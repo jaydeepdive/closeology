@@ -58,6 +58,7 @@ def main():
     daily.build("data/on", "site", "Ontario", "EPSG:3161", news_path="site/news_on.json", out_name="daily_on.html")
     build_app.build(APP_REGIONS, "site/app.html")
     build_site.build("site", REGIONS_SITE)
+    shutil.copy("site/app.html", "site/index.html")   # Pages home = the full app
     print("[build_all] done")
 
 

@@ -1,35 +1,32 @@
 name: closeology-daily
 
-# Fully automatic once this repo exists on GitHub: rebuilds BC + Ontario from
-# public data every morning and commits the refreshed site back to the repo.
 on:
   schedule:
-    - cron: "17 12 * * *"      # daily 12:17 UTC (~05:17 PT)
+    - cron: "17 12 * * *"
   push:
     branches: [main]
   workflow_dispatch: {}
 
-permissions:
-  contents: write
-
 concurrency:
-  group: closeology-build
+  group: closeology
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: System deps (Access DB reader for MINFILE facts)
+      - name: System deps
         run: sudo apt-get update -q && sudo apt-get install -y -q mdbtools
       - name: Python deps
         run: pip install -r requirements.txt
-      - name: Rebuild BC + Ontario (fetch live data, screen, render)
+      - name: Rebuild BC + Ontario
         run: PYTHONPATH=src python src/build_all.py
       - name: Commit refreshed site
         run: |
@@ -38,16 +35,19 @@ jobs:
           git add -A site data/keep 2>/dev/null || true
           git commit -m "Daily rebuild $(date -u +%Y-%m-%d)" || echo "no changes"
           git push || echo "nothing to push"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
 
-  # OPTIONAL public site: uncomment to serve site/ at username.github.io/closeology
-  # (needs Settings -> Pages -> Source: GitHub Actions; public repo on the free plan).
-  #  pages:
-  #    needs: build
-  #    runs-on: ubuntu-latest
-  #    permissions: { pages: write, id-token: write }
-  #    environment: { name: github-pages }
-  #    steps:
-  #      - uses: actions/checkout@v4
-  #      - uses: actions/upload-pages-artifact@v3
-  #        with: { path: site }
-  #      - uses: actions/deploy-pages@v4
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
