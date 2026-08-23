@@ -1,4 +1,6 @@
 geopandas
+pyogrio
+pyproj
 shapely
 pyarrow
 pandas
