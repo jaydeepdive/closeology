@@ -202,10 +202,15 @@ def fetch_communities():
     print(f"[on communities] {len(g)}")
 
 
-if __name__ == "__main__":
+def run():
     os.makedirs("data/on", exist_ok=True)
     fetch_mdi()
     fetch_drill()
     fetch_claims()
+    fetch_alienations()
     fetch_parks()
     fetch_communities()
+
+
+if __name__ == "__main__":
+    run()
