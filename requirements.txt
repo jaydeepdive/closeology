@@ -1,0 +1,7 @@
+geopandas
+shapely
+pyarrow
+pandas
+openpyxl
+construct
+tabulate

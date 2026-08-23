@@ -1,0 +1,21 @@
+# large raw data — re-fetched by build_all
+data/on/
+data/bc/*.parquet
+data/bc/*.csv
+data/bc/*.accdb
+data/bc/*.zip
+data/bc/*.chm
+data/bc/out/
+data/minfile_db/
+# large generated site assets — rebuilt + published as artifact
+site/app.html
+site/app_artifact.html
+site/bc.html
+site/on.html
+site/daily_bc.html
+site/daily_on.html
+site/*.geojson
+site/*.png
+__pycache__/
+*.pyc
+src/access_parser/
