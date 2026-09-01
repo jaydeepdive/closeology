@@ -343,7 +343,7 @@ def run_region(region):
             "community_km", "deposit_size", "grade_str", "tonnes_str", "resource_cat",
             "drill_highlights", "exploration_spend", "exploration_spend_str", "n_reports",
             "last_work_year", "operators", "basis", "encumbrances", "core_cell", "n_cells",
-            "cells_area_ha", "score", "lat", "lon", "cell_ids", "minfile_url", "capsule"]
+            "cells_area_ha", "score", "grade_conf", "lat", "lon", "cell_ids", "minfile_url", "capsule"]
     cols = [c for c in cols if c in leads.columns]
     leads[cols].to_csv(os.path.join(out_dir, "leads.csv"), index=False)
     leads[cols + ["metal_buckets", "geometry"]].to_file(os.path.join(out_dir, "leads.geojson"), driver="GeoJSON")

@@ -73,8 +73,9 @@ def main():
     daily.build("data/bc", "site", "British Columbia", "EPSG:3005", news_path="site/news.json", out_name="daily_bc.html")
     daily.build("data/on", "site", "Ontario", "EPSG:3161", news_path="site/news_on.json", out_name="daily_on.html")
     build_app.build(APP_REGIONS, "site/app.html")
-    build_site.build("site", REGIONS_SITE)
-    shutil.copy("site/app.html", "site/index.html")   # Pages home = the full app
+    import build_priority
+    build_priority.build("site", REGIONS_SITE)         # unified cross-jurisdiction ranking
+    build_site.build("site", REGIONS_SITE)             # Deep Dive-styled landing = index.html
 
     # digest for the daily email. Order of priority per region:
     #   1) EDGE PLAYS  - fresh drilling against open ground (the reason to act now)

@@ -1,0 +1,196 @@
+"""Unified, cross-jurisdiction priority list: every BC + Ontario lead ranked on
+one scale, each showing WHY it sits where it does (the score breakdown) plus all
+qualifying detail. Deep Dive-styled (sister site to thedeepdive.ca)."""
+import os
+import json
+import math
+import pandas as pd
+import site_theme as T
+from config import score_breakdown
+
+
+def _num(v, d=0.0):
+    try:
+        f = float(v)
+        return f if f == f else d
+    except (TypeError, ValueError):
+        return d
+
+
+def _s(v):
+    if v is None:
+        return ""
+    if isinstance(v, float) and math.isnan(v):
+        return ""
+    s = str(v)
+    return "" if s in ("nan", "None") else s
+
+
+def _load(csv, juris):
+    if not os.path.exists(csv):
+        return []
+    d = pd.read_csv(csv)
+    out = []
+    for _, r in d.iterrows():
+        status = _s(r.get("status"))
+        dopen = bool(r.get("deposit_open"))
+        grade = _s(r.get("grade_str"))
+        tonnes = _s(r.get("tonnes_str"))
+        drill = _s(r.get("drill_highlights"))
+        spend = _num(r.get("exploration_spend"))
+        conf = _num(r.get("grade_conf"), 1.0)
+        bd = score_breakdown(status, dopen, grade, tonnes, bool(drill), spend, conf)
+        out.append({
+            "juris": juris, "name": _s(r.get("name")) or "(unnamed)",
+            "minfile": _s(r.get("minfile")), "url": _s(r.get("minfile_url")),
+            "metal": _s(r.get("primary_metal")), "metals": _s(r.get("metals_abbr")),
+            "commodity": _s(r.get("commodity")), "status": status, "deposit_open": dopen,
+            "hard": _s(r.get("hard_to_stake")).lower() == "true", "grade": grade,
+            "size": _s(r.get("deposit_size")) or (tonnes if tonnes else ""),
+            "drill": drill[:300], "spend_str": _s(r.get("exploration_spend_str")),
+            "operators": _s(r.get("operators")), "last_work": _s(r.get("last_work_year")),
+            "community": _s(r.get("nearest_community")), "community_km": _s(r.get("community_km")),
+            "encumbrances": _s(r.get("encumbrances")), "cells_ha": _s(r.get("cells_area_ha")),
+            "n_cells": _s(r.get("n_cells")), "score": bd["total"], "parts": bd["parts"],
+            "lat": _num(r.get("lat")), "lon": _num(r.get("lon")),
+        })
+    return out
+
+
+def build(site_dir, regions):
+    leads = []
+    for r in regions:
+        if not r.get("live"):
+            continue
+        leads += _load(os.path.join(r["dir"], "out", "leads.csv"),
+                       "BC" if r["slug"] == "bc" else "ON")
+    leads.sort(key=lambda x: (-x["score"], not x["deposit_open"]))
+    for i, l in enumerate(leads, 1):
+        l["rank"] = i
+    n_bc = sum(1 for l in leads if l["juris"] == "BC")
+    n_on = sum(1 for l in leads if l["juris"] == "ON")
+    html = PAGE.format(
+        fonts=T.FONTS, css=T.THEME_CSS, header=T.header("priorities.html"), footer=T.footer(),
+        leads_json=json.dumps(leads, separators=(",", ":")),
+        n_total=len(leads), n_bc=n_bc, n_on=n_on,
+    )
+    os.makedirs(site_dir, exist_ok=True)
+    open(os.path.join(site_dir, "priorities.html"), "w").write(html)
+    print(f"[priority] priorities.html — {len(leads)} leads ({n_bc} BC, {n_on} ON)")
+
+
+PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Priority Leads · Project Closeology</title>
+{fonts}
+<style>{css}
+.controls{{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 6px;}}
+.controls input{{flex:1;min-width:220px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;}}
+.seg{{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;}}
+.seg button{{border:0;background:#fff;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--mut);}}
+.seg button.on{{background:var(--red);color:#fff;}}
+.count{{color:var(--mut);font-size:13px;}}
+.lead{{border:1px solid var(--line);border-radius:12px;padding:0;margin:14px 0;overflow:hidden;background:#fff;}}
+.lead:hover{{box-shadow:0 3px 14px rgba(0,0,0,.06);}}
+.lhead{{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border-bottom:1px solid var(--line);}}
+.rankbox{{flex:0 0 auto;text-align:center;min-width:56px;}}
+.rankbox .r{{font-family:'Bitter',serif;font-weight:800;font-size:26px;line-height:1;}}
+.rankbox .rl{{font-size:9.5px;letter-spacing:1px;color:var(--mut);text-transform:uppercase;}}
+.scorebox{{flex:0 0 auto;text-align:center;min-width:62px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;}}
+.scorebox .s{{font-family:'Bitter',serif;font-weight:800;font-size:24px;line-height:1;color:var(--red);}}
+.scorebox .sl{{font-size:9px;letter-spacing:.5px;color:var(--mut);text-transform:uppercase;}}
+.lmain{{flex:1;min-width:0;}}
+.lname{{font-family:'Bitter',serif;font-weight:700;font-size:18px;}}
+.pill{{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle;}}
+.p-bc{{background:#e8f0fe;color:#1a56db;}} .p-on{{background:#fdeaea;color:var(--red);}}
+.p-open{{background:#e7f6ec;color:#127a3a;}} .p-hard{{background:#fff4e5;color:#9a5b00;}}
+.sub{{color:var(--mut);font-size:13px;margin-top:3px;}}
+.chips{{margin-top:7px;}} .chip{{display:inline-block;background:var(--chip);color:#2d3748;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;margin:2px 5px 2px 0;}}
+.lbody{{display:grid;grid-template-columns:1.05fr 1fr;gap:0;}}
+@media (max-width:760px){{.lbody{{grid-template-columns:1fr;}}}}
+.why,.facts{{padding:14px 18px;}} .why{{border-right:1px solid var(--line);background:#fcfcfd;}}
+@media (max-width:760px){{.why{{border-right:0;border-bottom:1px solid var(--line);}}}}
+.sechd{{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--mut);font-weight:700;margin-bottom:8px;}}
+.prow{{display:flex;gap:10px;align-items:baseline;margin:5px 0;font-size:13px;}}
+.pbadge{{flex:0 0 auto;font-family:'Bitter',serif;font-weight:800;color:var(--red);min-width:34px;}}
+.prow .pl{{font-weight:600;}} .prow .pn{{color:var(--mut);}}
+.fact{{margin:6px 0;font-size:13px;}} .fact .k{{color:var(--mut);font-weight:600;display:inline-block;min-width:96px;}}
+.drill{{font-size:12.5px;color:#374151;background:#fcfcfd;border-left:3px solid var(--red);padding:7px 10px;margin-top:8px;border-radius:0 6px 6px 0;}}
+.empty{{color:var(--mut);padding:30px;text-align:center;}}
+</style></head><body>
+{header}
+<div class="wrap">
+  <div class="hero">
+    <h1>Priority leads</h1><div class="rule"></div>
+    <p>Every British Columbia and Ontario lead ranked on <b>one common scale</b> — driven by in-situ
+       metal value, deposit size, development status, open ground, drilling on record and exploration
+       spend. A score of 80 means the same thing in either province. Each lead shows exactly why it
+       sits where it does.</p>
+  </div>
+  <div class="controls">
+    <input id="q" placeholder="Search name, metal, commodity, community…"/>
+    <div class="seg" id="seg">
+      <button data-j="all" class="on">All ({n_total})</button>
+      <button data-j="BC">BC ({n_bc})</button>
+      <button data-j="ON">Ontario ({n_on})</button>
+    </div>
+  </div>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+</div>
+{footer}
+<script>
+const LEADS={leads_json};
+const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
+let jf='all', q='';
+function card(p){{
+  const parts=(p.parts||[]).map(x=>`<div class=prow><span class=pbadge>+${{x.pts}}</span><span><span class=pl>${{esc(x.label)}}.</span> <span class=pn>${{esc(x.note)}}</span></span></div>`).join('');
+  const chips=[];
+  if(p.metals) chips.push(`<span class=chip>${{esc(p.metals)}}</span>`);
+  else if(p.metal) chips.push(`<span class=chip>${{esc(p.metal)}}</span>`);
+  if(p.grade) chips.push(`<span class=chip>${{esc(p.grade)}}</span>`);
+  const facts=[];
+  facts.push(`<div class=fact><span class=k>Status</span>${{esc(p.status)||'—'}}</div>`);
+  if(p.commodity) facts.push(`<div class=fact><span class=k>Commodities</span>${{esc(p.commodity)}}</div>`);
+  if(p.grade) facts.push(`<div class=fact><span class=k>Grade</span>${{esc(p.grade)}}</div>`);
+  if(p.size) facts.push(`<div class=fact><span class=k>Size</span>${{esc(p.size)}}</div>`);
+  if(p.spend_str) facts.push(`<div class=fact><span class=k>Expl. spend</span>${{esc(p.spend_str)}}${{p.last_work?(' · last '+esc(p.last_work)):''}}${{p.operators?(' · '+esc(p.operators)):''}}</div>`);
+  if(p.community) facts.push(`<div class=fact><span class=k>Nearest town</span>${{esc(p.community)}}${{p.community_km!==''?(' · '+esc(p.community_km)+' km'):''}}</div>`);
+  if(p.cells_ha) facts.push(`<div class=fact><span class=k>Open ground</span>${{esc(p.n_cells)}} cell(s) · ${{esc(p.cells_ha)}} ha adjacent</div>`);
+  if(p.encumbrances && !p.hard) facts.push(`<div class=fact><span class=k>Nearby</span>${{esc(p.encumbrances)}}</div>`);
+  if(p.url) facts.push(`<div class=fact><span class=k>Record</span><a href="${{esc(p.url)}}" target=_blank>${{esc(p.minfile)||'official record'}} ↗</a></div>`);
+  return `<div class=lead>
+    <div class=lhead>
+      <div class=rankbox><div class=r>${{p.rank}}</div><div class=rl>rank</div></div>
+      <div class=scorebox><div class=s>${{p.score}}</div><div class=sl>score</div></div>
+      <div class=lmain>
+        <div><span class=lname>${{esc(p.name)}}</span>
+          <span class="pill ${{p.juris==='BC'?'p-bc':'p-on'}}">${{p.juris}}</span>
+          ${{p.deposit_open?'<span class="pill p-open">deposit open</span>':''}}
+          ${{p.hard?'<span class="pill p-hard">harder to stake</span>':''}}</div>
+        <div class=sub>${{esc(p.metal)}}${{p.minfile?(' · '+esc(p.minfile)):''}}</div>
+        <div class=chips>${{chips.join('')}}</div>
+      </div>
+    </div>
+    <div class=lbody>
+      <div class=why><div class=sechd>Why it ranks here</div>${{parts}}</div>
+      <div class=facts><div class=sechd>Qualifying details</div>${{facts.join('')}}
+        ${{p.drill?`<div class=drill><b>Drill / assay:</b> ${{esc(p.drill)}}${{p.drill.length>=300?'…':''}}</div>`:''}}
+        ${{p.hard?`<div class=drill style="border-left-color:#9a5b00"><b>Staking note:</b> ${{esc(p.encumbrances)||'A conditional / registration reserve applies here — a special staking process is required.'}}</div>`:''}}
+      </div>
+    </div>
+  </div>`;
+}}
+function render(){{
+  const ql=q.toLowerCase();
+  const rows=LEADS.filter(p=>(jf==='all'||p.juris===jf) &&
+    (!ql || (p.name+' '+p.metal+' '+p.commodity+' '+p.community+' '+p.metals).toLowerCase().includes(ql)));
+  document.getElementById('count').textContent=rows.length+' lead'+(rows.length===1?'':'s')+' shown, ranked by priority';
+  document.getElementById('list').innerHTML=rows.length?rows.map(card).join(''):'<div class=empty>No leads match.</div>';
+}}
+document.getElementById('seg').addEventListener('click',e=>{{const b=e.target.closest('button[data-j]');if(!b)return;
+  jf=b.dataset.j;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));render();}});
+document.getElementById('q').addEventListener('input',e=>{{q=e.target.value;render();}});
+render();
+</script></body></html>
+"""

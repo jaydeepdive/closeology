@@ -289,24 +289,53 @@ def score_lead(status, deposit_open, grade_str="", tonnes_str="", has_drill=Fals
     are the dominant levers; status/open-ground/drilling/spend de-risk on top.
     grade_conf (0-1) discounts the grade by how it was established — an actual
     resource counts fully, a drill intersection ~0.8, a grab sample ~0.5."""
-    s = 0
+    return score_breakdown(status, deposit_open, grade_str, tonnes_str,
+                           has_drill, spend, grade_conf)["total"]
+
+
+_CONF_LABEL = {1.0: "resource-grade", 0.8: "drill-intersection", 0.5: "grab-sample"}
+
+
+def score_breakdown(status, deposit_open, grade_str="", tonnes_str="", has_drill=False,
+                    spend=0, grade_conf=1.0):
+    """Same scoring as score_lead, but returns the component parts so a lead can
+    explain WHY it ranks where it does: {total, raw, parts:[{label,pts,note}]}."""
+    parts = []
     st = (status or "").lower()
-    if "past" in st and "produc" in st: s += 18       # a real deposit existed, but historic
-    elif "produc" in st: s += 22                        # active/near producer
-    elif "developed" in st: s += 15
-    elif "deposit" in st: s += 13
-    elif "prospect" in st: s += 9
-    elif "discovery" in st: s += 7
-    elif "showing" in st: s += 5
-    elif "occurrence" in st: s += 3
-    else: s += 2
-    if deposit_open: s += 14                             # its own ground is stakeable
-    if has_drill: s += 8
-    gv = grade_value(grade_str) * max(0.0, min(grade_conf, 1.0))   # confidence-weighted $/t
-    s += round(min(gv / VALUE_CAP, 1.0) * 26)            # 0..26  — the main lever
-    # size only counts when the rock is actually worth something: a huge barren
-    # (iron/sulphur) or unknown-grade tonnage earns no size credit.
+    if "past" in st and "produc" in st: sp, sl = 18, "Past producer — a real deposit existed here"
+    elif "produc" in st: sp, sl = 22, "Producer / near-producer"
+    elif "developed" in st: sp, sl = 15, "Developed prospect"
+    elif "deposit" in st: sp, sl = 13, "Classified deposit"
+    elif "prospect" in st: sp, sl = 9, "Prospect"
+    elif "discovery" in st: sp, sl = 7, "Discovery"
+    elif "showing" in st: sp, sl = 5, "Showing"
+    elif "occurrence" in st: sp, sl = 3, "Occurrence"
+    else: sp, sl = 2, "Mineral occurrence"
+    parts.append({"label": "Development status", "pts": sp, "note": sl})
+
+    if deposit_open:
+        parts.append({"label": "Open ground", "pts": 14, "note": "The deposit's own ground is unstaked and stakeable"})
+    if has_drill:
+        parts.append({"label": "Drilling on record", "pts": 8, "note": "Documented drill/assay history de-risks the target"})
+
+    gv_raw = grade_value(grade_str)
+    conf = max(0.0, min(grade_conf, 1.0))
+    gv = gv_raw * conf
+    gpts = round(min(gv / VALUE_CAP, 1.0) * 26)
+    if gpts:
+        cl = _CONF_LABEL.get(round(conf, 1), f"{int(conf*100)}%-confidence")
+        note = f"In-situ metal value ≈ ${gv_raw:,.0f}/t ({cl}"
+        note += f", discounted to ${gv:,.0f}/t)" if conf < 1.0 else ")"
+        parts.append({"label": "Grade value", "pts": gpts, "note": note})
+
     size_factor = 0.0 if gv < 25 else min((gv - 25) / 50.0, 1.0)
-    s += round(size_quality(parse_tonnes(tonnes_str)) * size_factor)   # 0..16, grade-gated
-    s += spend_points(spend)                             # 0..20
-    return min(s, 100)
+    spts = round(size_quality(parse_tonnes(tonnes_str)) * size_factor)
+    if spts:
+        parts.append({"label": "Deposit size", "pts": spts, "note": f"Tonnage {tonnes_str} (counts only because the grade is economic)"})
+
+    spp = spend_points(spend)
+    if spp:
+        parts.append({"label": "Exploration spend", "pts": spp, "note": f"≈ ${spend:,.0f} already spent proving the ground nearby"})
+
+    raw = sum(p["pts"] for p in parts)
+    return {"total": min(raw, 100), "raw": raw, "parts": parts}
