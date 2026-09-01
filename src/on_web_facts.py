@@ -118,10 +118,9 @@ def enrich(region_dir):
 
     # re-score with the new grade/tonnage, then re-rank
     leads["score"] = leads.apply(lambda r: score_lead(
-        r["status"], bool(r["deposit_open"]), bool(r.get("grade_str")), bool(r.get("tonnes_str")),
-        len(r["metal_buckets"]) if isinstance(r["metal_buckets"], (list, tuple)) else 1,
-        r.get("tonnes"), bool(r.get("drill_highlights")), r.get("exploration_spend", 0)), axis=1)
-    sort_keys = ["deposit_open", "score"] + (["exploration_spend"] if "exploration_spend" in leads.columns else [])
+        r["status"], bool(r["deposit_open"]), r.get("grade_str", ""), r.get("tonnes_str", ""),
+        bool(r.get("drill_highlights")), r.get("exploration_spend", 0)), axis=1)
+    sort_keys = ["score", "deposit_open"] + (["exploration_spend"] if "exploration_spend" in leads.columns else [])
     leads = leads.sort_values(sort_keys, ascending=False).reset_index(drop=True)
     leads["rank"] = range(1, len(leads) + 1)
     leads["lead_id"] = ["L%04d" % i for i in leads["rank"]]

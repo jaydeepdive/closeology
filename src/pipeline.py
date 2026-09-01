@@ -49,8 +49,8 @@ def prep(occ, facts):
     occ["has_resource"] = occ["has_resource"].fillna(False)
     occ["n_metals"] = occ["metal_buckets"].map(len)
     occ["base_score"] = occ.apply(lambda r: score_lead(
-        r["status"], False, bool(r["grade_str"]), bool(r.get("tonnes_str")),
-        r["n_metals"], r.get("tonnes"), bool(r.get("drill_highlights"))), axis=1)
+        r["status"], False, r.get("grade_str", ""), r.get("tonnes_str", ""),
+        bool(r.get("drill_highlights"))), axis=1)
     return occ
 
 
@@ -308,9 +308,9 @@ def run_region(region):
     leads = attach_spend(leads, _rd(os.path.join(d, "spend_reports.parquet")), metric)
     leads["exploration_spend_str"] = leads["exploration_spend"].map(_spend_str)
     leads["score"] = leads.apply(lambda r: score_lead(
-        r["status"], r["deposit_open"], bool(r["grade_str"]), bool(r.get("tonnes_str")),
-        r["n_metals"], r.get("tonnes"), bool(r.get("drill_highlights")), r.get("exploration_spend", 0)), axis=1)
-    leads = leads.sort_values(["deposit_open", "score", "exploration_spend"], ascending=False).reset_index(drop=True)
+        r["status"], r["deposit_open"], r.get("grade_str", ""), r.get("tonnes_str", ""),
+        bool(r.get("drill_highlights")), r.get("exploration_spend", 0)), axis=1)
+    leads = leads.sort_values(["score", "deposit_open", "exploration_spend"], ascending=False).reset_index(drop=True)
     leads.insert(0, "rank", range(1, len(leads) + 1))
     leads["lead_id"] = ["L%04d" % i for i in leads["rank"]]
     leads["cell_ids"] = leads["open_cells"].map(lambda x: ";".join(x))
