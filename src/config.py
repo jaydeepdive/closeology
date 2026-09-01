@@ -108,6 +108,102 @@ def grade_quality(grade_str):
     return min(grade_value(grade_str) / VALUE_CAP, 1.0)
 
 
+# --- extract grades from free capsule / assay text (BC + Ontario, identical) --
+_METAL_WORD = {
+    "gold": "au", "silver": "ag", "copper": "cu", "lead": "pb", "zinc": "zn",
+    "molybdenum": "mo", "molybdenite": "mo", "nickel": "ni", "cobalt": "co",
+    "tungsten": "w", "tin": "sn", "uranium": "u", "iron": "fe", "sulphur": "s",
+    "sulfur": "s", "cadmium": "cd", "antimony": "sb", "manganese": "mn",
+    "vanadium": "v", "lithium": "li", "platinum": "pt", "palladium": "pd",
+    "gallium": "ga", "germanium": "ge", "bismuth": "bi", "arsenic": "as",
+}
+_UNIT_WORD = (r"per\s*cent|percent|%|grams?\s*per\s*tonne|g/t|gpt|"
+              r"ounces?\s*per\s*ton|oz/t|parts\s*per\s*million|ppm|"
+              r"parts\s*per\s*billion|ppb")
+_GRADE_TEXT_RE = _re.compile(
+    r"(\d+\.?\d*)\s*(" + _UNIT_WORD + r")\s*(?:\([^)]{0,12}\)\s*)?([a-zA-Z]+)", _re.I)
+_TONNES_CTX = _re.compile(r"\d[\d,]*\s*tonnes|\d+\.?\d*\s*(?:mt|million\s*tonnes)", _re.I)
+_RESOURCE_KW = _re.compile(r"averag|grad|indicat|inferred|measured|contain|reserve|resourc", _re.I)
+_INTERSECT_KW = _re.compile(r"averag|grad|over\s*\d+\.?\d*\s*(?:m|metre|meter)", _re.I)
+
+
+def _canon_grade(value, unitword, metal_abbr):
+    """-> (value, 'pct'|'gpt') in the metal's natural reporting unit."""
+    u = unitword.lower().replace(" ", "")
+    if "percent" in u or u == "%" or "cent" in u:
+        v, unit = value, "pct"
+    elif "ounce" in u or "oz" in u:
+        v, unit = value * 34.2857, "gpt"        # troy oz/short ton -> g/t
+    elif "billion" in u or u == "ppb":
+        v, unit = value / 1000.0, "gpt"          # ppb -> g/t
+    elif "million" in u or u == "ppm":
+        v, unit = value, "gpt"                   # ppm == g/t
+    else:                                         # grams per tonne / g/t
+        v, unit = value, "gpt"
+    precious = metal_abbr in ("au", "ag", "pt", "pd")
+    if precious and unit == "pct":
+        v, unit = v * 10000.0, "gpt"
+    elif (not precious) and unit == "gpt":
+        v, unit = v / 10000.0, "pct"
+    return v, unit
+
+
+def grades_from_text(text):
+    """Compact grade string from capsule/assay prose, preferring deposit-scale
+    (resource, then drill-intersection) grades over isolated grab samples — so a
+    barren resource isn't flattered by a rich grab, and vice-versa. Returns e.g.
+    'Zn 6.7%, Pb 1.55%, Ag 19.2g/t' or '' when nothing usable is found."""
+    t = str(text or "")
+    if not t or t == "nan":
+        return ""
+    import statistics
+    tiers = {1: {}, 2: {}, 3: {}}      # tier -> {abbr -> [values in canonical unit]}
+    units = {}
+    for m in _GRADE_TEXT_RE.finditer(t):
+        num, unitword, word = m.group(1), m.group(2), m.group(3).lower()
+        ab = _METAL_WORD.get(word)
+        if not ab:
+            continue
+        try:
+            v = float(num)
+        except ValueError:
+            continue
+        cv, cu = _canon_grade(v, unitword, ab)
+        win = t[max(0, m.start() - 130):m.start()]
+        if _TONNES_CTX.search(win) and _RESOURCE_KW.search(win):
+            tier = 1
+        elif _INTERSECT_KW.search(win):
+            tier = 2
+        else:
+            tier = 3
+        tiers[tier].setdefault(ab, []).append(cv)
+        units[ab] = cu
+    chosen = tiers[1] or tiers[2] or tiers[3]
+    if not chosen:
+        return ""
+    parts = []
+    for ab, vals in chosen.items():
+        v = statistics.median(vals)
+        if units[ab] == "gpt":
+            parts.append((ab, f"{ab.title()} {v:.1f}g/t" if v < 100 else f"{ab.title()} {v:.0f}g/t"))
+        else:
+            parts.append((ab, f"{ab.title()} {v:.2f}%".rstrip("0").rstrip(".") + ("%" if False else "")))
+    # keep a stable, readable order (priced/high-value first)
+    order = {k: i for i, k in enumerate(
+        ["au", "ag", "pt", "pd", "cu", "pb", "zn", "ni", "co", "mo", "w", "sn",
+         "u", "sb", "bi", "li", "v", "fe", "s", "mn", "cd", "as", "ga", "ge"])}
+    parts.sort(key=lambda p: order.get(p[0], 99))
+    # fix percent formatting (ensure exactly one % sign)
+    out = []
+    for ab, s in parts:
+        if units[ab] == "pct":
+            num = s.split(" ", 1)[1].rstrip("%")
+            out.append(f"{ab.title()} {num}%")
+        else:
+            out.append(s)
+    return ", ".join(out)
+
+
 def parse_tonnes(tonnes_str):
     m = _TONNES_RE.search(str(tonnes_str or ""))
     if not m:

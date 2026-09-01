@@ -105,6 +105,15 @@ def enrich(region_dir):
         tonnes, cat, grade, produced = _parse(html)
         if grade and not str(leads.at[i, "grade_str"]):
             leads.at[i, "grade_str"] = grade; n_grade += 1
+        # fallback: pull grades from the record's prose (same extractor as BC),
+        # preferring resource/intersection grades over grab samples
+        if len(str(leads.at[i, "grade_str"])) < 3:
+            import re as _re2
+            from config import grades_from_text
+            page_txt = _re2.sub(r"<[^>]+>", " ", html)
+            g2 = grades_from_text(page_txt) or grades_from_text(str(leads.at[i, "drill_highlights"]) if "drill_highlights" in leads.columns else "")
+            if g2:
+                leads.at[i, "grade_str"] = g2; n_grade += 1
         headline = tonnes or produced
         if headline:
             leads.at[i, "tonnes"] = headline

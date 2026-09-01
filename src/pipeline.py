@@ -47,6 +47,12 @@ def prep(occ, facts):
     if "has_resource" not in occ:
         occ["has_resource"] = False
     occ["has_resource"] = occ["has_resource"].fillna(False)
+    # fill missing structured grade from the capsule / assay prose (same extractor
+    # as Ontario), so a deposit with grades only in text isn't valued at $0.
+    from config import grades_from_text
+    need = occ["grade_str"].astype(str).str.len() < 3
+    occ.loc[need, "grade_str"] = occ.loc[need].apply(
+        lambda r: grades_from_text(r.get("drill_highlights", "")) or grades_from_text(r.get("capsule", "")), axis=1)
     occ["n_metals"] = occ["metal_buckets"].map(len)
     occ["base_score"] = occ.apply(lambda r: score_lead(
         r["status"], False, r.get("grade_str", ""), r.get("tonnes_str", ""),
