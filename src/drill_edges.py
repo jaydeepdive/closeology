@@ -223,7 +223,7 @@ def find(region_dir, metric):
         except Exception:
             return None, "", None
 
-    plays, open_gdf_rows = [], []
+    plays, open_gdf_rows, held_gdf_rows = [], [], []
     edf["grp"] = edf["company"].str.lower() + "||" + edf["prop"].str.lower()
     for _, g in edf.groupby("grp"):
         g = g.sort_values("year", ascending=False)
@@ -258,8 +258,24 @@ def find(region_dir, metric):
             "lon": None, "lat": None, "_cx": cx, "_cy": cy,
         }
         plays.append(play)
+        pidx = len(plays) - 1
         if union_open is not None and not union_open.is_empty:
-            open_gdf_rows.append({"geometry": union_open, "pidx": len(plays) - 1})
+            open_gdf_rows.append({"geometry": union_open, "pidx": pidx})
+        # the staked ground around this project: actual claim polygons near the holes
+        halo = _union([Point(x, y).buffer(HALO_M * 1.4) for x, y in zip(g["x"], g["y"])])
+        drilled = set(claims_hit)
+        seen = 0
+        if halo is not None:
+            for i in csi.query(halo, predicate="intersects"):
+                cg = claims.geometry.iloc[int(i)]
+                if cg is None or not cg.intersects(halo):
+                    continue
+                held_gdf_rows.append({"geometry": cg, "pidx": pidx,
+                                      "claim": _s(claims[cid].iloc[int(i)]) if cid else "",
+                                      "drilled": (_s(claims[cid].iloc[int(i)]) in drilled) if cid else False})
+                seen += 1
+                if seen >= 60:
+                    break
 
     cen = gpd.GeoDataFrame(
         geometry=gpd.points_from_xy([p["_cx"] for p in plays], [p["_cy"] for p in plays]),
@@ -277,12 +293,18 @@ def find(region_dir, metric):
         for _, r in og.iterrows():
             open_feats.append({"type": "Feature", "geometry": r.geometry.__geo_interface__,
                                "properties": {"pidx": int(r["pidx"])}})
+    held_feats = []
+    if held_gdf_rows:
+        hg = gpd.GeoDataFrame(held_gdf_rows, geometry="geometry", crs=metric).to_crs("EPSG:4326")
+        for _, r in hg.iterrows():
+            held_feats.append({"type": "Feature", "geometry": r.geometry.__geo_interface__,
+                               "properties": {"pidx": int(r["pidx"]), "claim": r["claim"], "drilled": bool(r["drilled"])}})
 
     order = sorted(range(len(plays)), key=lambda k: (not plays[k]["hot"], -plays[k]["year"],
                                                      -(plays[k]["assay"] != ""), -plays[k]["open_ha"]))
     remap = {old: new for new, old in enumerate(order)}
-    for f in open_feats:
+    for f in open_feats + held_feats:
         f["properties"]["pidx"] = remap.get(f["properties"]["pidx"], f["properties"]["pidx"])
     plays = [plays[k] for k in order]
     point_feats = [point_feats[k] for k in order]
-    return {"plays": plays, "point_feats": point_feats, "open_feats": open_feats}
+    return {"plays": plays, "point_feats": point_feats, "open_feats": open_feats, "held_feats": held_feats}

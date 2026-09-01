@@ -102,6 +102,15 @@ TEMPLATE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
   tbody tr{{cursor:pointer;}} tbody tr:hover{{background:#16223c;}}
   .lead-name{{font-weight:600;}} .sub2{{color:var(--mut);font-size:10px;margin-top:2px;line-height:1.4;}} .drill{{color:#a7f3d0;font-size:10px;margin-top:3px;line-height:1.4;}}
   .metal-chip{{font-size:9px;padding:0 4px;border-radius:4px;color:#0b1526;font-weight:700;margin-left:4px;}}
+  .item.sel{{background:#1b2b4a;box-shadow:inset 3px 0 0 #f5a300;}}
+  .legendbox{{background:rgba(9,14,26,.9);color:#e5edf7;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:11px;line-height:1.7;max-width:250px;}}
+  .legendbox b{{font-size:11px;}} .legendbox div{{display:flex;align-items:center;gap:6px;margin-top:3px;}}
+  .k-open,.k-held,.k-pt{{display:inline-block;flex:0 0 auto;width:16px;height:12px;}}
+  .k-open{{background:#f5a300;border:2px dashed #7c2d00;}} .k-held{{background:transparent;border:1.5px solid #cbd5e1;}}
+  .k-pt{{width:10px;height:10px;border-radius:50%;background:#ef4444;border:2px solid #fff;}}
+  .lbl-open{{background:transparent;border:0;box-shadow:none;color:#7c2d00;font-weight:800;font-size:11px;text-shadow:0 1px 2px #fff,0 0 2px #fff;}}
+  .lbl-claim{{background:rgba(255,255,255,.85);border:0;box-shadow:none;color:#111827;font-size:10px;padding:0 3px;}}
+  .leaflet-tooltip.lbl-open:before,.leaflet-tooltip.lbl-claim:before{{display:none;}}
   .badge{{font-size:8.5px;padding:1px 4px;border-radius:4px;font-weight:700;margin-left:4px;}} .b-dep{{background:#16a34a;color:#04140a;}} .b-hard{{background:#b45309;color:#fde68a;}}
   .score-pill{{display:inline-block;min-width:26px;text-align:center;padding:2px 5px;border-radius:20px;font-weight:700;color:#0b1526;}}
   .tag{{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;margin-left:5px;}} .t-a{{background:#ea580c;color:#0b1526;}} .t-b{{background:#dc2626;color:#fff;}} .t-open{{background:#16a34a;color:#04140a;}}
@@ -262,14 +271,26 @@ function buildDaily(){{
   const bl=baseLayers(); const map=L.map('dmap',{{layers:[bl.topo]}}); dmapObj=map; const M={{}}, EM={{}};
   L.geoJSON({{type:'FeatureCollection',features:D.act}},{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:3,color:'#f59e0b',weight:1,fillColor:'#f59e0b',fillOpacity:.7}}),
     style:f=>({{color:f.properties.kind==='new'?'#dc2626':'#ea580c',weight:1.3,fillOpacity:.10}}),onEachFeature:(f,l)=>l.bindPopup(`<b>${{esc(f.properties.label)||'activity'}}</b><br>${{esc(f.properties.sub)}}`)}}).addTo(map);
-  L.geoJSON({{type:'FeatureCollection',features:D.edge_open_feats||[]}},{{style:()=>({{color:'#22c55e',weight:1.2,fillColor:'#22c55e',fillOpacity:.28}}),onEachFeature:(f,l)=>{{const p=(D.edges||[])[f.properties.pidx];if(p)l.bindPopup(`<b>Open ground</b><br>${{p.open_ha}} ha ${{esc(p.open_dir)}} of ${{esc(p.company)}}`);}}}}).addTo(map);
+  const EH=D.edge_held_feats||[], EO=D.edge_open_feats||[];
+  const heldFG=L.layerGroup().addTo(map), openFG=L.layerGroup().addTo(map);
+  function focusEdge(i){{heldFG.clearLayers();openFG.clearLayers();
+    const oL=L.geoJSON({{type:'FeatureCollection',features:EO.filter(f=>f.properties.pidx===i)}},{{style:()=>({{color:'#7c2d00',weight:3,dashArray:'7 4',fillColor:'#f5a300',fillOpacity:.62}})}});
+    oL.eachLayer(l=>l.bindTooltip('OPEN — stakeable ('+((D.edges||[])[i]?(D.edges||[])[i].open_ha:'')+' ha)',{{permanent:true,direction:'center',className:'lbl-open'}}));
+    oL.addTo(openFG);
+    const hL=L.geoJSON({{type:'FeatureCollection',features:EH.filter(f=>f.properties.pidx===i)}},{{style:f=>({{color:'#111827',weight:f.properties.drilled?3:1.5,fill:true,fillColor:'#334155',fillOpacity:f.properties.drilled?.28:.10}}),onEachFeature:(f,l)=>{{if(f.properties.claim)l.bindTooltip('claim '+esc(f.properties.claim),{{permanent:!!f.properties.drilled,direction:'center',className:'lbl-claim'}});}}}});
+    hL.addTo(heldFG);
+    const m=EM[i];try{{const grp=L.featureGroup([oL,hL].concat(m?[m]:[]));map.fitBounds(grp.getBounds().pad(0.35));}}catch(e){{if(m)map.setView(m.getLatLng(),13);}}
+    if(m)m.openPopup();
+    document.querySelectorAll('#d-list .item[data-e]').forEach(x=>x.classList.toggle('sel',+x.dataset.e===i));}}
   const lg=L.geoJSON({{type:'FeatureCollection',features:D.lead_feats}},{{pointToLayer:(f,ll)=>{{const p=f.properties;
     const m=L.circleMarker(ll,{{radius:4,color:'#0b1526',weight:1,fillColor:mc(p.metal),fillOpacity:.45}});M[p.rank]=m;
     m.bindPopup(`<b>#${{p.rank}} ${{esc(p.name)}}</b> <span style="color:#64748b">${{esc(p.metal)}}</span> <span class=pk>${{esc(p.minfile)}}</span><br>${{esc(p.status)}}${{p.deposit_open?' · <b style=color:#15803d>deposit open</b>':''}}${{p.grade?'<br>Grade: '+esc(p.grade):''}}${{p.drill?'<br><span style=color:#047857>⛏ '+esc(p.drill.slice(0,120))+'…</span>':''}}${{p.url?'<br><a href="'+esc(p.url)+'" target=_blank>Full record ↗</a>':''}}`);return m;}}}}).addTo(map);
   let _ei=0;
   L.geoJSON({{type:'FeatureCollection',features:D.edge_point_feats||[]}},{{pointToLayer:(f,ll)=>{{const p=f.properties;const c=p.source==='News release'?'#38bdf8':(p.hot?'#ef4444':'#f97316');const i=_ei++;
-    const m=L.circleMarker(ll,{{radius:p.hot?9:7,color:'#fff7ed',weight:2,fillColor:c,fillOpacity:.95}});EM[i]=m;m.bindPopup(edgePopup(p));return m;}}}}).addTo(map);
+    const m=L.circleMarker(ll,{{radius:p.hot?9:7,color:'#fff7ed',weight:2,fillColor:c,fillOpacity:.95}});EM[i]=m;m.bindPopup(edgePopup(p));m.on('click',()=>focusEdge(i));return m;}}}}).addTo(map);
   try{{const eg=L.featureGroup(Object.values(EM));map.fitBounds(((D.edges||[]).length?eg:lg).getBounds().pad(0.15));}}catch(e){{map.setView(CUR==='on'?[50,-86]:[54,-125],5);}}
+  if((D.edges||[]).length)focusEdge(0);
+  const lgd=L.control({{position:'bottomleft'}});lgd.onAdd=function(){{const d=L.DomUtil.create('div','legendbox');d.innerHTML='<b>How to read this</b><div><span class=k-open></span> solid amber = <b>OPEN ground you can stake</b></div><div><span class=k-held></span> outlined = claims already staked (number shown)</div><div><span class=k-pt></span> dot = where they drilled — click a play to focus</div>';return d;}};lgd.addTo(map);
   document.getElementById('d-stats').innerHTML=`
     <div class=stat><b style="color:#f97316">${{EC.n}}</b><span>edge plays</span></div>
     <div class=stat><b style="color:#ef4444">${{EC.hot}}</b><span>hot (last yr)</span></div>
@@ -283,7 +304,8 @@ function buildDaily(){{
   const sig=D.lead_feats.map(f=>f.properties).filter(p=>p.near_a||p.near_b).sort((a,b)=>a.rank-b.rank);
   const actHtml=sig.length?'<div class=controls><h2>'+esc(D.labels.sec)+' ('+sig.length+')</h2></div>'+sig.map(p=>`<div class=item data-r="${{p.rank}}"><b>#${{p.rank}} ${{esc(p.name)}}</b>${{p.deposit_open?'<span class="tag t-open">open</span>':''}}${{p.near_a?'<span class="tag t-a">'+esc(D.labels.tag_a)+'</span>':''}}${{p.near_b?'<span class="tag t-b">'+esc(D.labels.tag_b)+'</span>':''}}<div class=muted>${{esc(p.metal)}} · ${{esc(p.status)}} · ${{esc(p.community)}} ${{p.community_km!=null?p.community_km+' km':''}}</div>${{p.drill?`<div class=drill>⛏ ${{esc(p.drill.slice(0,110))}}…</div>`:''}}</div>`).join(''):'';
   document.getElementById('d-list').innerHTML=edgeHtml+drHtml+actHtml;
-  document.getElementById('d-list').onclick=e=>{{const ei=e.target.closest('.item[data-e]');if(ei){{const m=EM[ei.dataset.e];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}return;}}const it=e.target.closest('.item[data-r]');if(!it)return;const m=M[it.dataset.r];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}}};
+  document.getElementById('d-list').onclick=e=>{{const ei=e.target.closest('.item[data-e]');if(ei){{focusEdge(+ei.dataset.e);return;}}const it=e.target.closest('.item[data-r]');if(!it)return;const m=M[it.dataset.r];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}}};
+  if((D.edges||[]).length)focusEdge(0);   // highlight the top play now that the list exists
   setTimeout(()=>map.invalidateSize(),60);
 }}
 </script></body></html>

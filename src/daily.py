@@ -57,10 +57,14 @@ def payload(region_dir, metric, news_path=None):
         plays = a["plays"] + b["plays"]
         pts = a["point_feats"] + b["point_feats"]
         off = len(a["plays"])
-        opens = a["open_feats"] + [{"type": "Feature", "geometry": f["geometry"],
-                                    "properties": {"pidx": f["properties"]["pidx"] + off}}
-                                   for f in b["open_feats"]]
-        return {"plays": plays, "point_feats": pts, "open_feats": opens}
+
+        def shift(feats):
+            return [{"type": "Feature", "geometry": f["geometry"],
+                     "properties": {**f["properties"], "pidx": f["properties"]["pidx"] + off}}
+                    for f in feats]
+        opens = a["open_feats"] + shift(b["open_feats"])
+        helds = a.get("held_feats", []) + shift(b.get("held_feats", []))
+        return {"plays": plays, "point_feats": pts, "open_feats": opens, "held_feats": helds}
     edges = _combine(nz, gov)
     news_unplaced = nz["unplaced"]
 
@@ -139,7 +143,7 @@ def payload(region_dir, metric, news_path=None):
     return {"today": today.date().isoformat(), "lead_feats": lead_feats, "act": act_feats,
             "news": news, "counts": counts, "labels": labels, "dropped": dropped,
             "edges": edges["plays"], "edge_point_feats": edges["point_feats"],
-            "edge_open_feats": edges["open_feats"],
+            "edge_open_feats": edges["open_feats"], "edge_held_feats": edges.get("held_feats", []),
             "edge_counts": {"n": len(edges["plays"]), "hot": n_hot, "open_ha": open_ha,
                             "news": len(nz["plays"])}}
 
@@ -155,6 +159,7 @@ def build(region_dir, site_dir, region_name, metric, news_path=None, out_name="d
         act_json=json.dumps({"type": "FeatureCollection", "features": d["act"]}),
         edge_pts_json=json.dumps({"type": "FeatureCollection", "features": d["edge_point_feats"]}),
         edge_open_json=json.dumps({"type": "FeatureCollection", "features": d["edge_open_feats"]}),
+        edge_held_json=json.dumps({"type": "FeatureCollection", "features": d["edge_held_feats"]}),
         edges_json=json.dumps(d["edges"]), edge_counts_json=json.dumps(d["edge_counts"]),
         news_json=json.dumps(d["news"]), metal_color_json=json.dumps(METAL_COLOR),
         labels_json=json.dumps(d["labels"]), counts_json=json.dumps(d["counts"]), near_km=NEAR_KM,
@@ -194,7 +199,17 @@ DAILY = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
   a.news{{color:#93c5fd;text-decoration:none;}} footer{{padding:8px 15px;font-size:9.5px;color:var(--mut);border-top:1px solid var(--line);}}
   .leaflet-popup-content{{font-size:12px;}} .leaflet-popup-content b{{color:#0b1526;}}
   .empty{{color:var(--mut);font-size:11px;padding:2px 15px 10px;}}
-  @media (max-width:900px){{#panel{{width:100%;}}#app{{flex-direction:column;}}#map{{height:44%;}}#panel{{height:56%;}}}}
+  .item.sel{{background:#1b2b4a;box-shadow:inset 3px 0 0 #f5a300;}}
+  .legendbox{{background:rgba(9,14,26,.9);color:#e5edf7;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:11px;line-height:1.7;max-width:250px;}}
+  .legendbox b{{font-size:11px;}} .legendbox div{{display:flex;align-items:center;gap:6px;margin-top:3px;}}
+  .k-open,.k-held,.k-pt{{display:inline-block;flex:0 0 auto;width:16px;height:12px;}}
+  .k-open{{background:#f5a300;border:2px dashed #7c2d00;}}
+  .k-held{{background:transparent;border:1.5px solid #cbd5e1;}}
+  .k-pt{{width:10px;height:10px;border-radius:50%;background:#ef4444;border:2px solid #fff;}}
+  .lbl-open{{background:transparent;border:0;box-shadow:none;color:#7c2d00;font-weight:800;font-size:11px;text-shadow:0 1px 2px #fff,0 0 2px #fff;}}
+  .lbl-claim{{background:rgba(255,255,255,.85);border:0;box-shadow:none;color:#111827;font-size:10px;padding:0 3px;}}
+  .leaflet-tooltip.lbl-open:before,.leaflet-tooltip.lbl-claim:before{{display:none;}}
+  @media (max-width:900px){{#panel{{width:100%;}}#app{{flex-direction:column;}}#map{{height:52%;}}#panel{{height:48%;}}}}
 </style></head><body><div id="app">
 <div id="map"></div>
 <div id="panel">
@@ -216,7 +231,7 @@ DAILY = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 </div></div>
 <script>
 const LEADS={leads_json}, ACT={act_json}, NEWS={news_json}, MC={metal_color_json}, LBL={labels_json}, CN={counts_json};
-const DROPPED={dropped_json}, EDGES={edges_json}, EPTS={edge_pts_json}, EOPEN={edge_open_json}, EC={edge_counts_json};
+const DROPPED={dropped_json}, EDGES={edges_json}, EPTS={edge_pts_json}, EOPEN={edge_open_json}, EHELD={edge_held_json}, EC={edge_counts_json};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
 const mc=m=>MC[m]||'#94a3b8';
 const topo=L.tileLayer('https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:17,attribution:'&copy; OpenTopoMap'}});
@@ -227,9 +242,25 @@ L.geoJSON(ACT,{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:3,color:'#f59e0b
   style:f=>({{color:f.properties.kind==='new'?'#dc2626':'#ea580c',weight:1.3,fillOpacity:.10}}),
   onEachFeature:(f,l)=>l.bindPopup(`<b>${{esc(f.properties.label)||'activity'}}</b><br>${{esc(f.properties.sub)}}`)}}).addTo(map);
 
-// open ground beside edge plays (green fill)
-L.geoJSON(EOPEN,{{style:()=>({{color:'#22c55e',weight:1.2,fillColor:'#22c55e',fillOpacity:.28}}),
-  onEachFeature:(f,l)=>{{const p=EDGES[f.properties.pidx];if(p)l.bindPopup(`<b>Open ground</b><br>${{p.open_ha}} ha ${{esc(p.open_dir)}} of ${{esc(p.company)}}'s drilling`);}}}}).addTo(map);
+// per-play detail layers (drawn only for the selected play). Colour is NOT relied
+// on: STAKED = hollow outlined boxes carrying the claim number; OPEN = the one
+// solid filled block, thick dashed border, labelled "OPEN — stakeable".
+const heldFG=L.layerGroup().addTo(map), openFG=L.layerGroup().addTo(map);
+function focusEdge(i){{
+  heldFG.clearLayers(); openFG.clearLayers();
+  const held={{type:'FeatureCollection',features:EHELD.features.filter(f=>f.properties.pidx===i)}};
+  const open={{type:'FeatureCollection',features:EOPEN.features.filter(f=>f.properties.pidx===i)}};
+  const oL=L.geoJSON(open,{{style:()=>({{color:'#7c2d00',weight:3,dashArray:'7 4',fillColor:'#f5a300',fillOpacity:.62}})}});
+  oL.eachLayer(l=>l.bindTooltip('OPEN — stakeable ('+(EDGES[i]?EDGES[i].open_ha:'')+' ha)',{{permanent:true,direction:'center',className:'lbl-open'}}));
+  oL.addTo(openFG);
+  const hL=L.geoJSON(held,{{style:f=>({{color:'#111827',weight:f.properties.drilled?3:1.5,fill:true,fillColor:'#334155',fillOpacity:f.properties.drilled?.28:.10}}),
+    onEachFeature:(f,l)=>{{if(f.properties.claim){{l.bindTooltip('claim '+esc(f.properties.claim),{{permanent:f.properties.drilled,direction:'center',className:'lbl-claim'}});}}}}}});
+  hL.addTo(heldFG);
+  const m=emk[i];
+  try{{const grp=L.featureGroup([oL,hL].concat(m?[m]:[]));map.fitBounds(grp.getBounds().pad(0.35));}}catch(e){{if(m)map.setView(m.getLatLng(),13);}}
+  if(m)m.openPopup();
+  document.querySelectorAll('#edges .item').forEach(x=>x.classList.toggle('sel',+x.dataset.e===i));
+}}
 
 // leads for context (dim)
 const lg=L.geoJSON(LEADS,{{pointToLayer:(f,ll)=>{{const p=f.properties;
@@ -241,10 +272,19 @@ let _ei=0;
 L.geoJSON(EPTS,{{pointToLayer:(f,ll)=>{{const p=f.properties;const c=p.source==='News release'?'#38bdf8':(p.hot?'#ef4444':'#f97316');const idx=_ei++;
   const m=L.circleMarker(ll,{{radius:p.hot?9:7,color:'#fff7ed',weight:2,fillColor:c,fillOpacity:.95}});
   emk[idx]=m;
-  m.bindPopup(`<b>${{esc(p.company)}}</b>${{p.hot?' <span style="color:#b91c1c">HOT</span>':''}}<br><span style=color:#334155>${{esc(p.property)}}</span><br>${{p.source==='News release'?('news release '+esc(p.date)):(p.n_holes+' recent effort(s), latest '+p.year)}}${{p.commodity?' · '+esc(p.commodity):''}}<br><b style=color:#15803d>${{p.open_ha}} ha open ground ${{esc(p.open_dir)}}</b><br>${{p.assay?'<b style=color:#b45309>Assay: '+esc(p.assay)+'</b><br>':''}}Claim(s): ${{esc((p.claims||[]).join(', '))}}${{p.spend?'<br>Program spend: $'+Math.round(p.spend).toLocaleString():''}}<br><a href="${{esc(p.source_url)}}" target=_blank>Source: ${{esc(p.source)}}${{p.afri?' · AFRI '+esc(p.afri):''}} ↗</a>${{p.near_rank?'<br><span style=color:#64748b>nearest lead #'+p.near_rank+' · '+p.near_km+' km</span>':''}}`);
+  m.bindPopup(`<b>${{esc(p.company)}}</b>${{p.hot?' <span style="color:#b91c1c">HOT</span>':''}}<br><span style=color:#334155>${{esc(p.property)}}</span><br>${{p.source==='News release'?('news release '+esc(p.date)):(p.n_holes+' recent effort(s), latest '+p.year)}}${{p.commodity?' · '+esc(p.commodity):''}}<br><b>${{p.open_ha}} ha open ground to the ${{esc(p.open_dir)}}</b><br>${{p.assay?'<b style=color:#b45309>Assay: '+esc(p.assay)+'</b><br>':''}}Staked claim(s): ${{esc((p.claims||[]).join(', '))}}${{p.spend?'<br>Program spend: $'+Math.round(p.spend).toLocaleString():''}}<br><a href="${{esc(p.source_url)}}" target=_blank>Source: ${{esc(p.source)}}${{p.afri?' · AFRI '+esc(p.afri):''}} ↗</a>`);
+  m.on('click',()=>focusEdge(idx));
   return m;}}}}).addTo(map);
 
 try{{const grp=L.featureGroup(Object.values(emk));map.fitBounds((EDGES.length?grp:lg).getBounds().pad(0.15));}}catch(e){{map.setView([50,-86],5);}}
+if(EDGES.length)focusEdge(0);   // show the top play's staked/open detail on load
+
+// plain-words legend (no colour reliance)
+const lgd=L.control({{position:'bottomleft'}});
+lgd.onAdd=function(){{const d=L.DomUtil.create('div','legendbox');
+  d.innerHTML='<b>How to read this</b><div><span class=k-open></span> solid amber block = <b>OPEN ground you can stake</b></div><div><span class=k-held></span> outlined boxes = claims already staked (number shown)</div><div><span class=k-pt></span> dot = where they drilled — click any play to focus</div>';
+  return d;}};
+lgd.addTo(map);
 
 // ---- stats ----
 document.getElementById('stats').innerHTML=`
@@ -261,6 +301,7 @@ eb.innerHTML=EDGES.length?EDGES.map((p,i)=>`<div class="item edge-item${{p.hot?'
   <div class=why>▸ ${{p.open_ha}} ha open, stakeable ground to the ${{esc(p.open_dir)}} — abutting claim ${{esc((p.claims||[])[0]||'')}}</div>
   <div class=muted><a class=news href="${{esc(p.source_url)}}" target=_blank>source: ${{esc(p.source)}}${{p.afri?' · AFRI '+esc(p.afri):''}} ↗</a> · nearest lead ${{p.near_rank?('#'+p.near_rank+' '+p.near_km+'km'):'none'}}</div>
 </div>`).join(''):'<div class=empty>No recent drilling/work on an open-ground boundary in this region right now. Fresh news-release assays feed in here once the news source is wired.</div>';
+if(EDGES.length)focusEdge(0);   // highlight the top play now that the list exists
 
 // ---- ground just opened (drop tracker) ----
 const db=document.getElementById('dropped');
@@ -277,7 +318,7 @@ const nb=document.getElementById('news');
 nb.innerHTML=NEWS.length?NEWS.map(n=>`<div class=item>${{n.url?`<a class=news href="${{esc(n.url)}}" target=_blank>`:''}}<b>${{esc(n.title)}}</b>${{n.url?'</a>':''}}<div class=muted>${{esc(n.date||'')}} ${{n.summary?'· '+esc(n.summary):''}}</div></div>`).join(''):'<div class=empty>No drill news captured in the last run.</div>';
 
 // ---- clicks ----
-document.getElementById('edges').addEventListener('click',e=>{{const it=e.target.closest('.item[data-e]');if(!it)return;const m=emk[it.dataset.e];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}}});
+document.getElementById('edges').addEventListener('click',e=>{{const it=e.target.closest('.item[data-e]');if(!it)return;focusEdge(+it.dataset.e);}});
 document.getElementById('list').addEventListener('click',e=>{{const it=e.target.closest('.item[data-r]');if(!it)return;const p=LEADS.features.find(f=>f.properties.rank==it.dataset.r);if(p){{map.setView([p.geometry.coordinates[1],p.geometry.coordinates[0]],12);}}}});
 </script></body></html>
 """

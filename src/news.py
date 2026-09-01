@@ -178,7 +178,7 @@ def find(region_dir, metric):
         except Exception:
             occ = None
 
-    plays, unplaced, open_rows = [], [], []
+    plays, unplaced, open_rows, held_rows = [], [], [], []
     from shapely.geometry import Point
     for it in items:
         company = de._s(it.get("company"))
@@ -255,7 +255,22 @@ def find(region_dir, metric):
             "placed_by": placed_by, "near_rank": None, "near_lead": "", "near_km": None,
             "lon": None, "lat": None, "_cx": rep.x, "_cy": rep.y,
         })
-        open_rows.append({"geometry": openpoly, "pidx": len(plays) - 1})
+        pidx = len(plays) - 1
+        open_rows.append({"geometry": openpoly, "pidx": pidx})
+        # staked ground around the release: actual claim polygons near the point
+        halo = rep.buffer(de.HALO_M * 1.4)
+        if csi is not None:
+            seen = 0
+            for i in csi.query(halo, predicate="intersects"):
+                cg = claims.geometry.iloc[int(i)]
+                if cg is None or not cg.intersects(halo):
+                    continue
+                cnum = de._s(claims[cid].iloc[int(i)]) if cid else ""
+                held_rows.append({"geometry": cg, "pidx": pidx, "claim": cnum,
+                                  "drilled": bool(claim_hit) and cnum == claim_hit})
+                seen += 1
+                if seen >= 60:
+                    break
 
     if plays:
         cen = gpd.GeoDataFrame(
@@ -273,6 +288,13 @@ def find(region_dir, metric):
             for _, r in og.iterrows():
                 open_feats.append({"type": "Feature", "geometry": r.geometry.__geo_interface__,
                                    "properties": {"pidx": int(r["pidx"])}})
+        held_feats = []
+        if held_rows:
+            hg = gpd.GeoDataFrame(held_rows, geometry="geometry", crs=metric).to_crs("EPSG:4326")
+            for _, r in hg.iterrows():
+                held_feats.append({"type": "Feature", "geometry": r.geometry.__geo_interface__,
+                                   "properties": {"pidx": int(r["pidx"]), "claim": r["claim"], "drilled": bool(r["drilled"])}})
     else:
-        point_feats, open_feats = [], []
-    return {"plays": plays, "point_feats": point_feats, "open_feats": open_feats, "unplaced": unplaced}
+        point_feats, open_feats, held_feats = [], [], []
+    return {"plays": plays, "point_feats": point_feats, "open_feats": open_feats,
+            "held_feats": held_feats, "unplaced": unplaced}
