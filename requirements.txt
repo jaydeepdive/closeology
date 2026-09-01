@@ -1,4 +1,5 @@
 geopandas
+requests
 pyogrio
 pyproj
 shapely

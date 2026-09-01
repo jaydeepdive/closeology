@@ -1,0 +1,4 @@
+{
+  "_comment": "Drill-news sources pulled by the daily GitHub Action (fetch_news.py) and geolocated into fresh edge plays. Add MiningNewsTerminal's feed/API URL below. type: wp (WordPress REST, e.g. .../wp-json/wp/v2/posts?per_page=50), json (generic JSON array), rss (RSS/Atom XML), or auto (sniff). Multiple sources allowed.",
+  "sources": []
+}

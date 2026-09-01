@@ -33,6 +33,13 @@ def _have(p):
 def main():
     os.makedirs("site", exist_ok=True)
 
+    # ---- fresh drill news -> per-region news_items.json (safe no-op if no sources) ----
+    try:
+        import fetch_news
+        fetch_news.run(["data/bc", "data/on"])
+    except Exception as e:
+        print("[build_all] news fetch skipped:", str(e)[:80])
+
     # ---- British Columbia ----
     ingest.run()                                    # fast WFS layers + occurrences CSV
     keep = "data/keep/bc_minfile_facts.parquet"     # committed geology facts (grade/tonnage/drill)
@@ -62,7 +69,10 @@ def main():
     build_site.build("site", REGIONS_SITE)
     shutil.copy("site/app.html", "site/index.html")   # Pages home = the full app
 
-    # digest for the daily email: top flagged opportunities per region
+    # digest for the daily email. Order of priority per region:
+    #   1) EDGE PLAYS  - fresh drilling against open ground (the reason to act now)
+    #   2) ground just opened (drop tracker)
+    #   3) leads with claim activity nearby (BC lapsing/new-stake)
     import json as _json
     email = {"generated": BC["today"], "site": "https://jaydeepdive.github.io/closeology/", "regions": []}
     for rc in APP_REGIONS:
@@ -72,10 +82,14 @@ def main():
         flagged.sort(key=lambda p: -p.get("score", 0))
         name = "British Columbia" if rc["slug"] == "bc" else "Ontario"
         email["regions"].append({"slug": rc["slug"], "name": name, "labels": dp["labels"],
-                                 "counts": dp["counts"], "leads": flagged[:20],
+                                 "counts": dp["counts"],
+                                 "edges": dp.get("edges", [])[:20],
+                                 "edge_counts": dp.get("edge_counts", {"n": 0, "hot": 0, "open_ha": 0}),
+                                 "leads": flagged[:20],
                                  "dropped": dp.get("dropped", [])[:25]})
     _json.dump(email, open("site/daily_email.json", "w"))
-    print("[build_all] done + daily_email.json")
+    tot_edges = sum(len(r["edges"]) for r in email["regions"])
+    print(f"[build_all] done + daily_email.json ({tot_edges} edge plays across regions)")
 
 
 if __name__ == "__main__":

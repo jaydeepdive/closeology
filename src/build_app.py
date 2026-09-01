@@ -256,26 +256,34 @@ function buildMap(){{
   render(); setTimeout(()=>map.invalidateSize(),60);
 }}
 
+function edgePopup(p){{return `<b>${{esc(p.company)}}</b>${{p.source==='News release'?' <span style="color:#0369a1">NEWS</span>':''}}${{p.hot?' <span style="color:#b91c1c">HOT</span>':''}}<br><span style=color:#334155>${{esc(p.property)}}</span><br>${{p.source==='News release'?('news release '+esc(p.date)):(p.n_holes+' recent effort(s), latest '+p.year)}}${{p.commodity?' · '+esc(p.commodity):''}}<br><b style=color:#15803d>${{p.open_ha}} ha open ground ${{esc(p.open_dir)}}</b><br>${{p.assay?'<b style=color:#b45309>Assay: '+esc(p.assay)+'</b><br>':''}}Claim(s): ${{esc((p.claims||[]).join(', '))}}${{p.spend?'<br>Program spend: $'+Math.round(p.spend).toLocaleString():''}}<br><a href="${{esc(p.source_url)}}" target=_blank>Source: ${{esc(p.source)}}${{p.afri?' · AFRI '+esc(p.afri):''}} ↗</a>`;}}
 function buildDaily(){{
-  const R=REGIONS[CUR], D=R.daily; if(dmapObj){{dmapObj.remove();dmapObj=null;}}
-  const bl=baseLayers(); const map=L.map('dmap',{{layers:[bl.topo]}}); dmapObj=map; const M={{}};
+  const R=REGIONS[CUR], D=R.daily, EC=D.edge_counts||{{n:0,hot:0,open_ha:0}}; if(dmapObj){{dmapObj.remove();dmapObj=null;}}
+  const bl=baseLayers(); const map=L.map('dmap',{{layers:[bl.topo]}}); dmapObj=map; const M={{}}, EM={{}};
   L.geoJSON({{type:'FeatureCollection',features:D.act}},{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:3,color:'#f59e0b',weight:1,fillColor:'#f59e0b',fillOpacity:.7}}),
-    style:f=>({{color:f.properties.kind==='new'?'#dc2626':'#ea580c',weight:1.4,fillOpacity:.12}}),onEachFeature:(f,l)=>l.bindPopup(`<b>${{esc(f.properties.label)||'activity'}}</b><br>${{esc(f.properties.sub)}}`)}}).addTo(map);
-  const lg=L.geoJSON({{type:'FeatureCollection',features:D.lead_feats}},{{pointToLayer:(f,ll)=>{{const p=f.properties;const sig=p.near_a||p.near_b;
-    const m=L.circleMarker(ll,{{radius:sig?8:5,color:sig?'#fde68a':'#0b1526',weight:sig?2:1,fillColor:mc(p.metal),fillOpacity:sig?.95:.5}});M[p.rank]=m;
-    m.bindPopup(`<b>#${{p.rank}} ${{esc(p.name)}}</b> <span style="color:#64748b">${{esc(p.metal)}}</span> <span class=pk>${{esc(p.minfile)}}</span><br>${{esc(p.status)}}${{p.deposit_open?' · <b style=color:#15803d>deposit open</b>':''}}<br>${{p.grade?'Grade: '+esc(p.grade)+'<br>':''}}${{p.near_a?'<b style=color:#c2410c>◔ '+esc(D.labels.feat_a)+' nearby</b><br>':''}}${{p.near_b?'<b style=color:#b91c1c>⚑ '+esc(D.labels.feat_b)+' nearby</b><br>':''}}${{p.drill?'<span style=color:#047857>⛏ '+esc(p.drill.slice(0,120))+'…</span><br>':''}}${{p.url?`<a href="${{esc(p.url)}}" target=_blank>Full record ↗</a>`:''}}`);return m;}}}}).addTo(map);
-  try{{map.fitBounds(lg.getBounds().pad(0.1));}}catch(e){{map.setView(CUR==='on'?[50,-86]:[54,-125],5);}}
+    style:f=>({{color:f.properties.kind==='new'?'#dc2626':'#ea580c',weight:1.3,fillOpacity:.10}}),onEachFeature:(f,l)=>l.bindPopup(`<b>${{esc(f.properties.label)||'activity'}}</b><br>${{esc(f.properties.sub)}}`)}}).addTo(map);
+  L.geoJSON({{type:'FeatureCollection',features:D.edge_open_feats||[]}},{{style:()=>({{color:'#22c55e',weight:1.2,fillColor:'#22c55e',fillOpacity:.28}}),onEachFeature:(f,l)=>{{const p=(D.edges||[])[f.properties.pidx];if(p)l.bindPopup(`<b>Open ground</b><br>${{p.open_ha}} ha ${{esc(p.open_dir)}} of ${{esc(p.company)}}`);}}}}).addTo(map);
+  const lg=L.geoJSON({{type:'FeatureCollection',features:D.lead_feats}},{{pointToLayer:(f,ll)=>{{const p=f.properties;
+    const m=L.circleMarker(ll,{{radius:4,color:'#0b1526',weight:1,fillColor:mc(p.metal),fillOpacity:.45}});M[p.rank]=m;
+    m.bindPopup(`<b>#${{p.rank}} ${{esc(p.name)}}</b> <span style="color:#64748b">${{esc(p.metal)}}</span> <span class=pk>${{esc(p.minfile)}}</span><br>${{esc(p.status)}}${{p.deposit_open?' · <b style=color:#15803d>deposit open</b>':''}}${{p.grade?'<br>Grade: '+esc(p.grade):''}}${{p.drill?'<br><span style=color:#047857>⛏ '+esc(p.drill.slice(0,120))+'…</span>':''}}${{p.url?'<br><a href="'+esc(p.url)+'" target=_blank>Full record ↗</a>':''}}`);return m;}}}}).addTo(map);
+  let _ei=0;
+  L.geoJSON({{type:'FeatureCollection',features:D.edge_point_feats||[]}},{{pointToLayer:(f,ll)=>{{const p=f.properties;const c=p.source==='News release'?'#38bdf8':(p.hot?'#ef4444':'#f97316');const i=_ei++;
+    const m=L.circleMarker(ll,{{radius:p.hot?9:7,color:'#fff7ed',weight:2,fillColor:c,fillOpacity:.95}});EM[i]=m;m.bindPopup(edgePopup(p));return m;}}}}).addTo(map);
+  try{{const eg=L.featureGroup(Object.values(EM));map.fitBounds(((D.edges||[]).length?eg:lg).getBounds().pad(0.15));}}catch(e){{map.setView(CUR==='on'?[50,-86]:[54,-125],5);}}
   document.getElementById('d-stats').innerHTML=`
-    <div class=stat><b style="color:#f59e0b">${{D.counts.n_a}}</b><span>${{esc(D.labels.lead_a)}}</span></div>
-    <div class=stat><b style="color:#f87171">${{D.counts.n_b}}</b><span>${{esc(D.labels.lead_b)}}</span></div>
-    <div class=stat><b>${{D.counts.n_feat_a.toLocaleString()}}</b><span>${{esc(D.labels.feat_a)}} (near leads)</span></div>
-    <div class=stat><b>${{D.counts.n_feat_b.toLocaleString()}}</b><span>${{esc(D.labels.feat_b)}} (near leads)</span></div>`;
+    <div class=stat><b style="color:#f97316">${{EC.n}}</b><span>edge plays</span></div>
+    <div class=stat><b style="color:#ef4444">${{EC.hot}}</b><span>hot (last yr)</span></div>
+    <div class=stat><b style="color:#22c55e">${{Math.round(EC.open_ha).toLocaleString()}}</b><span>ha open beside</span></div>
+    <div class=stat><b style="color:#38bdf8">${{EC.news||0}}</b><span>from news</span></div>`;
   document.getElementById('d-news').innerHTML=D.news.length?D.news.map(n=>`<div class=item>${{n.url?`<a class=news href="${{esc(n.url)}}" target=_blank>`:''}}<b>${{esc(n.title)}}</b>${{n.url?'</a>':''}}<div class=muted>${{esc(n.date||'')}} ${{n.summary?'· '+esc(n.summary):''}}</div></div>`).join(''):'<div class=muted>No drill news captured in the last run.</div>';
+  const E=D.edges||[];
+  const edgeHtml='<div class=controls><h2>⚡ Edge plays — drilling on the boundary of open ground ('+E.length+')</h2></div>'+(E.length?E.map((p,i)=>`<div class=item data-e="${{i}}"><b>${{esc(p.company)}}</b>${{p.source==='News release'?'<span class="tag" style="background:#38bdf8;color:#052338">news</span>':''}}${{p.hot?'<span class="tag t-b">hot</span>':'<span class="tag t-a">edge</span>'}}<div class=muted>${{esc(p.property)}} · ${{p.source==='News release'?('release '+esc(p.date)):(p.n_holes+' effort(s), latest '+p.year)}}${{p.commodity?' · '+esc(p.commodity):''}}${{p.spend?' · $'+Math.round(p.spend).toLocaleString():''}}</div>${{p.assay?`<div class=drill>⛏ Assay: ${{esc(p.assay)}}</div>`:''}}<div class=drill style="color:#fdba74">▸ ${{p.open_ha}} ha open to the ${{esc(p.open_dir)}} — claim ${{esc((p.claims||[])[0]||'')}}</div><div class=muted><a class=news href="${{esc(p.source_url)}}" target=_blank>source: ${{esc(p.source)}} ↗</a></div></div>`).join(''):'<div class=item><div class=muted>No recent drilling/work on an open-ground boundary. Fresh news-release assays appear here once the news source is wired.</div></div>');
   const dr=(D.dropped||[]);
   const drHtml=dr.length?'<div class=controls><h2>⚑ Ground just opened ('+dr.length+')</h2></div>'+dr.slice(0,25).map(x=>`<div class=item><b>${{esc(x.owner)||'Claim '+esc(x.id)}}</b> dropped ${{x.area_ha}} ha${{x.good_to?' (was good to '+esc(x.good_to)+')':''}}<div class=muted>near #${{x.near_rank}} ${{esc(x.near_lead)}} · ${{x.near_km}} km</div></div>`).join(''):'';
   const sig=D.lead_feats.map(f=>f.properties).filter(p=>p.near_a||p.near_b).sort((a,b)=>a.rank-b.rank);
-  document.getElementById('d-list').innerHTML=drHtml+'<div class=controls><h2>'+esc(D.labels.sec)+' ('+sig.length+')</h2></div>'+sig.map(p=>`<div class=item data-r="${{p.rank}}"><b>#${{p.rank}} ${{esc(p.name)}}</b>${{p.deposit_open?'<span class="tag t-open">open</span>':''}}${{p.near_a?'<span class="tag t-a">'+esc(D.labels.tag_a)+'</span>':''}}${{p.near_b?'<span class="tag t-b">'+esc(D.labels.tag_b)+'</span>':''}}<div class=muted>${{esc(p.metal)}} · ${{esc(p.status)}} · ${{esc(p.community)}} ${{p.community_km!=null?p.community_km+' km':''}}</div>${{p.drill?`<div class=drill>⛏ ${{esc(p.drill.slice(0,110))}}…</div>`:''}}</div>`).join('');
-  document.getElementById('d-list').onclick=e=>{{const it=e.target.closest('.item[data-r]');if(!it)return;const m=M[it.dataset.r];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}}};
+  const actHtml=sig.length?'<div class=controls><h2>'+esc(D.labels.sec)+' ('+sig.length+')</h2></div>'+sig.map(p=>`<div class=item data-r="${{p.rank}}"><b>#${{p.rank}} ${{esc(p.name)}}</b>${{p.deposit_open?'<span class="tag t-open">open</span>':''}}${{p.near_a?'<span class="tag t-a">'+esc(D.labels.tag_a)+'</span>':''}}${{p.near_b?'<span class="tag t-b">'+esc(D.labels.tag_b)+'</span>':''}}<div class=muted>${{esc(p.metal)}} · ${{esc(p.status)}} · ${{esc(p.community)}} ${{p.community_km!=null?p.community_km+' km':''}}</div>${{p.drill?`<div class=drill>⛏ ${{esc(p.drill.slice(0,110))}}…</div>`:''}}</div>`).join(''):'';
+  document.getElementById('d-list').innerHTML=edgeHtml+drHtml+actHtml;
+  document.getElementById('d-list').onclick=e=>{{const ei=e.target.closest('.item[data-e]');if(ei){{const m=EM[ei.dataset.e];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}return;}}const it=e.target.closest('.item[data-r]');if(!it)return;const m=M[it.dataset.r];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}}};
   setTimeout(()=>map.invalidateSize(),60);
 }}
 </script></body></html>

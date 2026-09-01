@@ -1,17 +1,26 @@
-"""Region-aware daily radar. BC: claims lapsing soon / newly staked near leads.
-Ontario: recent drilling near leads (active exploration). Both render a map
-showing WHERE the flagged opportunities sit, plus drill news."""
+"""Region-aware daily radar.
+
+Headline signal = EDGE PLAYS: recent drill holes that sit on a held claim with
+open, stakeable ground right beside them (see drill_edges.py). That is the only
+geometry where drilled mineralization can run onto ground you could still peg —
+so it is presented first and separately from the ordinary open-deposit leads.
+
+Secondary signals:
+  - BC: claims lapsing soon / newly staked near our leads (ground opening up).
+  - Both: 'ground just opened' from the drop tracker; drill news (MiningNewsTerminal).
+"""
 import os
 import json
 import datetime
 import pandas as pd
 import geopandas as gpd
+import drill_edges
+import news as newsmod
 
 VEN = os.path.join(os.path.dirname(__file__), "vendor")
 LAPSE_DAYS = 180
 NEW_DAYS = 150
 NEAR_KM = 4.0
-RECENT_YRS = 5
 
 
 def _pdate(s):
@@ -38,11 +47,30 @@ def payload(region_dir, metric, news_path=None):
     leads = gpd.read_file(os.path.join(region_dir, "out", "leads.geojson"))
     lm = leads.to_crs(metric)
     today = pd.Timestamp(datetime.date.today())
-    claims = gpd.read_parquet(os.path.join(region_dir, "claims.parquet"))
-    has_dates = "GOOD_TO_DATE" in claims.columns
 
-    act_feats = []
-    if has_dates:   # ---- BC: claim-date activity ----
+    # ---- EDGE PLAYS (recent drilling/work against open ground) ----
+    gov = drill_edges.find(region_dir, metric)      # government layer (lags): OGS drill DB / BC ARIS
+    nz = newsmod.find(region_dir, metric)           # fresh company news releases (real assays, dated)
+    # news plays lead (freshest, actual assays); government plays follow
+
+    def _combine(a, b):
+        plays = a["plays"] + b["plays"]
+        pts = a["point_feats"] + b["point_feats"]
+        off = len(a["plays"])
+        opens = a["open_feats"] + [{"type": "Feature", "geometry": f["geometry"],
+                                    "properties": {"pidx": f["properties"]["pidx"] + off}}
+                                   for f in b["open_feats"]]
+        return {"plays": plays, "point_feats": pts, "open_feats": opens}
+    edges = _combine(nz, gov)
+    news_unplaced = nz["unplaced"]
+
+    # ---- secondary activity (BC only): claim date activity near leads ----
+    act_feats, a_flags, b_flags = [], [False] * len(leads), [False] * len(leads)
+    claims_p = os.path.join(region_dir, "claims.parquet")
+    has_claims = os.path.exists(claims_p)
+    claims = gpd.read_parquet(claims_p) if has_claims else None
+    has_dates = has_claims and "GOOD_TO_DATE" in claims.columns
+    if has_dates:
         claims["good"] = _pdate(claims["GOOD_TO_DATE"])
         claims["issued"] = _pdate(claims["ISSUE_DATE"])
         lapsing = claims[(claims.good >= today) & (claims.good <= today + pd.Timedelta(days=LAPSE_DAYS))]
@@ -68,26 +96,9 @@ def payload(region_dir, metric, news_path=None):
         labels = dict(lead_a="leads beside ground lapsing <6mo", lead_b="leads beside fresh staking",
                       feat_a="claims lapsing soon", feat_b="claims newly staked",
                       tag_a="lapsing", tag_b="new stake", sec="Leads with claim activity nearby")
-    else:            # ---- Ontario: recent-drilling activity ----
-        d = gpd.read_parquet(os.path.join(region_dir, "drillholes.parquet"))
-        d["YEAR_DRILLED"] = pd.to_numeric(d["YEAR_DRILLED"], errors="coerce")
-        recent = d[(d.YEAR_DRILLED >= today.year - RECENT_YRS) & (d.YEAR_DRILLED <= today.year)].to_crs(metric)
-        veryrecent = d[(d.YEAR_DRILLED >= today.year - 1) & (d.YEAR_DRILLED <= today.year)].to_crs(metric)
-        a_flags = _near_flags(lm, recent)
-        b_flags = _near_flags(lm, veryrecent)
-        rr = recent.to_crs("EPSG:4326")
-        # cap plotted holes for size; keep those near leads
-        near_flags_holes = _near_flags  # reuse
-        for _, r in rr.iterrows():
-            if r.geometry is None:
-                continue
-            act_feats.append({"type": "Feature", "geometry": {"type": "Point", "coordinates": [round(r.geometry.x, 5), round(r.geometry.y, 5)]},
-                              "properties": {"kind": "drill", "label": str(r.get("COMPANY_NAME") or "drill hole"),
-                                             "sub": f"{int(r['YEAR_DRILLED'])} · {str(r.get('ELEMENTS') or '')}"[:80]}})
-        counts = dict(n_a=int(sum(a_flags)), n_b=int(sum(b_flags)), n_feat_a=len(recent), n_feat_b=len(veryrecent))
-        labels = dict(lead_a=f"leads with drilling < {RECENT_YRS}yr", lead_b="leads drilled in last year",
-                      feat_a=f"drill holes < {RECENT_YRS}yr", feat_b="holes last year",
-                      tag_a="drilled", tag_b="hot", sec="Leads with recent drilling nearby")
+    else:
+        counts = dict(n_a=0, n_b=0, n_feat_a=0, n_feat_b=0)
+        labels = dict(lead_a="", lead_b="", feat_a="", feat_b="", tag_a="", tag_b="", sec="Top deposit-open leads")
 
     lead_feats = []
     for i, (_, r) in enumerate(leads.to_crs("EPSG:4326").iterrows()):
@@ -115,8 +126,22 @@ def payload(region_dir, metric, news_path=None):
             dropped = json.load(open(dp)).get("dropped", [])
         except Exception:
             dropped = []
+    n_hot = sum(1 for p in edges["plays"] if p["hot"])
+    open_ha = round(sum(p["open_ha"] for p in edges["plays"]), 0)
+    # news list = fresh releases we couldn't tie to open ground + any prefetched news.json
+    for u in news_unplaced:
+        title = u.get("company", "") + (" — " + u["project"] if u.get("project") else "")
+        summ = u.get("highlight", "")
+        if u.get("note"):
+            summ = (summ + " · " + u["note"]).strip(" ·")
+        news.insert(0, {"title": title or "Drill news", "date": u.get("date", ""),
+                        "summary": summ, "url": u.get("url", "")})
     return {"today": today.date().isoformat(), "lead_feats": lead_feats, "act": act_feats,
-            "news": news, "counts": counts, "labels": labels, "dropped": dropped}
+            "news": news, "counts": counts, "labels": labels, "dropped": dropped,
+            "edges": edges["plays"], "edge_point_feats": edges["point_feats"],
+            "edge_open_feats": edges["open_feats"],
+            "edge_counts": {"n": len(edges["plays"]), "hot": n_hot, "open_ha": open_ha,
+                            "news": len(nz["plays"])}}
 
 
 def build(region_dir, site_dir, region_name, metric, news_path=None, out_name="daily.html"):
@@ -128,6 +153,9 @@ def build(region_dir, site_dir, region_name, metric, news_path=None, out_name="d
         region=region_name, today=d["today"],
         leads_json=json.dumps({"type": "FeatureCollection", "features": d["lead_feats"]}),
         act_json=json.dumps({"type": "FeatureCollection", "features": d["act"]}),
+        edge_pts_json=json.dumps({"type": "FeatureCollection", "features": d["edge_point_feats"]}),
+        edge_open_json=json.dumps({"type": "FeatureCollection", "features": d["edge_open_feats"]}),
+        edges_json=json.dumps(d["edges"]), edge_counts_json=json.dumps(d["edge_counts"]),
         news_json=json.dumps(d["news"]), metal_color_json=json.dumps(METAL_COLOR),
         labels_json=json.dumps(d["labels"]), counts_json=json.dumps(d["counts"]), near_km=NEAR_KM,
         dropped_json=json.dumps(d.get("dropped", [])),
@@ -135,7 +163,8 @@ def build(region_dir, site_dir, region_name, metric, news_path=None, out_name="d
     os.makedirs(site_dir, exist_ok=True)
     outp = os.path.join(site_dir, out_name)
     open(outp, "w").write(html)
-    print(f"[daily {region_name}] {outp} | A={d['counts']['n_a']} B={d['counts']['n_b']} news={len(d['news'])}")
+    print(f"[daily {region_name}] {outp} | edge_plays={d['edge_counts']['n']} (hot={d['edge_counts']['hot']}) "
+          f"activity A={d['counts']['n_a']} B={d['counts']['n_b']} news={len(d['news'])}")
     return outp
 
 
@@ -144,58 +173,112 @@ DAILY = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 <title>Closeology Daily · {region}</title>
 <style>{leaflet_css}</style><script>{leaflet_js}</script>
 <style>
-  :root {{ --bg:#0f172a; --panel:#111c33; --line:#243352; --ink:#e5edf7; --mut:#94a3b8; --accent:#c026d3; }}
+  :root {{ --bg:#0f172a; --panel:#111c33; --line:#243352; --ink:#e5edf7; --mut:#94a3b8; --accent:#c026d3; --edge:#f97316; --hot:#ef4444; --open:#22c55e; }}
   *{{box-sizing:border-box;}} html,body{{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);}}
   #app{{display:flex;height:100vh;overflow:hidden;}} #map{{flex:1;}}
-  #panel{{width:420px;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;}}
+  #panel{{width:440px;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;}}
   header{{padding:12px 15px;border-bottom:1px solid var(--line);}} header h1{{margin:0 0 2px;font-size:15px;}}
   header .sub{{color:var(--mut);font-size:11.5px;}}
-  .stats{{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:10px 15px;border-bottom:1px solid var(--line);}}
+  .stats{{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 15px;border-bottom:1px solid var(--line);}}
   .stat{{background:#0b1526;border:1px solid var(--line);border-radius:7px;padding:8px;}} .stat b{{display:block;font-size:17px;}} .stat span{{color:var(--mut);font-size:10px;}}
-  .sec{{padding:10px 15px;border-bottom:1px solid var(--line);}} .sec h2{{font-size:11px;text-transform:uppercase;color:var(--mut);margin:0 0 7px;letter-spacing:.4px;}}
-  #list{{flex:1;overflow:auto;}} .item{{padding:8px 15px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer;}} .item:hover{{background:#16223c;}}
-  .item b{{font-weight:600;}} .tag{{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;margin-left:5px;}}
-  .t-a{{background:#ea580c;color:#0b1526;}} .t-b{{background:#dc2626;color:#fff;}} .t-open{{background:#16a34a;color:#04140a;}}
-  .muted{{color:var(--mut);font-size:10.5px;margin-top:2px;}} .drill{{color:#a7f3d0;font-size:10px;margin-top:3px;}}
+  .sec{{padding:9px 15px 4px;}} .sec h2{{font-size:11px;text-transform:uppercase;color:var(--mut);margin:0 0 3px;letter-spacing:.4px;}}
+  .sec .lead{{color:var(--mut);font-size:10.5px;margin:0 0 4px;line-height:1.45;}}
+  #scroll{{flex:1;overflow:auto;}}
+  .item{{padding:8px 15px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer;}} .item:hover{{background:#16223c;}}
+  .item b{{font-weight:600;}} .tag{{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;margin-left:5px;vertical-align:middle;}}
+  .t-hot{{background:var(--hot);color:#fff;}} .t-edge{{background:var(--edge);color:#0b1526;}} .t-news{{background:#38bdf8;color:#052338;}} .t-a{{background:#ea580c;color:#0b1526;}}
+  .t-b{{background:#dc2626;color:#fff;}} .t-open{{background:#16a34a;color:#04140a;}}
+  .edge-item{{border-left:3px solid var(--edge);}} .edge-item.hot{{border-left-color:var(--hot);}}
+  .muted{{color:var(--mut);font-size:10.5px;margin-top:2px;}} .why{{color:#fdba74;font-size:10.5px;margin-top:3px;line-height:1.4;}}
+  .drill{{color:#a7f3d0;font-size:10px;margin-top:3px;}}
   a.news{{color:#93c5fd;text-decoration:none;}} footer{{padding:8px 15px;font-size:9.5px;color:var(--mut);border-top:1px solid var(--line);}}
   .leaflet-popup-content{{font-size:12px;}} .leaflet-popup-content b{{color:#0b1526;}}
+  .empty{{color:var(--mut);font-size:11px;padding:2px 15px 10px;}}
   @media (max-width:900px){{#panel{{width:100%;}}#app{{flex-direction:column;}}#map{{height:44%;}}#panel{{height:56%;}}}}
 </style></head><body><div id="app">
 <div id="map"></div>
 <div id="panel">
   <header><h1>Daily Radar <span style="color:var(--accent)">·</span> {region}</h1>
-    <div class="sub">{today} · activity near our leads</div></header>
+    <div class="sub">{today} · fresh drilling against open ground</div></header>
   <div class="stats" id="stats"></div>
-  <div class="sec"><h2>Drill news</h2><div id="news"></div></div>
-  <div id="dropped"></div>
-  <div id="list"></div>
-  <footer>Screening signals only — verify each source. Not staking advice.</footer>
+  <div id="scroll">
+    <div class="sec"><h2>⚡ Edge plays — drilling on the boundary of open ground</h2>
+      <p class="lead">Recent holes drilled on a held claim that <b>abut open, stakeable ground</b>. If the intersected geology continues across the line, that open cell is the play — verify structure and trend before pegging.</p>
+    </div>
+    <div id="edges"></div>
+    <div id="dropped"></div>
+    <div class="sec" id="actsec" style="display:none"></div>
+    <div id="list"></div>
+    <div class="sec"><h2>Drill news · MiningNewsTerminal</h2></div>
+    <div id="news"></div>
+  </div>
+  <footer>Screening signals only — confirm every claim and boundary in the official title system before acting. Not staking advice.</footer>
 </div></div>
 <script>
-const LEADS={leads_json}, ACT={act_json}, NEWS={news_json}, MC={metal_color_json}, LBL={labels_json}, CN={counts_json}, DROPPED={dropped_json};
+const LEADS={leads_json}, ACT={act_json}, NEWS={news_json}, MC={metal_color_json}, LBL={labels_json}, CN={counts_json};
+const DROPPED={dropped_json}, EDGES={edges_json}, EPTS={edge_pts_json}, EOPEN={edge_open_json}, EC={edge_counts_json};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
 const mc=m=>MC[m]||'#94a3b8';
 const topo=L.tileLayer('https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:17,attribution:'&copy; OpenTopoMap'}});
-const map=L.map('map',{{layers:[topo]}}); const markers={{}};
+const map=L.map('map',{{layers:[topo]}}); const emk={{}};
+
+// secondary BC activity (lapsing / new stake)
 L.geoJSON(ACT,{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:3,color:'#f59e0b',weight:1,fillColor:'#f59e0b',fillOpacity:.7}}),
-  style:f=>({{color:f.properties.kind==='new'?'#dc2626':'#ea580c',weight:1.4,fillOpacity:.12}}),
+  style:f=>({{color:f.properties.kind==='new'?'#dc2626':'#ea580c',weight:1.3,fillOpacity:.10}}),
   onEachFeature:(f,l)=>l.bindPopup(`<b>${{esc(f.properties.label)||'activity'}}</b><br>${{esc(f.properties.sub)}}`)}}).addTo(map);
-const lg=L.geoJSON(LEADS,{{pointToLayer:(f,ll)=>{{const p=f.properties;const sig=p.near_a||p.near_b;
-  const m=L.circleMarker(ll,{{radius:sig?8:5,color:sig?'#fde68a':'#0b1526',weight:sig?2:1,fillColor:mc(p.metal),fillOpacity:sig?.95:.5}});markers[p.rank]=m;
-  m.bindPopup(`<b>#${{p.rank}} ${{esc(p.name)}}</b> <span style="color:#64748b">${{esc(p.metal)}}</span> <span style=color:#64748b>${{esc(p.minfile)}}</span><br>${{esc(p.status)}}${{p.deposit_open?' · <b style=color:#15803d>deposit open</b>':''}}<br>${{p.grade?'Grade: '+esc(p.grade)+'<br>':''}}${{p.near_a?'<b style=color:#c2410c>◔ '+esc(LBL.feat_a)+' within {near_km} km</b><br>':''}}${{p.near_b?'<b style=color:#b91c1c>⚑ '+esc(LBL.feat_b)+' within {near_km} km</b><br>':''}}${{p.drill?'<span style=color:#047857>⛏ '+esc(p.drill.slice(0,120))+'…</span><br>':''}}${{p.url?'<a href=\"'+esc(p.url)+'\" target=_blank>Full record ↗</a>':''}}`);return m;}}}}).addTo(map);
-try{{map.fitBounds(lg.getBounds().pad(0.1));}}catch(e){{map.setView([50,-86],5);}}
+
+// open ground beside edge plays (green fill)
+L.geoJSON(EOPEN,{{style:()=>({{color:'#22c55e',weight:1.2,fillColor:'#22c55e',fillOpacity:.28}}),
+  onEachFeature:(f,l)=>{{const p=EDGES[f.properties.pidx];if(p)l.bindPopup(`<b>Open ground</b><br>${{p.open_ha}} ha ${{esc(p.open_dir)}} of ${{esc(p.company)}}'s drilling`);}}}}).addTo(map);
+
+// leads for context (dim)
+const lg=L.geoJSON(LEADS,{{pointToLayer:(f,ll)=>{{const p=f.properties;
+  return L.circleMarker(ll,{{radius:4,color:'#0b1526',weight:1,fillColor:mc(p.metal),fillOpacity:.45}})
+    .bindPopup(`<b>#${{p.rank}} ${{esc(p.name)}}</b> <span style=color:#64748b>${{esc(p.metal)}}</span><br>${{esc(p.status)}}${{p.deposit_open?' · <b style=color:#15803d>deposit open</b>':''}}${{p.spend?'<br>Spend: '+esc(p.spend):''}}`);}}}}).addTo(map);
+
+// edge-play markers (the stars) — EPTS is in the same order as EDGES
+let _ei=0;
+L.geoJSON(EPTS,{{pointToLayer:(f,ll)=>{{const p=f.properties;const c=p.source==='News release'?'#38bdf8':(p.hot?'#ef4444':'#f97316');const idx=_ei++;
+  const m=L.circleMarker(ll,{{radius:p.hot?9:7,color:'#fff7ed',weight:2,fillColor:c,fillOpacity:.95}});
+  emk[idx]=m;
+  m.bindPopup(`<b>${{esc(p.company)}}</b>${{p.hot?' <span style="color:#b91c1c">HOT</span>':''}}<br><span style=color:#334155>${{esc(p.property)}}</span><br>${{p.source==='News release'?('news release '+esc(p.date)):(p.n_holes+' recent effort(s), latest '+p.year)}}${{p.commodity?' · '+esc(p.commodity):''}}<br><b style=color:#15803d>${{p.open_ha}} ha open ground ${{esc(p.open_dir)}}</b><br>${{p.assay?'<b style=color:#b45309>Assay: '+esc(p.assay)+'</b><br>':''}}Claim(s): ${{esc((p.claims||[]).join(', '))}}${{p.spend?'<br>Program spend: $'+Math.round(p.spend).toLocaleString():''}}<br><a href="${{esc(p.source_url)}}" target=_blank>Source: ${{esc(p.source)}}${{p.afri?' · AFRI '+esc(p.afri):''}} ↗</a>${{p.near_rank?'<br><span style=color:#64748b>nearest lead #'+p.near_rank+' · '+p.near_km+' km</span>':''}}`);
+  return m;}}}}).addTo(map);
+
+try{{const grp=L.featureGroup(Object.values(emk));map.fitBounds((EDGES.length?grp:lg).getBounds().pad(0.15));}}catch(e){{map.setView([50,-86],5);}}
+
+// ---- stats ----
 document.getElementById('stats').innerHTML=`
-  <div class=stat><b style="color:#f59e0b">${{CN.n_a}}</b><span>${{esc(LBL.lead_a)}}</span></div>
-  <div class=stat><b style="color:#f87171">${{CN.n_b}}</b><span>${{esc(LBL.lead_b)}}</span></div>
-  <div class=stat><b>${{CN.n_feat_a.toLocaleString()}}</b><span>${{esc(LBL.feat_a)}} (near leads)</span></div>
-  <div class=stat><b>${{CN.n_feat_b.toLocaleString()}}</b><span>${{esc(LBL.feat_b)}} (near leads)</span></div>`;
-const nb=document.getElementById('news');
-nb.innerHTML=NEWS.length?NEWS.map(n=>`<div class=item>${{n.url?`<a class=news href="${{esc(n.url)}}" target=_blank>`:''}}<b>${{esc(n.title)}}</b>${{n.url?'</a>':''}}<div class=muted>${{esc(n.date||'')}} ${{n.summary?'· '+esc(n.summary):''}}</div></div>`).join(''):'<div class=muted>No drill news captured in the last run.</div>';
+  <div class=stat><b style="color:#f97316">${{EC.n}}</b><span>edge plays</span></div>
+  <div class=stat><b style="color:#ef4444">${{EC.hot}}</b><span>hot (last yr)</span></div>
+  <div class=stat><b style="color:#22c55e">${{Math.round(EC.open_ha).toLocaleString()}}</b><span>ha open beside</span></div>`;
+
+// ---- edge-play list ----
+const eb=document.getElementById('edges');
+eb.innerHTML=EDGES.length?EDGES.map((p,i)=>`<div class="item edge-item${{p.hot?' hot':''}}" data-e="${{i}}">
+  <b>${{esc(p.company)}}</b>${{p.source==='News release'?'<span class="tag t-news">news</span>':''}}${{p.hot?'<span class="tag t-hot">hot</span>':'<span class="tag t-edge">edge</span>'}}
+  <div class=muted>${{esc(p.property)}} · ${{p.source==='News release'?('release '+esc(p.date)):(p.n_holes+' recent effort(s), latest '+p.year)}}${{p.commodity?' · '+esc(p.commodity):''}}${{p.spend?' · $'+Math.round(p.spend).toLocaleString()+' program':''}}</div>
+  ${{p.assay?`<div class=why>⛏ Assay: ${{esc(p.assay)}}</div>`:''}}
+  <div class=why>▸ ${{p.open_ha}} ha open, stakeable ground to the ${{esc(p.open_dir)}} — abutting claim ${{esc((p.claims||[])[0]||'')}}</div>
+  <div class=muted><a class=news href="${{esc(p.source_url)}}" target=_blank>source: ${{esc(p.source)}}${{p.afri?' · AFRI '+esc(p.afri):''}} ↗</a> · nearest lead ${{p.near_rank?('#'+p.near_rank+' '+p.near_km+'km'):'none'}}</div>
+</div>`).join(''):'<div class=empty>No recent drilling/work on an open-ground boundary in this region right now. Fresh news-release assays feed in here once the news source is wired.</div>';
+
+// ---- ground just opened (drop tracker) ----
 const db=document.getElementById('dropped');
 if(DROPPED.length){{db.innerHTML='<div class=sec><h2>⚑ Ground just opened ('+DROPPED.length+')</h2></div>'+DROPPED.slice(0,25).map(x=>`<div class=item><b>${{esc(x.owner)||'Claim '+esc(x.id)}}</b> dropped ${{x.area_ha}} ha${{x.good_to?' (was good to '+esc(x.good_to)+')':''}}<div class=muted>near #${{x.near_rank}} ${{esc(x.near_lead)}} · ${{x.near_km}} km</div></div>`).join('');}}
+
+// ---- BC secondary activity list ----
 const sig=LEADS.features.map(f=>f.properties).filter(p=>p.near_a||p.near_b).sort((a,b)=>a.rank-b.rank);
-document.getElementById('list').innerHTML='<div class=sec><h2>'+esc(LBL.sec)+' ('+sig.length+')</h2></div>'+sig.map(p=>`<div class=item data-r="${{p.rank}}"><b>#${{p.rank}} ${{esc(p.name)}}</b>${{p.deposit_open?'<span class="tag t-open">open</span>':''}}${{p.near_a?'<span class="tag t-a">'+esc(LBL.tag_a)+'</span>':''}}${{p.near_b?'<span class="tag t-b">'+esc(LBL.tag_b)+'</span>':''}}<div class=muted>${{esc(p.metal)}} · ${{esc(p.status)}} · ${{esc(p.community)}} ${{p.community_km!=null?p.community_km+' km':''}}</div>${{p.drill?`<div class=drill>⛏ ${{esc(p.drill.slice(0,110))}}…</div>`:''}}</div>`).join('');
-document.getElementById('list').addEventListener('click',e=>{{const it=e.target.closest('.item[data-r]');if(!it)return;const m=markers[it.dataset.r];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}}});
+if(sig.length){{document.getElementById('actsec').style.display='block';
+  document.getElementById('actsec').innerHTML='<h2>'+esc(LBL.sec)+' ('+sig.length+')</h2>';
+  document.getElementById('list').innerHTML=sig.map(p=>`<div class=item data-r="${{p.rank}}"><b>#${{p.rank}} ${{esc(p.name)}}</b>${{p.deposit_open?'<span class="tag t-open">open</span>':''}}${{p.near_a?'<span class="tag t-a">'+esc(LBL.tag_a)+'</span>':''}}${{p.near_b?'<span class="tag t-b">'+esc(LBL.tag_b)+'</span>':''}}<div class=muted>${{esc(p.metal)}} · ${{esc(p.status)}} · ${{esc(p.community)}} ${{p.community_km!=null?p.community_km+' km':''}}</div>${{p.spend?`<div class=drill>$ ${{esc(p.spend)}} prior spend</div>`:''}}</div>`).join('');}}
+
+// ---- drill news ----
+const nb=document.getElementById('news');
+nb.innerHTML=NEWS.length?NEWS.map(n=>`<div class=item>${{n.url?`<a class=news href="${{esc(n.url)}}" target=_blank>`:''}}<b>${{esc(n.title)}}</b>${{n.url?'</a>':''}}<div class=muted>${{esc(n.date||'')}} ${{n.summary?'· '+esc(n.summary):''}}</div></div>`).join(''):'<div class=empty>No drill news captured in the last run.</div>';
+
+// ---- clicks ----
+document.getElementById('edges').addEventListener('click',e=>{{const it=e.target.closest('.item[data-e]');if(!it)return;const m=emk[it.dataset.e];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}}});
+document.getElementById('list').addEventListener('click',e=>{{const it=e.target.closest('.item[data-r]');if(!it)return;const p=LEADS.features.find(f=>f.properties.rank==it.dataset.r);if(p){{map.setView([p.geometry.coordinates[1],p.geometry.coordinates[0]],12);}}}});
 </script></body></html>
 """
 
