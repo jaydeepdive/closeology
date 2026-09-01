@@ -78,6 +78,21 @@ def _assay_from(comment):
     return assay, afri
 
 
+def boundary(region_dir, metric):
+    """Provincial boundary polygon (metric) used to clip open ground so nothing
+    outside the jurisdiction — the US, the ocean, another province — is ever
+    reported as stakeable. Returns None if the boundary file is absent."""
+    slug = os.path.basename(region_dir.rstrip("/"))
+    p = os.path.join("data", "keep", f"{slug}_boundary.parquet")
+    if not os.path.exists(p):
+        return None
+    try:
+        b = gpd.read_parquet(p).to_crs(metric)
+        return _valid(unary_union(list(b.geometry.values)))
+    except Exception:
+        return None
+
+
 def _layers(region_dir, metric):
     """held (claims + leases) and nostake (parks/national parks/reserves)."""
     def rd(fn):
@@ -110,16 +125,14 @@ def _source_cfg(region_dir):
             "source": "OGS Ontario Drill Hole Database",
             "source_url": "https://www.geologyontario.mines.gov.on.ca/",
         }
-    bc = os.path.join(region_dir, "spend_reports.parquet")
-    if os.path.exists(bc):
-        d = gpd.read_parquet(bc)
-        return d, {
-            "kind": "aris", "recent": 2, "hot": 1, "min_spend": 50000,
-            "company": "operator", "prop": None, "year": "year",
-            "elems": None, "comments": None, "spend": "spend", "url": "url",
-            "source": "BC ARIS assessment report",
-            "source_url": "https://apps.nrs.gov.bc.ca/pub/aris/",
-        }
+    # NB: BC ARIS assessment reports are deliberately NOT used as an edge-play
+    # source. An ARIS point is a report's nominal location, not a drill collar,
+    # so it cannot reliably place drilling against a specific claim boundary and
+    # produced false "open ground" (e.g. Goldcliff). Government edge plays are
+    # therefore Ontario-only (real drill-hole collars); BC's trustworthy signals
+    # are the live claim lapse / new-stake activity and precise news-release
+    # geolocation. ARIS is still used elsewhere for exploration-spend enrichment.
+    return None, None
     return None, None
 
 
@@ -155,6 +168,7 @@ def find(region_dir, metric):
     cid = _claim_id(claims)
     csi, hsi = claims.sindex, held.sindex
     nsi = nostake.sindex if nostake is not None else None
+    bound = boundary(region_dir, metric)          # clip open ground to the province
 
     def _clip(geom, buf):
         try:
@@ -185,6 +199,11 @@ def find(region_dir, metric):
             pieces += [_clip(nostake.geometry.iloc[int(i)], buf) for i in nsi.query(buf, predicate="intersects")]
         covered = _union([p for p in pieces if p is not None])
         openpoly = buf.difference(covered) if covered is not None else buf
+        if bound is not None:                         # keep only ground inside the province
+            try:
+                openpoly = openpoly.intersection(bound)
+            except Exception:
+                openpoly = openpoly.intersection(_valid(bound))
         if openpoly.is_empty:
             continue
         f = max(0.0, openpoly.area) / A

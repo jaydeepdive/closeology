@@ -7,7 +7,9 @@ antimony, gallium etc. flows straight into every lead's in-situ value.
 
 Coverage by source (each is best-effort; a metal keeps its last value if its
 source is unavailable, so a failed fetch never zeroes a price):
-  • Precious (Au, Ag, Pt, Pd)  — gold-api.com, free, no key, daily.
+  • Precious (Au, Ag, Pt, Pd) + copper — gold-api.com, free, no key, daily,
+    fetched over plain HTTP (works from the Action). These are the dominant
+    value drivers, so the rankings stay live on their own.
   • Full basket incl. base + minor/critical (Cu, Zn, Pb, Ni, Co, Mo, Sn, Sb, Ga,
     Ge, In, W, Li, V, U, REE…) — metalpriceapi.com, if env METALPRICE_API_KEY is
     set (a free tier exists). Symbols map below.
@@ -63,11 +65,17 @@ def _get_json(url):
         return None
 
 
-def _precious(prices, sources):
-    for sym, ab in (("XAU", "au"), ("XAG", "ag"), ("XPT", "pt"), ("XPD", "pd")):
+LB_PER_KG = 2.2046226
+
+
+def _goldapi(prices, sources):
+    """Keyless live JSON: precious (USD/troy oz) + copper (USD/lb) -> USD/kg."""
+    for sym, ab, unit in (("XAU", "au", "ozt"), ("XAG", "ag", "ozt"),
+                          ("XPT", "pt", "ozt"), ("XPD", "pd", "ozt"), ("HG", "cu", "lb")):
         d = _get_json(f"https://api.gold-api.com/price/{sym}")
         if d and isinstance(d.get("price"), (int, float)) and d["price"] > 0:
-            prices[ab] = round(float(d["price"]) * OZT_PER_KG, 2)   # $/ozt -> $/kg
+            p = float(d["price"])
+            prices[ab] = round(p * OZT_PER_KG, 2) if unit == "ozt" else round(p * LB_PER_KG, 3)
             sources[ab] = "gold-api.com"
 
 
@@ -115,7 +123,7 @@ def run():
     state = _load()
     prices = state.get("prices_per_kg") or {}
     sources = state.get("sources") or {}
-    _precious(prices, sources)
+    _goldapi(prices, sources)
     _metalpriceapi(prices, sources)
     _custom(prices, sources)
     out = {"updated": datetime.date.today().isoformat(),

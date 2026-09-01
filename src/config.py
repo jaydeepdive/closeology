@@ -77,8 +77,8 @@ DEFAULT_PRICE_KG = {              # USD per kg of contained metal — real quote
     # SMM / strategic-metals trackers (minor+critical). Realizable spot/FOB used
     # for thin markets, NOT small-lot investor-retail quotes. fetch_prices.py
     # refreshes these on each daily build.
-    "au": 140100.0, "ag": 2080.0, "pt": 56650.0, "pd": 41900.0, "rh": 150000.0,
-    "cu": 14.6, "pb": 1.91, "zn": 3.93, "ni": 16.7, "co": 56.3, "mo": 55.0,
+    "au": 139340.0, "ag": 2070.0, "pt": 56650.0, "pd": 41900.0, "rh": 150000.0,
+    "cu": 14.6, "pb": 1.91, "zn": 3.93, "ni": 16.7, "co": 56.3, "mo": 33.0,
     "sn": 50.2, "w": 380.0, "wo3": 300.0, "sb": 50.0, "bi": 67.0,
     "u": 208.0, "u3o8": 176.0, "li": 120.0, "li2o": 56.0, "v": 25.0, "v2o5": 12.0,
     "ga": 350.0, "ge": 6000.0, "in": 970.0, "te": 240.0,

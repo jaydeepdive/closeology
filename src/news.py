@@ -91,8 +91,9 @@ def _match_owner(company, owner_tokens):
     return best[0] if best else None
 
 
-def _open_around(geom, held, nostake, hsi, nsi):
-    """Open, stakeable halo around a geometry (block or point buffer)."""
+def _open_around(geom, held, nostake, hsi, nsi, bound=None):
+    """Open, stakeable halo around a geometry (block or point buffer), clipped to
+    the province so nothing outside the jurisdiction counts as open."""
     buf = geom.buffer(BLOCK_HALO_M) if geom.geom_type == "Point" else geom.buffer(BLOCK_HALO_M).difference(geom)
     if buf.is_empty:
         return None, 0.0, 0.0
@@ -117,6 +118,11 @@ def _open_around(geom, held, nostake, hsi, nsi):
                 pieces.append(inter)
     covered = de._union(pieces)
     openpoly = buf.difference(covered) if covered is not None else buf
+    if bound is not None:
+        try:
+            openpoly = openpoly.intersection(bound)
+        except Exception:
+            openpoly = openpoly.intersection(de._valid(bound))
     if openpoly.is_empty:
         return None, 0.0, 0.0
     return openpoly, openpoly.area / 1e4, openpoly.area / A
@@ -153,6 +159,7 @@ def find(region_dir, metric):
     hsi = held.sindex
     nsi = nostake.sindex if nostake is not None else None
     csi = claims.sindex if claims is not None else None
+    bound = de.boundary(region_dir, metric)
     cid = None
     if claims is not None:
         for c in ("claim", "TENURE_NUMBER_ID", "CLAIM_NAME"):
@@ -237,7 +244,7 @@ def find(region_dir, metric):
                     on_claim = True
                     claim_hit = de._s(claims[cid].iloc[int(i)]) if cid else ""
                     break
-        openpoly, open_ha, frac = _open_around(rep, held, nostake, hsi, nsi)
+        openpoly, open_ha, frac = _open_around(rep, held, nostake, hsi, nsi, bound)
         if not on_claim or openpoly is None or not (de.OPEN_MIN <= frac <= de.OPEN_MAX):
             unplaced.append({"company": company, "project": proj, "date": dstr,
                              "highlight": highlight, "url": url, "location": de._s(it.get("location")),
