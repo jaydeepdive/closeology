@@ -96,6 +96,8 @@ def enrich(region_dir):
     out = os.path.join(region_dir, "out")
     leads = gpd.read_file(os.path.join(out, "leads.geojson"))
     stats = json.load(open(os.path.join(out, "stats.json")))
+    if "grade_conf" not in leads.columns:
+        leads["grade_conf"] = 1.0
     n_grade = n_ton = 0
     for i in leads.index:
         mdi = str(leads.at[i, "minfile"])
@@ -104,16 +106,20 @@ def enrich(region_dir):
             continue
         tonnes, cat, grade, produced = _parse(html)
         if grade and not str(leads.at[i, "grade_str"]):
-            leads.at[i, "grade_str"] = grade; n_grade += 1
+            leads.at[i, "grade_str"] = grade; n_grade += 1   # table grade = resource, conf 1.0
         # fallback: pull grades from the record's prose (same extractor as BC),
         # preferring resource/intersection grades over grab samples
         if len(str(leads.at[i, "grade_str"])) < 3:
             import re as _re2
             from config import grades_from_text
             page_txt = _re2.sub(r"<[^>]+>", " ", html)
-            g2 = grades_from_text(page_txt) or grades_from_text(str(leads.at[i, "drill_highlights"]) if "drill_highlights" in leads.columns else "")
+            g2, cf2 = grades_from_text(page_txt)
+            if not g2 and "drill_highlights" in leads.columns:
+                g2, cf2 = grades_from_text(str(leads.at[i, "drill_highlights"]))
             if g2:
-                leads.at[i, "grade_str"] = g2; n_grade += 1
+                leads.at[i, "grade_str"] = g2
+                leads.at[i, "grade_conf"] = cf2
+                n_grade += 1
         headline = tonnes or produced
         if headline:
             leads.at[i, "tonnes"] = headline
@@ -128,7 +134,8 @@ def enrich(region_dir):
     # re-score with the new grade/tonnage, then re-rank
     leads["score"] = leads.apply(lambda r: score_lead(
         r["status"], bool(r["deposit_open"]), r.get("grade_str", ""), r.get("tonnes_str", ""),
-        bool(r.get("drill_highlights")), r.get("exploration_spend", 0)), axis=1)
+        bool(r.get("drill_highlights")), r.get("exploration_spend", 0),
+        grade_conf=r.get("grade_conf", 1.0)), axis=1)
     sort_keys = ["score", "deposit_open"] + (["exploration_spend"] if "exploration_spend" in leads.columns else [])
     leads = leads.sort_values(sort_keys, ascending=False).reset_index(drop=True)
     leads["rank"] = range(1, len(leads) + 1)

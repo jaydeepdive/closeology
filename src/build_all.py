@@ -33,6 +33,13 @@ def _have(p):
 def main():
     os.makedirs("site", exist_ok=True)
 
+    # ---- refresh metal prices (value scoring tracks the market) ----
+    try:
+        import fetch_prices
+        fetch_prices.run()
+    except Exception as e:
+        print("[build_all] price refresh skipped:", str(e)[:80])
+
     # ---- fresh drill news -> per-region news_items.json (safe no-op if no sources) ----
     try:
         import fetch_news

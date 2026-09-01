@@ -49,14 +49,25 @@ def prep(occ, facts):
     occ["has_resource"] = occ["has_resource"].fillna(False)
     # fill missing structured grade from the capsule / assay prose (same extractor
     # as Ontario), so a deposit with grades only in text isn't valued at $0.
+    # Structured grades are resource-grade (confidence 1.0); text-derived grades
+    # carry a confidence reflecting resource vs intersection vs grab sample.
     from config import grades_from_text
+    occ["grade_conf"] = 1.0
     need = occ["grade_str"].astype(str).str.len() < 3
-    occ.loc[need, "grade_str"] = occ.loc[need].apply(
-        lambda r: grades_from_text(r.get("drill_highlights", "")) or grades_from_text(r.get("capsule", "")), axis=1)
+
+    def _fill(r):
+        gs, cf = grades_from_text(r.get("drill_highlights", ""))
+        if not gs:
+            gs, cf = grades_from_text(r.get("capsule", ""))
+        return pd.Series({"grade_str": gs, "grade_conf": cf})
+    if need.any():
+        filled = occ.loc[need].apply(_fill, axis=1)
+        occ.loc[need, "grade_str"] = filled["grade_str"].values
+        occ.loc[need, "grade_conf"] = filled["grade_conf"].values
     occ["n_metals"] = occ["metal_buckets"].map(len)
     occ["base_score"] = occ.apply(lambda r: score_lead(
         r["status"], False, r.get("grade_str", ""), r.get("tonnes_str", ""),
-        bool(r.get("drill_highlights"))), axis=1)
+        bool(r.get("drill_highlights")), grade_conf=r.get("grade_conf", 1.0)), axis=1)
     return occ
 
 
@@ -315,7 +326,8 @@ def run_region(region):
     leads["exploration_spend_str"] = leads["exploration_spend"].map(_spend_str)
     leads["score"] = leads.apply(lambda r: score_lead(
         r["status"], r["deposit_open"], r.get("grade_str", ""), r.get("tonnes_str", ""),
-        bool(r.get("drill_highlights")), r.get("exploration_spend", 0)), axis=1)
+        bool(r.get("drill_highlights")), r.get("exploration_spend", 0),
+        grade_conf=r.get("grade_conf", 1.0)), axis=1)
     leads = leads.sort_values(["score", "deposit_open", "exploration_spend"], ascending=False).reset_index(drop=True)
     leads.insert(0, "rank", range(1, len(leads) + 1))
     leads["lead_id"] = ["L%04d" % i for i in leads["rank"]]

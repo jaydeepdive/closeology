@@ -57,49 +57,95 @@ def spend_points(spend):
 
 
 # --- grade QUALITY = in-situ contained-metal VALUE, commodity-agnostic ------
-# Grade is scored by the rough dollar value of contained metal per tonne, using
-# approximate market prices. This ranks by real economics without preferring any
-# commodity: a 10 g/t Au or 15% Zn body scores high, while a marginal 4.75% Zn
-# showing or a barren iron/sulphur (pyrite) mass scores near zero. Bulk/industrial
-# commodities that aren't exploration-staking targets (Fe, S, Mn) are valued at 0,
-# and byproducts with no price (Ga, Ge, Cd…) simply don't contribute.
-# Value contribution per reported grade unit:  %-metal -> $/t = pct * 10 * $/kg ;
-# g/t-metal -> $/t = gpt * $/g.
-_PRICE_PCT = {  # $ per tonne of rock, per 1% grade  (= 10 kg * $/kg)
-    "cu": 95.0, "pb": 21.0, "zn": 29.0, "ni": 160.0, "co": 330.0, "mo": 400.0,
-    "sn": 300.0, "w": 450.0, "wo3": 450.0, "sb": 150.0, "bi": 100.0,
-    "u": 1800.0, "u3o8": 1800.0, "li": 80.0, "li2o": 80.0, "reo": 150.0,
-    "treo": 150.0, "v": 80.0, "v2o5": 80.0,
-    "fe": 0.0, "iro": 0.0, "iron": 0.0, "mn": 0.0, "s": 0.0,   # not staking targets
+# Grade is scored by the dollar value of contained metal per tonne at current
+# market prices. This ranks by real economics without preferring any commodity:
+# a 10 g/t Au or 15% Zn body scores high, a marginal 4.75% Zn showing or a barren
+# iron/sulphur pyrite mass scores near zero. Two guards keep a pricey metal from
+# distorting things: bulk commodities that aren't staking targets (Fe, S, Mn) are
+# priced at 0, and a per-metal GRADE FLOOR means a *trace* of a valuable metal
+# (a few ppm of gallium, say) contributes nothing no matter how high its price —
+# only a genuinely meaningful grade counts.
+#
+# Prices are $/kg of metal and are refreshed on each daily run (fetch_prices.py
+# writes data/keep/metal_prices.json); the values below are the fallback if that
+# file is absent or stale. Contained value: $/t = kg-metal-per-tonne * $/kg,
+# where kg/t = grade% * 10  (base)  or  grade_gpt / 1000  (precious/minor).
+import os as _os
+import json as _json
+DEFAULT_PRICE_KG = {              # USD per kg of contained metal — real quotes, ~1 Sep 2026
+    # sourced from Kitco (precious), metalcharts.org/LME (base), Fastmarkets /
+    # SMM / strategic-metals trackers (minor+critical). Realizable spot/FOB used
+    # for thin markets, NOT small-lot investor-retail quotes. fetch_prices.py
+    # refreshes these on each daily build.
+    "au": 140100.0, "ag": 2080.0, "pt": 56650.0, "pd": 41900.0, "rh": 150000.0,
+    "cu": 14.6, "pb": 1.91, "zn": 3.93, "ni": 16.7, "co": 56.3, "mo": 55.0,
+    "sn": 50.2, "w": 380.0, "wo3": 300.0, "sb": 50.0, "bi": 67.0,
+    "u": 208.0, "u3o8": 176.0, "li": 120.0, "li2o": 56.0, "v": 25.0, "v2o5": 12.0,
+    "ga": 350.0, "ge": 6000.0, "in": 970.0, "te": 240.0,
+    "reo": 30.0, "treo": 30.0, "nd": 245.0, "pr": 245.0, "dy": 930.0, "tb": 4030.0,
+    "la": 3.0, "ce": 3.0, "cd": 3.0,
+    "fe": 0.0, "iro": 0.0, "iron": 0.0, "mn": 0.0, "s": 0.0, "as": 0.0, "al": 0.0,
 }
-_PRICE_GPT = {"au": 75.0, "ag": 0.95, "pt": 33.0, "pd": 34.0}  # $ per tonne, per 1 g/t
+# minimum meaningful grade for a metal to contribute at all (in its canonical
+# reporting unit: g/t for precious/minor, % for base metals). Below this the
+# metal is a trace and adds no value regardless of price.
+GRADE_FLOOR = {
+    "au": 0.3, "ag": 5.0, "pt": 0.1, "pd": 0.1, "rh": 0.05,       # g/t
+    "cu": 0.1, "pb": 0.2, "zn": 0.3, "ni": 0.05, "co": 0.02,      # %
+    "mo": 0.01, "sn": 0.05, "w": 0.03, "wo3": 0.03, "sb": 0.05,
+    "bi": 0.02, "u": 0.005, "u3o8": 0.005, "li": 0.1, "li2o": 0.1,
+    "v": 0.05, "v2o5": 0.05, "reo": 0.1, "treo": 0.1,
+    "nd": 0.005, "pr": 0.005, "dy": 0.001, "tb": 0.0005,
+    "ga": 0.003, "ge": 0.001, "in": 0.0005, "te": 0.0005, "cd": 0.05,
+}
 VALUE_CAP = 400.0                                             # $/t that earns full grade credit
+PRICES_UPDATED = "built-in defaults"
+PRICE_KG = dict(DEFAULT_PRICE_KG)
+try:
+    _pf = _os.path.join("data", "keep", "metal_prices.json")
+    if _os.path.exists(_pf):
+        _d = _json.load(open(_pf))
+        for _k, _v in (_d.get("prices_per_kg") or {}).items():
+            if isinstance(_v, (int, float)) and _v >= 0:
+                PRICE_KG[_k.lower()] = float(_v)
+        PRICES_UPDATED = _d.get("updated", PRICES_UPDATED)
+except Exception:
+    pass
+
 import re as _re
 _GRADE_RE = _re.compile(r"([A-Za-z][A-Za-z0-9]{0,4})\s*([\d.]+)\s*(g/t|%)", _re.I)
 _TONNES_RE = _re.compile(r"([\d.]+)\s*(kt|mt|gt|t)\b", _re.I)
 _TMULT = {"t": 1.0, "kt": 1e3, "mt": 1e6, "gt": 1e9}
+_PRECIOUS = {"au", "ag", "pt", "pd", "rh"}
 
 
 def grade_value(grade_str):
-    """Approximate in-situ contained-metal value in $/tonne from a grade string."""
+    """In-situ contained-metal value in $/tonne at current prices, with a trace
+    grade floor so a pricey metal at negligible grade contributes nothing."""
     if not grade_str or str(grade_str) == "nan":
         return 0.0
     val = 0.0
     for ab, num, unit in _GRADE_RE.findall(str(grade_str)):
         a = ab.lower()
+        price = PRICE_KG.get(a)
+        if not price:
+            continue
         try:
             v = float(num)
         except ValueError:
             continue
         is_gpt = "g" in unit.lower()
-        if is_gpt and a in _PRICE_GPT:
-            val += v * _PRICE_GPT[a]
-        elif (not is_gpt) and a in _PRICE_PCT:
-            val += v * _PRICE_PCT[a]
-        elif is_gpt and a in _PRICE_PCT:        # base metal reported in g/t -> to %
-            val += (v / 10000.0) * _PRICE_PCT[a]
-        elif (not is_gpt) and a in _PRICE_GPT:  # precious reported in % (rare) -> to g/t
-            val += (v * 10000.0) * _PRICE_GPT[a]
+        # normalise to the metal's canonical unit (precious -> g/t, base -> %)
+        if a in _PRECIOUS:
+            gpt = v * 10000.0 if not is_gpt else v          # % -> g/t if needed
+            if gpt < GRADE_FLOOR.get(a, 0):
+                continue
+            val += (gpt / 1000.0) * price                    # kg/t * $/kg
+        else:
+            pct = v / 10000.0 if is_gpt else v               # g/t -> % if needed
+            if pct < GRADE_FLOOR.get(a, 0):
+                continue
+            val += (pct * 10.0) * price
     return val
 
 
@@ -116,6 +162,9 @@ _METAL_WORD = {
     "sulfur": "s", "cadmium": "cd", "antimony": "sb", "manganese": "mn",
     "vanadium": "v", "lithium": "li", "platinum": "pt", "palladium": "pd",
     "gallium": "ga", "germanium": "ge", "bismuth": "bi", "arsenic": "as",
+    "indium": "in", "tellurium": "te", "rhodium": "rh",
+    "neodymium": "nd", "praseodymium": "pr", "dysprosium": "dy", "terbium": "tb",
+    "lanthanum": "la", "cerium": "ce",
 }
 _UNIT_WORD = (r"per\s*cent|percent|%|grams?\s*per\s*tonne|g/t|gpt|"
               r"ounces?\s*per\s*ton|oz/t|parts\s*per\s*million|ppm|"
@@ -148,14 +197,19 @@ def _canon_grade(value, unitword, metal_abbr):
     return v, unit
 
 
+# confidence weight by how the grade was established: an actual resource is
+# trusted fully, a drill-intersection average less, an isolated grab sample least.
+TIER_CONF = {1: 1.0, 2: 0.8, 3: 0.5}
+
+
 def grades_from_text(text):
-    """Compact grade string from capsule/assay prose, preferring deposit-scale
-    (resource, then drill-intersection) grades over isolated grab samples — so a
-    barren resource isn't flattered by a rich grab, and vice-versa. Returns e.g.
-    'Zn 6.7%, Pb 1.55%, Ag 19.2g/t' or '' when nothing usable is found."""
+    """(grade_str, confidence) from capsule/assay prose. Prefers deposit-scale
+    (resource, then drill-intersection) grades over isolated grab samples, and
+    returns a confidence reflecting which tier the grade came from. Returns
+    ('', 1.0) when nothing usable is found."""
     t = str(text or "")
     if not t or t == "nan":
-        return ""
+        return "", 1.0
     import statistics
     tiers = {1: {}, 2: {}, 3: {}}      # tier -> {abbr -> [values in canonical unit]}
     units = {}
@@ -178,9 +232,11 @@ def grades_from_text(text):
             tier = 3
         tiers[tier].setdefault(ab, []).append(cv)
         units[ab] = cu
-    chosen = tiers[1] or tiers[2] or tiers[3]
+    chosen_tier = 1 if tiers[1] else (2 if tiers[2] else (3 if tiers[3] else 0))
+    chosen = tiers.get(chosen_tier) or {}
     if not chosen:
-        return ""
+        return "", 1.0
+    conf = TIER_CONF[chosen_tier]
     parts = []
     for ab, vals in chosen.items():
         v = statistics.median(vals)
@@ -201,7 +257,7 @@ def grades_from_text(text):
             out.append(f"{ab.title()} {num}%")
         else:
             out.append(s)
-    return ", ".join(out)
+    return ", ".join(out), conf
 
 
 def parse_tonnes(tonnes_str):
@@ -224,12 +280,15 @@ def size_quality(tonnes):
     return 0                                            # < 10 kt is not a target on its own
 
 
-def score_lead(status, deposit_open, grade_str="", tonnes_str="", has_drill=False, spend=0):
+def score_lead(status, deposit_open, grade_str="", tonnes_str="", has_drill=False, spend=0,
+               grade_conf=1.0):
     """0-100 opportunity score, driven by GRADE QUALITY + DEPOSIT SIZE.
 
     Quality-first and commodity-agnostic: a marginal, tiny past-producer no
     longer tops the list just for ticking boxes. Grade (0-26) and size (0-16)
-    are the dominant levers; status/open-ground/drilling/spend de-risk on top."""
+    are the dominant levers; status/open-ground/drilling/spend de-risk on top.
+    grade_conf (0-1) discounts the grade by how it was established — an actual
+    resource counts fully, a drill intersection ~0.8, a grab sample ~0.5."""
     s = 0
     st = (status or "").lower()
     if "past" in st and "produc" in st: s += 18       # a real deposit existed, but historic
@@ -243,7 +302,7 @@ def score_lead(status, deposit_open, grade_str="", tonnes_str="", has_drill=Fals
     else: s += 2
     if deposit_open: s += 14                             # its own ground is stakeable
     if has_drill: s += 8
-    gv = grade_value(grade_str)                          # in-situ $/t of contained metal
+    gv = grade_value(grade_str) * max(0.0, min(grade_conf, 1.0))   # confidence-weighted $/t
     s += round(min(gv / VALUE_CAP, 1.0) * 26)            # 0..26  — the main lever
     # size only counts when the rock is actually worth something: a huge barren
     # (iron/sulphur) or unknown-grade tonnage earns no size credit.
