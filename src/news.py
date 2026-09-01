@@ -47,13 +47,45 @@ def _distinctive(name):
     return set(t for t in _toks(name) if t not in _GENERIC)
 
 
+def _norm(name):
+    return " ".join(_toks(name))
+
+
+def _company_match(company, target_name):
+    """Announcer/operator match: all distinctive company tokens present, and either
+    >=2 such tokens or the company name is a prefix of the target (so 'Dryden Gold'
+    matches 'Dryden Gold Corp' but never 'Dryden Resources Corp')."""
+    dc = _distinctive(company)
+    if not dc:
+        return False
+    tt = set(_toks(target_name))
+    if not dc.issubset(tt):
+        return False
+    if len(dc) >= 2:
+        return True
+    return _norm(target_name).startswith(_norm(company))
+
+
+def _project_match(project, target_name):
+    """Project/property match — option-proof (a project keeps its name when optioned).
+    All distinctive project tokens present, and either >=2 tokens or one specific
+    token (>=4 chars) so 'Spyglass'/'Wicheeda' match but a lone generic word won't."""
+    pj = _distinctive(project)
+    if not pj:
+        return False
+    tt = set(_toks(target_name))
+    if not pj.issubset(tt):
+        return False
+    return len(pj) >= 2 or any(len(t) >= 4 for t in pj)
+
+
 def _match_owner(company, owner_tokens):
     dc = _distinctive(company)
     if not dc:
         return None
     best = None
     for owner, ot in owner_tokens.items():
-        if dc.issubset(ot):
+        if dc.issubset(ot) and (len(dc) >= 2 or _norm(owner).startswith(_norm(company))):
             if best is None or len(ot) < best[1]:
                 best = (owner, len(ot))
     return best[0] if best else None
@@ -120,18 +152,23 @@ def find(region_dir, metric):
         return empty
     hsi = held.sindex
     nsi = nostake.sindex if nostake is not None else None
+    csi = claims.sindex if claims is not None else None
+    cid = None
+    if claims is not None:
+        for c in ("claim", "TENURE_NUMBER_ID", "CLAIM_NAME"):
+            if c in claims.columns:
+                cid = c
+                break
 
-    owner_tokens = {}
-    if claims is not None and "OWNER_NAME" in claims.columns:
-        owner_tokens = {o: set(_toks(o)) for o in claims["OWNER_NAME"].dropna().unique()}
-
-    # recent-operator point layer (drill holes / ARIS) for fallback placement
+    # recent-operator/property point layer (drill holes / ARIS) — the driller anchor,
+    # which tracks the announcer + the actual ground even when a project is optioned.
     src_df, cfg = de._source_cfg(region_dir)
     op_pts = None
     if src_df is not None:
         s = gpd.GeoDataFrame(src_df.copy(), geometry="geometry", crs="EPSG:4326").to_crs(metric)
         s["_op"] = s.get(cfg["company"]).apply(de._s) if cfg.get("company") else ""
-        op_pts = s[s["_op"] != ""]
+        s["_prop"] = s.get(cfg["prop"]).apply(de._s) if cfg.get("prop") else ""
+        op_pts = s[(s["_op"] != "") | (s["_prop"] != "")]
 
     occ = None
     occp = os.path.join(region_dir, "out", "occurrences_all.geojson")
@@ -149,56 +186,63 @@ def find(region_dir, metric):
         highlight = de._s(it.get("highlight"))
         url = de._s(it.get("url"))
         hot, dstr = _fresh(it.get("date"))
+        if not dstr:            # undated item from a live newest-first feed -> treat as fresh
+            hot = True
         geom = None
         placed_by = ""
         claim_hit = ""
-        # 1. explicit coords
+        # 1. explicit coordinates
         try:
             if it.get("lat") is not None and it.get("lon") is not None:
                 geom = gpd.GeoSeries([Point(float(it["lon"]), float(it["lat"]))], crs="EPSG:4326").to_crs(metric).iloc[0]
                 placed_by = "coordinates"
         except Exception:
             geom = None
-        # 2. company -> claim owner block
-        if geom is None and owner_tokens:
-            owner = _match_owner(company, owner_tokens)
-            if owner:
-                block = claims[claims["OWNER_NAME"] == owner]
-                if len(block):
-                    geom = unary_union(list(block.geometry.values))
-                    placed_by = f"claim holder {owner}"
-                    try:
-                        claim_hit = de._s(block.iloc[0].get("TENURE_NUMBER_ID"))
-                    except Exception:
-                        claim_hit = ""
-        # 3. company -> recent operator point(s)
-        if geom is None and op_pts is not None and company:
-            dc = _distinctive(company)
-            if dc:
-                hit = op_pts[op_pts["_op"].apply(lambda o: dc.issubset(set(_toks(o))))]
-                if len(hit):
-                    geom = unary_union(list(hit.geometry.values)).centroid if len(hit) > 1 else hit.geometry.iloc[0]
-                    placed_by = "recent operator match"
-        # 4. project -> occurrence name
+        # 2. project -> drill PROPERTY_NAME  (precise + option-proof)
+        if geom is None and op_pts is not None and proj is not None and "_prop" in op_pts.columns:
+            hit = op_pts[op_pts["_prop"].apply(lambda n: bool(n) and _project_match(proj, n))]
+            if len(hit):
+                geom = unary_union(list(hit.geometry.values)).centroid if len(hit) > 1 else hit.geometry.iloc[0]
+                placed_by = "project → drilled property"
+        # 3. project -> occurrence / deposit name  (option-proof)
         if geom is None and occ is not None and proj and "name" in occ.columns:
-            pj = _distinctive(proj)
-            if pj:
-                m = occ[occ["name"].apply(lambda n: bool(pj & set(_toks(n))))]
-                if len(m):
-                    geom = m.geometry.iloc[0]
-                    placed_by = "project/occurrence match"
+            m = occ[occ["name"].apply(lambda n: _project_match(proj, n))]
+            if len(m):
+                geom = m.geometry.iloc[0]
+                placed_by = "project → known occurrence"
+        # 4. company -> driller/operator  (announcer usually = the driller)
+        if geom is None and op_pts is not None and company:
+            hit = op_pts[op_pts["_op"].apply(lambda o: bool(o) and _company_match(company, o))]
+            if len(hit):
+                geom = unary_union(list(hit.geometry.values)).centroid if len(hit) > 1 else hit.geometry.iloc[0]
+                placed_by = "company → recent driller"
+        # NB: no claim-holder-name placement. A drill result is usually announced by
+        # the optionee/operator while the claims still sit in the optionor's name, so
+        # holder-name matching would both miss real plays and assert false ones. We
+        # only place by where the drilling/project actually is.
         if geom is None:
             unplaced.append({"company": company, "project": proj, "date": dstr,
-                             "highlight": highlight, "url": url, "location": de._s(it.get("location"))})
+                             "highlight": highlight, "url": url, "location": de._s(it.get("location")),
+                             "note": "could not place (no project/driller match)"})
             continue
 
-        openpoly, open_ha, frac = _open_around(geom, held, nostake, hsi, nsi)
-        rep = geom.centroid
-        if openpoly is None or frac < de.OPEN_MIN:
-            # placed but no meaningful open ground beside it -> news list only
+        # the located point must actually sit ON a held claim with open, stakeable
+        # ground beside it — the same edge test as the government scan.
+        rep = geom.centroid if geom.geom_type != "Point" else geom
+        on_claim = False
+        if csi is not None:
+            for i in csi.query(rep, predicate="intersects"):
+                cg = claims.geometry.iloc[int(i)]
+                if cg is not None and cg.contains(rep):
+                    on_claim = True
+                    claim_hit = de._s(claims[cid].iloc[int(i)]) if cid else ""
+                    break
+        openpoly, open_ha, frac = _open_around(rep, held, nostake, hsi, nsi)
+        if not on_claim or openpoly is None or not (de.OPEN_MIN <= frac <= de.OPEN_MAX):
             unplaced.append({"company": company, "project": proj, "date": dstr,
                              "highlight": highlight, "url": url, "location": de._s(it.get("location")),
-                             "note": "no open ground adjacent"})
+                             "note": ("drilling is mid-block — no open ground on the boundary"
+                                      if on_claim else "drilling not on a stakeable claim boundary")})
             continue
         oc = openpoly.centroid
         plays.append({

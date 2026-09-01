@@ -1,4 +1,11 @@
 {
-  "_comment": "Drill-news sources pulled by the daily GitHub Action (fetch_news.py) and geolocated into fresh edge plays. Add MiningNewsTerminal's feed/API URL below. type: wp (WordPress REST, e.g. .../wp-json/wp/v2/posts?per_page=50), json (generic JSON array), rss (RSS/Atom XML), or auto (sniff). Multiple sources allowed.",
-  "sources": []
+  "_comment": "Drill-news sources pulled by the daily GitHub Action (fetch_news.py) and geolocated into fresh edge plays. type: jmn/html (scrape a listing page via link_re), wp (WordPress REST), json (generic JSON array), rss (RSS/Atom), or auto. Add MiningNewsTerminal here once its feed/API is live.",
+  "sources": [
+    {
+      "url": "https://www.juniorminingnetwork.com/mining-topics/topic/drill-results.html",
+      "type": "jmn",
+      "base": "https://www.juniorminingnetwork.com",
+      "link_re": "/junior-miner-news/press-releases/[^\"']+\\.html"
+    }
+  ]
 }

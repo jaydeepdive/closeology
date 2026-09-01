@@ -35,8 +35,8 @@ MAX_ITEMS = 60
 UA = {"User-Agent": "closeology-news/1.0"}
 
 _ASSAY = re.compile(
-    r"\d+(?:\.\d+)?\s*m\s*(?:@|of|grading)?\s*\d+(?:\.\d+)?\s*(?:g/?t|gpt|%|ppm|oz/?t|opt)\s*[A-Za-z]{0,3}"
-    r"|\d+(?:\.\d+)?\s*(?:g/?t|gpt|%|ppm|oz/?t|opt)\s*[A-Za-z]{0,3}\s*over\s*\d+(?:\.\d+)?\s*m", re.I)
+    r"\d+(?:\.\d+)?\s*m(?:etres|eters)?\s*(?:@|at|of|grading|averaging|,|-)?\s*\d+(?:\.\d+)?\s*(?:g/?t|gpt|%|ppm|oz/?t(?:on)?|opt)\s*[A-Za-z]{0,14}"
+    r"|\d+(?:\.\d+)?\s*(?:g/?t|gpt|%|ppm|oz/?t(?:on)?|opt)\s*[A-Za-z]{0,14}\s*(?:over|across)\s*\d+(?:\.\d+)?\s*m(?:etres|eters)?", re.I)
 _VERB = re.compile(r"\b(announces?|reports?|intersects?|intercepts?|drills?|hits?|extends?|"
                    r"discovers?|provides?|completes?|expands?|returns?|files?|confirms?)\b", re.I)
 _PROJ = re.compile(r"\b(?:at|on|from)\s+(?:its\s+|the\s+)?([A-Z][\w'.-]+(?:\s+[A-Z][\w'.-]+){0,3})", )
@@ -147,6 +147,25 @@ def _parse_json(r):
     return out
 
 
+def _parse_html(r, src):
+    """Scrape a listing page: pull <a href=...>headline</a> whose href matches
+    link_re. Used for Junior Mining Network's drill-results topic (no RSS)."""
+    base = src.get("base") or re.match(r"https?://[^/]+", src["url"]).group(0)
+    lre = src.get("link_re") or r"/junior-miner-news/press-releases/[^\"']+\.html"
+    out, seen = [], set()
+    for m in re.finditer(r'href=["\'](' + lre + r')["\'][^>]*>(.*?)</a>', r.text, re.I | re.S):
+        href = m.group(1)
+        title = _strip(m.group(2))
+        if len(title) < 25:
+            continue
+        url = href if href.startswith("http") else base + href
+        if url in seen:
+            continue
+        seen.add(url)
+        out.append(_normalize(title, "", None, url))
+    return out
+
+
 def _parse_rss(r):
     out = []
     try:
@@ -176,6 +195,8 @@ def _fetch_source(src):
     t = (src.get("type") or "auto").lower()
     ct = r.headers.get("content-type", "").lower()
     try:
+        if t in ("html", "jmn"):
+            return _parse_html(r, src)
         if t == "wp" or ("wp-json" in src["url"] and t == "auto"):
             return _parse_wp(r)
         if t == "json" or ("json" in ct and t == "auto"):
