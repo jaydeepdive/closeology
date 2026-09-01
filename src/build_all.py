@@ -72,7 +72,8 @@ def main():
         flagged.sort(key=lambda p: -p.get("score", 0))
         name = "British Columbia" if rc["slug"] == "bc" else "Ontario"
         email["regions"].append({"slug": rc["slug"], "name": name, "labels": dp["labels"],
-                                 "counts": dp["counts"], "leads": flagged[:20]})
+                                 "counts": dp["counts"], "leads": flagged[:20],
+                                 "dropped": dp.get("dropped", [])[:25]})
     _json.dump(email, open("site/daily_email.json", "w"))
     print("[build_all] done + daily_email.json")
 

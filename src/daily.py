@@ -99,6 +99,8 @@ def payload(region_dir, metric, news_path=None):
                                           "near_a": bool(a_flags[i]), "near_b": bool(b_flags[i]),
                                           "minfile": r.get("minfile", ""), "url": r.get("minfile_url", "") or "",
                                           "score": int(r.get("score", 0)), "size": r.get("deposit_size", "") or "",
+                                          "spend": r.get("exploration_spend_str", "") or "", "spend_val": float(r.get("exploration_spend", 0) or 0),
+                                          "operators": r.get("operators", "") or "",
                                           "community": r.get("nearest_community", ""), "community_km": r.get("community_km")}})
     news = []
     if news_path and os.path.exists(news_path):
@@ -106,8 +108,15 @@ def payload(region_dir, metric, news_path=None):
             news = json.load(open(news_path))
         except Exception:
             news = []
+    dropped = []
+    dp = os.path.join(region_dir, "out", "dropped.json")
+    if os.path.exists(dp):
+        try:
+            dropped = json.load(open(dp)).get("dropped", [])
+        except Exception:
+            dropped = []
     return {"today": today.date().isoformat(), "lead_feats": lead_feats, "act": act_feats,
-            "news": news, "counts": counts, "labels": labels}
+            "news": news, "counts": counts, "labels": labels, "dropped": dropped}
 
 
 def build(region_dir, site_dir, region_name, metric, news_path=None, out_name="daily.html"):
@@ -121,6 +130,7 @@ def build(region_dir, site_dir, region_name, metric, news_path=None, out_name="d
         act_json=json.dumps({"type": "FeatureCollection", "features": d["act"]}),
         news_json=json.dumps(d["news"]), metal_color_json=json.dumps(METAL_COLOR),
         labels_json=json.dumps(d["labels"]), counts_json=json.dumps(d["counts"]), near_km=NEAR_KM,
+        dropped_json=json.dumps(d.get("dropped", [])),
     )
     os.makedirs(site_dir, exist_ok=True)
     outp = os.path.join(site_dir, out_name)
@@ -157,11 +167,12 @@ DAILY = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
     <div class="sub">{today} · activity near our leads</div></header>
   <div class="stats" id="stats"></div>
   <div class="sec"><h2>Drill news</h2><div id="news"></div></div>
+  <div id="dropped"></div>
   <div id="list"></div>
   <footer>Screening signals only — verify each source. Not staking advice.</footer>
 </div></div>
 <script>
-const LEADS={leads_json}, ACT={act_json}, NEWS={news_json}, MC={metal_color_json}, LBL={labels_json}, CN={counts_json};
+const LEADS={leads_json}, ACT={act_json}, NEWS={news_json}, MC={metal_color_json}, LBL={labels_json}, CN={counts_json}, DROPPED={dropped_json};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
 const mc=m=>MC[m]||'#94a3b8';
 const topo=L.tileLayer('https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:17,attribution:'&copy; OpenTopoMap'}});
@@ -180,6 +191,8 @@ document.getElementById('stats').innerHTML=`
   <div class=stat><b>${{CN.n_feat_b.toLocaleString()}}</b><span>${{esc(LBL.feat_b)}} (near leads)</span></div>`;
 const nb=document.getElementById('news');
 nb.innerHTML=NEWS.length?NEWS.map(n=>`<div class=item>${{n.url?`<a class=news href="${{esc(n.url)}}" target=_blank>`:''}}<b>${{esc(n.title)}}</b>${{n.url?'</a>':''}}<div class=muted>${{esc(n.date||'')}} ${{n.summary?'· '+esc(n.summary):''}}</div></div>`).join(''):'<div class=muted>No drill news captured in the last run.</div>';
+const db=document.getElementById('dropped');
+if(DROPPED.length){{db.innerHTML='<div class=sec><h2>⚑ Ground just opened ('+DROPPED.length+')</h2></div>'+DROPPED.slice(0,25).map(x=>`<div class=item><b>${{esc(x.owner)||'Claim '+esc(x.id)}}</b> dropped ${{x.area_ha}} ha${{x.good_to?' (was good to '+esc(x.good_to)+')':''}}<div class=muted>near #${{x.near_rank}} ${{esc(x.near_lead)}} · ${{x.near_km}} km</div></div>`).join('');}}
 const sig=LEADS.features.map(f=>f.properties).filter(p=>p.near_a||p.near_b).sort((a,b)=>a.rank-b.rank);
 document.getElementById('list').innerHTML='<div class=sec><h2>'+esc(LBL.sec)+' ('+sig.length+')</h2></div>'+sig.map(p=>`<div class=item data-r="${{p.rank}}"><b>#${{p.rank}} ${{esc(p.name)}}</b>${{p.deposit_open?'<span class="tag t-open">open</span>':''}}${{p.near_a?'<span class="tag t-a">'+esc(LBL.tag_a)+'</span>':''}}${{p.near_b?'<span class="tag t-b">'+esc(LBL.tag_b)+'</span>':''}}<div class=muted>${{esc(p.metal)}} · ${{esc(p.status)}} · ${{esc(p.community)}} ${{p.community_km!=null?p.community_km+' km':''}}</div>${{p.drill?`<div class=drill>⛏ ${{esc(p.drill.slice(0,110))}}…</div>`:''}}</div>`).join('');
 document.getElementById('list').addEventListener('click',e=>{{const it=e.target.closest('.item[data-r]');if(!it)return;const m=markers[it.dataset.r];if(m){{map.setView(m.getLatLng(),12);m.openPopup();}}}});

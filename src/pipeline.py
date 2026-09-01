@@ -166,6 +166,105 @@ def enrich(leads, communities, reserves, parks, metric):
     return leads
 
 
+def attach_spend(leads, reports, metric, R=1500):
+    """Per-lead exploration spend: sum $ of assessment reports/work areas within R
+    (and, for BC, reports whose MINFILE list names this occurrence)."""
+    if reports is None or not len(reports):
+        leads["exploration_spend"] = 0.0
+        leads["n_reports"] = 0
+        leads["last_work_year"] = None
+        leads["operators"] = ""
+        return leads
+    lm = leads.to_crs(metric)
+    rm = reports.to_crs(metric).reset_index(drop=True)
+    rm["spend"] = pd.to_numeric(rm["spend"], errors="coerce").fillna(0.0)
+    rep_by_mf = {}
+    if "minfile" in rm.columns:
+        for idx, mf in zip(rm.index, rm["minfile"].astype(str)):
+            for tok in mf.split(";"):
+                k = tok.replace(" ", "").upper().strip()
+                if k:
+                    rep_by_mf.setdefault(k, set()).add(idx)
+    key = leads["minfile"].astype(str).str.replace(" ", "", regex=False).str.upper()
+    si = rm.sindex
+    spends, ncnt, yrs, ops = [], [], [], []
+    geoms = lm.geometry.values
+    for i in range(len(lm)):
+        halo = geoms[i].buffer(R)
+        idxs = set()
+        for j in si.query(halo, predicate="intersects"):
+            if halo.intersects(rm.geometry.iloc[int(j)]):
+                idxs.add(int(j))
+        idxs |= rep_by_mf.get(key.iloc[i], set())
+        sub = rm.loc[list(idxs)] if idxs else rm.iloc[0:0]
+        spends.append(float(sub["spend"].sum()))
+        ncnt.append(int(len(sub)))
+        y = pd.to_numeric(sub["year"], errors="coerce").dropna() if len(sub) else pd.Series([], dtype=float)
+        yrs.append(int(y.max()) if len(y) else None)
+        seen = []
+        for o in (list(sub.sort_values("spend", ascending=False)["operator"]) if len(sub) else []):
+            for part in str(o).split(","):
+                p = part.strip()
+                if p and p not in seen and p.lower() != "nan":
+                    seen.append(p)
+        ops.append(", ".join(seen[:3]))
+    leads["exploration_spend"] = spends
+    leads["n_reports"] = ncnt
+    leads["last_work_year"] = yrs
+    leads["operators"] = ops
+    return leads
+
+
+def _spend_str(v):
+    if not v or v != v:
+        return ""
+    if v >= 1e6:
+        return f"${v/1e6:.1f}M"
+    if v >= 1e3:
+        return f"${v/1e3:.0f}k"
+    return f"${v:.0f}"
+
+
+def track_drops(d, claims, leads, metric):
+    """Snapshot active claims; diff vs the committed prior snapshot to find claims
+    that DROPPED since the last run (prior owner + expiry + nearest lead)."""
+    slug = os.path.basename(d.rstrip("/"))
+    snap = os.path.join("data", "keep", f"{slug}_claims_snapshot.parquet")
+    c = claims.copy()
+    if "TENURE_NUMBER_ID" in c.columns:      # BC
+        idf, own, dte, area = "TENURE_NUMBER_ID", "OWNER_NAME", "GOOD_TO_DATE", "AREA_IN_HECTARES"
+    elif "claim" in c.columns:               # Ontario cells
+        idf, own, dte, area = "claim", None, None, None
+    else:
+        return 0
+    cen = c.to_crs(metric).geometry.representative_point().to_crs("EPSG:4326")
+    cur = pd.DataFrame({"id": c[idf].astype(str),
+                        "owner": c[own].astype(str) if own else "",
+                        "good_to": c[dte].astype(str) if dte else "",
+                        "area_ha": pd.to_numeric(c[area], errors="coerce") if area else 0.0,
+                        "lon": cen.x.round(5), "lat": cen.y.round(5)}).drop_duplicates("id")
+    dropped = []
+    if os.path.exists(snap):
+        prev = pd.read_parquet(snap)
+        pg = prev[prev["id"].isin(set(prev["id"]) - set(cur["id"]))].copy()
+        if len(pg) and len(leads):
+            pgm = gpd.GeoDataFrame(pg, geometry=gpd.points_from_xy(pg.lon, pg.lat), crs="EPSG:4326").to_crs(metric)
+            lg = gpd.GeoDataFrame(leads[["name", "rank"]].reset_index(drop=True),
+                                  geometry=leads.to_crs(metric).geometry.values, crs=metric)
+            j = gpd.sjoin_nearest(pgm, lg, distance_col="_d")
+            j = j[~j.index.duplicated(keep="first")]
+            for _, r in j.iterrows():
+                dropped.append({"id": r["id"], "owner": r.get("owner", ""), "good_to": str(r.get("good_to", ""))[:10],
+                                "area_ha": round(float(r.get("area_ha") or 0), 1), "lon": r["lon"], "lat": r["lat"],
+                                "near_lead": r.get("name", ""), "near_rank": int(r.get("rank", 0)), "near_km": round(r["_d"] / 1000, 1)})
+            dropped.sort(key=lambda x: x["near_km"])
+    json.dump({"n": len(dropped), "dropped": dropped[:200]},
+              open(os.path.join(d, "out", "dropped.json"), "w"))
+    os.makedirs(os.path.join("data", "keep"), exist_ok=True)
+    cur.to_parquet(snap)
+    return len(dropped)
+
+
 def run_region(region):
     d = region["dir"]
     metric = region["metric_crs"]
@@ -206,10 +305,12 @@ def run_region(region):
         cand[c] = scdf[c].values
     leads = cand[cand["n_cells"] > 0].copy().reset_index(drop=True)
     leads["deposit_open"] = leads["deposit_open"].astype(bool)
+    leads = attach_spend(leads, _rd(os.path.join(d, "spend_reports.parquet")), metric)
+    leads["exploration_spend_str"] = leads["exploration_spend"].map(_spend_str)
     leads["score"] = leads.apply(lambda r: score_lead(
         r["status"], r["deposit_open"], bool(r["grade_str"]), bool(r.get("tonnes_str")),
-        r["n_metals"], r.get("tonnes"), bool(r.get("drill_highlights"))), axis=1)
-    leads = leads.sort_values(["deposit_open", "score"], ascending=False).reset_index(drop=True)
+        r["n_metals"], r.get("tonnes"), bool(r.get("drill_highlights")), r.get("exploration_spend", 0)), axis=1)
+    leads = leads.sort_values(["deposit_open", "score", "exploration_spend"], ascending=False).reset_index(drop=True)
     leads.insert(0, "rank", range(1, len(leads) + 1))
     leads["lead_id"] = ["L%04d" % i for i in leads["rank"]]
     leads["cell_ids"] = leads["open_cells"].map(lambda x: ";".join(x))
@@ -222,7 +323,8 @@ def run_region(region):
     cols = ["rank", "lead_id", "name", "minfile", "primary_metal", "metals_abbr", "commodity",
             "status", "deposit_open", "hard_to_stake", "nearest_community", "community_type",
             "community_km", "deposit_size", "grade_str", "tonnes_str", "resource_cat",
-            "drill_highlights", "basis", "encumbrances", "core_cell", "n_cells",
+            "drill_highlights", "exploration_spend", "exploration_spend_str", "n_reports",
+            "last_work_year", "operators", "basis", "encumbrances", "core_cell", "n_cells",
             "cells_area_ha", "score", "lat", "lon", "cell_ids", "minfile_url", "capsule"]
     cols = [c for c in cols if c in leads.columns]
     leads[cols].to_csv(os.path.join(out_dir, "leads.csv"), index=False)
@@ -265,8 +367,11 @@ def run_region(region):
     json.dump({"type": "FeatureCollection", "features": feats},
               open(os.path.join(out_dir, "occurrences_all.geojson"), "w"))
 
+    n_dropped = track_drops(d, claims, leads, metric)
+
     stats = {
         "region": region["name"], "generated": region.get("today", ""),
+        "n_dropped": n_dropped,
         "n_leads": len(leads), "n_deposit_open": int(leads["deposit_open"].sum()),
         "n_with_drill_highlights": int((leads["drill_highlights"].str.len() > 0).sum()),
         "n_hard_to_stake": int(leads["hard_to_stake"].sum()),
@@ -275,6 +380,7 @@ def run_region(region):
         "n_candidate_leads": int(len(cand)), "top_n_examined": TOP_N,
         "n_occurrences": len(occ), "n_claims_active": len(claims),
         "grid_dlon": gridmeta["dlon"], "grid_dlat": gridmeta["dlat"],
+        "n_with_spend": int((leads["exploration_spend"] > 0).sum()),
         "attribution": region["attribution"],
     }
     json.dump(stats, open(os.path.join(out_dir, "stats.json"), "w"), indent=2)

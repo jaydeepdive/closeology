@@ -44,7 +44,20 @@ def metal_bucket(commodity):
     return "Other metallic"
 
 
-def score_lead(status, deposit_open, has_grade, has_tonnes, n_metals, produced_tonnes, has_drill=False):
+def spend_points(spend):
+    """Exploration $ spent nearby -> ranking boost (higher spend = higher rank)."""
+    if not spend or spend != spend:
+        return 0
+    if spend >= 5e6: return 20
+    if spend >= 1e6: return 15
+    if spend >= 250e3: return 10
+    if spend >= 50e3: return 6
+    if spend >= 1e3: return 2
+    return 0
+
+
+def score_lead(status, deposit_open, has_grade, has_tonnes, n_metals, produced_tonnes,
+               has_drill=False, spend=0):
     """0-100 prospectivity-of-opportunity score (BC + Ontario vocabularies).
 
     Balanced so a region isn't penalised for a data field the other province
@@ -69,4 +82,5 @@ def score_lead(status, deposit_open, has_grade, has_tonnes, n_metals, produced_t
     s += min(n_metals, 4) * 2
     if produced_tonnes and produced_tonnes > 1e6: s += 8
     elif produced_tonnes and produced_tonnes > 1e5: s += 4
+    s += spend_points(spend)
     return min(s, 100)

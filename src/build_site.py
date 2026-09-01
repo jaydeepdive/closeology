@@ -4,6 +4,27 @@ import json
 import shutil
 
 
+def _xlsx(csv, out, region):
+    try:
+        import pandas as pd
+        from openpyxl.utils import get_column_letter
+        cols = ["rank", "name", "minfile", "nearest_community", "community_km", "primary_metal",
+                "commodity", "status", "deposit_open", "hard_to_stake", "deposit_size", "grade_str",
+                "drill_highlights", "exploration_spend_str", "n_reports", "last_work_year", "operators",
+                "encumbrances", "n_cells", "cells_area_ha", "score", "lat", "lon", "minfile_url"]
+        d = pd.read_csv(csv)
+        c = [x for x in cols if x in d.columns]
+        dd = d[c].copy(); dd.columns = [x.replace("_", " ").title() for x in c]
+        with pd.ExcelWriter(out, engine="openpyxl") as w:
+            dd.to_excel(w, index=False, sheet_name=region[:31]); ws = w.sheets[region[:31]]; ws.freeze_panes = "A2"
+            wid = {"Name": 24, "Nearest Community": 18, "Commodity": 22, "Deposit Size": 26, "Grade Str": 20,
+                   "Drill Highlights": 60, "Operators": 34, "Encumbrances": 28, "Minfile Url": 40}
+            for i, cc in enumerate(dd.columns, 1):
+                ws.column_dimensions[get_column_letter(i)].width = wid.get(cc, 12)
+    except Exception as e:
+        print("  [xlsx] skipped:", str(e)[:60])
+
+
 def build(site_dir, regions):
     cards = []
     for r in regions:
@@ -40,6 +61,7 @@ def build(site_dir, regions):
         csv = os.path.join(r["dir"], "out", "leads.csv")
         if r.get("live") and os.path.exists(csv):
             shutil.copy(csv, os.path.join(site_dir, f"{r['slug']}_leads.csv"))
+            _xlsx(csv, os.path.join(site_dir, f"{r['slug']}_leads.xlsx"), r["name"])
     open(os.path.join(site_dir, ".nojekyll"), "w").write("")
     print(f"[site] index.html + {sum(1 for r in regions if r.get('live'))} region CSV(s)")
 

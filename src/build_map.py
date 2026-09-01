@@ -169,6 +169,7 @@ const leadsLayer=L.geoJSON(LEADS,{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radi
       <b>Nearest community:</b> ${{esc(p.nearest_community)}} (${{p.community_km}} km)<br>
       ${{p.deposit_size&&p.deposit_size!=='no tonnage on record'?`<b>Size:</b> ${{esc(p.deposit_size)}}<br>`:''}}${{p.grade_str?`<b>Grade:</b> ${{esc(p.grade_str)}}<br>`:''}}
       ${{p.drill_highlights?`<b>Drill / assay:</b> ${{esc(p.drill_highlights)}}<br>`:''}}
+      ${{p.exploration_spend_str?`<b>Exploration spend:</b> ${{esc(p.exploration_spend_str)}}${{p.n_reports?` · ${{p.n_reports}} report(s)`:''}}${{p.last_work_year?` · last ${{p.last_work_year}}`:''}}${{p.operators?`<br><span class=pk>${{esc(p.operators)}}</span>`:''}}<br>`:''}}
       ${{p.encumbrances?`<b style="color:#b45309">⚠ Harder to stake:</b> ${{esc(p.encumbrances)}}<br>`:''}}
       <b>Open cells nearby:</b> ${{p.n_cells}} (~${{p.cells_area_ha}} ha)<br>
       ${{p.minfile_url?`<a href="${{esc(p.minfile_url)}}" target=_blank>Full record ↗</a>`:''}}`);

@@ -81,8 +81,28 @@ def occurrences():
     print(f"[occ] {len(g)}")
 
 
+def fetch_aris():
+    """BC assessment reports (ARIS): exploration $ spent, operator, year, MINFILE link."""
+    feats = wfs_all("WHSE_MINERAL_TENURE.ARIS_MINERAL_REPORTS")
+    rows = []
+    for f in feats:
+        p = f["properties"]
+        lat = p.get("LATITUDE_DECIMAL_NAD83"); lon = p.get("LONGITUDE_DECIMAL_NAD83")
+        if lat is None or lon is None:
+            continue
+        rows.append({"spend": pd.to_numeric(p.get("MERGE_SPENT_REPORTED"), errors="coerce"),
+                     "year": p.get("REPORT_YEAR"), "operator": p.get("OPERATOR_NAMES") or "",
+                     "url": p.get("ARIS_REPORT_URL") or "", "minfile": p.get("MINFILE_NUMBERS") or "",
+                     "lat": lat, "lon": lon})
+    df = pd.DataFrame(rows).dropna(subset=["lat", "lon"])
+    g = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
+    g.to_parquet("data/bc/spend_reports.parquet")
+    print(f"[aris] {len(g)} reports, total ${g['spend'].sum()/1e6:.0f}M")
+
+
 def run():
     occurrences()
+    fetch_aris()
     jobs = [
         ("claims", "WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW", None,
          "TENURE_NUMBER_ID,CLAIM_NAME,TENURE_TYPE_DESCRIPTION,OWNER_NAME,ISSUE_DATE,GOOD_TO_DATE,AREA_IN_HECTARES"),
