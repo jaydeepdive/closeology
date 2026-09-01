@@ -44,8 +44,13 @@ def metal_bucket(commodity):
     return "Other metallic"
 
 
-def score_lead(status, deposit_open, has_grade, has_tonnes, n_metals, produced_tonnes):
-    """0-100 prospectivity-of-opportunity score (BC + Ontario vocabularies)."""
+def score_lead(status, deposit_open, has_grade, has_tonnes, n_metals, produced_tonnes, has_drill=False):
+    """0-100 prospectivity-of-opportunity score (BC + Ontario vocabularies).
+
+    Balanced so a region isn't penalised for a data field the other province
+    happens to publish: grade/tonnage (strong in BC's MINFILE) and drill data
+    (strong in Ontario's OGS drill database) each contribute, and any one of
+    them signals a de-risked target."""
     s = 0
     st = (status or "").lower()
     if "past" in st and "produc" in st: s += 34       # past producer / past producing mine
@@ -58,8 +63,9 @@ def score_lead(status, deposit_open, has_grade, has_tonnes, n_metals, produced_t
     elif "occurrence" in st: s += 8
     else: s += 6
     if deposit_open: s += 24
-    if has_tonnes: s += 14
-    if has_grade: s += 12
+    if has_drill: s += 12                                # documented drilling (OGS holes / MINFILE capsule)
+    if has_tonnes: s += 8
+    if has_grade: s += 8
     s += min(n_metals, 4) * 2
     if produced_tonnes and produced_tonnes > 1e6: s += 8
     elif produced_tonnes and produced_tonnes > 1e5: s += 4

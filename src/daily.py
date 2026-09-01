@@ -97,6 +97,8 @@ def payload(region_dir, metric, news_path=None):
                                           "status": r["status"], "deposit_open": bool(r["deposit_open"]),
                                           "grade": r.get("grade_str", "") or "", "drill": r.get("drill_highlights", "") or "",
                                           "near_a": bool(a_flags[i]), "near_b": bool(b_flags[i]),
+                                          "minfile": r.get("minfile", ""), "url": r.get("minfile_url", "") or "",
+                                          "score": int(r.get("score", 0)), "size": r.get("deposit_size", "") or "",
                                           "community": r.get("nearest_community", ""), "community_km": r.get("community_km")}})
     news = []
     if news_path and os.path.exists(news_path):
@@ -169,7 +171,7 @@ L.geoJSON(ACT,{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:3,color:'#f59e0b
   onEachFeature:(f,l)=>l.bindPopup(`<b>${{esc(f.properties.label)||'activity'}}</b><br>${{esc(f.properties.sub)}}`)}}).addTo(map);
 const lg=L.geoJSON(LEADS,{{pointToLayer:(f,ll)=>{{const p=f.properties;const sig=p.near_a||p.near_b;
   const m=L.circleMarker(ll,{{radius:sig?8:5,color:sig?'#fde68a':'#0b1526',weight:sig?2:1,fillColor:mc(p.metal),fillOpacity:sig?.95:.5}});markers[p.rank]=m;
-  m.bindPopup(`<b>#${{p.rank}} ${{esc(p.name)}}</b> <span style="color:#64748b">${{esc(p.metal)}}</span><br>${{esc(p.status)}}${{p.deposit_open?' · <b style=color:#15803d>deposit open</b>':''}}<br>${{p.grade?'Grade: '+esc(p.grade)+'<br>':''}}${{p.near_a?'<b style=color:#c2410c>◔ '+esc(LBL.feat_a)+' within {near_km} km</b><br>':''}}${{p.near_b?'<b style=color:#b91c1c>⚑ '+esc(LBL.feat_b)+' within {near_km} km</b><br>':''}}${{p.drill?'<span style=color:#047857>⛏ '+esc(p.drill.slice(0,120))+'…</span>':''}}`);return m;}}}}).addTo(map);
+  m.bindPopup(`<b>#${{p.rank}} ${{esc(p.name)}}</b> <span style="color:#64748b">${{esc(p.metal)}}</span> <span style=color:#64748b>${{esc(p.minfile)}}</span><br>${{esc(p.status)}}${{p.deposit_open?' · <b style=color:#15803d>deposit open</b>':''}}<br>${{p.grade?'Grade: '+esc(p.grade)+'<br>':''}}${{p.near_a?'<b style=color:#c2410c>◔ '+esc(LBL.feat_a)+' within {near_km} km</b><br>':''}}${{p.near_b?'<b style=color:#b91c1c>⚑ '+esc(LBL.feat_b)+' within {near_km} km</b><br>':''}}${{p.drill?'<span style=color:#047857>⛏ '+esc(p.drill.slice(0,120))+'…</span><br>':''}}${{p.url?'<a href=\"'+esc(p.url)+'\" target=_blank>Full record ↗</a>':''}}`);return m;}}}}).addTo(map);
 try{{map.fitBounds(lg.getBounds().pad(0.1));}}catch(e){{map.setView([50,-86],5);}}
 document.getElementById('stats').innerHTML=`
   <div class=stat><b style="color:#f59e0b">${{CN.n_a}}</b><span>${{esc(LBL.lead_a)}}</span></div>

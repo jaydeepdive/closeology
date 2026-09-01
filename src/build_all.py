@@ -51,6 +51,8 @@ def main():
                 fx()
     on_prep.prep()
     pipeline.run_region(ON)
+    import on_web_facts
+    on_web_facts.enrich("data/on")     # grade + tonnage from MDI record pages, then re-rank
     build_map.build("data/on/out", "site/on.html", inline_claims=True)
 
     # ---- daily radars, combined app, landing ----
@@ -59,7 +61,20 @@ def main():
     build_app.build(APP_REGIONS, "site/app.html")
     build_site.build("site", REGIONS_SITE)
     shutil.copy("site/app.html", "site/index.html")   # Pages home = the full app
-    print("[build_all] done")
+
+    # digest for the daily email: top flagged opportunities per region
+    import json as _json
+    email = {"generated": BC["today"], "site": "https://jaydeepdive.github.io/closeology/", "regions": []}
+    for rc in APP_REGIONS:
+        dp = daily.payload(rc["dir"], rc["metric"], rc.get("news"))
+        flagged = [f["properties"] for f in dp["lead_feats"]
+                   if f["properties"]["near_a"] or f["properties"]["near_b"]]
+        flagged.sort(key=lambda p: -p.get("score", 0))
+        name = "British Columbia" if rc["slug"] == "bc" else "Ontario"
+        email["regions"].append({"slug": rc["slug"], "name": name, "labels": dp["labels"],
+                                 "counts": dp["counts"], "leads": flagged[:20]})
+    _json.dump(email, open("site/daily_email.json", "w"))
+    print("[build_all] done + daily_email.json")
 
 
 if __name__ == "__main__":

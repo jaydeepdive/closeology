@@ -50,7 +50,7 @@ def prep(occ, facts):
     occ["n_metals"] = occ["metal_buckets"].map(len)
     occ["base_score"] = occ.apply(lambda r: score_lead(
         r["status"], False, bool(r["grade_str"]), bool(r.get("tonnes_str")),
-        r["n_metals"], r.get("tonnes")), axis=1)
+        r["n_metals"], r.get("tonnes"), bool(r.get("drill_highlights"))), axis=1)
     return occ
 
 
@@ -58,44 +58,50 @@ def _cellij(x, y):
     return (np.floor(x / GRID_M).astype(int), np.floor(y / GRID_M).astype(int))
 
 
-def screen(cands_m, nostake_layers):
-    """cands_m: metric occurrence points. nostake_layers: list of held/protected
-    GeoDataFrames (metric). Returns per-occurrence open-ground summary."""
+def screen(cands_ll, nostake_layers, metric):
+    """cands_ll: occurrence points in EPSG:4326. Grid cells are aligned to a
+    lat/long lattice (so they run parallel to the real MTO / MLAS claim cells,
+    not skewed to a projection's axes). nostake_layers: held/protected layers in
+    `metric`. Returns (per-occurrence summary, {dlon, dlat}) in degrees."""
+    import math
     G, R = GRID_M, NEIGHBOR_M
+    xs = cands_ll.geometry.x.values      # lon
+    ys = cands_ll.geometry.y.values      # lat
+    ref_lat = float(np.nanmean(ys))
+    dlat = G / 111320.0
+    dlon = G / (111320.0 * max(0.2, math.cos(math.radians(ref_lat))))
     steps = int(R // G)
     offs = [(dx, dy) for dx in range(-steps, steps + 1) for dy in range(-steps, steps + 1)
             if (dx * G) ** 2 + (dy * G) ** 2 <= R * R]
-    # collect unique candidate cells
-    xs = cands_m.geometry.x.values
-    ys = cands_m.geometry.y.values
-    ci, cj = _cellij(xs, ys)
-    cellset = {}
-    per_occ = []
-    for k in range(len(cands_m)):
+    ci = np.floor(xs / dlon).astype(int)
+    cj = np.floor(ys / dlat).astype(int)
+    cellset, per_occ = {}, []
+    for k in range(len(cands_ll)):
         own = (int(ci[k]), int(cj[k]))
         neigh = [(own[0] + dx, own[1] + dy) for dx, dy in offs]
         per_occ.append((own, neigh))
         for c in neigh:
             cellset[c] = None
     cells = list(cellset.keys())
-    polys = [box(i * G, j * G, (i + 1) * G, (j + 1) * G) for i, j in cells]
-    cg = gpd.GeoDataFrame({"i": [c[0] for c in cells], "j": [c[1] for c in cells]},
-                          geometry=[p.centroid for p in polys], crs=cands_m.crs)
+    # test the whole cell polygon: a cell is open only if it does NOT overlap any
+    # claimed / leased / patented / park ground (not merely miss its centre).
+    polys = [box(i * dlon, j * dlat, (i + 1) * dlon, (j + 1) * dlat) for i, j in cells]
+    cg = gpd.GeoDataFrame(geometry=polys, crs="EPSG:4326").to_crs(metric)
     occupied = np.zeros(len(cg), dtype=bool)
     for layer in nostake_layers:
         if layer is None or not len(layer):
             continue
-        hit = gpd.sjoin(cg[["geometry"]], layer[["geometry"]], predicate="within", how="left")
+        hit = gpd.sjoin(cg[["geometry"]], layer[["geometry"]], predicate="intersects", how="left")
         idx = hit[hit.index_right.notna()].index.unique()
         occupied[cg.index.isin(idx)] = True
-    open_map = {(cells[n]): (not occupied[n]) for n in range(len(cells))}
+    open_map = {cells[n]: (not occupied[n]) for n in range(len(cells))}
     out = []
     for own, neigh in per_occ:
         opens = [f"{i}_{j}" for (i, j) in neigh if open_map.get((i, j), False)]
         out.append({"deposit_open": open_map.get(own, False), "core_cell": f"{own[0]}_{own[1]}",
                     "open_cells": opens, "n_cells": len(opens),
                     "cells_area_ha": round(len(opens) * (G * G) / 1e4, 1)})
-    return out
+    return out, {"dlon": dlon, "dlat": dlat}
 
 
 COND = ("conditional", "release required", "designated placer")
@@ -194,8 +200,7 @@ def run_region(region):
     npk = natparks.to_crs(metric) if natparks is not None else None
     leases = _rd(os.path.join(d, "leases.parquet"))     # held mining leases / patents (Ontario)
     lz = leases.to_crs(metric) if leases is not None else None
-    cand_m = cand.to_crs(metric)
-    sc = screen(cand_m, [cm, noreg, pk, npk, lz])
+    sc, gridmeta = screen(cand.to_crs("EPSG:4326"), [cm, noreg, pk, npk, lz], metric)
     scdf = pd.DataFrame(sc)
     for c in scdf.columns:
         cand[c] = scdf[c].values
@@ -203,7 +208,7 @@ def run_region(region):
     leads["deposit_open"] = leads["deposit_open"].astype(bool)
     leads["score"] = leads.apply(lambda r: score_lead(
         r["status"], r["deposit_open"], bool(r["grade_str"]), bool(r.get("tonnes_str")),
-        r["n_metals"], r.get("tonnes")), axis=1)
+        r["n_metals"], r.get("tonnes"), bool(r.get("drill_highlights"))), axis=1)
     leads = leads.sort_values(["deposit_open", "score"], ascending=False).reset_index(drop=True)
     leads.insert(0, "rank", range(1, len(leads) + 1))
     leads["lead_id"] = ["L%04d" % i for i in leads["rank"]]
@@ -223,16 +228,16 @@ def run_region(region):
     leads[cols].to_csv(os.path.join(out_dir, "leads.csv"), index=False)
     leads[cols + ["metal_buckets", "geometry"]].to_file(os.path.join(out_dir, "leads.geojson"), driver="GeoJSON")
 
-    # open stakeable cells as polygons (the actual ground to stake)
-    G = GRID_M
+    # open stakeable cells as polygons (lat/long lattice, parallel to real claim cells)
+    dlon, dlat = gridmeta["dlon"], gridmeta["dlat"]
     cellfeats = []
     for _, r in leads.iterrows():
         for cid in (r["open_cells"] or []):
             i, j = map(int, cid.split("_"))
-            cellfeats.append({"lead_id": r["lead_id"], "rank": int(r["rank"]),
-                              "name": r["name"], "geometry": box(i * G, j * G, (i + 1) * G, (j + 1) * G)})
+            cellfeats.append({"lead_id": r["lead_id"], "rank": int(r["rank"]), "name": r["name"],
+                              "geometry": box(i * dlon, j * dlat, (i + 1) * dlon, (j + 1) * dlat)})
     if cellfeats:
-        gpd.GeoDataFrame(cellfeats, geometry="geometry", crs=metric).to_crs("EPSG:4326").to_file(
+        gpd.GeoDataFrame(cellfeats, geometry="geometry", crs="EPSG:4326").to_file(
             os.path.join(out_dir, "opencells.geojson"), driver="GeoJSON")
 
     # claim-cell context near leads (regions without a live claims WMS)
@@ -269,6 +274,7 @@ def run_region(region):
         "n_with_resource": int(leads["has_resource"].sum()) if "has_resource" in leads else 0,
         "n_candidate_leads": int(len(cand)), "top_n_examined": TOP_N,
         "n_occurrences": len(occ), "n_claims_active": len(claims),
+        "grid_dlon": gridmeta["dlon"], "grid_dlat": gridmeta["dlat"],
         "attribution": region["attribution"],
     }
     json.dump(stats, open(os.path.join(out_dir, "stats.json"), "w"), indent=2)

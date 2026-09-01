@@ -142,7 +142,7 @@ if(USE_WMS){{
   }});
 }} else {{
   claimsLayer=L.geoJSON(CLAIMS,{{style:{{color:'#64748b',weight:.8,fillColor:'#64748b',fillOpacity:0.18}},
-    onEachFeature:(f,l)=>l.bindPopup(`<b>Claim ${{esc(f.properties.claim)}}</b><br>Active mining claim cell<br><span class=pk>Ontario MLAS (daily)</span>`)}});
+    onEachFeature:(f,l)=>l.bindPopup(`<b>Claim ${{esc(f.properties.claim)}}</b><br>Active mining claim cell<br><a href="https://www.mlas.mndm.gov.on.ca/mlas/search/searchIndex.html#/search/searchClaimDetails?claimNumber=${{esc(f.properties.claim)}}" target=_blank>View in MLAS ↗</a>`)}});
   claimsLayer.addTo(map);
 }}
 

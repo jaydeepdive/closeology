@@ -113,29 +113,38 @@ def fetch_claims():
     print(f"[on claims] {len(g)} unique claim cells")
 
 
-ALIEN_BASE = "https://www.geologyontario.mndm.gov.on.ca/mines/data/google/claims2/alienations"
+CLAIMS2 = "https://www.geologyontario.mndm.gov.on.ca/mines/data/google/claims2"
+# held mining ground (not stakeable): alienations = patents/withdrawals,
+# dispositions = active mining leases/patents/licences (Rights Granted incl. mining).
+HELD_BASES = [f"{CLAIMS2}/alienations", f"{CLAIMS2}/dispositions"]
 
 
-def fetch_alienations():
-    """Held mining lands (leases, patents, licences of occupation, withdrawals)
-    — not available for staking. Same tiled KMZ structure as claims."""
-    doc = _get(ALIEN_BASE + "/doc.kml").decode("utf-8", "replace")
+def _crawl_tiles(base):
+    doc = _get(base + "/doc.kml").decode("utf-8", "replace")
     tiles = re.findall(r"<href>files/([^<]+)</href>", doc)
-    print(f"[on leases] {len(tiles)} tiles")
     feats, t0 = [], time.time()
     for i, t in enumerate(tiles):
         try:
-            kmz = _get(f"{ALIEN_BASE}/files/{t}", timeout=60)
+            kmz = _get(f"{base}/files/{t}", timeout=60)
             z = zipfile.ZipFile(io.BytesIO(kmz))
             kmlname = [n for n in z.namelist() if n.endswith(".kml")][0]
             feats += _parse_kml_polys(z.read(kmlname))
         except Exception as e:
             print("  tile fail", t, str(e)[:50])
-        if (i + 1) % 100 == 0:
-            print(f"   {i+1}/{len(tiles)}, {len(feats)} parcels, {time.time()-t0:.0f}s")
-    g = gpd.GeoDataFrame(feats, geometry="geometry", crs="EPSG:4326")
+        if (i + 1) % 150 == 0:
+            print(f"   {os.path.basename(base)} {i+1}/{len(tiles)}, {len(feats)} parcels, {time.time()-t0:.0f}s")
+    return feats
+
+
+def fetch_alienations():
+    """Held mining ground (leases, patents, withdrawals, licences) — not stakeable."""
+    feats = []
+    for base in HELD_BASES:
+        print(f"[on held] crawling {os.path.basename(base)} …")
+        feats += _crawl_tiles(base)
+    g = gpd.GeoDataFrame(feats, geometry="geometry", crs="EPSG:4326").drop_duplicates("claim")
     g.to_parquet("data/on/leases.parquet")
-    print(f"[on leases] {len(g)} held parcels")
+    print(f"[on held] {len(g)} held parcels")
 
 
 OPEN = "https://ws.lioservices.lrc.gov.on.ca/arcgis1071a/rest/services/LIO_OPEN_DATA"
