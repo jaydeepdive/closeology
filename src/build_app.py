@@ -5,6 +5,7 @@ import os
 import re
 import json
 import daily
+import site_theme as T
 from build_map import BC_WMS
 
 VEN = os.path.join(os.path.dirname(__file__), "vendor")
@@ -51,6 +52,7 @@ def build(regions_cfg, html_path):
     regions = {rc["slug"]: _region(rc["dir"], rc["slug"], rc["metric"], rc.get("news")) for rc in regions_cfg}
     gen = list(regions.values())[0]["stats"].get("generated", "")
     html = TEMPLATE.format(
+        fonts=T.FONTS, theme_css=T.THEME_CSS, header=T.header("app.html"),
         leaflet_css=_r("leaflet.css"), mc_css=_r("mc.css") + _r("mcd.css"),
         leaflet_js=_r("leaflet.js"), mc_js=_r("mc.js"),
         regions_json=json.dumps(regions), metal_color=json.dumps(METAL_COLOR),
@@ -72,66 +74,70 @@ def build(regions_cfg, html_path):
 TEMPLATE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Project Closeology</title>
+{fonts}
 <style>{leaflet_css}</style><style>{mc_css}</style>
 <script>{leaflet_js}</script><script>{mc_js}</script>
+<style>{theme_css}</style>
 <style>
-  :root{{--bg:#0b1220;--panel:#111c33;--line:#243352;--ink:#e5edf7;--mut:#94a3b8;--accent:#c026d3;}}
-  *{{box-sizing:border-box;}} html,body{{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);}}
-  #shell{{display:flex;flex-direction:column;height:100vh;overflow:hidden;}}
-  nav{{display:flex;align-items:center;gap:6px;padding:8px 14px;background:#0b1526;border-bottom:1px solid var(--line);flex:0 0 auto;flex-wrap:wrap;}}
-  nav .brand{{font-weight:700;font-size:14px;margin-right:8px;}} nav .brand span{{color:var(--accent);}}
-  nav button{{background:transparent;border:1px solid transparent;color:var(--mut);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;}}
-  nav button.on{{background:var(--panel);color:var(--ink);border-color:var(--line);}}
+  :root{{--bg:#ffffff;--panel:#f5f7fa;--line:#e6e8eb;--ink:#111418;--mut:#636363;--accent:#D71920;}}
+  *{{box-sizing:border-box;}} html,body{{margin:0;height:100%;font-family:'Roboto',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);}}
+  body{{display:flex;flex-direction:column;height:100vh;overflow:hidden;}}
+  #shell{{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;}}
+  nav.tabs{{display:flex;align-items:center;gap:6px;padding:8px 14px;background:#fff;border-bottom:1px solid var(--line);flex:0 0 auto;flex-wrap:wrap;}}
+  nav.tabs button{{background:transparent;border:1px solid transparent;color:var(--mut);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;}}
+  nav.tabs button.on{{background:#fff;color:var(--accent);border-color:var(--accent);}}
   .regsel{{display:flex;gap:4px;margin-left:6px;border-left:1px solid var(--line);padding-left:10px;}}
   .regsel button.on{{background:var(--accent);color:#fff;border-color:var(--accent);}}
-  nav .spacer{{flex:1;}} nav .upd{{color:var(--mut);font-size:11px;}}
+  nav.tabs .spacer{{flex:1;}} nav.tabs .upd{{color:var(--mut);font-size:11px;}}
+  h1,h2,h3,h4{{font-family:'Bitter',Georgia,serif;}}
   .view{{flex:1;min-height:0;display:none;}} .view.on{{display:flex;}}
   .split{{display:flex;width:100%;height:100%;overflow:hidden;}}
-  .lmap{{flex:1;height:100%;}} .side{{width:440px;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;}}
-  .side h2{{font-size:11px;text-transform:uppercase;color:var(--mut);letter-spacing:.4px;margin:0;}}
+  .lmap{{flex:1;height:100%;}} .side{{width:440px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;}}
+  .side h2{{font-size:11px;text-transform:uppercase;color:var(--mut);letter-spacing:.4px;margin:0;font-family:'Roboto',sans-serif;font-weight:700;}}
   .stats{{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);}}
-  .stat{{background:#0b1526;border:1px solid var(--line);border-radius:7px;padding:6px;}} .stat b{{display:block;font-size:15px;}} .stat span{{color:var(--mut);font-size:9px;text-transform:uppercase;}}
+  .stat{{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:6px;}} .stat b{{display:block;font-size:15px;font-family:'Bitter',serif;}} .stat span{{color:var(--mut);font-size:9px;text-transform:uppercase;}}
   .controls{{padding:8px 14px;border-bottom:1px solid var(--line);font-size:11.5px;}}
   .chips{{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}}
-  .chip{{padding:2px 7px;border-radius:20px;border:1px solid var(--line);cursor:pointer;font-size:10.5px;display:flex;align-items:center;gap:4px;}}
+  .chip{{padding:2px 7px;border-radius:20px;border:1px solid var(--line);cursor:pointer;font-size:10.5px;display:flex;align-items:center;gap:4px;background:#fff;}}
   .chip .dot{{width:8px;height:8px;border-radius:50%;}} .chip.off{{opacity:.35;}}
   .row{{display:flex;gap:10px;align-items:center;color:var(--mut);flex-wrap:wrap;}} .row label{{display:flex;gap:4px;align-items:center;cursor:pointer;}}
   .scroll{{flex:1;overflow:auto;min-height:0;}}
   table{{width:100%;border-collapse:collapse;font-size:11.5px;}} th,td{{padding:6px 8px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}}
-  th{{position:sticky;top:0;background:#0b1526;color:var(--mut);font-weight:600;font-size:10px;text-transform:uppercase;cursor:pointer;white-space:nowrap;}} th.sorted::after{{content:" \25BE";}}
-  tbody tr{{cursor:pointer;}} tbody tr:hover{{background:#16223c;}}
-  .lead-name{{font-weight:600;}} .sub2{{color:var(--mut);font-size:10px;margin-top:2px;line-height:1.4;}} .drill{{color:#a7f3d0;font-size:10px;margin-top:3px;line-height:1.4;}}
-  .metal-chip{{font-size:9px;padding:0 4px;border-radius:4px;color:#0b1526;font-weight:700;margin-left:4px;}}
-  .item.sel{{background:#1b2b4a;box-shadow:inset 3px 0 0 #f5a300;}}
-  .legendbox{{background:rgba(9,14,26,.9);color:#e5edf7;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:11px;line-height:1.7;max-width:250px;}}
+  th{{position:sticky;top:0;background:var(--panel);color:var(--mut);font-weight:700;font-size:10px;text-transform:uppercase;cursor:pointer;white-space:nowrap;}} th.sorted::after{{content:" \25BE";}}
+  tbody tr{{cursor:pointer;}} tbody tr:hover{{background:#fdeaea;}}
+  .lead-name{{font-weight:700;}} .sub2{{color:var(--mut);font-size:10px;margin-top:2px;line-height:1.4;}} .drill{{color:#047857;font-size:10px;margin-top:3px;line-height:1.4;}}
+  .metal-chip{{font-size:9px;padding:0 4px;border-radius:4px;color:#fff;font-weight:700;margin-left:4px;}}
+  .item.sel{{background:#fdeaea;box-shadow:inset 3px 0 0 var(--accent);}}
+  .legendbox{{background:rgba(255,255,255,.95);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:11px;line-height:1.7;max-width:250px;box-shadow:0 1px 6px rgba(0,0,0,.08);}}
   .legendbox b{{font-size:11px;}} .legendbox div{{display:flex;align-items:center;gap:6px;margin-top:3px;}}
   .k-open,.k-held,.k-pt{{display:inline-block;flex:0 0 auto;width:16px;height:12px;}}
-  .k-open{{background:#f5a300;border:2px dashed #7c2d00;}} .k-held{{background:transparent;border:1.5px solid #cbd5e1;}}
-  .k-pt{{width:10px;height:10px;border-radius:50%;background:#ef4444;border:2px solid #fff;}}
+  .k-open{{background:#f5a300;border:2px dashed #7c2d00;}} .k-held{{background:transparent;border:1.5px solid #64748b;}}
+  .k-pt{{width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid #fff;}}
   .lbl-open{{background:transparent;border:0;box-shadow:none;color:#7c2d00;font-weight:800;font-size:11px;text-shadow:0 1px 2px #fff,0 0 2px #fff;}}
   .lbl-claim{{background:rgba(255,255,255,.85);border:0;box-shadow:none;color:#111827;font-size:10px;padding:0 3px;}}
   .leaflet-tooltip.lbl-open:before,.leaflet-tooltip.lbl-claim:before{{display:none;}}
-  .badge{{font-size:8.5px;padding:1px 4px;border-radius:4px;font-weight:700;margin-left:4px;}} .b-dep{{background:#16a34a;color:#04140a;}} .b-hard{{background:#b45309;color:#fde68a;}}
-  .score-pill{{display:inline-block;min-width:26px;text-align:center;padding:2px 5px;border-radius:20px;font-weight:700;color:#0b1526;}}
-  .tag{{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;margin-left:5px;}} .t-a{{background:#ea580c;color:#0b1526;}} .t-b{{background:#dc2626;color:#fff;}} .t-open{{background:#16a34a;color:#04140a;}}
-  .item{{padding:8px 14px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer;}} .item:hover{{background:#16223c;}} .item b{{font-weight:600;}}
-  .muted{{color:var(--mut);font-size:10.5px;margin-top:2px;}} a.news{{color:#93c5fd;text-decoration:none;}}
+  .badge{{font-size:8.5px;padding:1px 4px;border-radius:4px;font-weight:700;margin-left:4px;}} .b-dep{{background:#e7f6ec;color:#127a3a;}} .b-hard{{background:#fff4e5;color:#9a5b00;}}
+  .score-pill{{display:inline-block;min-width:26px;text-align:center;padding:2px 5px;border-radius:20px;font-weight:700;color:#fff;background:var(--accent);}}
+  .tag{{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;margin-left:5px;}} .t-a{{background:#ea580c;color:#fff;}} .t-b{{background:#dc2626;color:#fff;}} .t-open{{background:#e7f6ec;color:#127a3a;}}
+  .item{{padding:8px 14px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer;}} .item:hover{{background:var(--panel);}} .item b{{font-weight:600;}}
+  .muted{{color:var(--mut);font-size:10.5px;margin-top:2px;}} a.news{{color:var(--accent);text-decoration:none;}}
   footer{{padding:7px 14px;font-size:9.5px;color:var(--mut);border-top:1px solid var(--line);line-height:1.4;}}
-  .leaflet-popup-content{{font-size:12px;line-height:1.5;max-width:300px;}} .leaflet-popup-content b{{color:#0b1526;}} .pk{{color:#64748b;}}
-  .legend{{background:rgba(15,23,42,.92);padding:8px 10px;border-radius:8px;font-size:10.5px;line-height:1.5;border:1px solid var(--line);max-width:170px;}}
+  .leaflet-popup-content{{font-size:12px;line-height:1.5;max-width:300px;}} .leaflet-popup-content b{{color:#111;}} .pk{{color:#64748b;}}
+  .legend{{background:rgba(255,255,255,.95);color:var(--ink);padding:8px 10px;border-radius:8px;font-size:10.5px;line-height:1.5;border:1px solid var(--line);max-width:170px;box-shadow:0 1px 6px rgba(0,0,0,.08);}}
   .legend i{{display:inline-block;width:10px;height:10px;margin-right:5px;border-radius:3px;vertical-align:-1px;}}
-  .ov{{overflow:auto;width:100%;padding:40px 24px 60px;}} .ov .wrap{{max-width:1000px;margin:0 auto;}}
+  .ov{{overflow:auto;width:100%;padding:34px 24px 60px;}} .ov .wrap{{max-width:1000px;margin:0 auto;}}
   .ov h1{{font-size:30px;margin:0 0 6px;}} .ov h1 span{{color:var(--accent);}} .ov .lead{{color:var(--mut);font-size:15px;line-height:1.6;max-width:720px;}}
   .cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:30px;}}
-  .card{{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;}}
-  .card h3{{margin:0 0 10px;font-size:18px;}} .card .pill{{font-size:10px;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:#14532d;color:#86efac;margin-left:8px;vertical-align:2px;}}
-  .kpis{{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 14px;}} .kpis b{{display:block;font-size:18px;}} .kpis span{{color:var(--mut);font-size:9.5px;text-transform:uppercase;}}
+  .card{{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;}}
+  .card h3{{margin:0 0 10px;font-size:18px;}} .card .pill{{font-size:10px;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:#e7f6ec;color:#127a3a;margin-left:8px;vertical-align:2px;}}
+  .kpis{{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 14px;}} .kpis b{{display:block;font-size:18px;font-family:'Bitter',serif;}} .kpis span{{color:var(--mut);font-size:9.5px;text-transform:uppercase;}}
   .card button{{background:var(--accent);color:#fff;border:none;padding:8px 13px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-right:6px;}}
   .how{{margin-top:36px;color:var(--mut);font-size:13.5px;line-height:1.7;border-top:1px solid var(--line);padding-top:20px;}} .how b{{color:var(--ink);}}
   @media (max-width:900px){{.side{{width:100%;}}.split{{flex-direction:column;}}.lmap{{height:44%;}}.side{{height:56%;}}}}
-</style></head><body><div id="shell">
-  <nav>
-    <div class="brand">Project Closeology <span>·</span></div>
+</style></head><body>
+{header}
+<div id="shell">
+  <nav class="tabs">
     <button data-t="overview" class="on">Overview</button>
     <button data-t="map">Map</button>
     <button data-t="daily">Daily Radar</button>
@@ -178,7 +184,7 @@ TEMPLATE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 const REGIONS={regions_json}, METAL_COLOR={metal_color}, METAL_ORDER={metal_order};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
 const mc=m=>METAL_COLOR[m]||'#94a3b8';
-let CUR='bc', tab='overview', mapObj=null, dmapObj=null;
+let CUR='bc', tab='overview', mapObj=null, dmapObj=null, LEADMARK={{}};
 const order=['bc','on'];
 
 // region selector
@@ -222,7 +228,7 @@ function buildMap(){{
   const cells=L.geoJSON(R.cells,{{style:{{color:'#22c55e',weight:1,fillColor:'#22c55e',fillOpacity:0.28}},onEachFeature:(f,l)=>l.bindPopup(`<b>Open cell</b> — beside #${{f.properties.rank}} ${{esc(f.properties.name)}}<br>Appears unstaked. Verify before acting.`)}}).addTo(map);
   const occC=L.markerClusterGroup({{chunkedLoading:true,maxClusterRadius:45,disableClusteringAtZoom:11}});
   L.geoJSON(R.occ,{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:4,color:'#0b1526',weight:.7,fillColor:SC[(f.properties.st||'').trim()]||'#94a3b8',fillOpacity:f.properties.p?0.95:0.6}}),onEachFeature:(f,l)=>l.bindPopup(`<b>${{esc(f.properties.n)}}</b><br>${{esc(f.properties.st)}}${{f.properties.p?' · produced':''}}`)}}).addTo(occC); occC.addTo(map);
-  const M={{}};
+  const M={{}}; LEADMARK=M;
   const lg=L.geoJSON(R.leads,{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:7,color:'#0b1526',weight:1.3,fillColor:mc(f.properties.primary_metal),fillOpacity:0.92}}),
     onEachFeature:(f,l)=>{{const p=f.properties;M[p.lead_id]=l;
       l.bindPopup(`<b>#${{p.rank}} · ${{esc(p.name)}}</b> <span class=pk>${{esc(p.minfile)}}</span> <span class=metal-chip style="background:${{mc(p.primary_metal)}}">${{esc(p.primary_metal)}}</span><br>
@@ -308,6 +314,15 @@ function buildDaily(){{
   if((D.edges||[]).length)focusEdge(0);   // highlight the top play now that the list exists
   setTimeout(()=>map.invalidateSize(),60);
 }}
+// deep link from the priority page: app.html?r=bc&lat=..&lon=..&rank=.. -> open the map there
+(function(){{
+  const p=new URLSearchParams(location.search);
+  const r=p.get('r'), lat=parseFloat(p.get('lat')), lon=parseFloat(p.get('lon')), rank=p.get('rank');
+  if(r==='bc'||r==='on'){{CUR=r;document.querySelectorAll('#regsel button').forEach(x=>x.classList.toggle('on',x.dataset.r===CUR));}}
+  const lid=p.get('lead');
+  if(!isNaN(lat)&&!isNaN(lon)){{show('map');
+    setTimeout(()=>{{if(mapObj){{mapObj.setView([lat,lon],14);const m=lid&&LEADMARK[lid];if(m){{m.openPopup();}}}}}},500);}}
+}})();
 </script></body></html>
 """
 

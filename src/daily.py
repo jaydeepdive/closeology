@@ -16,6 +16,7 @@ import pandas as pd
 import geopandas as gpd
 import drill_edges
 import news as newsmod
+import site_theme as T
 
 VEN = os.path.join(os.path.dirname(__file__), "vendor")
 LAPSE_DAYS = 180
@@ -152,6 +153,7 @@ def build(region_dir, site_dir, region_name, metric, news_path=None, out_name="d
     from config import METAL_COLOR
     d = payload(region_dir, metric, news_path)
     html = DAILY.format(
+        fonts=T.FONTS, theme_css=T.THEME_CSS, header=T.header(out_name),
         leaflet_css=open(os.path.join(VEN, "leaflet.css")).read(),
         leaflet_js=open(os.path.join(VEN, "leaflet.js")).read(),
         region=region_name, today=d["today"],
@@ -176,41 +178,46 @@ def build(region_dir, site_dir, region_name, metric, news_path=None, out_name="d
 DAILY = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Closeology Daily · {region}</title>
+{fonts}
 <style>{leaflet_css}</style><script>{leaflet_js}</script>
+<style>{theme_css}</style>
 <style>
-  :root {{ --bg:#0f172a; --panel:#111c33; --line:#243352; --ink:#e5edf7; --mut:#94a3b8; --accent:#c026d3; --edge:#f97316; --hot:#ef4444; --open:#22c55e; }}
-  *{{box-sizing:border-box;}} html,body{{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);}}
-  #app{{display:flex;height:100vh;overflow:hidden;}} #map{{flex:1;}}
-  #panel{{width:440px;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;}}
-  header{{padding:12px 15px;border-bottom:1px solid var(--line);}} header h1{{margin:0 0 2px;font-size:15px;}}
-  header .sub{{color:var(--mut);font-size:11.5px;}}
+  :root {{ --bg:#ffffff; --panel:#f5f7fa; --line:#e6e8eb; --ink:#111418; --mut:#636363; --accent:#D71920; --edge:#f97316; --hot:#ef4444; --open:#22c55e; }}
+  *{{box-sizing:border-box;}} html,body{{margin:0;height:100%;font-family:'Roboto',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--ink);}}
+  body{{display:flex;flex-direction:column;height:100vh;overflow:hidden;}}
+  #app{{display:flex;flex:1;min-height:0;overflow:hidden;}} #map{{flex:1;}}
+  #panel{{width:440px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;}}
+  #panel > header{{padding:12px 15px;border-bottom:1px solid var(--line);}} #panel header h1{{margin:0 0 2px;font-size:15px;font-family:'Bitter',serif;}}
+  #panel header .sub{{color:var(--mut);font-size:11.5px;}}
   .stats{{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 15px;border-bottom:1px solid var(--line);}}
-  .stat{{background:#0b1526;border:1px solid var(--line);border-radius:7px;padding:8px;}} .stat b{{display:block;font-size:17px;}} .stat span{{color:var(--mut);font-size:10px;}}
-  .sec{{padding:9px 15px 4px;}} .sec h2{{font-size:11px;text-transform:uppercase;color:var(--mut);margin:0 0 3px;letter-spacing:.4px;}}
+  .stat{{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:8px;}} .stat b{{display:block;font-size:17px;font-family:'Bitter',serif;}} .stat span{{color:var(--mut);font-size:10px;}}
+  .sec{{padding:9px 15px 4px;}} .sec h2{{font-size:11px;text-transform:uppercase;color:var(--mut);margin:0 0 3px;letter-spacing:.4px;font-family:'Roboto',sans-serif;font-weight:700;}}
   .sec .lead{{color:var(--mut);font-size:10.5px;margin:0 0 4px;line-height:1.45;}}
   #scroll{{flex:1;overflow:auto;}}
-  .item{{padding:8px 15px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer;}} .item:hover{{background:#16223c;}}
+  .item{{padding:8px 15px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer;}} .item:hover{{background:var(--panel);}}
   .item b{{font-weight:600;}} .tag{{font-size:9px;padding:1px 5px;border-radius:4px;font-weight:700;margin-left:5px;vertical-align:middle;}}
-  .t-hot{{background:var(--hot);color:#fff;}} .t-edge{{background:var(--edge);color:#0b1526;}} .t-news{{background:#38bdf8;color:#052338;}} .t-a{{background:#ea580c;color:#0b1526;}}
-  .t-b{{background:#dc2626;color:#fff;}} .t-open{{background:#16a34a;color:#04140a;}}
+  .t-hot{{background:var(--hot);color:#fff;}} .t-edge{{background:var(--edge);color:#fff;}} .t-news{{background:#0ea5e9;color:#fff;}} .t-a{{background:#ea580c;color:#fff;}}
+  .t-b{{background:#dc2626;color:#fff;}} .t-open{{background:#e7f6ec;color:#127a3a;}}
   .edge-item{{border-left:3px solid var(--edge);}} .edge-item.hot{{border-left-color:var(--hot);}}
-  .muted{{color:var(--mut);font-size:10.5px;margin-top:2px;}} .why{{color:#fdba74;font-size:10.5px;margin-top:3px;line-height:1.4;}}
-  .drill{{color:#a7f3d0;font-size:10px;margin-top:3px;}}
-  a.news{{color:#93c5fd;text-decoration:none;}} footer{{padding:8px 15px;font-size:9.5px;color:var(--mut);border-top:1px solid var(--line);}}
-  .leaflet-popup-content{{font-size:12px;}} .leaflet-popup-content b{{color:#0b1526;}}
+  .muted{{color:var(--mut);font-size:10.5px;margin-top:2px;}} .why{{color:#9a5b00;font-size:10.5px;margin-top:3px;line-height:1.4;}}
+  .drill{{color:#047857;font-size:10px;margin-top:3px;}}
+  a.news{{color:var(--accent);text-decoration:none;}} footer{{padding:8px 15px;font-size:9.5px;color:var(--mut);border-top:1px solid var(--line);}}
+  .leaflet-popup-content{{font-size:12px;}} .leaflet-popup-content b{{color:#111;}}
   .empty{{color:var(--mut);font-size:11px;padding:2px 15px 10px;}}
-  .item.sel{{background:#1b2b4a;box-shadow:inset 3px 0 0 #f5a300;}}
-  .legendbox{{background:rgba(9,14,26,.9);color:#e5edf7;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:11px;line-height:1.7;max-width:250px;}}
+  .item.sel{{background:#fdeaea;box-shadow:inset 3px 0 0 var(--accent);}}
+  .legendbox{{background:rgba(255,255,255,.95);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:11px;line-height:1.7;max-width:250px;box-shadow:0 1px 6px rgba(0,0,0,.08);}}
   .legendbox b{{font-size:11px;}} .legendbox div{{display:flex;align-items:center;gap:6px;margin-top:3px;}}
   .k-open,.k-held,.k-pt{{display:inline-block;flex:0 0 auto;width:16px;height:12px;}}
   .k-open{{background:#f5a300;border:2px dashed #7c2d00;}}
-  .k-held{{background:transparent;border:1.5px solid #cbd5e1;}}
-  .k-pt{{width:10px;height:10px;border-radius:50%;background:#ef4444;border:2px solid #fff;}}
+  .k-held{{background:transparent;border:1.5px solid #64748b;}}
+  .k-pt{{width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid #fff;}}
   .lbl-open{{background:transparent;border:0;box-shadow:none;color:#7c2d00;font-weight:800;font-size:11px;text-shadow:0 1px 2px #fff,0 0 2px #fff;}}
   .lbl-claim{{background:rgba(255,255,255,.85);border:0;box-shadow:none;color:#111827;font-size:10px;padding:0 3px;}}
   .leaflet-tooltip.lbl-open:before,.leaflet-tooltip.lbl-claim:before{{display:none;}}
   @media (max-width:900px){{#panel{{width:100%;}}#app{{flex-direction:column;}}#map{{height:52%;}}#panel{{height:48%;}}}}
-</style></head><body><div id="app">
+</style></head><body>
+{header}
+<div id="app">
 <div id="map"></div>
 <div id="panel">
   <header><h1>Daily Radar <span style="color:var(--accent)">·</span> {region}</h1>

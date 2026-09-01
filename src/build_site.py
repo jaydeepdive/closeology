@@ -55,17 +55,16 @@ def build(site_dir, regions):
             cards.append(f"""
       <div class="card"><div class="card-h"><h3>{r['name']}</h3><span class="pill">soon</span></div>
         <p class="soon">{r.get('note','Pipeline in progress.')}</p></div>""")
-    html = INDEX.format(fonts=T.FONTS, css=T.THEME_CSS, header=T.header("index.html"),
-                        footer=T.footer(), cards="\n".join(cards), tot=f"{tot_leads:,}")
+    # NB: index.html is the priority list (build_priority). build_site only ships
+    # the per-region CSV/XLSX downloads consumed by the priority page's hero links.
     os.makedirs(site_dir, exist_ok=True)
-    open(os.path.join(site_dir, "index.html"), "w").write(html)
     for r in regions:
         csv = os.path.join(r["dir"], "out", "leads.csv")
         if r.get("live") and os.path.exists(csv):
             shutil.copy(csv, os.path.join(site_dir, f"{r['slug']}_leads.csv"))
             _xlsx(csv, os.path.join(site_dir, f"{r['slug']}_leads.xlsx"), r["name"])
     open(os.path.join(site_dir, ".nojekyll"), "w").write("")
-    print(f"[site] index.html (Deep Dive theme) + downloads")
+    print(f"[site] region CSV/XLSX downloads + .nojekyll")
 
 
 INDEX = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>

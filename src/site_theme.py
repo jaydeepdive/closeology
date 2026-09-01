@@ -12,9 +12,8 @@ except Exception:
 
 RED = "#D71920"
 
-NAV = [("Priority leads", "priorities.html"), ("Explore map", "app.html"),
-       ("BC radar", "daily_bc.html"), ("Ontario radar", "daily_on.html"),
-       ("Overview", "index.html")]
+NAV = [("Priority leads", "index.html"), ("Explore map", "app.html"),
+       ("BC radar", "daily_bc.html"), ("Ontario radar", "daily_on.html")]
 
 THEME_CSS = """
 :root{ --red:#D71920; --ink:#111418; --mut:#636363; --line:#e6e8eb; --panel:#f5f7fa; --bg:#ffffff; --chip:#EDF2F7; }

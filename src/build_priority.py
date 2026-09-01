@@ -42,6 +42,7 @@ def _load(csv, juris):
         bd = score_breakdown(status, dopen, grade, tonnes, bool(drill), spend, conf)
         out.append({
             "juris": juris, "name": _s(r.get("name")) or "(unnamed)",
+            "lead_id": _s(r.get("lead_id")),
             "minfile": _s(r.get("minfile")), "url": _s(r.get("minfile_url")),
             "metal": _s(r.get("primary_metal")), "metals": _s(r.get("metals_abbr")),
             "commodity": _s(r.get("commodity")), "status": status, "deposit_open": dopen,
@@ -70,13 +71,14 @@ def build(site_dir, regions):
     n_bc = sum(1 for l in leads if l["juris"] == "BC")
     n_on = sum(1 for l in leads if l["juris"] == "ON")
     html = PAGE.format(
-        fonts=T.FONTS, css=T.THEME_CSS, header=T.header("priorities.html"), footer=T.footer(),
+        fonts=T.FONTS, css=T.THEME_CSS, header=T.header("index.html"), footer=T.footer(),
         leads_json=json.dumps(leads, separators=(",", ":")),
         n_total=len(leads), n_bc=n_bc, n_on=n_on,
     )
     os.makedirs(site_dir, exist_ok=True)
-    open(os.path.join(site_dir, "priorities.html"), "w").write(html)
-    print(f"[priority] priorities.html — {len(leads)} leads ({n_bc} BC, {n_on} ON)")
+    open(os.path.join(site_dir, "index.html"), "w").write(html)          # front page
+    open(os.path.join(site_dir, "priorities.html"), "w").write(html)      # stable alias
+    print(f"[priority] index.html (front page) — {len(leads)} leads ({n_bc} BC, {n_on} ON)")
 
 
 PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
@@ -116,6 +118,10 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 .prow .pl{{font-weight:600;}} .prow .pn{{color:var(--mut);}}
 .fact{{margin:6px 0;font-size:13px;}} .fact .k{{color:var(--mut);font-weight:600;display:inline-block;min-width:96px;}}
 .drill{{font-size:12.5px;color:#374151;background:#fcfcfd;border-left:3px solid var(--red);padding:7px 10px;margin-top:8px;border-radius:0 6px 6px 0;}}
+.maplink{{display:inline-block;background:var(--red);color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:7px;}} .maplink:hover{{text-decoration:none;opacity:.92;}}
+.herolinks{{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}}
+.hbtn{{background:var(--red);color:#fff;font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;}} .hbtn:hover{{text-decoration:none;opacity:.92;}}
+.hbtn.ghost{{background:#fff;border:1px solid var(--line);color:var(--ink);}}
 .empty{{color:var(--mut);padding:30px;text-align:center;}}
 </style></head><body>
 {header}
@@ -126,6 +132,13 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
        metal value, deposit size, development status, open ground, drilling on record and exploration
        spend. A score of 80 means the same thing in either province. Each lead shows exactly why it
        sits where it does.</p>
+    <div class="herolinks">
+      <a class="hbtn" href="app.html">Interactive map →</a>
+      <a class="hbtn ghost" href="daily_bc.html">BC daily radar</a>
+      <a class="hbtn ghost" href="daily_on.html">Ontario daily radar</a>
+      <a class="hbtn ghost" href="bc_leads.csv">BC CSV</a>
+      <a class="hbtn ghost" href="on_leads.csv">Ontario CSV</a>
+    </div>
   </div>
   <div class="controls">
     <input id="q" placeholder="Search name, metal, commodity, community…"/>
@@ -159,6 +172,7 @@ function card(p){{
   if(p.cells_ha) facts.push(`<div class=fact><span class=k>Open ground</span>${{esc(p.n_cells)}} cell(s) · ${{esc(p.cells_ha)}} ha adjacent</div>`);
   if(p.encumbrances && !p.hard) facts.push(`<div class=fact><span class=k>Nearby</span>${{esc(p.encumbrances)}}</div>`);
   if(p.url) facts.push(`<div class=fact><span class=k>Record</span><a href="${{esc(p.url)}}" target=_blank>${{esc(p.minfile)||'official record'}} ↗</a></div>`);
+  const mapurl=`app.html?r=${{p.juris.toLowerCase()}}&lat=${{p.lat}}&lon=${{p.lon}}&lead=${{encodeURIComponent(p.lead_id||'')}}`;
   return `<div class=lead>
     <div class=lhead>
       <div class=rankbox><div class=r>${{p.rank}}</div><div class=rl>rank</div></div>
@@ -170,6 +184,7 @@ function card(p){{
           ${{p.hard?'<span class="pill p-hard">harder to stake</span>':''}}</div>
         <div class=sub>${{esc(p.metal)}}${{p.minfile?(' · '+esc(p.minfile)):''}}</div>
         <div class=chips>${{chips.join('')}}</div>
+        <div style="margin-top:8px"><a class=maplink href="${{mapurl}}">📍 View on the map</a></div>
       </div>
     </div>
     <div class=lbody>

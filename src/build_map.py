@@ -30,7 +30,9 @@ def build(out_dir, html_path, wms=None, inline_claims=False):
     stats = json.load(open(os.path.join(out_dir, "stats.json")))
     w = wms or {"url": "", "layer": "", "attr": "", "fields": {k: "OBJECTID" for k in
                 ("name", "id", "type", "area", "owner", "good")}}
+    import site_theme as _T
     html = TEMPLATE.format(
+        fonts=_T.FONTS, theme_css=_T.THEME_CSS, header=_T.header(""),
         leaflet_css=_read(os.path.join(VEN, "leaflet.css")),
         leaflet_js=_read(os.path.join(VEN, "leaflet.js")),
         mc_css=_read(os.path.join(VEN, "mc.css")) + _read(os.path.join(VEN, "mcd.css")),
@@ -56,48 +58,53 @@ def build(out_dir, html_path, wms=None, inline_claims=False):
 TEMPLATE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Closeology · {region}</title>
+{fonts}
 <style>{leaflet_css}</style><style>{mc_css}</style>
 <script>{leaflet_js}</script><script>{mc_js}</script>
+<style>{theme_css}</style>
 <style>
-  :root {{ --bg:#0f172a; --panel:#111c33; --line:#243352; --ink:#e5edf7; --mut:#94a3b8; --accent:#c026d3; }}
+  :root {{ --bg:#ffffff; --panel:#f5f7fa; --line:#e6e8eb; --ink:#111418; --mut:#636363; --accent:#D71920; }}
   * {{ box-sizing:border-box; }}
-  html,body {{ margin:0; height:100%; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--ink); }}
-  #app {{ display:flex; height:100vh; overflow:hidden; }}
+  html,body {{ margin:0; height:100%; font-family:'Roboto',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--ink); }}
+  body {{ display:flex; flex-direction:column; height:100vh; overflow:hidden; }}
+  #app {{ display:flex; flex:1; min-height:0; overflow:hidden; }}
   #map {{ flex:1; height:100%; }}
-  #panel {{ width:460px; background:var(--panel); border-left:1px solid var(--line); display:flex; flex-direction:column; }}
-  header {{ padding:12px 15px; border-bottom:1px solid var(--line); }}
-  header h1 {{ margin:0 0 2px; font-size:15px; }} header .sub {{ color:var(--mut); font-size:11.5px; }}
+  #panel {{ width:460px; background:#fff; border-left:1px solid var(--line); display:flex; flex-direction:column; min-height:0; }}
+  #panel > header {{ padding:12px 15px; border-bottom:1px solid var(--line); }}
+  #panel header h1 {{ margin:0 0 2px; font-size:15px; font-family:'Bitter',serif; }} #panel header .sub {{ color:var(--mut); font-size:11.5px; }}
   .stats {{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; padding:10px 15px; border-bottom:1px solid var(--line); }}
-  .stat {{ background:#0b1526; border:1px solid var(--line); border-radius:7px; padding:6px; }}
-  .stat b {{ display:block; font-size:15px; }} .stat span {{ color:var(--mut); font-size:9px; text-transform:uppercase; letter-spacing:.3px; }}
+  .stat {{ background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:6px; }}
+  .stat b {{ display:block; font-size:15px; font-family:'Bitter',serif; }} .stat span {{ color:var(--mut); font-size:9px; text-transform:uppercase; letter-spacing:.3px; }}
   .controls {{ padding:8px 15px; border-bottom:1px solid var(--line); font-size:11.5px; }}
   .chips {{ display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }}
-  .chip {{ padding:2px 7px; border-radius:20px; border:1px solid var(--line); cursor:pointer; font-size:10.5px; display:flex; align-items:center; gap:4px; }}
+  .chip {{ padding:2px 7px; border-radius:20px; border:1px solid var(--line); cursor:pointer; font-size:10.5px; display:flex; align-items:center; gap:4px; background:#fff; }}
   .chip .dot {{ width:8px; height:8px; border-radius:50%; }} .chip.off {{ opacity:.35; }}
   .controls .row {{ display:flex; gap:10px; align-items:center; color:var(--mut); flex-wrap:wrap; }}
   .controls label {{ display:flex; gap:4px; align-items:center; cursor:pointer; }}
   #leadlist {{ flex:1; overflow:auto; }}
   table {{ width:100%; border-collapse:collapse; font-size:11.5px; }}
   th,td {{ padding:6px 8px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }}
-  th {{ position:sticky; top:0; background:#0b1526; color:var(--mut); font-weight:600; font-size:10px; text-transform:uppercase; cursor:pointer; white-space:nowrap; }}
+  th {{ position:sticky; top:0; background:var(--panel); color:var(--mut); font-weight:700; font-size:10px; text-transform:uppercase; cursor:pointer; white-space:nowrap; }}
   th.sorted::after {{ content:" \25BE"; }}
-  tbody tr {{ cursor:pointer; }} tbody tr:hover {{ background:#16223c; }}
-  .lead-name {{ font-weight:600; }}
+  tbody tr {{ cursor:pointer; }} tbody tr:hover {{ background:#fdeaea; }}
+  .lead-name {{ font-weight:700; }}
   .sub2 {{ color:var(--mut); font-size:10px; margin-top:2px; line-height:1.4; }}
-  .drill {{ color:#a7f3d0; font-size:10px; margin-top:3px; line-height:1.4; }}
-  .metal-chip {{ font-size:9px; padding:0 4px; border-radius:4px; color:#0b1526; font-weight:700; margin-left:4px; }}
+  .drill {{ color:#047857; font-size:10px; margin-top:3px; line-height:1.4; }}
+  .metal-chip {{ font-size:9px; padding:0 4px; border-radius:4px; color:#fff; font-weight:700; margin-left:4px; }}
   .badge {{ font-size:8.5px; padding:1px 4px; border-radius:4px; font-weight:700; margin-left:4px; }}
-  .b-dep {{ background:#16a34a; color:#04140a; }} .b-hard {{ background:#b45309; color:#fde68a; }}
-  .score-pill {{ display:inline-block; min-width:26px; text-align:center; padding:2px 5px; border-radius:20px; font-weight:700; color:#0b1526; }}
+  .b-dep {{ background:#e7f6ec; color:#127a3a; }} .b-hard {{ background:#fff4e5; color:#9a5b00; }}
+  .score-pill {{ display:inline-block; min-width:26px; text-align:center; padding:2px 5px; border-radius:20px; font-weight:700; color:#fff; background:var(--accent); }}
   footer {{ padding:8px 15px; font-size:9.5px; color:var(--mut); border-top:1px solid var(--line); line-height:1.4; }}
   .leaflet-popup-content {{ font-size:12px; line-height:1.5; max-width:300px; }}
-  .leaflet-popup-content b {{ color:#0b1526; }} .pk {{ color:#64748b; }}
+  .leaflet-popup-content b {{ color:#111; }} .pk {{ color:#64748b; }}
   .cells {{ max-height:70px; overflow:auto; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:3px 5px; margin-top:3px; font-family:ui-monospace,monospace; font-size:10.5px; color:#0b1526; }}
-  .legend {{ background:rgba(15,23,42,.92); padding:8px 10px; border-radius:8px; font-size:10.5px; line-height:1.55; border:1px solid var(--line); max-width:175px; }}
+  .legend {{ background:rgba(255,255,255,.95); color:var(--ink); padding:8px 10px; border-radius:8px; font-size:10.5px; line-height:1.55; border:1px solid var(--line); max-width:175px; box-shadow:0 1px 6px rgba(0,0,0,.08); }}
   .legend i {{ display:inline-block; width:10px; height:10px; margin-right:5px; border-radius:3px; vertical-align:-1px; }}
   @media (max-width:900px) {{ #panel {{ width:100%; }} #app{{flex-direction:column;}} #map{{height:44%;}} #panel{{height:56%;}} }}
 </style></head>
-<body><div id="app">
+<body>
+{header}
+<div id="app">
   <div id="map"></div>
   <div id="panel">
     <header><h1>Project Closeology <span style="color:var(--accent)">·</span> {region}</h1>
