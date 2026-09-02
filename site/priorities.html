@@ -13,13 +13,12 @@ a{color:var(--red);text-decoration:none;} a:hover{text-decoration:underline;}
 .brand{display:flex;flex-direction:column;gap:3px;text-decoration:none;}
 .brand img{height:30px;width:auto;display:block;}
 .brand .sub{font-family:'Bitter',serif;font-weight:700;font-size:11px;letter-spacing:2.5px;color:var(--ink);text-transform:uppercase;}
-nav.menu{display:flex;gap:22px;flex-wrap:wrap;}
-nav.menu a{color:var(--ink);font-size:14px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;text-decoration:none;}
+nav.menu{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+nav.menu a,nav.menu .dd>a.ddlabel{display:inline-flex;align-items:center;height:32px;color:var(--ink);font-size:14px;font-weight:500;line-height:1;border-bottom:2px solid transparent;text-decoration:none;}
 nav.menu a:hover{color:var(--red);text-decoration:none;}
 nav.menu a.active{color:var(--red);border-bottom-color:var(--red);}
-nav.menu .dd{position:relative;}
-nav.menu .dd>a.ddlabel{color:var(--ink);font-size:14px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;}
-nav.menu .dd>a.ddlabel::after{content:"";display:inline-block;width:0;height:0;margin-left:6px;vertical-align:middle;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--mut);}
+nav.menu .dd{position:relative;display:inline-flex;align-items:center;}
+nav.menu .dd>a.ddlabel::after{content:"";display:inline-block;width:0;height:0;margin-left:6px;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--mut);}
 nav.menu .dd:hover>a.ddlabel::after{border-top-color:var(--red);}
 nav.menu .dd:hover>a.ddlabel,nav.menu .dd>a.ddlabel.active{color:var(--red);}
 nav.menu .dd-menu{display:none;position:absolute;top:100%;left:0;padding-top:8px;min-width:230px;z-index:60;}
@@ -33,7 +32,7 @@ nav.menu .dd-menu a:hover{background:var(--panel);color:var(--red);text-decorati
 footer.site{border-top:1px solid var(--line);color:var(--mut);font-size:12px;line-height:1.6;padding:22px;max-width:1180px;margin:0 auto;}
 footer.site b{color:var(--ink);}
 
-.p-bc{background:#e8f0fe;color:#1a56db;}.p-yk{background:#eef7ee;color:#2f7d32;}.p-nl{background:#e6f4f6;color:#0e7490;}.p-sk{background:#f3eefe;color:#6d28d9;}.p-mb{background:#fef3e2;color:#b45309;}.p-nt{background:#e9f7f3;color:#0f766e;}.p-ns{background:#eef2ff;color:#3730a3;}.p-ab{background:#e0f2fe;color:#0369a1;}.p-qc{background:#fce7f3;color:#be185d;}
+.p-bc{background:#e8f0fe;color:#1a56db;}.p-on{background:#fdeaea;color:#c81e1e;}.p-yk{background:#eef7ee;color:#2f7d32;}.p-nl{background:#e6f4f6;color:#0e7490;}.p-sk{background:#f3eefe;color:#6d28d9;}.p-mb{background:#fef3e2;color:#b45309;}.p-nt{background:#e9f7f3;color:#0f766e;}.p-nb{background:#fdf0e6;color:#9a3412;}.p-ns{background:#eef2ff;color:#3730a3;}.p-ab{background:#e0f2fe;color:#0369a1;}.p-qc{background:#fce7f3;color:#be185d;}
 .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:18px 0 8px;}
 .fsel{display:flex;flex-direction:column;gap:5px;}
 .fsel.grow{flex:1;min-width:220px;}
@@ -84,7 +83,7 @@ footer.site b{color:var(--ink);}
 <div class="wrap">
   <div class="hero">
     <h1>Priority leads</h1><div class="rule"></div>
-    <p>Every British Columbia, Yukon, Newfoundland & Labrador, Saskatchewan, Manitoba, Northwest Territories, Nova Scotia, Alberta and Quebec lead ranked on <b>one common scale</b> — driven by in-situ
+    <p>Every British Columbia, Ontario, Yukon, Newfoundland & Labrador, Saskatchewan, Manitoba, Northwest Territories, New Brunswick, Nova Scotia, Alberta and Quebec lead ranked on <b>one common scale</b> — driven by in-situ
        metal value, deposit size, development status, open ground, drilling on record and exploration
        spend. A score of 80 means the same thing in every jurisdiction. Each lead shows exactly why it
        sits where it does.</p>
