@@ -57,6 +57,9 @@ def build(regions_cfg, html_path):
         oc = os.path.join(rc["dir"], "out", "opencells.geojson")
         if os.path.exists(oc):
             shutil.copy(oc, os.path.join(site_dir, f"{rc['slug'].lower()}_opencells.geojson"))
+        cn = os.path.join(rc["dir"], "out", "claims_near.geojson")
+        if os.path.exists(cn):
+            shutil.copy(cn, os.path.join(site_dir, f"{rc['slug'].lower()}_claims_near.geojson"))
     leads.sort(key=lambda x: -x["score"])
 
     counts_j, counts_m = {}, {}
@@ -177,7 +180,7 @@ L.geoJSON(BORDERS,{{interactive:false,style:{{color:'#334155',weight:1.4,opacity
 L.layerGroup(BLABELS.map(b=>L.marker([b.lat,b.lon],{{interactive:false,icon:L.divIcon({{className:'',html:`<span style="font:700 11px Bitter,serif;color:#475569;text-shadow:0 0 3px #fff,0 0 3px #fff">${{b.n}}</span>`}})}}))).addTo(map);
 const cluster=L.markerClusterGroup({{chunkedLoading:true,maxClusterRadius:48,disableClusteringAtZoom:9}});
 map.addLayer(cluster);
-let groundLayer=null, selMarker=null, selId=null;
+let groundLayer=null, claimLayer=null, selMarker=null, selId=null;
 const markers={{}};
 let jf='all', mf='all', mins=0, q='';
 function metalMatch(dm){{ if(mf==='all')return true; if(GROUPS[mf])return GROUPS[mf].includes(dm); return dm===mf; }}
@@ -198,19 +201,44 @@ function refresh(){{
     <div class=mt><span style="color:${{col(p.dmetal)}}">●</span> ${{esc(p.dmetal)}}${{p.deposit_open?' · deposit open':''}} · ${{esc(p.community||'')}}</div></div></div>`).join('')
     ||'<div class=row>No opportunities match the filters.</div>';
 }}
-async function showGround(p){{
+function clearOverlays(){{
   if(groundLayer){{map.removeLayer(groundLayer);groundLayer=null;}}
+  if(claimLayer){{map.removeLayer(claimLayer);claimLayer=null;}}
+}}
+async function showGround(p){{
+  clearOverlays();
+  let bounds=null;
   try{{
     const r=await fetch(p.region+'_opencells.geojson'); const d=await r.json();
-    const fs=d.features.filter(f=>f.properties.lead_id===p.lead_id);
+    // the dissolved open-ground block(s) this lead belongs to (shared with any
+    // neighbouring occurrence sitting in the same open ground)
+    const fs=d.features.filter(f=>String(f.properties.lead_ids||'').split(',').indexOf(String(p.lead_id))>=0);
     if(fs.length){{
-      // render each open cell as its own square so it reads as discrete,
-      // pegable claim cells (a staking grid) — not an abstract target blob
       groundLayer=L.geoJSON({{type:'FeatureCollection',features:fs}},
-        {{interactive:false,style:{{color:'#0f7a3a',weight:1,opacity:.9,fillColor:'#22c55e',fillOpacity:.32}}}}).addTo(map);
-      map.fitBounds(groundLayer.getBounds().pad(0.6));
-    }} else {{ map.setView([p.lat,p.lon],12); }}
-  }}catch(e){{ map.setView([p.lat,p.lon],12); }}
+        {{interactive:false,style:{{color:'#0f7a3a',weight:1.5,opacity:.95,fillColor:'#22c55e',fillOpacity:.34}}}}).addTo(map);
+      bounds=groundLayer.getBounds();
+    }}
+  }}catch(e){{}}
+  // real neighbouring claims (already-staked ground) so the open ground reads
+  // as the genuine gaps in tenure, not a shape floating in space
+  try{{
+    const cr=await fetch(p.region+'_claims_near.geojson');
+    if(cr.ok){{
+      const cd=await cr.json();
+      const near=(cd.features||[]).filter(f=>{{
+        try{{ const b=L.geoJSON(f).getBounds();
+          const c=b.getCenter();
+          return Math.abs(c.lat-p.lat)<0.12 && Math.abs(c.lng-p.lon)<0.22; }}catch(_){{return false;}}
+      }});
+      if(near.length){{
+        claimLayer=L.geoJSON({{type:'FeatureCollection',features:near}},
+          {{interactive:false,style:{{color:'#8a6d3b',weight:1,opacity:.75,fillColor:'#c9a227',fillOpacity:.14}}}}).addTo(map);
+        if(!bounds) bounds=claimLayer.getBounds();
+      }}
+    }}
+  }}catch(e){{}}
+  if(bounds && bounds.isValid()){{ map.fitBounds(bounds.pad(0.55)); }}
+  else {{ map.setView([p.lat,p.lon],12); }}
 }}
 function detailHTML(p){{
   const parts=(p.parts||[]).map(x=>`<div class=prow><span class=pbadge>+${{x.pts}}</span><span><span class=pl>${{esc(x.label)}}.</span> <span class=pn>${{esc(x.note)}}</span></span></div>`).join('');
@@ -229,7 +257,7 @@ function detailHTML(p){{
       <span class="pill" style="background:${{col(p.dmetal)}}22;color:${{col(p.dmetal)}}">${{esc(p.dmetal)}}</span>
       ${{p.deposit_open?'<span class="pill p-open">deposit open</span>':''}}${{p.hard?'<span class="pill p-hard">harder to stake</span>':''}}
       <div class=dsub>${{esc(p.juris)}} · ${{esc(p.minfile||'')}}</div></div>
-    ${{(p.n_cells)?`<div class=ground>◎ <b>Stakeable ground</b> — ${{esc(p.n_cells)}} open cell(s), ~${{esc(p.cells_ha)}} ha ${{p.deposit_open?'on and around the deposit':'adjacent to the deposit'}}, shown in green on the map. Verify exact cells in the official registry before staking.</div>`:''}}
+    ${{(p.n_cells)?`<div class=ground>◎ <b>Stakeable ground</b> — ${{esc(p.n_cells)}} open cell(s), ~${{esc(p.cells_ha)}} ha ${{p.deposit_open?'on and around the deposit':'adjacent to the deposit'}}. The green block on the map is the real open ground carved around any existing claims (shown in gold). Verify exact cells in the official registry before staking.</div>`:''}}
     <div class=chips>${{p.metals?`<span class=chip>${{esc(p.metals)}}</span>`:''}}${{p.grade?`<span class=chip>${{esc(p.grade)}}</span>`:''}}</div>
     <div class=sec><div class=sechd>Qualifying details</div>${{facts.join('')}}
       ${{p.production?`<div class=prodbox><b>Past production.</b> ${{esc(p.production)}}</div>`:''}}
@@ -247,7 +275,7 @@ function select(id){{
 }}
 function deselect(){{
   selId=null;
-  if(groundLayer){{map.removeLayer(groundLayer);groundLayer=null;}}
+  clearOverlays();
   document.getElementById('detail').style.display='none';
   document.getElementById('list').style.display='block';
   document.getElementById('cnt').style.display='block';
@@ -262,7 +290,8 @@ const legend=L.control({{position:'bottomleft'}});
 legend.onAdd=()=>{{const d=L.DomUtil.create('div','legend');
   const ms=['Gold','Silver','Copper','Zinc','Lead','Nickel','Uranium','Lithium','Other metallic'];
   d.innerHTML='<b>Marker = lead</b> (size = score)<br>'+ms.map(m=>`<i style="background:${{col(m)}}"></i>${{m}}`).join('<br>')
-    +'<br><i style="background:#22c55e;border:1px solid #0f7a3a;border-radius:2px"></i>Open claim cells (stakeable)';return d;}};
+    +'<br><i style="background:#22c55e;border:1px solid #0f7a3a;border-radius:2px"></i>Open ground (stakeable)'
+    +'<br><i style="background:#c9a227;border:1px solid #8a6d3b;border-radius:2px"></i>Existing claims (staked)';return d;}};
 legend.addTo(map);
 refresh();
 </script></body></html>

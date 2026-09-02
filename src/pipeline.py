@@ -422,17 +422,50 @@ def run_region(region):
     leads[cols].to_csv(os.path.join(out_dir, "leads.csv"), index=False)
     leads[cols + ["metal_buckets", "geometry"]].to_file(os.path.join(out_dir, "leads.geojson"), driver="GeoJSON")
 
-    # open stakeable cells as polygons (lat/long lattice, parallel to real claim cells)
+    # Open stakeable ground. Every lead's open cells are DISSOLVED into
+    # contiguous blocks, so two occurrences sitting in the same open ground
+    # share ONE real shape (bounded by the surrounding claims) instead of each
+    # getting an identical fixed disk stamped on its own point. Each dissolved
+    # block is tagged with the lead_ids it serves so the map can light up the
+    # right block when a lead is selected.
+    from shapely.ops import unary_union
     dlon, dlat = gridmeta["dlon"], gridmeta["dlat"]
-    cellfeats = []
+    cell_leads = {}   # "i_j" -> set(lead_id)
     for _, r in leads.iterrows():
         for cid in (r["open_cells"] or []):
+            cell_leads.setdefault(cid, set()).add(r["lead_id"])
+    if cell_leads:
+        cids = list(cell_leads)
+        squares, reps = [], []
+        for cid in cids:
             i, j = map(int, cid.split("_"))
-            cellfeats.append({"lead_id": r["lead_id"], "rank": int(r["rank"]), "name": r["name"],
-                              "geometry": box(i * dlon, j * dlat, (i + 1) * dlon, (j + 1) * dlat)})
-    if cellfeats:
-        gpd.GeoDataFrame(cellfeats, geometry="geometry", crs="EPSG:4326").to_file(
-            os.path.join(out_dir, "opencells.geojson"), driver="GeoJSON")
+            sq = box(i * dlon, j * dlat, (i + 1) * dlon, (j + 1) * dlat)
+            squares.append(sq)
+            reps.append(sq.representative_point())
+        merged = unary_union(squares)
+        parts = list(merged.geoms) if merged.geom_type == "MultiPolygon" else [merged]
+        csq = gpd.GeoDataFrame({"cid": cids}, geometry=reps, crs="EPSG:4326")
+        pg = gpd.GeoDataFrame({"pi": list(range(len(parts)))}, geometry=list(parts), crs="EPSG:4326")
+        jn = gpd.sjoin(csq, pg, predicate="within", how="left")
+        part_leads = {pi: set() for pi in range(len(parts))}
+        part_cells = {pi: 0 for pi in range(len(parts))}
+        for cid, pi in zip(jn["cid"], jn["pi"]):
+            if pi != pi:      # NaN — cell fell on a boundary; skip (rare)
+                continue
+            pi = int(pi)
+            part_leads[pi] |= cell_leads[cid]
+            part_cells[pi] += 1
+        feats = []
+        for pi, part in enumerate(parts):
+            ids = sorted(part_leads.get(pi, []))
+            if not ids:
+                continue
+            feats.append({"lead_ids": ",".join(ids), "n_cells": part_cells.get(pi, 0),
+                          "area_ha": round(part_cells.get(pi, 0) * (GRID_M * GRID_M) / 1e4, 1),
+                          "geometry": part})
+        if feats:
+            gpd.GeoDataFrame(feats, geometry="geometry", crs="EPSG:4326").to_file(
+                os.path.join(out_dir, "opencells.geojson"), driver="GeoJSON")
 
     # claim-cell context near leads (regions without a live claims WMS)
     if region.get("inline_claims") and claims is not None:
