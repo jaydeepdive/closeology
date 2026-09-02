@@ -59,11 +59,11 @@ def _fetch(mdi):
 
 
 def _parse(html):
-    """-> (tonnes, resource_cat, grade_str, produced_tonnes)."""
+    """-> (tonnes, resource_cat, grade_str, produced_tonnes, prod_year)."""
     try:
         tabs = pd.read_html(io.StringIO(html))
     except Exception:
-        return None, "", "", None
+        return None, "", "", None, None
     reserves = production = None
     for tb in tabs:
         cols = [str(c).lower() for c in tb.columns]

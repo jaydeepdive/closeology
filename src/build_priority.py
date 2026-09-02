@@ -160,7 +160,8 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 .fsel label{{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);font-weight:700;}}
 .fsel input,.fsel select{{height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;color:var(--ink);}}
 .fsel select{{font-weight:600;font-size:13.5px;cursor:pointer;min-width:190px;}}
-.fsel input{{width:100%;}}
+.fsel input[type=text],.fsel input#q{{width:100%;}}
+.fsel input[type=range]{{height:auto;min-width:150px;padding:0;border:0;}}
 .count{{color:var(--mut);font-size:13px;}}
 .lead{{border:1px solid var(--line);border-radius:12px;padding:0;margin:14px 0;overflow:hidden;background:#fff;}}
 .lead:hover{{box-shadow:0 3px 14px rgba(0,0,0,.06);}}
@@ -212,6 +213,8 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
       <select id="jsel">{jopts}</select></div>
     <div class="fsel"><label for="msel">Dominant metal</label>
       <select id="msel">{mopts}</select></div>
+    <div class="fsel"><label for="sc">Min score: <span id="sv">0</span></label>
+      <input id="sc" type="range" min="0" max="90" value="0" step="5"></div>
   </div>
   <div class="count" id="count"></div>
   <div id="list"></div>
@@ -221,7 +224,7 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 const LEADS={leads_json};
 const GROUPS={groups_json};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
-let jf='all', mf='all', q='';
+let jf='all', mf='all', q='', mins=0;
 function metalMatch(dm){{
   if(mf==='all') return true;
   if(GROUPS[mf]) return GROUPS[mf].includes(dm);
@@ -271,13 +274,14 @@ function card(p){{
 }}
 function render(){{
   const ql=q.toLowerCase();
-  const rows=LEADS.filter(p=>(jf==='all'||p.juris===jf) && metalMatch(p.dmetal) &&
+  const rows=LEADS.filter(p=>(jf==='all'||p.juris===jf) && metalMatch(p.dmetal) && p.score>=mins &&
     (!ql || (p.name+' '+p.metal+' '+p.commodity+' '+p.community+' '+p.metals).toLowerCase().includes(ql)));
   document.getElementById('count').textContent=rows.length+' lead'+(rows.length===1?'':'s')+' shown, ranked by priority';
   document.getElementById('list').innerHTML=rows.length?rows.map(card).join(''):'<div class=empty>No leads match — widen the metal or jurisdiction filter.</div>';
 }}
 document.getElementById('jsel').addEventListener('change',e=>{{jf=e.target.value;render();}});
 document.getElementById('msel').addEventListener('change',e=>{{mf=e.target.value;render();}});
+document.getElementById('sc').addEventListener('input',e=>{{mins=+e.target.value;document.getElementById('sv').textContent=mins;render();}});
 document.getElementById('q').addEventListener('input',e=>{{q=e.target.value;render();}});
 render();
 </script></body></html>

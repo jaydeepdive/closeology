@@ -10,6 +10,8 @@ from config import (metal_bucket, score_lead, METAL_ABBR, METAL_ORDER,
                     GRID_M, NEIGHBOR_M, TOP_N)
 
 STATUS_CAND = ("produc", "prospect", "deposit", "discovery", "developed")
+MIN_LEAD_SCORE = 18            # floor only sheds sub-merit noise; pre-1980 producers
+                               # (informative but low-value) are kept and rank low
 
 
 def _rd(p):
@@ -333,13 +335,16 @@ def run_region(region):
     # lithology unit on open ground is NOT a lead — otherwise data-poor jurisdictions
     # (every point reads "Occurrence") flood the map with undifferentiated dots and
     # drown the genuinely prospective ground in BC / Ontario / Quebec.
+    # MERIT BAR — a lead must be a real deposit, not a bare occurrence on open ground:
+    # a classified deposit / developed prospect / discovery / advanced-exploration
+    # status, OR a producer/past-producer, OR hard evidence (economic grade, resource,
+    # tonnage). Bare showings / early prospects / lithology units are dropped.
+    from config import grade_value
+    ECON_MIN = 25.0
     MERIT_STATUS = ("produc", "developed", "deposit", "discovery", "advanced")
     merit_status = st.str.contains("|".join(MERIT_STATUS))
-    # hard evidence of a real deposit: a grade, tonnage, or a classified resource.
-    # (Drilling alone is NOT a merit gate — a lone historical recon hole isn't a
-    # deposit — but it still counts toward the score and the drill radar.)
-    has_evidence = (occ["grade_str"].astype(str).str.len() >= 2) \
-        | occ["has_resource"] \
+    gval = occ["grade_str"].map(grade_value)
+    has_evidence = (gval >= ECON_MIN) | occ["has_resource"] \
         | (occ["tonnes_str"].astype(str).str.len() >= 2)
     keep = (merit_status | has_evidence) & (occ["primary_metal"] != "Industrial") & ~active
     cand = occ[keep].copy()
@@ -383,6 +388,20 @@ def run_region(region):
         bool(r.get("drill_highlights")), r.get("exploration_spend", 0),
         grade_conf=r.get("grade_conf", 1.0), last_prod_year=r.get("last_prod_year"),
         primary_metal=r.get("primary_metal", "")), axis=1)
+    # QUALITY FLOOR: a lead must clear a minimum opportunity score. This is
+    # jurisdiction-fair (a recent past producer or a developed/classified deposit on
+    # open ground clears it whether or not its province publishes assays), but it
+    # sheds the long tail of spent pre-1980 workings and marginal showings that
+    # otherwise flood the lightly-staked provinces.
+    leads = leads[leads["score"] >= MIN_LEAD_SCORE].reset_index(drop=True)
+    if leads.empty:
+        for fn in ("leads.csv", "leads.geojson", "opencells.geojson", "claims_near.geojson",
+                   "occurrences_all.geojson", "stats.json"):
+            fp2 = os.path.join(out_dir, fn)
+            if os.path.exists(fp2):
+                os.remove(fp2)
+        print(f"[{region['name']}] no leads clear the quality floor — skipping")
+        return
     leads = leads.sort_values(["score", "deposit_open", "exploration_spend"], ascending=False).reset_index(drop=True)
     leads.insert(0, "rank", range(1, len(leads) + 1))
     leads["lead_id"] = ["L%04d" % i for i in leads["rank"]]

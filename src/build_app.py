@@ -208,7 +208,9 @@ function popup(p){{
     ${{p.u?(' · <a href="'+esc(p.u)+'" target=_blank>record ↗</a>'):''}}`;
 }}
 LEADS.forEach(p=>{{
-  const m=L.circleMarker([p.lat,p.lon],{{radius:6,color:'#0b1526',weight:1,fillColor:col(p.dm),fillOpacity:.9}});
+  // size + opacity scale with score so quality leads visually dominate the tail
+  const r=3.5+Math.max(0,Math.min(p.s,90))/13, op=0.45+Math.max(0,Math.min(p.s,90))/180;
+  const m=L.circleMarker([p.lat,p.lon],{{radius:r,color:'#0b1526',weight:.8,fillColor:col(p.dm),fillOpacity:op}});
   m.bindPopup(()=>popup(p)); m._p=p; markers[p.id]=m;
 }});
 function refresh(){{

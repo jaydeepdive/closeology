@@ -68,8 +68,11 @@ def _on():
                 fx()
     on_prep.prep()
     pipeline.run_region(ON)
-    import on_web_facts
-    on_web_facts.enrich("data/on")
+    try:
+        import on_web_facts
+        on_web_facts.enrich("data/on")     # grade/tonnage from MDI pages; re-rank
+    except Exception as e:
+        print("[build_all] ON web-facts enrich skipped (leads already built):", str(e)[:120])
     build_map.build("data/on/out", "site/on.html", inline_claims=True)
     daily.build("data/on", "site", "Ontario", "EPSG:3161",
                 news_path="site/news_on.json", out_name="daily_on.html")
