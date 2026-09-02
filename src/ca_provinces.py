@@ -63,7 +63,7 @@ PROVINCES = [
     },
     {   # ---------------- Manitoba ----------------
         "slug": "mb", "name": "Manitoba", "metric_crs": LAMBERT,
-        "boundary_name": "Manitoba",
+        "boundary_name": "Manitoba", "enrich": "manitoba",
         "attribution": ("Contains information from Manitoba Mineral Resources (mineral "
                         "deposits database, mining claims/leases, mining-restricted areas) "
                         "under the Manitoba Open Government Licence. Verify tenure before staking."),
@@ -101,7 +101,7 @@ PROVINCES = [
     },
     {   # ---------------- New Brunswick ----------------
         "slug": "nb", "name": "New Brunswick", "metric_crs": LAMBERT,
-        "boundary_name": "New Brunswick",
+        "boundary_name": "New Brunswick", "enrich": "new_brunswick",
         "attribution": ("Contains information from the Government of New Brunswick / GeoNB "
                         "(NBGS mineral occurrences, mineral claims) under the GeoNB Open Data "
                         "Licence. Holder/expiry not public — verify tenure before staking."),
@@ -116,7 +116,7 @@ PROVINCES = [
     },
     {   # ---------------- Nova Scotia ----------------
         "slug": "ns", "name": "Nova Scotia", "metric_crs": LAMBERT,
-        "boundary_name": "Nova Scotia",
+        "boundary_name": "Nova Scotia", "enrich": "nova_scotia",
         "attribution": ("Contains information from the Government of Nova Scotia (NSMOD "
                         "mineral occurrences, NovaRoc exploration licences/leases, restricted "
                         "lands) under the NS Open Data Licence. Verify tenure before staking."),

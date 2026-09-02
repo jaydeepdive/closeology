@@ -87,11 +87,20 @@ def _yk():
 
 def _arcgis_province(cfg):
     def _run():
-        if os.environ.get("FULL") or not _have(os.path.join(cfg["dir"], "claims.parquet")) \
-                or not _have(os.path.join(cfg["dir"], "occurrences.parquet")):
+        fresh = os.environ.get("FULL") or not _have(os.path.join(cfg["dir"], "claims.parquet")) \
+            or not _have(os.path.join(cfg["dir"], "occurrences.parquet"))
+        if fresh:
             arcgis_common.run_fetch(cfg)
         else:
             arcgis_common.boundary(cfg)
+        # per-province enrichment (assay tables / detail pages) so leads qualify
+        enrich = cfg.get("enrich")
+        if enrich and fresh:
+            try:
+                import region_enrich
+                getattr(region_enrich, enrich)(cfg["dir"])
+            except Exception as e:
+                print(f"[build_all] {cfg['slug']} enrich skipped:", str(e)[:100])
         pipeline.run_region(run_region_cfg(cfg))
         build_map.build(os.path.join(cfg["dir"], "out"), f"site/{cfg['slug']}.html", inline_claims=True)
         daily.build(cfg["dir"], "site", cfg["name"], cfg["metric_crs"],
