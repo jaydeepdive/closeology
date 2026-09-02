@@ -69,7 +69,9 @@ def _load(csv, juris):
 PILL = {"BC": "background:#e8f0fe;color:#1a56db;", "ON": "background:#fdeaea;color:#c81e1e;",
         "YK": "background:#eef7ee;color:#2f7d32;", "NL": "background:#e6f4f6;color:#0e7490;",
         "SK": "background:#f3eefe;color:#6d28d9;", "MB": "background:#fef3e2;color:#b45309;",
-        "QC": "background:#fce7f3;color:#be185d;", "AB": "background:#e0f2fe;color:#0369a1;"}
+        "QC": "background:#fce7f3;color:#be185d;", "AB": "background:#e0f2fe;color:#0369a1;",
+        "NT": "background:#e9f7f3;color:#0f766e;", "NB": "background:#fdf0e6;color:#9a3412;",
+        "NS": "background:#eef2ff;color:#3730a3;"}
 
 
 def build(site_dir, regions):
@@ -201,7 +203,7 @@ function card(p){{
   if(p.cells_ha) facts.push(`<div class=fact><span class=k>Open ground</span>${{esc(p.n_cells)}} cell(s) · ${{esc(p.cells_ha)}} ha adjacent</div>`);
   if(p.encumbrances && !p.hard) facts.push(`<div class=fact><span class=k>Nearby</span>${{esc(p.encumbrances)}}</div>`);
   if(p.url) facts.push(`<div class=fact><span class=k>Record</span><a href="${{esc(p.url)}}" target=_blank>${{esc(p.minfile)||'official record'}} ↗</a></div>`);
-  const mapurl=`app.html?r=${{p.juris.toLowerCase()}}&lat=${{p.lat}}&lon=${{p.lon}}&lead=${{encodeURIComponent(p.lead_id||'')}}`;
+  const mapurl=`${{p.juris.toLowerCase()}}.html?lat=${{p.lat}}&lon=${{p.lon}}&lead=${{encodeURIComponent(p.lead_id||'')}}`;
   return `<div class=lead>
     <div class=lhead>
       <div class=rankbox><div class=r>${{p.rank}}</div><div class=rl>rank</div></div>

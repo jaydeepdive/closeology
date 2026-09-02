@@ -184,6 +184,14 @@ const leadsLayer=L.geoJSON(LEADS,{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radi
 try{{map.fitBounds(leadsLayer.getBounds().pad(0.05));}}catch(e){{map.setView([50,-86],5);}}
 L.control.layers({{'Topographic':topo,'Street':osm}},{{}},{{position:'topleft'}}).addTo(map);
 
+// deep link from the priority page: <region>.html?lat=..&lon=..&lead=L0007
+(function(){{
+  const q=new URLSearchParams(location.search);
+  const lat=parseFloat(q.get('lat')), lon=parseFloat(q.get('lon')), lead=q.get('lead');
+  if(isFinite(lat)&&isFinite(lon)){{ map.setView([lat,lon],12);
+    const l=lead&&leadMarkers[lead]; if(l){{setTimeout(()=>l.openPopup(),300);}} }}
+}})();
+
 document.getElementById('subline').textContent=`Updated ${{STATS.generated}} · green = open stakeable ground · click any lead`;
 document.getElementById('attribution').textContent=STATS.attribution;
 const S=[['n_leads','Leads'],['n_deposit_open','Deposit open'],['n_with_drill_highlights','Drill data'],['n_hard_to_stake','Harder stake'],['n_candidate_leads','Candidates'],['n_occurrences','Occurrences'],['n_claims_active','Claims'],['top_n_examined','Examined']];

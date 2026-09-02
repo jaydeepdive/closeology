@@ -309,9 +309,17 @@ def run_region(region):
     st = occ["status"].str.lower()
     # a currently-operating mine/quarry can't be staked — exclude (keep PAST producers)
     active = (st.str.contains("producing") & ~st.str.contains("past")) | (st.str.strip() == "producer")
-    cand = occ[(st.str.contains("|".join(STATUS_CAND)) | occ["has_resource"])
-               & (occ["primary_metal"] != "Industrial") & ~active].copy()
+    status_hit = st.str.contains("|".join(STATUS_CAND)) | occ["has_resource"]
+    # Some jurisdictions (e.g. MB, NB) publish no development-status vocabulary — every
+    # occurrence reads "Occurrence". When the status filter matches nothing, fall back to
+    # all occurrences (still non-industrial, non-active) and let base_score + TOP_N rank them.
+    if not status_hit.any():
+        status_hit = pd.Series(True, index=occ.index)
+    cand = occ[status_hit & (occ["primary_metal"] != "Industrial") & ~active].copy()
     cand = cand.sort_values("base_score", ascending=False).head(TOP_N).reset_index(drop=True)
+    if cand.empty:
+        print(f"[{region['name']}] no candidate occurrences — skipping")
+        return
 
     cm = claims.to_crs(metric)
     rz = reserves.copy() if reserves is not None else None
@@ -379,9 +387,16 @@ def run_region(region):
         halo = gpd.GeoDataFrame(geometry=[lm.geometry.buffer(2500).union_all()], crs=metric)
         cnear = gpd.sjoin(claims.to_crs(metric), halo, predicate="intersects", how="inner")
         cnear = claims.loc[cnear.index.unique()].to_crs("EPSG:4326")
-        idcol = "claim" if "claim" in cnear.columns else cnear.columns[0]
-        cnear[[idcol, "geometry"]].rename(columns={idcol: "claim"}).to_file(
-            os.path.join(out_dir, "claims_near.geojson"), driver="GeoJSON")
+        gcol = cnear.geometry.name
+        if "claim" in cnear.columns:
+            idcol = "claim"
+        elif "TENURE_NUMBER_ID" in cnear.columns:
+            idcol = "TENURE_NUMBER_ID"
+        else:
+            idcol = next((c for c in cnear.columns if c != gcol), gcol)
+        out = gpd.GeoDataFrame(cnear[[idcol, gcol]].rename(columns={idcol: "claim", gcol: "geometry"}),
+                               geometry="geometry", crs=cnear.crs)
+        out.to_file(os.path.join(out_dir, "claims_near.geojson"), driver="GeoJSON")
 
     # light occurrences layer for the map
     o = occ.copy()

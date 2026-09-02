@@ -55,16 +55,20 @@ def build(site_dir, regions):
             cards.append(f"""
       <div class="card"><div class="card-h"><h3>{r['name']}</h3><span class="pill">soon</span></div>
         <p class="soon">{r.get('note','Pipeline in progress.')}</p></div>""")
-    # NB: index.html is the priority list (build_priority). build_site only ships
-    # the per-region CSV/XLSX downloads consumed by the priority page's hero links.
+    # index.html is the priority list (build_priority). build_site ships the per-region
+    # CSV/XLSX downloads AND the "Regions & maps" hub (regions.html) linking every
+    # jurisdiction's map + daily radar + downloads.
     os.makedirs(site_dir, exist_ok=True)
     for r in regions:
         csv = os.path.join(r["dir"], "out", "leads.csv")
         if r.get("live") and os.path.exists(csv):
             shutil.copy(csv, os.path.join(site_dir, f"{r['slug']}_leads.csv"))
             _xlsx(csv, os.path.join(site_dir, f"{r['slug']}_leads.xlsx"), r["name"])
+    html = INDEX.format(fonts=T.FONTS, css=T.THEME_CSS, header=T.header("regions.html"),
+                        footer=T.footer(), cards="".join(cards), tot=f"{tot_leads:,}")
+    open(os.path.join(site_dir, "regions.html"), "w").write(html)
     open(os.path.join(site_dir, ".nojekyll"), "w").write("")
-    print(f"[site] region CSV/XLSX downloads + .nojekyll")
+    print(f"[site] regions.html hub ({len(cards)} regions) + CSV/XLSX + .nojekyll")
 
 
 INDEX = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
@@ -92,15 +96,15 @@ INDEX = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 {header}
 <div class="wrap">
   <div class="hero">
-    <h1>Mineral opportunity radar</h1><div class="rule"></div>
+    <h1>Regions &amp; maps</h1><div class="rule"></div>
     <p>Past-producing and drilled-out deposits sitting on — or right beside — <b>open, stakeable ground</b>
-       across British Columbia and Ontario. Screened against live mineral titles, leases, reserves and parks;
-       valued on real in-situ metal worth and refreshed by a daily scan.</p>
+       across Canada. Each jurisdiction below has its own interactive map and daily radar; every lead is
+       screened against live mineral titles, leases and reserves and valued on real in-situ metal worth.</p>
   </div>
-  <a class="big" href="priorities.html">
+  <a class="big" href="index.html">
     <div class="lead"><h2>Priority leads — one ranked list</h2>
-      <div style="color:var(--mut)">Every BC and Ontario lead on a single common scale ({tot} in all), each showing
-      exactly why it ranks where it does and all its qualifying detail.</div></div>
+      <div style="color:var(--mut)">Every lead across all jurisdictions on a single common scale ({tot} in all),
+      each showing exactly why it ranks where it does and all its qualifying detail.</div></div>
     <span class="cta">Open the priority list →</span>
   </a>
   <div class="grid">{cards}</div>

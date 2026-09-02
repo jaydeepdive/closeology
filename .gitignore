@@ -1,24 +1,21 @@
-# large raw data — re-fetched by build_all
+# large raw data — re-fetched by build_all (data/keep is kept; see negation below)
+data/*/*.parquet
+data/*/*.csv
+data/*/*.accdb
+data/*/*.zip
+data/*/*.chm
+data/*/out/
+data/qc/_gpkg/
 data/on/
-data/bc/*.parquet
-data/bc/*.csv
-data/bc/*.accdb
-data/bc/*.zip
-data/bc/*.chm
-data/bc/out/
-data/yk/*.parquet
-data/yk/*.csv
-data/yk/out/
 data/minfile_db/
-# large generated site assets — rebuilt + published as artifact
-site/app.html
+!data/keep/**
+# large generated site assets — rebuilt in CI + published via the Pages artifact.
+# Keep only the lightweight core pages (priority + hub) tracked for reference.
+site/*.html
+!site/index.html
+!site/priorities.html
+!site/regions.html
 site/app_artifact.html
-site/bc.html
-site/on.html
-site/yk.html
-site/daily_bc.html
-site/daily_on.html
-site/daily_yk.html
 site/*.geojson
 site/*.png
 __pycache__/
