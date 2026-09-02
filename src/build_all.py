@@ -145,7 +145,7 @@ def main():
     app_regions = [r for r in APP_REGIONS if r["slug"] in live
                    and _have(os.path.join(r["dir"], "out", "leads.geojson"))]
 
-    build_app.build(app_regions, "site/app.html")
+    build_app.build(regions_site, "site/app.html")   # ONE unified all-Canada map
     import build_priority
     build_priority.build("site", regions_site)         # index.html (front page)
     build_site.build("site", regions_site)             # regions.html hub + CSV/XLSX

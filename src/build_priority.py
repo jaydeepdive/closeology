@@ -154,11 +154,13 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 <title>Priority Leads · Project Closeology</title>
 {fonts}
 <style>{css}
-.controls{{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0 8px;}}
-.controls input{{flex:1;min-width:200px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;}}
-.fsel{{display:flex;flex-direction:column;gap:3px;}}
+.controls{{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:18px 0 8px;}}
+.fsel{{display:flex;flex-direction:column;gap:5px;}}
+.fsel.grow{{flex:1;min-width:220px;}}
 .fsel label{{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);font-weight:700;}}
-.fsel select{{padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;background:#fff;color:var(--ink);cursor:pointer;min-width:180px;}}
+.fsel input,.fsel select{{height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;color:var(--ink);}}
+.fsel select{{font-weight:600;font-size:13.5px;cursor:pointer;min-width:190px;}}
+.fsel input{{width:100%;}}
 .count{{color:var(--mut);font-size:13px;}}
 .lead{{border:1px solid var(--line);border-radius:12px;padding:0;margin:14px 0;overflow:hidden;background:#fff;}}
 .lead:hover{{box-shadow:0 3px 14px rgba(0,0,0,.06);}}
@@ -204,7 +206,8 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
        sits where it does.</p>
   </div>
   <div class="controls">
-    <input id="q" placeholder="Search name, metal, commodity, community…"/>
+    <div class="fsel grow"><label for="q">Search</label>
+      <input id="q" placeholder="Name, metal, commodity, community…"/></div>
     <div class="fsel"><label for="jsel">Jurisdiction</label>
       <select id="jsel">{jopts}</select></div>
     <div class="fsel"><label for="msel">Dominant metal</label>
