@@ -1,8 +1,10 @@
 name: closeology-daily
 
+# Rebuilds BC + Ontario + Yukon from public data every morning and publishes
+# the site to GitHub Pages (public URL) automatically.
 on:
   schedule:
-    - cron: "17 12 * * *"
+    - cron: "17 12 * * *"      # daily 12:17 UTC (~05:17 PT)
   push:
     branches: [main]
   workflow_dispatch: {}
@@ -14,7 +16,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 55
     permissions:
       contents: write
     steps:
@@ -26,7 +28,7 @@ jobs:
         run: sudo apt-get update -q && sudo apt-get install -y -q mdbtools
       - name: Python deps
         run: pip install -r requirements.txt
-      - name: Rebuild BC + Ontario
+      - name: Rebuild BC + Ontario + Yukon
         run: PYTHONPATH=src python src/build_all.py
       - name: Commit refreshed site
         run: |

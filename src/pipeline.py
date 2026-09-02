@@ -139,10 +139,11 @@ def enrich(leads, communities, reserves, parks, metric):
         leads["nearest_community"] = ""; leads["community_km"] = None; leads["community_type"] = ""
     # encumbrance flags
     notes = [[] for _ in range(len(lm))]
-    if reserves is not None and len(reserves):
+    if reserves is not None and len(reserves) and "MTA_SITE_ORDER_RESTR_DESC" in reserves.columns:
         r = reserves.copy()
-        r["restr"] = r.get("MTA_SITE_ORDER_RESTR_DESC", "").fillna("").astype(str)
-        r["reason"] = r.get("MTA_SITE_REASON_DESCRIPTION", "").fillna("").astype(str)
+        r["restr"] = r["MTA_SITE_ORDER_RESTR_DESC"].fillna("").astype(str)
+        r["reason"] = r.get("MTA_SITE_REASON_DESCRIPTION", "").fillna("").astype(str) \
+            if "MTA_SITE_REASON_DESCRIPTION" in r.columns else ""
         rc = r[r["restr"].str.lower().str.contains("|".join(COND))].to_crs(metric)
         if len(rc):
             si = rc.sindex
@@ -248,12 +249,18 @@ def track_drops(d, claims, leads, metric):
     slug = os.path.basename(d.rstrip("/"))
     snap = os.path.join("data", "keep", f"{slug}_claims_snapshot.parquet")
     c = claims.copy()
-    if "TENURE_NUMBER_ID" in c.columns:      # BC
+    if "TENURE_NUMBER_ID" in c.columns:      # BC / Yukon (owner + expiry)
         idf, own, dte, area = "TENURE_NUMBER_ID", "OWNER_NAME", "GOOD_TO_DATE", "AREA_IN_HECTARES"
     elif "claim" in c.columns:               # Ontario cells
         idf, own, dte, area = "claim", None, None, None
     else:
         return 0
+    if area not in c.columns:
+        area = None
+    if own and own not in c.columns:
+        own = None
+    if dte and dte not in c.columns:
+        dte = None
     cen = c.to_crs(metric).geometry.representative_point().to_crs("EPSG:4326")
     cur = pd.DataFrame({"id": c[idf].astype(str),
                         "owner": c[own].astype(str) if own else "",
@@ -310,8 +317,14 @@ def run_region(region):
     rz = reserves.copy() if reserves is not None else None
     noreg = None
     if rz is not None:
-        rz["restr"] = rz.get("MTA_SITE_ORDER_RESTR_DESC", "").fillna("").astype(str)
-        noreg = rz[rz["restr"].str.lower().str.contains("no registration")].to_crs(metric)
+        if "MTA_SITE_ORDER_RESTR_DESC" in rz.columns:
+            # BC: only "No Registration Reserve" areas actually block staking
+            rz["restr"] = rz["MTA_SITE_ORDER_RESTR_DESC"].fillna("").astype(str)
+            noreg = rz[rz["restr"].str.lower().str.contains("no registration")].to_crs(metric)
+        else:
+            # other jurisdictions: the whole reserves layer is no-stake ground
+            # (e.g. Yukon "Areas Withdrawn from Staking")
+            noreg = rz.to_crs(metric)
     pk = parks.to_crs(metric) if parks is not None else None
     npk = natparks.to_crs(metric) if natparks is not None else None
     leases = _rd(os.path.join(d, "leases.parquet"))     # held mining leases / patents (Ontario)

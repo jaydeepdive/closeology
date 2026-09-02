@@ -65,27 +65,51 @@ def _load(csv, juris):
     return out
 
 
+# per-jurisdiction pill colours (fallback grey for any not listed)
+PILL = {"BC": "background:#e8f0fe;color:#1a56db;", "ON": "background:#fdeaea;color:#c81e1e;",
+        "YK": "background:#eef7ee;color:#2f7d32;", "NL": "background:#e6f4f6;color:#0e7490;",
+        "SK": "background:#f3eefe;color:#6d28d9;", "MB": "background:#fef3e2;color:#b45309;",
+        "QC": "background:#fce7f3;color:#be185d;", "AB": "background:#e0f2fe;color:#0369a1;"}
+
+
 def build(site_dir, regions):
     leads = []
+    juris = []      # (code, display name) in region order, only those with leads
     for r in regions:
         if not r.get("live"):
             continue
-        leads += _load(os.path.join(r["dir"], "out", "leads.csv"),
-                       "BC" if r["slug"] == "bc" else "ON")
+        code = r["slug"].upper()
+        rows = _load(os.path.join(r["dir"], "out", "leads.csv"), code)
+        if rows:
+            leads += rows
+            juris.append((code, r["name"]))
     leads.sort(key=lambda x: (-x["score"], not x["deposit_open"]))
     for i, l in enumerate(leads, 1):
         l["rank"] = i
-    n_bc = sum(1 for l in leads if l["juris"] == "BC")
-    n_on = sum(1 for l in leads if l["juris"] == "ON")
+    counts = {c: sum(1 for l in leads if l["juris"] == c) for c, _ in juris}
+
+    # dynamic filter segment + hero radar links + per-juris pill CSS
+    segs = ['<button data-j="all" class="on">All ({0})</button>'.format(len(leads))]
+    for c, nm in juris:
+        segs.append('<button data-j="{0}">{1} ({2})</button>'.format(c, nm, counts[c]))
+    radio = "".join('<a class="hbtn ghost" href="daily_{0}.html">{1} radar</a>'.format(c.lower(), nm)
+                    for c, nm in juris)
+    pill_css = "".join(".p-{0}{{{1}}}".format(c.lower(), PILL.get(c, "background:#eef0f2;color:#444;"))
+                       for c, _ in juris)
+    names = ", ".join(nm for _, nm in juris[:-1]) + (" and " + juris[-1][1] if len(juris) > 1 else
+                                                     (juris[0][1] if juris else ""))
+
     html = PAGE.format(
-        fonts=T.FONTS, css=T.THEME_CSS, header=T.header("index.html"), footer=T.footer(),
+        fonts=T.FONTS, css=T.THEME_CSS + "\n" + pill_css,
+        header=T.header("index.html"), footer=T.footer(),
         leads_json=json.dumps(leads, separators=(",", ":")),
-        n_total=len(leads), n_bc=n_bc, n_on=n_on,
+        segs="".join(segs), radio=radio, region_names=names,
     )
     os.makedirs(site_dir, exist_ok=True)
     open(os.path.join(site_dir, "index.html"), "w").write(html)          # front page
     open(os.path.join(site_dir, "priorities.html"), "w").write(html)      # stable alias
-    print(f"[priority] index.html (front page) — {len(leads)} leads ({n_bc} BC, {n_on} ON)")
+    summ = ", ".join("{0} {1}".format(counts[c], c) for c, _ in juris)
+    print(f"[priority] index.html (front page) — {len(leads)} leads ({summ})")
 
 
 PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
@@ -111,7 +135,6 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 .lmain{{flex:1;min-width:0;}}
 .lname{{font-family:'Bitter',serif;font-weight:700;font-size:18px;}}
 .pill{{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle;}}
-.p-bc{{background:#e8f0fe;color:#1a56db;}} .p-on{{background:#fdeaea;color:var(--red);}}
 .p-open{{background:#e7f6ec;color:#127a3a;}} .p-hard{{background:#fff4e5;color:#9a5b00;}}
 .sub{{color:var(--mut);font-size:13px;margin-top:3px;}}
 .chips{{margin-top:7px;}} .chip{{display:inline-block;background:var(--chip);color:#2d3748;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;margin:2px 5px 2px 0;}}
@@ -138,24 +161,19 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 <div class="wrap">
   <div class="hero">
     <h1>Priority leads</h1><div class="rule"></div>
-    <p>Every British Columbia and Ontario lead ranked on <b>one common scale</b> — driven by in-situ
+    <p>Every {region_names} lead ranked on <b>one common scale</b> — driven by in-situ
        metal value, deposit size, development status, open ground, drilling on record and exploration
-       spend. A score of 80 means the same thing in either province. Each lead shows exactly why it
+       spend. A score of 80 means the same thing in every jurisdiction. Each lead shows exactly why it
        sits where it does.</p>
     <div class="herolinks">
       <a class="hbtn" href="app.html">Interactive map →</a>
-      <a class="hbtn ghost" href="daily_bc.html">BC daily radar</a>
-      <a class="hbtn ghost" href="daily_on.html">Ontario daily radar</a>
-      <a class="hbtn ghost" href="bc_leads.csv">BC CSV</a>
-      <a class="hbtn ghost" href="on_leads.csv">Ontario CSV</a>
+      {radio}
     </div>
   </div>
   <div class="controls">
     <input id="q" placeholder="Search name, metal, commodity, community…"/>
     <div class="seg" id="seg">
-      <button data-j="all" class="on">All ({n_total})</button>
-      <button data-j="BC">BC ({n_bc})</button>
-      <button data-j="ON">Ontario ({n_on})</button>
+      {segs}
     </div>
   </div>
   <div class="count" id="count"></div>
@@ -190,7 +208,7 @@ function card(p){{
       <div class=scorebox><div class=s>${{p.score}}</div><div class=sl>score</div></div>
       <div class=lmain>
         <div><span class=lname>${{esc(p.name)}}</span>
-          <span class="pill ${{p.juris==='BC'?'p-bc':'p-on'}}">${{p.juris}}</span>
+          <span class="pill p-${{p.juris.toLowerCase()}}">${{p.juris}}</span>
           ${{p.deposit_open?'<span class="pill p-open">deposit open</span>':''}}
           ${{p.hard?'<span class="pill p-hard">harder to stake</span>':''}}</div>
         <div class=sub>${{esc(p.metal)}}${{p.minfile?(' · '+esc(p.minfile)):''}}</div>
