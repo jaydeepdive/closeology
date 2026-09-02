@@ -175,6 +175,8 @@ def main():
                                  "edge_counts": dp.get("edge_counts", {"n": 0, "hot": 0, "open_ha": 0}),
                                  "leads": flagged[:20], "dropped": dp.get("dropped", [])[:25]})
     _json.dump(email, open("site/daily_email.json", "w"))
+    import build_radar
+    build_radar.build(email, "site")                   # radar.html cross-Canada overview
     tot_edges = sum(len(r["edges"]) for r in email["regions"])
     print(f"[build_all] done ({', '.join(live)}) + daily_email.json ({tot_edges} edge plays)")
 
