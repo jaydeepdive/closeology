@@ -15,6 +15,14 @@ RED = "#D71920"
 NAV = [("Priority leads", "index.html"), ("Regions & maps", "regions.html"),
        ("Explore map", "app.html")]
 
+# daily radars live in a nav dropdown (one page per jurisdiction)
+RADARS = [("British Columbia", "daily_bc.html"), ("Ontario", "daily_on.html"),
+          ("Yukon", "daily_yk.html"), ("Newfoundland & Labrador", "daily_nl.html"),
+          ("Saskatchewan", "daily_sk.html"), ("Manitoba", "daily_mb.html"),
+          ("Northwest Territories", "daily_nt.html"), ("New Brunswick", "daily_nb.html"),
+          ("Nova Scotia", "daily_ns.html"), ("Alberta", "daily_ab.html"),
+          ("Quebec", "daily_qc.html")]
+
 THEME_CSS = """
 :root{ --red:#D71920; --ink:#111418; --mut:#636363; --line:#e6e8eb; --panel:#f5f7fa; --bg:#ffffff; --chip:#EDF2F7; }
 *{box-sizing:border-box;}
@@ -30,6 +38,14 @@ nav.menu{display:flex;gap:22px;flex-wrap:wrap;}
 nav.menu a{color:var(--ink);font-size:14px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;text-decoration:none;}
 nav.menu a:hover{color:var(--red);text-decoration:none;}
 nav.menu a.active{color:var(--red);border-bottom-color:var(--red);}
+nav.menu details.dd{position:relative;}
+nav.menu details.dd>summary{list-style:none;cursor:pointer;font-size:14px;font-weight:500;padding:4px 0;color:var(--ink);}
+nav.menu details.dd>summary::-webkit-details-marker{display:none;}
+nav.menu details.dd>summary::after{content:" \\25BE";color:var(--mut);font-size:11px;}
+nav.menu details.dd[open]>summary{color:var(--red);}
+nav.menu details.dd .dd-menu{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.09);padding:6px 0;min-width:220px;z-index:60;}
+nav.menu details.dd .dd-menu a{display:block;padding:7px 15px;font-size:13.5px;color:var(--ink);border:0;white-space:nowrap;}
+nav.menu details.dd .dd-menu a:hover{background:var(--panel);color:var(--red);text-decoration:none;}
 .wrap{max-width:1180px;margin:0 auto;padding:26px 22px 60px;}
 .hero h1{font-size:30px;letter-spacing:-.3px;} .hero p{color:var(--mut);max-width:760px;}
 .rule{height:3px;width:52px;background:var(--red);margin:10px 0 0;border-radius:2px;}
@@ -47,10 +63,14 @@ def header(active=""):
     items = "".join(
         f'<a href="{href}" class="{"active" if href==active else ""}">{label}</a>'
         for label, href in NAV)
+    radars = "".join(f'<a href="{href}">{label}</a>' for label, href in RADARS)
+    active_radar = " open" if active in [h for _, h in RADARS] else ""
+    dd = (f'<details class="dd"{active_radar}><summary>Daily radars</summary>'
+          f'<div class="dd-menu">{radars}</div></details>')
     logo = f'<img src="{LOGO_URI}" alt="the deep dive">' if LOGO_URI else '<span style="font-family:Bitter;font-weight:800;font-size:20px">thedeepdive<span style="color:#D71920">.ca</span></span>'
     return f"""<div class="topbar"><div class="topwrap">
   <a class="brand" href="index.html">{logo}<span class="sub">Project Closeology</span></a>
-  <nav class="menu">{items}</nav>
+  <nav class="menu">{items}{dd}</nav>
 </div></div>"""
 
 

@@ -106,8 +106,6 @@ def build(site_dir, regions):
         l["rank"] = i
     counts = {c: sum(1 for l in leads if l["juris"] == c) for c, _ in juris}
 
-    radio = "".join('<a class="hbtn ghost" href="daily_{0}.html">{1} radar</a>'.format(c.lower(), nm)
-                    for c, nm in juris)
     pill_css = "".join(".p-{0}{{{1}}}".format(c.lower(), PILL.get(c, "background:#eef0f2;color:#444;"))
                        for c, _ in juris)
     names = ", ".join(nm for _, nm in juris[:-1]) + (" and " + juris[-1][1] if len(juris) > 1 else
@@ -141,7 +139,7 @@ def build(site_dir, regions):
         fonts=T.FONTS, css=T.THEME_CSS + "\n" + pill_css,
         header=T.header("index.html"), footer=T.footer(),
         leads_json=json.dumps(leads, separators=(",", ":")),
-        jopts="".join(jopts), mopts="".join(mopts), radio=radio, region_names=names,
+        jopts="".join(jopts), mopts="".join(mopts), region_names=names,
         groups_json=json.dumps({k: sorted(v) for k, v in GROUPS.items()}),
     )
     os.makedirs(site_dir, exist_ok=True)
@@ -204,10 +202,6 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
        metal value, deposit size, development status, open ground, drilling on record and exploration
        spend. A score of 80 means the same thing in every jurisdiction. Each lead shows exactly why it
        sits where it does.</p>
-    <div class="herolinks">
-      <a class="hbtn" href="app.html">Interactive map →</a>
-      {radio}
-    </div>
   </div>
   <div class="controls">
     <input id="q" placeholder="Search name, metal, commodity, community…"/>
