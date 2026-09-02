@@ -157,11 +157,16 @@ def fetch_occurrences(cfg, out_dir):
                 url = ""       # some "reference" fields are citations, not links
         elif o.get("url_tmpl") and pid:
             url = o["url_tmpl"].format(id=quote(pid, safe=""))
+        drill = ""
+        tok = o.get("drill_status_token")
+        if tok and tok.lower() in status.lower():
+            drill = "drill-tested"
         rows.append({"minfile": pid,
                      "name": (str(p.get(o["name"]) or "").strip() or pid) if o.get("name") else pid,
                      "status": status, "commodities": comm, "commodity": ", ".join(comm),
                      "deposit_type": str(p.get(o["deptype"]) or "").strip() if o.get("deptype") else "",
-                     "minfile_url": url, "prod_ind": "Y" if is_prod else "N", "township": ""})
+                     "minfile_url": url, "prod_ind": "Y" if is_prod else "N", "township": "",
+                     "drill_highlights": drill})
         geoms.append(pt)
     gdf = gpd.GeoDataFrame(rows, geometry=geoms, crs="EPSG:4326")
     gdf.to_parquet(os.path.join(out_dir, "occurrences.parquet"))

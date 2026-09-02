@@ -11,7 +11,7 @@ on:
 
 concurrency:
   group: closeology
-  cancel-in-progress: true
+  cancel-in-progress: false      # queue rebuilds instead of cancelling the one that's deploying
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
           git config user.name "closeology-bot"
           git config user.email "actions@github.com"
           git add -A site data/keep 2>/dev/null || true
-          git commit -m "Daily rebuild $(date -u +%Y-%m-%d)" || echo "no changes"
+          git commit -m "Daily rebuild $(date -u +%Y-%m-%d) [skip ci]" || echo "no changes"
           git push || echo "nothing to push"
       - uses: actions/upload-pages-artifact@v3
         with:

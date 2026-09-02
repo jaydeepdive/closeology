@@ -7,9 +7,32 @@ import os
 import re
 import json
 import shutil
+import geopandas as gpd
+from shapely.geometry import mapping
 import site_theme as T
 import enrich_facts as E
 from config import METAL_COLOR, METAL_ORDER, metal_bucket
+
+
+def _borders(regions_cfg):
+    """Simplified province/territory outlines + a centroid label for each, so a
+    lead sitting on a border line is easy to place."""
+    feats, labels = [], []
+    for rc in regions_cfg:
+        bp = os.path.join("data", "keep", f"{rc['slug']}_boundary.parquet")
+        if not os.path.exists(bp):
+            continue
+        try:
+            g = gpd.read_parquet(bp).to_crs(4326)
+            geom = g.geometry.union_all() if hasattr(g.geometry, "union_all") else g.geometry.unary_union
+            simp = geom.simplify(0.03)
+            feats.append({"type": "Feature", "properties": {"n": rc["name"]},
+                          "geometry": mapping(simp)})
+            c = simp.representative_point()
+            labels.append({"n": rc["slug"].upper(), "lat": round(c.y, 4), "lon": round(c.x, 4)})
+        except Exception:
+            continue
+    return {"type": "FeatureCollection", "features": feats}, labels
 
 VEN = os.path.join(os.path.dirname(__file__), "vendor")
 
@@ -90,12 +113,15 @@ def build(regions_cfg, html_path):
         mopts.append('<option value="{0}">{0} ({1})</option>'.format(m, counts_m[m]))
     mopts.append("</optgroup>")
 
+    borders, blabels = _borders(regions_cfg)
     html = TEMPLATE.format(
         fonts=T.FONTS, theme_css=T.THEME_CSS, header=T.header("app.html"),
         leaflet_css=_r("leaflet.css"), mc_css=_r("mc.css") + _r("mcd.css"),
         leaflet_js=_r("leaflet.js"), mc_js=_r("mc.js"),
         leads_json=json.dumps(feats, separators=(",", ":")),
         metal_color=json.dumps(METAL_COLOR), groups_json=json.dumps(GROUPS),
+        borders_json=json.dumps(borders, separators=(",", ":")),
+        blabels_json=json.dumps(blabels, separators=(",", ":")),
         jopts="".join(jopts), mopts="".join(mopts), n=len(feats),
     )
     open(html_path, "w").write(html)
@@ -152,12 +178,17 @@ html,body{{height:100%;}} body{{display:flex;flex-direction:column;height:100vh;
 </div>
 <script>
 const LEADS={leads_json}, MC={metal_color}, GROUPS={groups_json};
+const BORDERS={borders_json}, BLABELS={blabels_json};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
 const col=m=>MC[m]||'#8091a5';
 const topo=L.tileLayer('https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:17,attribution:'&copy; OpenTopoMap'}});
 const osm=L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:19,attribution:'&copy; OpenStreetMap'}});
 const map=L.map('map',{{layers:[topo],preferCanvas:true}}).setView([58,-96],4);
 L.control.layers({{'Topographic':topo,'Street':osm}}).addTo(map);
+// province / territory borders + labels
+L.geoJSON(BORDERS,{{interactive:false,style:{{color:'#334155',weight:1.4,opacity:.6,fill:false,dashArray:'4 3'}}}}).addTo(map);
+const blabelLayer=L.layerGroup(BLABELS.map(b=>L.marker([b.lat,b.lon],{{interactive:false,
+  icon:L.divIcon({{className:'',html:`<span style="font:700 11px Bitter,serif;color:#475569;text-shadow:0 0 3px #fff,0 0 3px #fff">${{b.n}}</span>`}})}}))).addTo(map);
 const cluster=L.markerClusterGroup({{chunkedLoading:true,maxClusterRadius:48,disableClusteringAtZoom:9}});
 map.addLayer(cluster);
 let cellLayer=null;

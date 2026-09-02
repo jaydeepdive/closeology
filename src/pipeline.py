@@ -325,16 +325,33 @@ def run_region(region):
     st = occ["status"].str.lower()
     # a currently-operating mine/quarry can't be staked — exclude (keep PAST producers)
     active = (st.str.contains("producing") & ~st.str.contains("past")) | (st.str.strip() == "producer")
-    status_hit = st.str.contains("|".join(STATUS_CAND)) | occ["has_resource"]
-    # Some jurisdictions (e.g. MB, NB) publish no development-status vocabulary — every
-    # occurrence reads "Occurrence". When the status filter matches nothing, fall back to
-    # all occurrences (still non-industrial, non-active) and let base_score + TOP_N rank them.
-    if not status_hit.any():
-        status_hit = pd.Series(True, index=occ.index)
-    cand = occ[status_hit & (occ["primary_metal"] != "Industrial") & ~active].copy()
+
+    # MERIT BAR: a lead must be an occurrence of real merit — a proven/classified
+    # deposit (producer / past producer / developed / classified deposit / discovery /
+    # advanced exploration) OR one carrying hard evidence (a grade, a drill record,
+    # tonnage, a resource). A bare "Occurrence" / "Showing" / early "Prospect" /
+    # lithology unit on open ground is NOT a lead — otherwise data-poor jurisdictions
+    # (every point reads "Occurrence") flood the map with undifferentiated dots and
+    # drown the genuinely prospective ground in BC / Ontario / Quebec.
+    MERIT_STATUS = ("produc", "developed", "deposit", "discovery", "advanced")
+    merit_status = st.str.contains("|".join(MERIT_STATUS))
+    # hard evidence of a real deposit: a grade, tonnage, or a classified resource.
+    # (Drilling alone is NOT a merit gate — a lone historical recon hole isn't a
+    # deposit — but it still counts toward the score and the drill radar.)
+    has_evidence = (occ["grade_str"].astype(str).str.len() >= 2) \
+        | occ["has_resource"] \
+        | (occ["tonnes_str"].astype(str).str.len() >= 2)
+    keep = (merit_status | has_evidence) & (occ["primary_metal"] != "Industrial") & ~active
+    cand = occ[keep].copy()
     cand = cand.sort_values("base_score", ascending=False).head(TOP_N).reset_index(drop=True)
     if cand.empty:
-        print(f"[{region['name']}] no candidate occurrences — skipping")
+        # clear any stale outputs so a now-empty jurisdiction doesn't linger on the site
+        for fn in ("leads.csv", "leads.geojson", "opencells.geojson", "claims_near.geojson",
+                   "occurrences_all.geojson", "stats.json"):
+            fp2 = os.path.join(out_dir, fn)
+            if os.path.exists(fp2):
+                os.remove(fp2)
+        print(f"[{region['name']}] no candidate occurrences of merit — skipping")
         return
 
     cm = claims.to_crs(metric)

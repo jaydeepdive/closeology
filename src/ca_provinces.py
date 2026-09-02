@@ -87,8 +87,9 @@ PROVINCES = [
         "occ": {"url": ("https://services3.arcgis.com/GSr8HAQhtEt4sNnv/arcgis/rest/services/"
                         "NWTShowings2021a/FeatureServer/0"),
                 "fields": "SHOWING_ID,NAME,DEV_STAGE,COMM_ALL,DEPOSIT_TY,RANK",
-                "id": "SHOWING_ID", "name": "NAME", "status": "RANK",
-                "comm": "COMM_ALL", "deptype": "DEPOSIT_TY", "producer_tokens": ["producer", "mine"]},
+                "id": "SHOWING_ID", "name": "NAME", "status": "DEV_STAGE",
+                "comm": "COMM_ALL", "deptype": "DEPOSIT_TY",
+                "producer_tokens": ["producer"], "drill_status_token": "drill"},
         "claims": {"url": f"{_NT}/Economy_LCC/MapServer/1",
                    "fields": "CLAIM_NUM,CLAIM_NAME,OWNERS,ISSUE_DT,ANNIV_DT,CLAIM_STAT",
                    "id": "CLAIM_NUM", "name": "CLAIM_NAME", "owner": "OWNERS",

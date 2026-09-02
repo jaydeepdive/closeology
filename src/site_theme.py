@@ -42,7 +42,8 @@ nav.menu a:hover{color:var(--red);text-decoration:none;}
 nav.menu a.active{color:var(--red);border-bottom-color:var(--red);}
 nav.menu .dd{position:relative;}
 nav.menu .dd>a.ddlabel{color:var(--ink);font-size:14px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;}
-nav.menu .dd>a.ddlabel::after{content:" \\25BE";color:var(--mut);font-size:11px;}
+nav.menu .dd>a.ddlabel::after{content:"";display:inline-block;width:0;height:0;margin-left:6px;vertical-align:middle;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--mut);}
+nav.menu .dd:hover>a.ddlabel::after{border-top-color:var(--red);}
 nav.menu .dd:hover>a.ddlabel,nav.menu .dd>a.ddlabel.active{color:var(--red);}
 nav.menu .dd-menu{display:none;position:absolute;top:100%;left:0;padding-top:8px;min-width:230px;z-index:60;}
 nav.menu .dd:hover .dd-menu{display:block;}
