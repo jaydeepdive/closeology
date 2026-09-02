@@ -6,6 +6,7 @@ import json
 import math
 import pandas as pd
 import site_theme as T
+import enrich_facts as E
 from config import score_breakdown
 
 
@@ -40,7 +41,12 @@ def _load(csv, juris):
         spend = _num(r.get("exploration_spend"))
         conf = _num(r.get("grade_conf"), 1.0)
         bd = score_breakdown(status, dopen, grade, tonnes, bool(drill), spend, conf)
+        capsule = _s(r.get("capsule"))
+        _vt, vparts = E.value_parts(grade)
+        drill_top = E.top_intercepts(drill, 3)
+        production = E.production_summary(capsule, drill, status)
         out.append({
+            "value_parts": vparts, "drill_top": drill_top, "production": production,
             "juris": juris, "name": _s(r.get("name")) or "(unnamed)",
             "lead_id": _s(r.get("lead_id")),
             "minfile": _s(r.get("minfile")), "url": _s(r.get("minfile_url")),
@@ -119,6 +125,9 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 .fact{{margin:6px 0;font-size:13px;}} .fact .k{{color:var(--mut);font-weight:600;display:inline-block;min-width:96px;}}
 .drill{{font-size:12.5px;color:#374151;background:#fcfcfd;border-left:3px solid var(--red);padding:7px 10px;margin-top:8px;border-radius:0 6px 6px 0;}}
 .maplink{{display:inline-block;background:var(--red);color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:7px;}} .maplink:hover{{text-decoration:none;opacity:.92;}}
+.intercept{{font-size:12.5px;padding:5px 10px;margin-top:5px;background:#f0f9f4;border-left:3px solid #127a3a;border-radius:0 6px 6px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}}
+.intercept .vpt{{color:#127a3a;font-weight:700;white-space:nowrap;}}
+.prodbox{{font-size:12.5px;color:#374151;background:#fbf6ef;border-left:3px solid #9a5b00;padding:7px 10px;margin-top:10px;border-radius:0 6px 6px 0;}}
 .herolinks{{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}}
 .hbtn{{background:var(--red);color:#fff;font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;}} .hbtn:hover{{text-decoration:none;opacity:.92;}}
 .hbtn.ghost{{background:#fff;border:1px solid var(--line);color:var(--ink);}}
@@ -166,6 +175,7 @@ function card(p){{
   facts.push(`<div class=fact><span class=k>Status</span>${{esc(p.status)||'—'}}</div>`);
   if(p.commodity) facts.push(`<div class=fact><span class=k>Commodities</span>${{esc(p.commodity)}}</div>`);
   if(p.grade) facts.push(`<div class=fact><span class=k>Grade</span>${{esc(p.grade)}}</div>`);
+  if(p.value_parts&&p.value_parts.length) facts.push(`<div class=fact><span class=k>Value split</span>${{p.value_parts.map(x=>esc(x[0])+' <b>$'+x[1]+'</b>').join(' · ')}} <span class=pn>per tonne in-situ</span></div>`);
   if(p.size) facts.push(`<div class=fact><span class=k>Size</span>${{esc(p.size)}}</div>`);
   if(p.spend_str) facts.push(`<div class=fact><span class=k>Expl. spend</span>${{esc(p.spend_str)}}${{p.last_work?(' · last '+esc(p.last_work)):''}}${{p.operators?(' · '+esc(p.operators)):''}}</div>`);
   if(p.community) facts.push(`<div class=fact><span class=k>Nearest town</span>${{esc(p.community)}}${{p.community_km!==''?(' · '+esc(p.community_km)+' km'):''}}</div>`);
@@ -190,7 +200,8 @@ function card(p){{
     <div class=lbody>
       <div class=why><div class=sechd>Why it ranks here</div>${{parts}}</div>
       <div class=facts><div class=sechd>Qualifying details</div>${{facts.join('')}}
-        ${{p.drill?`<div class=drill><b>Drill / assay:</b> ${{esc(p.drill)}}${{p.drill.length>=300?'…':''}}</div>`:''}}
+        ${{p.production?`<div class=prodbox><b>Past production.</b> ${{esc(p.production)}}</div>`:''}}
+        ${{(p.drill_top&&p.drill_top.length)?(`<div class=sechd style="margin-top:12px">⛏ Top drill results</div>`+p.drill_top.map(x=>`<div class=intercept><b>${{esc(x.text)}}</b> <span class=vpt>≈ $${{x.vpt}}/t</span></div>`).join('')):(p.drill?`<div class=drill><b>Drill / assay.</b> ${{esc(p.drill)}}${{p.drill.length>=300?'…':''}}</div>`:'')}}
         ${{p.hard?`<div class=drill style="border-left-color:#9a5b00"><b>Staking note:</b> ${{esc(p.encumbrances)||'A conditional / registration reserve applies here — a special staking process is required.'}}</div>`:''}}
       </div>
     </div>
