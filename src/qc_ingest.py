@@ -47,12 +47,98 @@ def _gpkg_path():
     return p
 
 
+# precious metals reported as g/t; everything else as %
+_PRECIOUS_SYM = {"Au", "Ag", "Pt", "Pd"}
+# sample-type -> grade confidence (drill > channel/other > grab)
+_TYPE_CONF = {"D": 0.8, "R": 0.7, "C": 0.7, "T": 0.6, "V": 0.6, "G": 0.5}
+
+
+def _grade_token(sym, tenr, unit):
+    """(symbol, value, unit) -> ('Au 5.20 g/t' | 'Cu 1.08%', is_gpt)."""
+    u = str(unit or "").lower()
+    try:
+        v = float(tenr)
+    except (TypeError, ValueError):
+        return None
+    if v <= 0:
+        return None
+    if sym in _PRECIOUS_SYM:
+        gpt = v / 1000.0 if "ppb" in u else (v * 10000.0 if "%" in u else v)   # ppm≈g/t
+        return f"{sym} {gpt:.2f} g/t"
+    pct = v if "%" in u else (v / 1e4 if "ppm" in u else v / 1e7)
+    return f"{sym} {pct:.3g}%"
+
+
+def _qc_grades(gpkg):
+    """Best grade per (corps, element) from F4E14, preferring drill over grab; returns
+    {corps: (grade_str, grade_conf, has_drill)}."""
+    t = pd.DataFrame(gpd.read_file(gpkg, layer="F4E14_SUBSTANCE_TENEUR").drop(
+        columns="geometry", errors="ignore"))
+    t = t.dropna(subset=["NUMR_CORPS_MINR", "CODE_ELMN_CHIM", "TENR"]).copy()
+    t["TENR"] = pd.to_numeric(t["TENR"], errors="coerce")
+    t = t[t["TENR"] > 0]
+    t["conf"] = t["CODE_TYPE_ECHN_MINR"].map(_TYPE_CONF).fillna(0.5)
+    out = {}
+    from config import PRICE_KG
+    import enrich_facts as EF
+    for cid, grp in t.groupby("NUMR_CORPS_MINR"):
+        has_drill = bool((grp["CODE_TYPE_ECHN_MINR"] == "D").any())
+        toks = []
+        for sym, g2 in grp.groupby("CODE_ELMN_CHIM"):
+            g2 = g2.sort_values("TENR", ascending=False)
+            best = g2.iloc[0]
+            tok = _grade_token(str(sym), best["TENR"], best["CODE_UNITE_TENR"])
+            if not tok:
+                continue
+            # value for ranking (0 for unpriced elements, still displayed)
+            val, _ = EF.value_parts(tok)
+            toks.append((val, float(best["conf"]), tok))
+        if not toks:
+            continue
+        toks.sort(key=lambda x: -x[0])
+        grade_str = ", ".join(t3 for _, _, t3 in toks[:5])
+        # confidence of the value-dominant element (fall back to best available)
+        conf = toks[0][1] if toks[0][0] > 0 else max(c for _, c, _ in toks)
+        out[cid] = (grade_str, conf, has_drill)
+    return out
+
+
+def _qc_production(gpkg):
+    """{corps: (y0, y1, tonnes)} from F4E06 production periods (YYYYMMDD dates)."""
+    p = pd.DataFrame(gpd.read_file(gpkg, layer="F4E06_PERIODE_PRODUCTION").drop(
+        columns="geometry", errors="ignore"))
+    p = p.dropna(subset=["NUMR_CORPS_MINR"]).copy()
+
+    def _yr(v):
+        s = "" if v is None or (isinstance(v, float) and v != v) else str(v).strip()
+        if s.endswith(".0"):
+            s = s[:-2]
+        return int(s[:4]) if len(s) >= 4 and s[:4].isdigit() else None
+    out = {}
+    for cid, grp in p.groupby("NUMR_CORPS_MINR"):
+        ys = [y for v in list(grp["DATE_DEBUT_PROD"]) + list(grp["DATE_FIN_PROD"])
+              for y in [_yr(v)] if y]
+        ton = pd.to_numeric(grp["F4E06_TONNA"], errors="coerce").sum()
+        out[cid] = (min(ys) if ys else None, max(ys) if ys else None,
+                    float(ton) if ton == ton else 0.0)
+    return out
+
+
+def _fmt_t(t):
+    if not t:
+        return ""
+    if t >= 1e6:
+        return f"{t/1e6:.1f} Mt"
+    if t >= 1e3:
+        return f"{t/1e3:.0f} kt"
+    return f"{t:.0f} t"
+
+
 def fetch_occurrences():
     g = _gpkg_path()
     occ = gpd.read_file(g, layer="F4E02_CORPS_MINERALISE").to_crs("EPSG:4326")
     el = pd.DataFrame(gpd.read_file(g, layer="F4R21_CORPS_MINR_ELMN_CHIMIQUE").drop(
         columns="geometry", errors="ignore"))
-    # commodities per body: principal first, then secondary, mapped symbol->name
     el = el.dropna(subset=["NUMR_CORPS_MINR"]).copy()
     el["ord"] = (el["CODE_INDC_PRIN_SECN"].astype(str) != "P").astype(int)
     comm = {}
@@ -63,6 +149,8 @@ def fetch_occurrences():
             if nm not in names:
                 names.append(nm)
         comm[cid] = names
+    grades = _qc_grades(g)          # real assays w/ confidence + drill flag
+    prod = _qc_production(g)        # production years + tonnage
 
     rows, geoms = [], []
     for _, r in occ.iterrows():
@@ -77,17 +165,26 @@ def fetch_occurrences():
                         ("COMN_SUBS", "COMN_MINR", "COMN_PROD", "COMN_DECV"))
         nid = r.get("NUMR_INTER")
         url = f"https://sigeom.mines.gouv.qc.ca/signet/classes/I1102_afchDetlLien?l=f&entt=I0001_corpsMineralise&noSeqnEntt={int(nid)}" if pd.notna(nid) else ""
+        gs, gconf, hdrill = grades.get(cid, ("", 1.0, False))
+        y0, y1, ton = prod.get(cid, (None, None, 0.0))
+        production = ""
+        if y1:
+            production = f"Produced {y0}–{y1}" + (f": {_fmt_t(ton)}" if ton else "")
         rows.append({"minfile": str(r.get("NUMR_IDNT_CORPS_MINR") or cid or "").strip(),
                      "name": str(r.get("NOM_CORPS_MINR") or "").strip() or "(sans nom)",
                      "status": status, "commodities": cl, "commodity": ", ".join(cl),
                      "deposit_type": "", "minfile_url": url,
                      "prod_ind": "Y" if status in ("Past Producer", "Producer") else "N",
                      "township": "", "capsule": text[:1500],
-                     "drill_highlights": ""})
+                     "grade_str": gs, "grade_conf": gconf,
+                     "drill_highlights": ("drill-tested" if hdrill else ""),
+                     "tonnes": ton or None, "tonnes_str": _fmt_t(ton) if ton else "",
+                     "production": production, "last_prod_year": y1})
         geoms.append(pt)
     gdf = gpd.GeoDataFrame(rows, geometry=geoms, crs="EPSG:4326")
     gdf.to_parquet("data/qc/occurrences.parquet")
-    print(f"[qc] occurrences {len(gdf)} (producers {int((gdf.prod_ind=='Y').sum())})")
+    ng = int((gdf.grade_str.str.len() > 0).sum())
+    print(f"[qc] occurrences {len(gdf)} (producers {int((gdf.prod_ind=='Y').sum())}, graded {ng})")
 
 
 def _wfs_all(typename, colmap, out, count=40000):

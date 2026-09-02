@@ -52,7 +52,9 @@ def prep(occ, facts):
     # Structured grades are resource-grade (confidence 1.0); text-derived grades
     # carry a confidence reflecting resource vs intersection vs grab sample.
     from config import grades_from_text
-    occ["grade_conf"] = 1.0
+    if "grade_conf" not in occ:
+        occ["grade_conf"] = 1.0
+    occ["grade_conf"] = occ["grade_conf"].fillna(1.0)
     need = occ["grade_str"].astype(str).str.len() < 3
 
     def _fill(r):
@@ -65,9 +67,23 @@ def prep(occ, facts):
         occ.loc[need, "grade_str"] = filled["grade_str"].values
         occ.loc[need, "grade_conf"] = filled["grade_conf"].values
     occ["n_metals"] = occ["metal_buckets"].map(len)
+    # last production year (recency) — from an explicit column, else parsed from the
+    # production string / capsule. Drives the pre-1980 discount in scoring.
+    from config import last_production_year
+    if "last_prod_year" not in occ:
+        occ["last_prod_year"] = None
+    def _ly(r):
+        v = r.get("last_prod_year")
+        if v is not None and str(v).strip() not in ("", "nan", "None"):
+            return v
+        if "produc" in str(r.get("status", "")).lower():
+            return last_production_year(r.get("production", ""), r.get("capsule", ""))
+        return None
+    occ["last_prod_year"] = occ.apply(_ly, axis=1)
     occ["base_score"] = occ.apply(lambda r: score_lead(
         r["status"], False, r.get("grade_str", ""), r.get("tonnes_str", ""),
-        bool(r.get("drill_highlights")), grade_conf=r.get("grade_conf", 1.0)), axis=1)
+        bool(r.get("drill_highlights")), grade_conf=r.get("grade_conf", 1.0),
+        last_prod_year=r.get("last_prod_year"), primary_metal=r.get("primary_metal", "")), axis=1)
     return occ
 
 
@@ -348,7 +364,8 @@ def run_region(region):
     leads["score"] = leads.apply(lambda r: score_lead(
         r["status"], r["deposit_open"], r.get("grade_str", ""), r.get("tonnes_str", ""),
         bool(r.get("drill_highlights")), r.get("exploration_spend", 0),
-        grade_conf=r.get("grade_conf", 1.0)), axis=1)
+        grade_conf=r.get("grade_conf", 1.0), last_prod_year=r.get("last_prod_year"),
+        primary_metal=r.get("primary_metal", "")), axis=1)
     leads = leads.sort_values(["score", "deposit_open", "exploration_spend"], ascending=False).reset_index(drop=True)
     leads.insert(0, "rank", range(1, len(leads) + 1))
     leads["lead_id"] = ["L%04d" % i for i in leads["rank"]]
@@ -364,7 +381,7 @@ def run_region(region):
             "community_km", "deposit_size", "grade_str", "tonnes_str", "resource_cat",
             "drill_highlights", "exploration_spend", "exploration_spend_str", "n_reports",
             "last_work_year", "operators", "basis", "encumbrances", "core_cell", "n_cells",
-            "cells_area_ha", "score", "grade_conf", "production", "lat", "lon", "cell_ids", "minfile_url", "capsule"]
+            "cells_area_ha", "score", "grade_conf", "production", "last_prod_year", "lat", "lon", "cell_ids", "minfile_url", "capsule"]
     cols = [c for c in cols if c in leads.columns]
     leads[cols].to_csv(os.path.join(out_dir, "leads.csv"), index=False)
     leads[cols + ["metal_buckets", "geometry"]].to_file(os.path.join(out_dir, "leads.geojson"), driver="GeoJSON")

@@ -10,24 +10,44 @@ GRID_M = 500                      # synthetic staking-cell size (25 ha)
 NEIGHBOR_M = 1000                 # adjacency radius around an occurrence
 TOP_N = 700                       # occurrences enumerated for cell detail
 
-METAL_ORDER = ["Gold", "Silver", "Copper", "Lead", "Zinc", "Molybdenum", "Nickel",
-               "Cobalt", "Tungsten", "Tin", "Uranium", "Iron", "Industrial", "Other metallic"]
+METAL_ORDER = ["Gold", "Silver", "Platinum", "Palladium", "Copper", "Lead", "Zinc",
+               "Molybdenum", "Nickel", "Cobalt", "Tungsten", "Tin", "Antimony", "Bismuth",
+               "Uranium", "Lithium", "Vanadium", "Rare earths", "Niobium", "Tantalum",
+               "Beryllium", "Chromium", "Titanium", "Iron", "Manganese", "Graphite",
+               "Industrial", "Other metallic"]
 
 METAL_COLOR = {
-    "Gold": "#e6b800", "Silver": "#9aa7b4", "Copper": "#e07a3f", "Lead": "#7d8a99",
-    "Zinc": "#5fb0c9", "Molybdenum": "#a855c7", "Nickel": "#3fa66a", "Cobalt": "#3b6fd4",
-    "Tungsten": "#8a6d3b", "Tin": "#b0a99f", "Uranium": "#7cc043", "Iron": "#b0553f",
-    "Industrial": "#c9a15f", "Other metallic": "#8091a5",
+    "Gold": "#e6b800", "Silver": "#9aa7b4", "Platinum": "#6f7d8c", "Palladium": "#8a94a0",
+    "Copper": "#e07a3f", "Lead": "#7d8a99", "Zinc": "#5fb0c9", "Molybdenum": "#a855c7",
+    "Nickel": "#3fa66a", "Cobalt": "#3b6fd4", "Tungsten": "#8a6d3b", "Tin": "#b0a99f",
+    "Antimony": "#6b7280", "Bismuth": "#c084fc", "Uranium": "#7cc043", "Lithium": "#22c1a6",
+    "Vanadium": "#d4a017", "Rare earths": "#d15fa8", "Niobium": "#4b8bbe", "Tantalum": "#5a7d9a",
+    "Beryllium": "#7bb37b", "Chromium": "#4a9e8f", "Titanium": "#9aa0a6", "Iron": "#b0553f",
+    "Manganese": "#a06a86", "Graphite": "#555b63", "Industrial": "#c9a15f", "Other metallic": "#8091a5",
 }
 
-METAL_ABBR = {"Gold": "Au", "Silver": "Ag", "Copper": "Cu", "Lead": "Pb", "Zinc": "Zn",
-              "Molybdenum": "Mo", "Nickel": "Ni", "Cobalt": "Co", "Tungsten": "W",
-              "Tin": "Sn", "Uranium": "U", "Iron": "Fe", "Industrial": "Ind",
+METAL_ABBR = {"Gold": "Au", "Silver": "Ag", "Platinum": "Pt", "Palladium": "Pd", "Copper": "Cu",
+              "Lead": "Pb", "Zinc": "Zn", "Molybdenum": "Mo", "Nickel": "Ni", "Cobalt": "Co",
+              "Tungsten": "W", "Tin": "Sn", "Antimony": "Sb", "Bismuth": "Bi", "Uranium": "U",
+              "Lithium": "Li", "Vanadium": "V", "Rare earths": "REE", "Niobium": "Nb",
+              "Tantalum": "Ta", "Beryllium": "Be", "Chromium": "Cr", "Titanium": "Ti",
+              "Iron": "Fe", "Manganese": "Mn", "Graphite": "Cg", "Industrial": "Ind",
               "Other metallic": "Met"}
 
-# commodity description (MINFILE / MDI) -> metal bucket
-_SELF = {"Gold", "Silver", "Copper", "Lead", "Zinc", "Molybdenum", "Nickel",
-         "Cobalt", "Tungsten", "Tin", "Uranium", "Iron"}
+# commodity description (MINFILE / MDI / SIGEOM) -> metal bucket
+_SELF = {"Gold", "Silver", "Platinum", "Palladium", "Copper", "Lead", "Zinc", "Molybdenum",
+         "Nickel", "Cobalt", "Tungsten", "Tin", "Antimony", "Bismuth", "Uranium", "Lithium",
+         "Vanadium", "Niobium", "Tantalum", "Beryllium", "Chromium", "Titanium", "Iron",
+         "Manganese", "Graphite"}
+# synonyms / element strings -> canonical bucket
+_SYN = {"Rare Earths": "Rare earths", "Rare Earth": "Rare earths", "Rare Earth Elements": "Rare earths",
+        "Ree": "Rare earths", "Etr": "Rare earths", "Cerium": "Rare earths", "Neodymium": "Rare earths",
+        "Lanthanum": "Rare earths", "Yttrium": "Rare earths", "Dysprosium": "Rare earths",
+        "Pge": "Platinum", "Egp": "Platinum", "Platinum Group": "Platinum",
+        "Platinum Group Elements": "Platinum", "Platinum Group Metals": "Platinum",
+        "Lithium Oxide": "Lithium", "Vanadium Pentoxide": "Vanadium", "Chromite": "Chromium",
+        "Ilmenite": "Titanium", "Rutile": "Titanium", "Pyrochlore": "Niobium", "Columbium": "Niobium",
+        "Wolfram": "Tungsten", "Tungsten Trioxide": "Tungsten", "Wo3": "Tungsten"}
 _INDUSTRIAL = {"Barite", "Gypsum", "Limestone", "Dolomite", "Coal", "Clay", "Gravel",
                "Sand", "Silica", "Talc", "Magnesite", "Marble", "Granite", "Jade",
                "Wollastonite", "Diatomite", "Zeolite", "Perlite", "Gemstone",
@@ -35,11 +55,25 @@ _INDUSTRIAL = {"Barite", "Gypsum", "Limestone", "Dolomite", "Coal", "Clay", "Gra
                "Sulphur", "Peat", "Feldspar", "Mica", "Graphite", "Fluorite"}
 
 
+# industrial / dimension-stone / aggregate keywords — matched as substrings so
+# qualified names ("Marble (Building Stone)", "Marble (High Purity/Flux)") are caught
+_INDUSTRIAL_KW = ("marble", "granite", "gneiss", "sandstone", "limestone", "dolomite",
+                  "building stone", "dimension stone", "structural material", "aggregate",
+                  "gravel", "clay", "gypsum", "barite", "baryte", "talc", "silica",
+                  "quartzite", "flux", "peat", "feldspar", "mica", "wollastonite", "coal",
+                  "slate", "soapstone", "ballast", "flagstone", "diatomite", "zeolite",
+                  "perlite", "gemstone", "quarry", "sand ", "salt", "potash")
+
+
 def metal_bucket(commodity):
-    c = (commodity or "").strip().title()
-    if c in _SELF:
-        return c
-    if c in _INDUSTRIAL:
+    c = (commodity or "").strip()
+    ct = c.title()
+    if ct in _SYN:
+        return _SYN[ct]
+    if ct in _SELF:
+        return ct
+    cl = c.lower()
+    if any(k in cl for k in _INDUSTRIAL_KW) or ct in _INDUSTRIAL:
         return "Industrial"
     return "Other metallic"
 
@@ -260,6 +294,22 @@ def grades_from_text(text):
     return ", ".join(out), conf
 
 
+import re as _re_year
+_YEAR_RE = _re_year.compile(r"\b(18\d\d|19\d\d|20[0-2]\d)\b")
+
+
+def last_production_year(*texts):
+    """Latest 4-digit year mentioned in production text (e.g. 'Produced 1928–2011: …').
+    Returns int or None. Used to weight past production by recency."""
+    best = None
+    for t in texts:
+        for m in _YEAR_RE.finditer(str(t or "")):
+            y = int(m.group(1))
+            if 1850 <= y <= 2035 and (best is None or y > best):
+                best = y
+    return best
+
+
 def parse_tonnes(tonnes_str):
     m = _TONNES_RE.search(str(tonnes_str or ""))
     if not m:
@@ -281,57 +331,120 @@ def size_quality(tonnes):
 
 
 def score_lead(status, deposit_open, grade_str="", tonnes_str="", has_drill=False, spend=0,
-               grade_conf=1.0):
-    """0-100 opportunity score, driven by GRADE QUALITY + DEPOSIT SIZE.
-
-    Quality-first and commodity-agnostic: a marginal, tiny past-producer no
-    longer tops the list just for ticking boxes. Grade (0-26) and size (0-16)
-    are the dominant levers; status/open-ground/drilling/spend de-risk on top.
-    grade_conf (0-1) discounts the grade by how it was established — an actual
-    resource counts fully, a drill intersection ~0.8, a grab sample ~0.5."""
+               grade_conf=1.0, last_prod_year=None, primary_metal=""):
+    """0-100 opportunity score. Jurisdiction-agnostic and recency-aware."""
     return score_breakdown(status, deposit_open, grade_str, tonnes_str,
-                           has_drill, spend, grade_conf)["total"]
+                           has_drill, spend, grade_conf, last_prod_year, primary_metal)["total"]
+
+
+# commodities we price at ~$0 (bulk/industrial) — a body known to be one of these
+# is not a staking target even without an assay number, so it earns no implied grade.
+_LOW_VALUE_METAL = {"Iron", "Industrial", "Manganese"}
 
 
 _CONF_LABEL = {1.0: "resource-grade", 0.8: "drill-intersection", 0.5: "grab-sample"}
 
+# non-producer development status -> (points, implied-grade credit, label)
+_STATUS_PTS = {
+    "developed": (15, 13, "Developed prospect"),
+    "deposit": (13, 11, "Classified deposit"),
+    "prospect": (9, 5, "Prospect"),
+    "discovery": (7, 4, "Discovery"),
+    "showing": (5, 0, "Showing"),
+    "occurrence": (3, 0, "Occurrence"),
+}
+
+
+def _prod_recency(year):
+    """Past-production value by WHEN it last produced. Pre-1980 workings are
+    treated as spent — a century-old mine almost never has modern-economic
+    material left, so it earns little. Recent producers (still-modern mines that
+    closed on price/permitting, not exhaustion) are the prime targets.
+    Returns (status_pts, implied_grade_factor 0..1, label)."""
+    try:
+        y = int(year) if year is not None and str(year).strip() not in ("", "nan", "None") else None
+    except (ValueError, TypeError):
+        y = None
+    if y is None:
+        return (10, 0.5, "past producer — production date unknown")
+    if y >= 2010:
+        return (24, 1.0, f"modern past producer (to {y}) — likely revivable")
+    if y >= 2000:
+        return (22, 1.0, f"recent past producer ({y})")
+    if y >= 1990:
+        return (18, 0.85, f"past producer ({y})")
+    if y >= 1980:
+        return (13, 0.6, f"past producer ({y})")
+    return (3, 0.1, f"historic pre-1980 workings ({y}) — little modern-economic material likely remains")
+
 
 def score_breakdown(status, deposit_open, grade_str="", tonnes_str="", has_drill=False,
-                    spend=0, grade_conf=1.0):
+                    spend=0, grade_conf=1.0, last_prod_year=None, primary_metal=""):
     """Same scoring as score_lead, but returns the component parts so a lead can
-    explain WHY it ranks where it does: {total, raw, parts:[{label,pts,note}]}."""
+    explain WHY it ranks where it does: {total, raw, parts:[{label,pts,note}]}.
+
+    Jurisdiction-agnostic: the score is built from signals available everywhere
+    (development status, open ground, drilling, deposit size) plus a grade term
+    that uses the real in-situ value where a grade is on record and an implied
+    value from past-production/development status where it is not — so a proven
+    past producer on open ground ranks the same whether or not its province
+    publishes assay numbers."""
     parts = []
     st = (status or "").lower()
-    if "past" in st and "produc" in st: sp, sl = 18, "Past producer — a real deposit existed here"
-    elif "produc" in st: sp, sl = 22, "Producer / near-producer"
-    elif "developed" in st: sp, sl = 15, "Developed prospect"
-    elif "deposit" in st: sp, sl = 13, "Classified deposit"
-    elif "prospect" in st: sp, sl = 9, "Prospect"
-    elif "discovery" in st: sp, sl = 7, "Discovery"
-    elif "showing" in st: sp, sl = 5, "Showing"
-    elif "occurrence" in st: sp, sl = 3, "Occurrence"
-    else: sp, sl = 2, "Mineral occurrence"
+    is_prod = "produc" in st
+    if is_prod:
+        sp, imp_factor, sl = _prod_recency(last_prod_year)
+        implied_base = 18
+    else:
+        sp, imp_base, sl = _STATUS_PTS.get(
+            next((k for k in _STATUS_PTS if k in st), "occurrence"), (2, 0, "Mineral occurrence"))
+        imp_factor, implied_base = 1.0, imp_base
     parts.append({"label": "Development status", "pts": sp, "note": sl})
 
     if deposit_open:
-        parts.append({"label": "Open ground", "pts": 14, "note": "The deposit's own ground is unstaked and stakeable"})
+        parts.append({"label": "Open ground", "pts": 16, "note": "The deposit's own ground is unstaked and stakeable"})
     if has_drill:
         parts.append({"label": "Drilling on record", "pts": 8, "note": "Documented drill/assay history de-risks the target"})
 
     gv_raw = grade_value(grade_str)
     conf = max(0.0, min(grade_conf, 1.0))
     gv = gv_raw * conf
-    gpts = round(min(gv / VALUE_CAP, 1.0) * 26)
-    if gpts:
-        cl = _CONF_LABEL.get(round(conf, 1), f"{int(conf*100)}%-confidence")
-        note = f"In-situ metal value ≈ ${gv_raw:,.0f}/t ({cl}"
-        note += f", discounted to ${gv:,.0f}/t)" if conf < 1.0 else ")"
-        parts.append({"label": "Grade value", "pts": gpts, "note": note})
+    has_grade_data = len(str(grade_str or "").strip()) >= 2
+    known_economic = has_grade_data and gv_raw > 0
+    low_value = metal_bucket(primary_metal) in _LOW_VALUE_METAL if primary_metal else False
+    if known_economic:
+        gpts = round(min(gv / VALUE_CAP, 1.0) * 22)
+        if gpts:
+            cl = _CONF_LABEL.get(round(conf, 1), f"{int(conf*100)}%-confidence")
+            note = f"In-situ metal value ≈ ${gv_raw:,.0f}/t ({cl}"
+            note += f", discounted to ${gv:,.0f}/t)" if conf < 1.0 else ")"
+            parts.append({"label": "Grade value", "pts": gpts, "note": note})
+    elif has_grade_data or low_value:
+        # grade is on record but the metals are worth ~$0 (iron/sulphur/industrial),
+        # or the commodity itself is a bulk non-target — this is KNOWN low value, not
+        # unknown, so it earns no implied credit. Keeps barren iron/pyrite bodies down.
+        pass
+    else:
+        # unknown grade -> credit from status. If the commodity itself is unknown
+        # ("Other metallic"), we can't be sure it's valuable, so credit cautiously.
+        uncertain = metal_bucket(primary_metal) == "Other metallic" if primary_metal else False
+        imp = round(implied_base * imp_factor * (0.5 if uncertain else 1.0))
+        if imp:
+            parts.append({"label": "Grade (implied)", "pts": imp,
+                          "note": ("No assay and commodity not well defined — partial credit"
+                                   if uncertain else
+                                   "No assay in the public data — grade credited from "
+                                   + ("past production" if is_prod else "development status"))})
 
-    size_factor = 0.0 if gv < 25 else min((gv - 25) / 50.0, 1.0)
-    spts = round(size_quality(parse_tonnes(tonnes_str)) * size_factor)
+    # deposit size counts only for an economically-graded body or a proven, still-
+    # relevant deposit — never for a known-barren (iron/sulphur) mass or spent
+    # pre-1980 workings.
+    size_ok = known_economic and gv >= 25
+    size_ok = size_ok or (not has_grade_data and not low_value
+                          and (any(k in st for k in ("developed", "deposit")) or (is_prod and imp_factor >= 0.6)))
+    spts = round(size_quality(parse_tonnes(tonnes_str))) if size_ok else 0
     if spts:
-        parts.append({"label": "Deposit size", "pts": spts, "note": f"Tonnage {tonnes_str} (counts only because the grade is economic)"})
+        parts.append({"label": "Deposit size", "pts": spts, "note": f"Tonnage {tonnes_str} on record"})
 
     spp = spend_points(spend)
     if spp:

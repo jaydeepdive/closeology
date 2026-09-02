@@ -7,7 +7,7 @@ import math
 import pandas as pd
 import site_theme as T
 import enrich_facts as E
-from config import score_breakdown
+from config import score_breakdown, metal_bucket, METAL_ORDER
 
 
 def _num(v, d=0.0):
@@ -40,14 +40,21 @@ def _load(csv, juris):
         drill = _s(r.get("drill_highlights"))
         spend = _num(r.get("exploration_spend"))
         conf = _num(r.get("grade_conf"), 1.0)
-        bd = score_breakdown(status, dopen, grade, tonnes, bool(drill), spend, conf)
+        lpy = r.get("last_prod_year")
+        lpy = None if (lpy is None or str(lpy).strip() in ("", "nan", "None")) else lpy
+        pmetal = _s(r.get("primary_metal"))
+        bd = score_breakdown(status, dopen, grade, tonnes, bool(drill), spend, conf, lpy, pmetal)
         capsule = _s(r.get("capsule"))
         grade, top_metal = E.sort_grade_by_value(grade)   # highest-$ metal first
         _vt, vparts = E.value_parts(grade)
         drill_top = E.top_intercepts(drill, 3)
         production = _s(r.get("production")) or E.production_summary(capsule, drill, status)
+        # dominant metal = the metal contributing the most $/t (else first commodity)
+        dom_raw = vparts[0][0] if vparts else (top_metal or _s(r.get("primary_metal")))
+        dmetal = metal_bucket(dom_raw) if dom_raw else "Other metallic"
         out.append({
             "value_parts": vparts, "drill_top": drill_top, "production": production,
+            "dmetal": dmetal, "last_prod_year": (int(lpy) if lpy not in (None,) and str(lpy).strip().isdigit() else ""),
             "juris": juris, "name": _s(r.get("name")) or "(unnamed)",
             "lead_id": _s(r.get("lead_id")),
             "minfile": _s(r.get("minfile")), "url": _s(r.get("minfile_url")),
@@ -101,11 +108,22 @@ def build(site_dir, regions):
     names = ", ".join(nm for _, nm in juris[:-1]) + (" and " + juris[-1][1] if len(juris) > 1 else
                                                      (juris[0][1] if juris else ""))
 
+    # dominant-metal filter chips (by highest $/t per lead), ordered by the metal taxonomy
+    mcounts = {}
+    for l in leads:
+        mcounts[l["dmetal"]] = mcounts.get(l["dmetal"], 0) + 1
+    order = {m: i for i, m in enumerate(METAL_ORDER)}
+    metals_sorted = sorted(mcounts, key=lambda m: (order.get(m, 99), -mcounts[m]))
+    PRECIOUS = {"Gold", "Silver"}
+    mchips = "".join(
+        '<button class="mchip on" data-m="{0}" data-prec="{1}">{0} <span class=mc>{2}</span></button>'.format(
+            m, "1" if m in PRECIOUS else "0", mcounts[m]) for m in metals_sorted)
+
     html = PAGE.format(
         fonts=T.FONTS, css=T.THEME_CSS + "\n" + pill_css,
         header=T.header("index.html"), footer=T.footer(),
         leads_json=json.dumps(leads, separators=(",", ":")),
-        segs="".join(segs), radio=radio, region_names=names,
+        segs="".join(segs), radio=radio, region_names=names, mchips=mchips,
     )
     os.makedirs(site_dir, exist_ok=True)
     open(os.path.join(site_dir, "index.html"), "w").write(html)          # front page
@@ -125,6 +143,12 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 .seg button{{border:0;background:#fff;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--mut);}}
 .seg button.on{{background:var(--red);color:#fff;}}
 .count{{color:var(--mut);font-size:13px;}}
+.mrow{{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0 2px;}}
+.mrow .lbl{{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);font-weight:700;margin-right:4px;}}
+.mchip{{border:1px solid var(--line);background:#fff;color:#2d3748;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;cursor:pointer;}}
+.mchip.on{{background:var(--ink);color:#fff;border-color:var(--ink);}}
+.mchip .mc{{opacity:.6;font-weight:500;margin-left:2px;}}
+.mpreset{{border:1px solid var(--line);background:#fff;color:var(--red);font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;}}
 .lead{{border:1px solid var(--line);border-radius:12px;padding:0;margin:14px 0;overflow:hidden;background:#fff;}}
 .lead:hover{{box-shadow:0 3px 14px rgba(0,0,0,.06);}}
 .lhead{{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border-bottom:1px solid var(--line);}}
@@ -178,6 +202,13 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
       {segs}
     </div>
   </div>
+  <div class="mrow" id="mrow">
+    <span class="lbl">Dominant metal</span>
+    <button class="mpreset" data-preset="all">All</button>
+    <button class="mpreset" data-preset="precious">Precious only</button>
+    <button class="mpreset" data-preset="none">None</button>
+    {mchips}
+  </div>
   <div class="count" id="count"></div>
   <div id="list"></div>
 </div>
@@ -186,6 +217,8 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 const LEADS={leads_json};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
 let jf='all', q='';
+const ALLM=[...new Set(LEADS.map(l=>l.dmetal))];
+let selM=new Set(ALLM);   // dominant-metal filter (all on by default)
 function card(p){{
   const parts=(p.parts||[]).map(x=>`<div class=prow><span class=pbadge>+${{x.pts}}</span><span><span class=pl>${{esc(x.label)}}.</span> <span class=pn>${{esc(x.note)}}</span></span></div>`).join('');
   const chips=[];
@@ -230,14 +263,26 @@ function card(p){{
 }}
 function render(){{
   const ql=q.toLowerCase();
-  const rows=LEADS.filter(p=>(jf==='all'||p.juris===jf) &&
+  const rows=LEADS.filter(p=>(jf==='all'||p.juris===jf) && selM.has(p.dmetal) &&
     (!ql || (p.name+' '+p.metal+' '+p.commodity+' '+p.community+' '+p.metals).toLowerCase().includes(ql)));
   document.getElementById('count').textContent=rows.length+' lead'+(rows.length===1?'':'s')+' shown, ranked by priority';
-  document.getElementById('list').innerHTML=rows.length?rows.map(card).join(''):'<div class=empty>No leads match.</div>';
+  document.getElementById('list').innerHTML=rows.length?rows.map(card).join(''):'<div class=empty>No leads match — widen the metal or jurisdiction filter.</div>';
 }}
 document.getElementById('seg').addEventListener('click',e=>{{const b=e.target.closest('button[data-j]');if(!b)return;
   jf=b.dataset.j;document.querySelectorAll('#seg button').forEach(x=>x.classList.toggle('on',x===b));render();}});
 document.getElementById('q').addEventListener('input',e=>{{q=e.target.value;render();}});
+// dominant-metal chips + presets
+function syncChips(){{document.querySelectorAll('.mchip').forEach(c=>c.classList.toggle('on',selM.has(c.dataset.m)));}}
+document.getElementById('mrow').addEventListener('click',e=>{{
+  const chip=e.target.closest('.mchip'), pre=e.target.closest('.mpreset');
+  if(chip){{const m=chip.dataset.m; selM.has(m)?selM.delete(m):selM.add(m);}}
+  else if(pre){{const p=pre.dataset.preset;
+    if(p==='all') selM=new Set(ALLM);
+    else if(p==='none') selM=new Set();
+    else if(p==='precious') selM=new Set(ALLM.filter(m=>m==='Gold'||m==='Silver'));}}
+  else return;
+  syncChips(); render();
+}});
 render();
 </script></body></html>
 """

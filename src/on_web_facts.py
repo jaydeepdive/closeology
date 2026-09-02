@@ -83,13 +83,36 @@ def _parse(html):
             tonnes = float(best["Tonnes"])
             cat = re.sub(r"\s*mineral resource| reserve", "", str(best["Category"]), flags=re.I).strip()
             grade = _grade_str(best["Commodities"])
-    produced = None
+    produced = prod_year = None
     if production is not None and len(production):
         p = production.copy()
         p["Tonnes"] = pd.to_numeric(p["Tonnes"], errors="coerce")
         s = p["Tonnes"].sum()
         produced = float(s) if s == s and s > 0 else None
-    return tonnes, cat, grade, produced
+        if "Year" in p.columns:
+            yy = pd.to_numeric(p["Year"], errors="coerce").dropna()
+            prod_year = int(yy.max()) if len(yy) else None
+    return tonnes, cat, grade, produced, prod_year
+
+
+_GRADE_SENT = re.compile(r'\d[\d,]*\.?\d*\s?(?:%|g/t|gpt|oz/t|opt|ppm|ppb|per cent)', re.I)
+_DRILLW = re.compile(r'\b(?:hole|ddh|drill|intersect|intercept|assay|grading|averag|over\s+\d)', re.I)
+
+
+def _capsule_and_drill(html):
+    """From an MDI record page: (capsule text, real drill/assay highlights).
+    The public MDI 'Comments'/'Description' narrative sometimes carries actual
+    intersections — surface those instead of the generic 'N holes nearby' count."""
+    txt = re.sub(r"<[^>]+>", " ", html)
+    txt = re.sub(r"&#x?\w+;", " ", txt)
+    txt = re.sub(r"\s+", " ", txt).strip()
+    m = re.search(r"(Comments?.*)", txt)
+    cap = (m.group(1) if m else txt)[:1600]
+    sents = re.split(r"(?<=[.;])\s+", cap)
+    keep = [s.strip() for s in sents if _GRADE_SENT.search(s) and _DRILLW.search(s)]
+    keep.sort(key=lambda s: (0 if re.search(r"g/t|%|oz", s, re.I) else 1))
+    drill = " ".join(keep[:4])[:600]
+    return cap, drill
 
 
 def enrich(region_dir):
@@ -98,13 +121,26 @@ def enrich(region_dir):
     stats = json.load(open(os.path.join(out, "stats.json")))
     if "grade_conf" not in leads.columns:
         leads["grade_conf"] = 1.0
-    n_grade = n_ton = 0
+    if "capsule" not in leads.columns:
+        leads["capsule"] = ""
+    if "last_prod_year" not in leads.columns:
+        leads["last_prod_year"] = None
+    n_grade = n_ton = n_drill = 0
     for i in leads.index:
         mdi = str(leads.at[i, "minfile"])
         html = _fetch(mdi)
         if not html:
             continue
-        tonnes, cat, grade, produced = _parse(html)
+        tonnes, cat, grade, produced, prod_year = _parse(html)
+        if prod_year:
+            leads.at[i, "last_prod_year"] = prod_year
+        cap, real_drill = _capsule_and_drill(html)
+        if cap:
+            leads.at[i, "capsule"] = cap
+        # real intersections from the record replace the generic "N holes nearby"
+        if real_drill:
+            leads.at[i, "drill_highlights"] = real_drill
+            n_drill += 1
         if grade and not str(leads.at[i, "grade_str"]):
             leads.at[i, "grade_str"] = grade; n_grade += 1   # table grade = resource, conf 1.0
         # fallback: pull grades from the record's prose (same extractor as BC),
@@ -131,11 +167,19 @@ def enrich(region_dir):
                 leads.at[i, "deposit_size"] = f"{_fmt_t(produced)} produced"
             n_ton += 1
 
-    # re-score with the new grade/tonnage, then re-rank
+    # last production year from the record prose where the table lacked it
+    from config import last_production_year
+    for i in leads.index:
+        if not leads.at[i, "last_prod_year"] and "produc" in str(leads.at[i, "status"]).lower():
+            y = last_production_year(leads.at[i, "capsule"])
+            if y:
+                leads.at[i, "last_prod_year"] = y
+    # re-score with the new grade/tonnage/recency, then re-rank
     leads["score"] = leads.apply(lambda r: score_lead(
         r["status"], bool(r["deposit_open"]), r.get("grade_str", ""), r.get("tonnes_str", ""),
         bool(r.get("drill_highlights")), r.get("exploration_spend", 0),
-        grade_conf=r.get("grade_conf", 1.0)), axis=1)
+        grade_conf=r.get("grade_conf", 1.0), last_prod_year=r.get("last_prod_year"),
+        primary_metal=r.get("primary_metal", "")), axis=1)
     sort_keys = ["score", "deposit_open"] + (["exploration_spend"] if "exploration_spend" in leads.columns else [])
     leads = leads.sort_values(sort_keys, ascending=False).reset_index(drop=True)
     leads["rank"] = range(1, len(leads) + 1)
@@ -165,7 +209,7 @@ def enrich(region_dir):
     stats["n_with_grade"] = int((leads["grade_str"].astype(str).str.len() > 0).sum())
     stats["n_with_tonnage"] = int((leads["tonnes_str"].astype(str).str.len() > 0).sum())
     json.dump(stats, open(os.path.join(out, "stats.json"), "w"), indent=2)
-    print(f"[on web-facts] grade added: {n_grade} | tonnage added: {n_ton} | leads {len(leads)}")
+    print(f"[on web-facts] grade added: {n_grade} | tonnage added: {n_ton} | real drill: {n_drill} | leads {len(leads)}")
 
 
 if __name__ == "__main__":
