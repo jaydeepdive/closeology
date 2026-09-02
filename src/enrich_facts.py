@@ -34,6 +34,29 @@ def _dollars(ab, v, is_gpt):
     return (pct * 10.0) * price
 
 
+def sort_grade_by_value(grade_str):
+    """Reorder the compact grade string so the highest-$/t metal comes first — the
+    primary asset is then obvious at a glance. Priced metals (desc by $/t) lead;
+    trace/unpriced tokens keep their text at the end. Returns (sorted_str, top_metal)."""
+    s = str(grade_str or "")
+    if not s or s == "nan":
+        return "", ""
+    toks = []
+    for m in C._GRADE_RE.finditer(s):
+        ab, num, unit = m.group(1), m.group(2), m.group(3)
+        try:
+            v = float(num)
+        except ValueError:
+            v = 0.0
+        d = _dollars(ab.lower(), v, "g" in unit.lower())
+        toks.append((d, m.group(0).strip(), _ABBR_NAME.get(ab.lower(), ab.title())))
+    if not toks:
+        return s, ""
+    toks.sort(key=lambda t: -t[0])
+    top = toks[0][2] if toks[0][0] > 0 else ""
+    return ", ".join(t[1] for t in toks), top
+
+
 def value_parts(grade_str):
     """Return (total $/t, [[metal_name, $/t], ...] desc) from a compact grade str."""
     if not grade_str or str(grade_str) == "nan":

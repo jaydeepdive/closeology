@@ -30,11 +30,29 @@ def _df(db, t):
 def _fmt_t(t):
     if not t or t != t:
         return ""
+    if t >= 1e9:
+        return f"{t/1e9:.1f} Bt"
     if t >= 1e6:
         return f"{t/1e6:.1f} Mt"
     if t >= 1e3:
         return f"{t/1e3:.0f} kt"
     return f"{t:.0f} t"
+
+
+def _mass_kg(kg):
+    """Readable metal mass from kilograms."""
+    if not kg or kg != kg:
+        return ""
+    t = kg / 1000.0
+    if t >= 1e6:
+        return f"{t/1e6:.2f} Mt"
+    if t >= 1e3:
+        return f"{t/1e3:.1f} kt"
+    if t >= 1:
+        return f"{t:,.0f} t"
+    if kg >= 1:
+        return f"{kg:,.0f} kg"
+    return f"{kg*1000:,.0f} g"
 
 
 def _capsule_tonnes(txt):
@@ -104,6 +122,57 @@ def build():
         facts[mid] = {"grade_str": ", ".join(parts[:5]), "has_resource": True,
                       "resource_cat": RESCAT.get(rescc.get(best.RESCAT_ID, ""), "")}
 
+    # ---- structured PRODUCTION: ore mined/milled (R18A) + commodity yield (R18B) ----
+    a = _df(db, "R18A_Minfile_Materials_Mined")
+    b = _df(db, "R18B_Minfile_Commodities_Yield")
+    for c in ("YEAR", "MINED", "MILLED"):
+        a[c] = pd.to_numeric(a[c], errors="coerce")
+    for c in ("YEAR", "QUANTITY"):
+        b[c] = pd.to_numeric(b[c], errors="coerce")
+    prod = {}
+    for mid, g in a.groupby("MINFILE_ID"):
+        yrs = g["YEAR"].dropna()
+        prod[mid] = {"y0": int(yrs.min()) if len(yrs) else None,
+                     "y1": int(yrs.max()) if len(yrs) else None,
+                     "ore": float(g["MINED"].sum() or 0), "mil": float(g["MILLED"].sum() or 0),
+                     "comm": {}}
+    for mid, g in b.groupby("MINFILE_ID"):
+        d = prod.setdefault(mid, {"y0": None, "y1": None, "ore": 0.0, "mil": 0.0, "comm": {}})
+        yrs = g["YEAR"].dropna()
+        if len(yrs):
+            d["y0"] = min(d["y0"] or 9999, int(yrs.min()))
+            d["y1"] = max(d["y1"] or 0, int(yrs.max()))
+        for cid, gg in g.groupby("COMMOD_ID"):
+            q = float(gg["QUANTITY"].sum() or 0)
+            if q:
+                d["comm"][cid] = d["comm"].get(cid, 0.0) + q
+
+    def _fmt_prod(d):
+        if not d:
+            return ""
+        cparts = []
+        for cid, q in sorted(d["comm"].items(), key=lambda x: -x[1]):
+            nm = str(e19m.get(cid, "")).strip()
+            if not nm or q <= 0:
+                continue
+            kg = q / 1000.0 if prec.get(cid) == "Y" else q   # precious grams->kg; base already kg
+            m = _mass_kg(kg)
+            if m:
+                cparts.append(f"{m} {abbr.get(nm, nm)}")
+        mil, mined = d.get("mil") or 0, d.get("ore") or 0
+        ore = max(mil, mined)
+        seg = []
+        if ore:
+            seg.append(_fmt_t(ore) + (" milled" if mil >= mined else " mined"))
+        if cparts:
+            seg.append(", ".join(cparts[:6]))
+        if not seg:
+            return ""
+        yr = f"{d['y0']}–{d['y1']}" if d.get("y0") and d.get("y1") else ""
+        return (f"Produced {yr}: " if yr else "Produced: ") + " — ".join(seg)
+
+    prod_str = {mid: _fmt_prod(d) for mid, d in prod.items()}
+
     caps = {}
     for _, r in cap.iterrows():
         t = r["CAPSUL_T"]
@@ -118,11 +187,13 @@ def build():
         rows.append({"key": mfno, "grade_str": f.get("grade_str", ""),
                      "resource_cat": f.get("resource_cat", ""), "has_resource": bool(f.get("has_resource")),
                      "tonnes": tonnes, "tonnes_str": _fmt_t(tonnes),
-                     "drill_highlights": dh, "capsule": capsule})
+                     "drill_highlights": dh, "capsule": capsule,
+                     "production": prod_str.get(mid, "")})
     out = pd.DataFrame(rows).drop_duplicates("key")
     out.to_parquet("data/bc/minfile_facts.parquet")
     print(f"[facts] {len(out)} occ | grade: {int((out.grade_str.str.len()>0).sum())} | "
-          f"tonnage: {int(out.tonnes.notna().sum())} | drill highlights: {int((out.drill_highlights.str.len()>0).sum())}")
+          f"tonnage: {int(out.tonnes.notna().sum())} | drill highlights: {int((out.drill_highlights.str.len()>0).sum())} | "
+          f"production: {int((out.production.str.len()>0).sum())}")
 
 
 if __name__ == "__main__":

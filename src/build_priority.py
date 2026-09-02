@@ -42,15 +42,16 @@ def _load(csv, juris):
         conf = _num(r.get("grade_conf"), 1.0)
         bd = score_breakdown(status, dopen, grade, tonnes, bool(drill), spend, conf)
         capsule = _s(r.get("capsule"))
+        grade, top_metal = E.sort_grade_by_value(grade)   # highest-$ metal first
         _vt, vparts = E.value_parts(grade)
         drill_top = E.top_intercepts(drill, 3)
-        production = E.production_summary(capsule, drill, status)
+        production = _s(r.get("production")) or E.production_summary(capsule, drill, status)
         out.append({
             "value_parts": vparts, "drill_top": drill_top, "production": production,
             "juris": juris, "name": _s(r.get("name")) or "(unnamed)",
             "lead_id": _s(r.get("lead_id")),
             "minfile": _s(r.get("minfile")), "url": _s(r.get("minfile_url")),
-            "metal": _s(r.get("primary_metal")), "metals": _s(r.get("metals_abbr")),
+            "metal": top_metal or _s(r.get("primary_metal")), "metals": _s(r.get("metals_abbr")),
             "commodity": _s(r.get("commodity")), "status": status, "deposit_open": dopen,
             "hard": _s(r.get("hard_to_stake")).lower() == "true", "grade": grade,
             "size": _s(r.get("deposit_size")) or (tonnes if tonnes else ""),
