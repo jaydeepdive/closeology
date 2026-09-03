@@ -220,6 +220,25 @@ def main():
     _json.dump(email, open("site/daily_email.json", "w"))
     import build_radar
     build_radar.build(email, "site")                   # radar.html cross-Canada overview
+
+    # newswire drill-data pipeline: crawl recent mining releases, extract collars
+    # + assays into the shared bank, then build the Drill Radar page. Guarded so a
+    # throttle / network hiccup never breaks the site build.
+    try:
+        from newswire import run as nw_run, radar as nw_radar
+        limit = int(os.environ.get("NEWSWIRE_LIMIT", "120"))
+        mode = "backfill" if os.environ.get("NEWSWIRE_BACKFILL") else "incremental"
+        nw_run.run(mode, limit=limit)
+        nw_radar.build("site")
+        from minemodelingpro import export as mmp_export
+        mmp_export.export()                             # refresh modelling tables
+    except Exception as e:
+        print("[build_all] newswire step skipped:", str(e)[:160])
+        try:
+            from newswire import radar as nw_radar
+            nw_radar.build("site")     # still (re)build the page from whatever's banked
+        except Exception:
+            pass
     tot_edges = sum(len(r["edges"]) for r in email["regions"])
     print(f"[build_all] done ({', '.join(live)}) + daily_email.json ({tot_edges} edge plays)")
 

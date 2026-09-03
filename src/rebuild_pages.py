@@ -70,6 +70,11 @@ def main():
                                  "leads": flagged[:20], "dropped": dp.get("dropped", [])[:25]})
     json.dump(email, open("site/daily_email.json", "w"))
     build_radar.build(email, "site")
+    try:
+        from newswire import radar as nw_radar
+        nw_radar.build("site")     # Drill Radar page from whatever's banked
+    except Exception as e:
+        print("[rebuild] drill radar skipped:", str(e)[:120])
     print(f"[rebuild] pages rebuilt for: {', '.join(live)}")
 
 

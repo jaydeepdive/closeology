@@ -13,7 +13,7 @@ except Exception:
 RED = "#D71920"
 
 NAV = [("Priority leads", "index.html"), ("Regions & maps", "regions.html"),
-       ("Explore map", "app.html")]
+       ("Explore map", "app.html"), ("Drill radar", "drill_radar.html")]
 
 # daily radars live in a nav hover-dropdown (one page per jurisdiction), listed
 # alphabetically; the dropdown label itself links to the cross-Canada overview.
