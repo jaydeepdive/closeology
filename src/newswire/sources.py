@@ -13,6 +13,7 @@ fill in as their access is worked out, and the deterministic extractor + failure
 log already handle whatever they return)."""
 import re
 import time
+import html as _html
 import requests
 
 UA = {"User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -122,6 +123,56 @@ def tnw_incremental(session):
     return out
 
 
+# ------------------------------------------------------------- juniorminingnetwork
+# JMN aggregates EVERY major wire (Newsfile, GlobeNewswire, Accesswire, Cision,
+# Businesswire, PRNewswire) and re-hosts the full release text on its own domain
+# with readable collar/assay tables. Its Cloudflare blocks datacenter IPs (the
+# cloud build gets 403) but a residential IP — Jordan's Mac, where the daily
+# collector task runs — gets clean 200s. So this is the primary, un-throttled,
+# genuinely source-agnostic feed. The "drill-results" topic is a rolling window
+# of the latest ~30 drill releases across all wires; run daily it accrues real
+# volume, and the orchestrator skips anything already banked.
+JMN = "https://www.juniorminingnetwork.com"
+JMN_TOPICS = ["drill-results"]
+_JMN_REL = re.compile(r'href="(/junior-miner-news/press-releases/[^"]+?\.html)"')
+_JMN_ANCHOR = re.compile(
+    r'href="(/junior-miner-news/press-releases/[^"]+?\.html)"[^>]*>\s*([^<]{8,200})')
+
+
+def _jmn_from_html(html):
+    """(url, title) for every release link on a JMN listing/topic page."""
+    out, seen = [], set()
+    # anchor text gives the headline (→ company + drill keyword filter)
+    for href, title in _JMN_ANCHOR.findall(html or ""):
+        if href in seen:
+            continue
+        seen.add(href)
+        out.append((href, re.sub(r"\s+", " ", _html.unescape(title)).strip()))
+    # links whose anchor text didn't match the greedy pattern (image links etc.)
+    for href in _JMN_REL.findall(html or ""):
+        if href not in seen:
+            seen.add(href)
+            out.append((href, ""))
+    return out
+
+
+def jmn_incremental(session):
+    rel = {}
+    for topic in JMN_TOPICS:
+        html = _get(session, f"{JMN}/mining-topics/topic/{topic}.html")
+        for href, title in _jmn_from_html(html):
+            # keep drill-relevant items (the topic is already drill-results, but
+            # the page also carries nav/related links we don't want)
+            if title and not DRILL_KW.search(title):
+                continue
+            url = href if href.startswith("http") else JMN + href
+            rid = href.rsplit("/", 1)[-1][:60]
+            rel[rid] = {"source": "juniorminingnetwork", "id": rid, "url": url,
+                        "title": title or None, "published": None, "company": None}
+        time.sleep(0.5)
+    return list(rel.values())
+
+
 # --------------------------------------------- best-effort adapters (JS/anti-bot)
 def _empty(_session):
     return []
@@ -131,6 +182,8 @@ def _empty(_session):
 # available. Others are wired so they activate the moment a working listing/feed
 # (or the planned LLM-assisted fetch) is dropped in — no orchestrator change.
 ADAPTERS = {
+    # JMN first: un-throttled on a residential IP and covers all wires at once.
+    "juniorminingnetwork": {"incremental": jmn_incremental, "backfill": _empty},
     "newsfilecorp": {"incremental": nfc_incremental, "backfill": nfc_sitemap},
     "thenewswire": {"incremental": tnw_incremental, "backfill": _empty},
     "cision": {"incremental": _empty, "backfill": _empty},        # newswire.ca
