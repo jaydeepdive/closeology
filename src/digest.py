@@ -86,3 +86,69 @@ def group_dropped(rows, slug, cluster_km=3.0):
     # biggest, closest properties first
     out.sort(key=lambda x: (x["near_km"], -x["area_ha"]))
     return out
+
+
+# ---------------------------------------------------------------------------
+# build_top(): the SHORT ranked digest for the email. The email must be a
+# skimmable teaser (a handful of one-line movements + a link to the radar for
+# the rest), never a per-region dump of every lead. We pre-compose the one-line
+# strings HERE so the email step can't balloon the format again.
+
+def _abbr(name):
+    m = {"British Columbia": "BC", "Ontario": "ON", "Quebec": "QC", "Yukon": "YK",
+         "Newfoundland & Labrador": "NL", "Saskatchewan": "SK", "Manitoba": "MB",
+         "Northwest Territories": "NT", "Nova Scotia": "NS", "New Brunswick": "NB",
+         "Alberta": "AB", "Nunavut": "NU", "Prince Edward Island": "PE"}
+    return m.get(name, (name or "")[:2].upper())
+
+
+def build_top(regions, n_edges=6, n_drop=8, n_leads=8, site=""):
+    """Collapse every region's signals into one short, ranked set for the email."""
+    edges, drops, leads = [], [], []
+    for r in regions:
+        juris = _abbr(r.get("name", r.get("slug", "")))
+        for e in r.get("edges", []):
+            edges.append((juris, e))
+        for d in r.get("dropped_properties", []):
+            drops.append((juris, d))
+        for l in r.get("leads", []):
+            leads.append((juris, l))
+    edges.sort(key=lambda x: (0 if x[1].get("hot") else 1, -_num(x[1].get("open_ha"))))
+    drops.sort(key=lambda x: (-_num(x[1].get("area_ha")), _num(x[1].get("near_km"), 1e9)))
+    leads.sort(key=lambda x: -_num(x[1].get("score")))
+
+    def _abs(u):
+        return (site + u) if (u and site and not u.startswith("http")) else u
+
+    def edge_line(j, e):
+        comp = e.get("company") or e.get("property") or "Drill play"
+        prop = e.get("property")
+        oh = e.get("open_ha")
+        bit = f" · {round(_num(oh))} ha open{(' to the '+e.get('open_dir')) if e.get('open_dir') else ''}" if oh else ""
+        return {"juris": j, "hot": bool(e.get("hot")),
+                "text": f"{comp}{(' — '+prop) if prop else ''}{bit}",
+                "map_url": _abs(e.get("map_url"))}
+
+    def drop_line(j, d):
+        owner = (d.get("owner") or "A holder").replace(" 100%", "").strip()
+        lead = d.get("near_lead") or "open ground"
+        n = int(d.get("n_claims", 1) or 1)
+        area = _num(d.get("area_ha"))
+        km = d.get("near_km")
+        size = f"{n} claim{'s' if n!=1 else ''}" + (f", ~{round(area)} ha" if area >= 1 else "")
+        prox = f" · {km} km from #{d.get('near_rank')}" if km is not None else ""
+        return {"juris": j,
+                "text": f"{owner} dropped its {lead} block · {size}{prox}",
+                "map_url": _abs(d.get("map_url"))}
+
+    def lead_line(j, l):
+        return {"juris": j,
+                "text": f"#{l.get('rank')} {l.get('name')} · {l.get('metal')} · score {int(_num(l.get('score')))}",
+                "url": l.get("url") or "", "map_url": _abs(l.get("map_url"))}
+
+    return {
+        "counts": {"edges": len(edges), "dropped": len(drops), "leads": len(leads)},
+        "edges": [edge_line(j, e) for j, e in edges[:n_edges]],
+        "dropped": [drop_line(j, d) for j, d in drops[:n_drop]],
+        "leads": [lead_line(j, l) for j, l in leads[:n_leads]],
+    }

@@ -239,6 +239,10 @@ def main():
                                  "leads": flagged[:20],
                                  "dropped_properties": dropped_props[:25],
                                  "dropped": dp.get("dropped", [])[:25]})
+    # short, ranked teaser for the email (a handful of one-liners across all
+    # regions + a link to the radar for the rest) so the email can't be a wall
+    import digest as _digest
+    email["top"] = _digest.build_top(email["regions"], site=email["site"])
     _json.dump(email, open("site/daily_email.json", "w"))
     import build_radar
     build_radar.build(email, "site")                   # radar.html cross-Canada overview
