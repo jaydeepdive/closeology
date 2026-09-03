@@ -247,7 +247,7 @@ function card(p){{
   if(p.cells_ha) facts.push(`<div class=fact><span class=k>Open ground</span>${{esc(p.n_cells)}} cell(s) · ${{esc(p.cells_ha)}} ha adjacent</div>`);
   if(p.encumbrances && !p.hard) facts.push(`<div class=fact><span class=k>Nearby</span>${{esc(p.encumbrances)}}</div>`);
   if(p.url) facts.push(`<div class=fact><span class=k>Record</span><a href="${{esc(p.url)}}" target=_blank>${{esc(p.minfile)||'official record'}} ↗</a></div>`);
-  const mapurl=`${{p.juris.toLowerCase()}}.html?lat=${{p.lat}}&lon=${{p.lon}}&lead=${{encodeURIComponent(p.lead_id||'')}}`;
+  const mapurl=`app.html?lat=${{p.lat}}&lon=${{p.lon}}&z=12&region=${{p.juris.toLowerCase()}}&kind=lead&label=${{encodeURIComponent(p.name||'')}}`;
   return `<div class=lead>
     <div class=lhead>
       <div class=rankbox><div class=r>${{p.rank}}</div><div class=rl>rank</div></div>

@@ -44,7 +44,7 @@ def build(site_dir, regions):
           <div><b>{s.get('n_claims_active',0):,}</b><span>active claims</span></div>
         </div>
         <div class="links">
-          <a class="btn" href="{r['slug']}.html">Explore map →</a>
+          <a class="btn" href="app.html?region={r['slug']}">Explore map →</a>
           <a class="btn ghost" href="daily_{r['slug']}.html">Daily radar</a>
           <a class="btn ghost" href="{r['slug']}_leads.csv">CSV</a>
           <a class="btn ghost" href="{r['slug']}_leads.xlsx">XLSX</a>

@@ -327,7 +327,16 @@ refresh();
 (function(){{
   const q=new URLSearchParams(location.search);
   const lat=parseFloat(q.get('lat')), lon=parseFloat(q.get('lon'));
-  if(isNaN(lat)||isNaN(lon)) return;
+  const region=(q.get('region')||'').toLowerCase();
+  if(isNaN(lat)||isNaN(lon)){{
+    // no specific point — if a region was named, frame that region's leads, but
+    // leave EVERY Canadian lead on the map so you can just zoom out to see them all
+    if(region){{
+      const pts=LEADS.filter(p=>p.region===region).map(p=>[p.lat,p.lon]);
+      if(pts.length){{ try{{ map.fitBounds(pts,{{padding:[40,40],maxZoom:8}}); }}catch(e){{}} }}
+    }}
+    return;
+  }}
   const z=parseInt(q.get('z'))||12, kind=q.get('kind')||'', label=q.get('label')||'';
   // nearest lead to the target (match a radar item to its lead card)
   let best=null, bd=1e9;
