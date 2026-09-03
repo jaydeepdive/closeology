@@ -46,9 +46,10 @@ def main():
         except Exception as e:
             print(f"[rebuild] daily {slug} failed:", str(e)[:120])
 
+    info_regions = [r for r in build_all.REGIONS_SITE if r.get("info")]
     build_app.build(regions_site, "site/app.html")
     build_priority.build("site", regions_site)
-    build_site.build("site", regions_site)
+    build_site.build("site", regions_site + info_regions)
 
     # cross-Canada daily overview (radar.html) from the same email payload
     email = {"generated": TODAY, "site": "https://jaydeepdive.github.io/closeology/", "regions": []}

@@ -28,13 +28,26 @@ QC = {"slug": "qc", "name": "Quebec", "dir": "data/qc", "metric_crs": "EPSG:3978
                       "(titres miniers) under the Open Government Licence – Québec. "
                       "Verify tenure before staking.")}
 
+# NU is NUMIN (CSV POST) + CIRNAC claims (ArcGIS) — its own ingest + run_region config
+NU = {"slug": "nu", "name": "Nunavut", "dir": "data/nu", "metric_crs": "EPSG:3978",
+      "attribution": ("Contains NUMIN mineral showings (Nunavut Geoscience) and CIRNAC "
+                      "Nunavut mineral claims (Crown-administered federal tenure) under the "
+                      "Open Government Licence. Verify tenure before staking.")}
+
 # order = user's "fastest-open-data first", then the rest
 REGIONS_SITE = ([
     {"name": "British Columbia", "dir": "data/bc", "slug": "bc", "live": True},
     {"name": "Ontario", "dir": "data/on", "slug": "on", "live": True},
     {"name": "Yukon", "dir": "data/yk", "slug": "yk", "live": True},
 ] + [{"name": p["name"], "dir": p["dir"], "slug": p["slug"], "live": True} for p in PROVINCES]
-  + [{"name": "Quebec", "dir": "data/qc", "slug": "qc", "live": True}])
+  + [{"name": "Quebec", "dir": "data/qc", "slug": "qc", "live": True},
+     {"name": "Nunavut", "dir": "data/nu", "slug": "nu", "live": True},
+     {"name": "Prince Edward Island", "dir": "data/pe", "slug": "pe", "info": True,
+      "note": ("No metallic mineral occurrences on record. PEI is underlain entirely by "
+               "flat-lying Permian–Carboniferous redbeds (sandstone, siltstone, mudstone) "
+               "of the Maritimes Basin — a sedimentary cover with no economic metallic "
+               "mineralization and no mineral-claim staking regime. Tracked here for "
+               "completeness; there is no open metallic ground to flag.")}])
 
 APP_REGIONS = [   # combined explorer stays scoped to the flagship regions (size)
     {"dir": "data/bc", "slug": "bc", "name": "British Columbia", "metric": "EPSG:3005", "news": "site/news.json"},
@@ -111,6 +124,20 @@ def _arcgis_province(cfg):
     return _run
 
 
+def _nu():
+    import nu_ingest
+    if os.environ.get("FULL") or not _have("data/nu/claims.parquet") \
+            or not _have("data/nu/occurrences.parquet"):
+        nu_ingest.run()
+    else:
+        arcgis_common.boundary({"slug": "nu", "name": "Nunavut", "boundary_name": "Nunavut"})
+    pipeline.run_region({"name": "Nunavut", "dir": "data/nu", "metric_crs": "EPSG:3978",
+                         "today": TODAY, "inline_claims": True, "attribution": NU["attribution"]})
+    build_map.build("data/nu/out", "site/nu.html", inline_claims=True)
+    daily.build("data/nu", "site", "Nunavut", "EPSG:3978",
+                news_path="site/news_nu.json", out_name="daily_nu.html")
+
+
 def _qc():
     import qc_ingest
     if os.environ.get("FULL") or not _have("data/qc/claims.parquet") \
@@ -141,7 +168,7 @@ def main():
     # region builders in the chosen order
     builders = [("bc", _bc), ("on", _on), ("yk", _yk)]
     builders += [(p["slug"], _arcgis_province(p)) for p in PROVINCES]
-    builders += [("qc", _qc)]
+    builders += [("qc", _qc), ("nu", _nu)]
 
     live = []
     for slug, fn in builders:
@@ -157,10 +184,14 @@ def main():
     app_regions = [r for r in APP_REGIONS if r["slug"] in live
                    and _have(os.path.join(r["dir"], "out", "leads.geojson"))]
 
+    # info-only regions (e.g. PEI — no metallic ground) carry no leads but are
+    # shown on the hub for completeness
+    info_regions = [r for r in REGIONS_SITE if r.get("info")]
+
     build_app.build(regions_site, "site/app.html")   # ONE unified all-Canada map
     import build_priority
     build_priority.build("site", regions_site)         # index.html (front page)
-    build_site.build("site", regions_site)             # regions.html hub + CSV/XLSX
+    build_site.build("site", regions_site + info_regions)   # regions.html hub + CSV/XLSX
 
     # daily email digest across every live region
     import json as _json
@@ -168,7 +199,7 @@ def main():
         {"slug": "bc", "metric_crs": "EPSG:3005"}, {"slug": "on", "metric_crs": "EPSG:3161"},
         {"slug": "yk", "metric_crs": "EPSG:3579"}] + [
         {"slug": p["slug"], "metric_crs": p["metric_crs"]} for p in PROVINCES] + [
-        {"slug": "qc", "metric_crs": "EPSG:3978"}]}
+        {"slug": "qc", "metric_crs": "EPSG:3978"}, {"slug": "nu", "metric_crs": "EPSG:3978"}]}
     name = {r["slug"]: r["name"] for r in REGIONS_SITE}
     email = {"generated": TODAY, "site": "https://jaydeepdive.github.io/closeology/", "regions": []}
     for slug in live:

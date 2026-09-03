@@ -467,21 +467,37 @@ def run_region(region):
             gpd.GeoDataFrame(feats, geometry="geometry", crs="EPSG:4326").to_file(
                 os.path.join(out_dir, "opencells.geojson"), driver="GeoJSON")
 
-    # claim-cell context near leads (regions without a live claims WMS)
-    if region.get("inline_claims") and claims is not None:
+    # claim-cell context near leads (regions without a live claims WMS): who
+    # holds the surrounding staked ground, so a user can see the neighbours and
+    # research what they may have found before committing to stake.
+    if claims is not None and len(claims):
         lm = leads.to_crs(metric)
         halo = gpd.GeoDataFrame(geometry=[lm.geometry.buffer(2500).union_all()], crs=metric)
         cnear = gpd.sjoin(claims.to_crs(metric), halo, predicate="intersects", how="inner")
         cnear = claims.loc[cnear.index.unique()].to_crs("EPSG:4326")
         gcol = cnear.geometry.name
-        if "claim" in cnear.columns:
-            idcol = "claim"
-        elif "TENURE_NUMBER_ID" in cnear.columns:
-            idcol = "TENURE_NUMBER_ID"
-        else:
-            idcol = next((c for c in cnear.columns if c != gcol), gcol)
-        out = gpd.GeoDataFrame(cnear[[idcol, gcol]].rename(columns={idcol: "claim", gcol: "geometry"}),
-                               geometry="geometry", crs=cnear.crs)
+
+        def _pick(*names):
+            return next((n for n in names if n in cnear.columns), None)
+        idcol = _pick("claim", "TENURE_NUMBER_ID", "tenure", "TENURE_ID")
+        namecol = _pick("CLAIM_NAME", "NAME", "claim_name")
+        owncol = _pick("OWNER_NAME", "owner", "HOLDER", "CLIENT_NAME")
+        expcol = _pick("GOOD_TO_DATE", "EXPIRY_DATE", "expiry")
+        keep = {gcol: "geometry"}
+        cols = [gcol]
+        if idcol:
+            keep[idcol] = "claim"; cols.append(idcol)
+        if namecol:
+            keep[namecol] = "cname"; cols.append(namecol)
+        if owncol:
+            keep[owncol] = "owner"; cols.append(owncol)
+        if expcol:
+            keep[expcol] = "expiry"; cols.append(expcol)
+        out = cnear[cols].rename(columns=keep)
+        for c in ("claim", "cname", "owner", "expiry"):
+            if c in out.columns:
+                out[c] = out[c].astype(str).replace({"nan": "", "None": "", "NaT": ""}).str.strip()
+        out = gpd.GeoDataFrame(out, geometry="geometry", crs=cnear.crs)
         out.to_file(os.path.join(out_dir, "claims_near.geojson"), driver="GeoJSON")
 
     # light occurrences layer for the map

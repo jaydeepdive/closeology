@@ -21,7 +21,7 @@ RADARS = sorted([
     ("Alberta", "daily_ab.html"), ("British Columbia", "daily_bc.html"),
     ("Manitoba", "daily_mb.html"), ("New Brunswick", "daily_nb.html"),
     ("Newfoundland & Labrador", "daily_nl.html"), ("Northwest Territories", "daily_nt.html"),
-    ("Nova Scotia", "daily_ns.html"), ("Ontario", "daily_on.html"),
+    ("Nova Scotia", "daily_ns.html"), ("Nunavut", "daily_nu.html"), ("Ontario", "daily_on.html"),
     ("Quebec", "daily_qc.html"), ("Saskatchewan", "daily_sk.html"),
     ("Yukon", "daily_yk.html")], key=lambda x: x[0])
 

@@ -51,6 +51,10 @@ def build(site_dir, regions):
         </div>
         <div class="upd">Updated {s.get('generated','')}</div>
       </div>""")
+        elif r.get("info"):
+            cards.append(f"""
+      <div class="card"><div class="card-h"><h3>{r['name']}</h3><span class="pill">no metallic ground</span></div>
+        <p class="soon">{r.get('note','')}</p></div>""")
         else:
             cards.append(f"""
       <div class="card"><div class="card-h"><h3>{r['name']}</h3><span class="pill">soon</span></div>

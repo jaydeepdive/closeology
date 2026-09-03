@@ -148,6 +148,8 @@ html,body{{height:100%;}} body{{display:flex;flex-direction:column;height:100vh;
 .dbtn{{display:inline-block;background:var(--red);color:#fff;font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:8px;margin:2px 16px 14px;}} .dbtn:hover{{text-decoration:none;opacity:.92;}}
 .legend{{background:rgba(255,255,255,.95);padding:7px 9px;border-radius:8px;font-size:10.5px;line-height:1.5;border:1px solid var(--line);max-width:160px;}}
 .legend i{{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;}}
+.own{{font-weight:600;color:var(--ink);}}
+.claimtip{{font-size:11.5px;line-height:1.35;}}
 @media(max-width:820px){{#app{{flex-direction:column;}}#map{{height:50%;}}#side{{width:100%;max-width:100%;height:50%;}}}}
 </style></head><body>
 {header}
@@ -220,23 +222,47 @@ async function showGround(p){{
     }}
   }}catch(e){{}}
   // real neighbouring claims (already-staked ground) so the open ground reads
-  // as the genuine gaps in tenure, not a shape floating in space
+  // as the genuine gaps in tenure — and so the user can see WHO is nearby and
+  // research what they may have found before committing to stake.
+  const owners={{}}; let nearCount=0;
   try{{
     const cr=await fetch(p.region+'_claims_near.geojson');
     if(cr.ok){{
       const cd=await cr.json();
       const near=(cd.features||[]).filter(f=>{{
-        try{{ const b=L.geoJSON(f).getBounds();
-          const c=b.getCenter();
+        try{{ const c=L.geoJSON(f).getBounds().getCenter();
           return Math.abs(c.lat-p.lat)<0.12 && Math.abs(c.lng-p.lon)<0.22; }}catch(_){{return false;}}
       }});
+      nearCount=near.length;
       if(near.length){{
-        claimLayer=L.geoJSON({{type:'FeatureCollection',features:near}},
-          {{interactive:false,style:{{color:'#8a6d3b',weight:1,opacity:.75,fillColor:'#c9a227',fillOpacity:.14}}}}).addTo(map);
+        claimLayer=L.geoJSON({{type:'FeatureCollection',features:near}},{{
+          style:{{color:'#8a6d3b',weight:1,opacity:.8,fillColor:'#c9a227',fillOpacity:.16}},
+          onEachFeature:(f,lyr)=>{{
+            const pr=f.properties||{{}};
+            const own=(pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
+            if(own){{ owners[own]=(owners[own]||0)+1; }}
+            const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{pr.cname?esc(pr.cname)+' ':''}}${{pr.claim?'#'+esc(pr.claim):''}}${{pr.expiry?'<br><span style=\"color:#666\">good to '+esc(pr.expiry)+'</span>':''}}`;
+            if(tip.trim()) lyr.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
+          }}
+        }}).addTo(map);
         if(!bounds) bounds=claimLayer.getBounds();
       }}
     }}
   }}catch(e){{}}
+  // fill the "who's nearby" list in the sidebar detail
+  const nb=document.getElementById('nearby');
+  if(nb){{
+    const ranked=Object.keys(owners).sort((a,b)=>owners[b]-owners[a]);
+    if(ranked.length){{
+      nb.innerHTML=`<div class=sechd>Who's nearby — ${{ranked.length}} holder(s) within ~5 km</div>`+
+        ranked.slice(0,12).map(o=>`<div class=fact><span class=own>${{esc(o)}}</span> <span class=pn>${{owners[o]}} claim${{owners[o]>1?'s':''}}</span></div>`).join('')+
+        `<div class=pn style="margin-top:5px">Hover any gold claim on the map for the holder and tenure number.</div>`;
+    }} else if(nearCount>0){{
+      nb.innerHTML=`<div class=sechd>Who's nearby — ${{nearCount}} claim(s) within ~5 km</div><div class=pn>Neighbouring ground is staked (shown in gold), but this jurisdiction's dataset doesn't publish holder names. Check the provincial registry for the current holders.</div>`;
+    }} else {{
+      nb.innerHTML=`<div class=sechd>Who's nearby</div><div class=pn>No active claims recorded within ~5 km — this ground looks open with no immediate neighbours.</div>`;
+    }}
+  }}
   if(bounds && bounds.isValid()){{ map.fitBounds(bounds.pad(0.55)); }}
   else {{ map.setView([p.lat,p.lon],12); }}
 }}
@@ -262,6 +288,7 @@ function detailHTML(p){{
     <div class=sec><div class=sechd>Qualifying details</div>${{facts.join('')}}
       ${{p.production?`<div class=prodbox><b>Past production.</b> ${{esc(p.production)}}</div>`:''}}
       ${{drill?(`<div class=sechd style="margin-top:10px">⛏ Drill results</div>`+drill):''}}</div>
+    <div class=sec id=nearby><div class=sechd>Who's nearby</div><div class=pn>Loading neighbouring claim holders…</div></div>
     <div class=sec><div class=sechd>Why it ranks here</div>${{parts}}</div>
     ${{p.url?`<a class=dbtn href="${{esc(p.url)}}" target=_blank>Full record ↗</a>`:''}}`;
 }}
