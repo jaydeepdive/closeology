@@ -1,0 +1,45 @@
+name: mmp-drillhole-backbone
+
+# Refreshes the MineModelingPro collar backbone from the provincial/territorial
+# government drill-hole databases (public ArcGIS services). Unlike the news wires,
+# these government services do NOT rate-limit datacenter IPs, so this runs cleanly
+# in GitHub Actions — no residential machine needed. Weekly is plenty (these DBs
+# update monthly at most). Also re-exports the unified MMP modelling tables.
+on:
+  schedule:
+    - cron: "0 8 * * 1"        # Mondays 08:00 UTC
+  workflow_dispatch:
+    inputs:
+      sources:
+        description: "space-separated source keys (blank = all)"
+        default: ""
+
+concurrency:
+  group: mmp-backbone
+  cancel-in-progress: false
+
+jobs:
+  backbone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Python deps
+        run: pip install -r requirements.txt
+      - name: Refresh provincial collar backbone
+        run: |
+          PYTHONPATH=src python -m minemodelingpro.gov_drillholes ${{ github.event.inputs.sources }}
+          PYTHONPATH=src python -m minemodelingpro.export
+      - name: Commit the MMP store + exports
+        run: |
+          git config user.name "closeology-bot"
+          git config user.email "actions@github.com"
+          git pull --no-edit -X ours origin main || true
+          git add -A data/keep/mmp.sqlite data/keep/mmp_*.parquet data/keep/mmp_collars_sample.csv 2>/dev/null || true
+          git commit -m "MMP drillhole backbone refresh $(date -u +%Y-%m-%d) [skip ci]" || echo "no changes"
+          git push || echo "nothing to push"
