@@ -29,7 +29,12 @@ def build(email, site_dir):
         for e in r.get("edges", []):
             p = e.get("properties", e)
             edges.append((slug, p))
-        for d in r.get("dropped", []):
+        # prefer the grouped PROPERTIES (one per dropped block); fall back to raw
+        props = r.get("dropped_properties")
+        if props is None:
+            import digest
+            props = digest.group_dropped(r.get("dropped", []), slug)
+        for d in props:
             dropped.append((slug, d))
         for l in r.get("leads", []):
             flagged.append((slug, l))
@@ -47,22 +52,33 @@ def build(email, site_dir):
         srclink = f'<a href="{surl}" target=_blank>{src or "source"} ↗</a>' if surl else src
         openha = p.get("open_ha")
         hot = "🔥 " if p.get("hot") else ""
+        mu = _s(p.get("map_url"))
+        maplink = f'<a class="mapbtn" href="{mu}">▸ View on map</a>' if mu else ""
         edge_rows += f"""<div class="item{' hot' if p.get('hot') else ''}">
           <div class="ihead">{_pill(slug)}<b>{hot}{comp}</b></div>
           <div class="imeta">{assay}{(' · near '+_s(p.get('near_lead'))) if p.get('near_lead') else ''}
             {(' · '+str(round(_num(openha)))+' ha open beside it') if openha else ''}</div>
-          <div class="isrc">{srclink}</div></div>"""
+          <div class="isrc">{srclink}{('  ·  '+maplink) if maplink else ''}</div></div>"""
     edge_sec = _section("Fresh drill plays", "Recent drilling on held ground beside open, stakeable cells — the reason to act now.", edge_rows, len(edges))
 
-    # ---- ground just opened ----
+    # ---- ground just opened (grouped into the PROPERTY that was dropped) ----
     drop_rows = ""
     for slug, d in dropped[:60]:
-        drop_rows += f"""<div class="item">
-          <div class="ihead">{_pill(slug)}<b>{_s(d.get('near_lead')) or 'Open ground'}</b></div>
-          <div class="imeta">Claim {_s(d.get('id'))} lapsed{(' · '+str(d.get('area_ha'))+' ha') if d.get('area_ha') else ''}
+        holder = _s(d.get("owner")).replace(" 100%", "").strip()
+        n = int(d.get("n_claims", 1) or 1)
+        blk = f"{n} claims" if n > 1 else "1 claim"
+        area = f"~{d.get('area_ha')} ha" if d.get("area_ha") else ""
+        anchor = _s(d.get("near_lead")) or "a lead"
+        rank = d.get("near_rank")
+        mu = _s(d.get("map_url"))
+        maplink = f'<a class="mapbtn" href="{mu}">▸ View on map</a>' if mu else ""
+        title = (holder or "A holder") + " let go of ground"
+        drop_rows += f"""<div class="item drop">
+          <div class="ihead">{_pill(slug)}<b>{title}</b><span class="tag">{blk}{(' · '+area) if area else ''}</span></div>
+          <div class="imeta">Whole block dropped{(' — around #'+str(rank)+' '+anchor) if rank else (' near '+anchor)}
             {(' · '+str(d.get('near_km'))+' km from the lead') if d.get('near_km') is not None else ''}</div>
-          <div class="isrc">{('Prior holder: '+_s(d.get('owner'))) if d.get('owner') else ''}</div></div>"""
-    drop_sec = _section("Ground just opened", "Claims that lapsed next to a lead since the last scan — freshly stakeable.", drop_rows, len(dropped))
+          <div class="isrc">{maplink}</div></div>"""
+    drop_sec = _section("Ground just opened", "A holder just dropped a whole property beside a lead — grouped here as one block (not cell-by-cell), each with a map view. Freshly stakeable.", drop_rows, len(dropped))
 
     # ---- leads flagged by claim activity ----
     flag_rows = ""
@@ -72,12 +88,16 @@ def build(email, site_dir):
             why.append("beside ground lapsing soon")
         if l.get("near_b"):
             why.append("beside fresh staking")
+        mu = _s(l.get("map_url"))
+        maplink = f'<a class="mapbtn" href="{mu}">▸ View on map</a>' if mu else ""
+        rec = f'<a href="{_s(l.get("url"))}" target=_blank>record ↗</a>' if l.get("url") else ""
+        tail = "  ·  ".join(x for x in [maplink, rec] if x)
         flag_rows += f"""<div class="item">
           <div class="ihead">{_pill(slug)}<b>{_s(l.get('name'))}</b>
             <span class="sc">score {int(_num(l.get('score')))}</span></div>
-          <div class="imeta">{_s(l.get('metal'))} · {_s(l.get('status'))}{(' · '+_s(l.get('grade'))) if l.get('grade') else ''}</div>
-          <div class="isrc">{' · '.join(why)}{(' · '+_s(l.get('community'))+' '+str(l.get('community_km'))+' km') if l.get('community') else ''}
-            {(' · <a href="'+_s(l.get('url'))+'" target=_blank>record ↗</a>') if l.get('url') else ''}</div></div>"""
+          <div class="imeta">{_s(l.get('metal'))} · {_s(l.get('status'))}{(' · '+_s(l.get('grade'))) if l.get('grade') else ''}
+            {' · '+' · '.join(why) if why else ''}{(' · '+_s(l.get('community'))+' '+str(l.get('community_km'))+' km') if l.get('community') else ''}</div>
+          <div class="isrc">{tail}</div></div>"""
     flag_sec = _section("Leads flagged by claim activity", "Existing leads where a claim is lapsing or fresh staking just landed nearby.", flag_rows, len(flagged))
 
     total = len(edges) + len(dropped) + len(flagged)
@@ -127,6 +147,10 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 .imeta{{color:#374151;font-size:13px;margin-top:3px;}} .isrc{{color:var(--mut);font-size:12px;margin-top:3px;}}
 .jp{{font-size:9.5px;font-weight:700;padding:1px 7px;border-radius:10px;}}
 .sc{{color:var(--red);font-weight:700;font-size:12px;}}
+.tag{{font-size:11px;font-weight:700;color:#0f766e;background:#e9f7f3;padding:1px 8px;border-radius:10px;}}
+.item.drop{{border-left-color:#0f766e;}}
+.mapbtn{{display:inline-block;font-weight:600;font-size:12px;color:#fff !important;background:var(--red);padding:3px 10px;border-radius:6px;text-decoration:none;}}
+.mapbtn:hover{{opacity:.9;text-decoration:none;}}
 .empty{{border:1px solid var(--line);border-radius:10px;padding:26px;color:var(--mut);text-align:center;margin-top:20px;}}
 </style></head><body>
 {header}

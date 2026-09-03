@@ -209,14 +209,36 @@ def main():
             dp = daily.payload(d, metric.get(slug, "EPSG:3978"), news)
         except Exception:
             continue
+        import digest
         flagged = [f["properties"] for f in dp["lead_feats"]
                    if f["properties"]["near_a"] or f["properties"]["near_b"]]
         flagged.sort(key=lambda p: -p.get("score", 0))
+        # coalesce the per-cell drop rows into the PROPERTIES that were dropped,
+        # and give every lead a map deep-link so it can actually be looked at
+        dropped_props = digest.group_dropped(dp.get("dropped", []), slug)
+        for lf in dp["lead_feats"]:
+            p = lf["properties"]
+            c = lf["geometry"]["coordinates"]
+            p["lat"], p["lon"] = c[1], c[0]
+            p["map_url"] = digest.map_url(slug, c[1], c[0], zoom=12,
+                                          label=p.get("name"), kind="lead")
+        flagged = [f["properties"] for f in dp["lead_feats"]
+                   if f["properties"]["near_a"] or f["properties"]["near_b"]]
+        flagged.sort(key=lambda p: -p.get("score", 0))
+        for e in dp.get("edges", []):
+            ll = e.get("lat"), e.get("lon")
+            if ll[0] is not None and ll[1] is not None:
+                e["map_url"] = digest.map_url(slug, ll[0], ll[1], zoom=12,
+                                              label=e.get("company") or e.get("property"), kind="edge")
         email["regions"].append({"slug": slug, "name": name.get(slug, slug.upper()),
                                  "labels": dp["labels"], "counts": dp["counts"],
+                                 "map": f"https://jaydeepdive.github.io/closeology/{slug}.html",
+                                 "radar": "https://jaydeepdive.github.io/closeology/radar.html",
                                  "edges": dp.get("edges", [])[:20],
                                  "edge_counts": dp.get("edge_counts", {"n": 0, "hot": 0, "open_ha": 0}),
-                                 "leads": flagged[:20], "dropped": dp.get("dropped", [])[:25]})
+                                 "leads": flagged[:20],
+                                 "dropped_properties": dropped_props[:25],
+                                 "dropped": dp.get("dropped", [])[:25]})
     _json.dump(email, open("site/daily_email.json", "w"))
     import build_radar
     build_radar.build(email, "site")                   # radar.html cross-Canada overview

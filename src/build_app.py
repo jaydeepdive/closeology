@@ -321,5 +321,27 @@ legend.onAdd=()=>{{const d=L.DomUtil.create('div','legend');
     +'<br><i style="background:#c9a227;border:1px solid #8a6d3b;border-radius:2px"></i>Existing claims (staked)';return d;}};
 legend.addTo(map);
 refresh();
+
+// ---- deep-link: center on a point from the daily radar / email and, if a lead
+// sits right there, open it; otherwise drop a labelled pin so the spot is obvious
+(function(){{
+  const q=new URLSearchParams(location.search);
+  const lat=parseFloat(q.get('lat')), lon=parseFloat(q.get('lon'));
+  if(isNaN(lat)||isNaN(lon)) return;
+  const z=parseInt(q.get('z'))||12, kind=q.get('kind')||'', label=q.get('label')||'';
+  // nearest lead to the target (match a radar item to its lead card)
+  let best=null, bd=1e9;
+  LEADS.forEach(p=>{{const d=Math.hypot((p.lat-lat)*111,(p.lon-lon)*111*Math.cos(lat*Math.PI/180));
+    if(d<bd){{bd=d;best=p;}}}});
+  map.setView([lat,lon], z);
+  if(best && bd<1.2){{ select(best.id); return; }}   // a lead is right here — open it
+  // otherwise mark the spot (dropped ground / drill play with no lead card)
+  const c=kind==='drop'?'#0f766e':(kind==='edge'?'#D71920':'#334155');
+  const pin=L.circleMarker([lat,lon],{{radius:9,color:'#fff',weight:2,fillColor:c,fillOpacity:.95}}).addTo(map);
+  pin.bindPopup(`<b>${{(label||'Location').replace(/[<>]/g,'')}}</b>`+
+    (kind==='drop'?'<br>Dropped ground — freshly stakeable':kind==='edge'?'<br>Fresh drill play':'')).openPopup();
+  // show open ground + claims context here even without a lead selected
+  showGround({{region:(q.get('region')||'').toLowerCase(), lead_id:'__none__', lat:lat, lon:lon}});
+}})();
 </script></body></html>
 """
