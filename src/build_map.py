@@ -100,6 +100,20 @@ TEMPLATE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
   .cells {{ max-height:70px; overflow:auto; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:3px 5px; margin-top:3px; font-family:ui-monospace,monospace; font-size:10.5px; color:#0b1526; }}
   .legend {{ background:rgba(255,255,255,.95); color:var(--ink); padding:8px 10px; border-radius:8px; font-size:10.5px; line-height:1.55; border:1px solid var(--line); max-width:175px; box-shadow:0 1px 6px rgba(0,0,0,.08); }}
   .legend i {{ display:inline-block; width:10px; height:10px; margin-right:5px; border-radius:3px; vertical-align:-1px; }}
+  #detail {{ flex:1; overflow:auto; display:none; }}
+  .dback {{ position:sticky; top:0; background:#fff; border-bottom:1px solid var(--line); padding:9px 15px; font-size:13px; font-weight:600; color:var(--accent); cursor:pointer; z-index:2; }}
+  .dhd {{ padding:13px 16px 4px; }} .dscore {{ font-family:'Bitter',serif; font-weight:800; font-size:22px; color:var(--accent); }}
+  .dhd .dn {{ font-family:'Bitter',serif; font-weight:800; font-size:19px; margin-left:6px; }}
+  .dpill {{ font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; margin-left:6px; vertical-align:middle; }}
+  .p-open {{ background:#e7f6ec; color:#127a3a; }} .p-hard {{ background:#fff4e5; color:#9a5b00; }}
+  .dsub {{ color:var(--mut); font-size:12px; margin-top:3px; }}
+  .dground {{ background:#fdeaf6; border:1px solid #ff8fd8; color:#8a005a; border-radius:8px; padding:9px 11px; font-size:12.5px; margin:8px 16px; }}
+  .dsec {{ padding:10px 16px; border-top:1px solid var(--line); }}
+  .dsec .h {{ font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--mut); font-weight:700; margin-bottom:6px; }}
+  .fact {{ margin:5px 0; font-size:13px; }} .fact .k {{ color:var(--mut); font-weight:600; display:inline-block; min-width:98px; }}
+  .drillbox {{ font-size:12.5px; background:#f0f9f4; border-left:3px solid #127a3a; padding:6px 9px; border-radius:0 6px 6px 0; margin-top:4px; }}
+  .prodbox {{ font-size:12.5px; background:#fbf6ef; border-left:3px solid #9a5b00; padding:6px 9px; border-radius:0 6px 6px 0; margin-top:6px; }}
+  .dbtn {{ display:inline-block; background:var(--accent); color:#fff !important; font-size:12.5px; font-weight:600; padding:7px 13px; border-radius:8px; margin:2px 16px 16px; text-decoration:none; }}
   @media (max-width:900px) {{ #panel {{ width:100%; }} #app{{flex-direction:column;}} #map{{height:44%;}} #panel{{height:56%;}} }}
 </style></head>
 <body>
@@ -124,6 +138,7 @@ TEMPLATE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
       <thead><tr><th data-k="rank">#</th><th data-k="name">Lead · community · basis</th>
         <th data-k="tonnes_str">Size</th><th data-k="score">Score</th></tr></thead>
       <tbody id="leadrows"></tbody></table></div>
+    <div id="detail"></div>
     <footer id="attribution"></footer>
   </div></div>
 <script>
@@ -154,7 +169,7 @@ if(USE_WMS){{
 }}
 
 // --- open stakeable cells (the ground to stake) ---
-const cellLayer=L.geoJSON(CELLS,{{style:{{color:'#22c55e',weight:1,fillColor:'#22c55e',fillOpacity:0.28}},
+const cellLayer=L.geoJSON(CELLS,{{style:{{color:'#7a0050',weight:2,fillColor:'#ff2fbf',fillOpacity:0.5}},
   onEachFeature:(f,l)=>l.bindPopup(`<b>Open cell</b> — beside #${{f.properties.rank}} ${{esc(f.properties.name)}}<br>Appears unstaked &amp; stakeable. Verify before acting.`)}}).addTo(map);
 
 // --- occurrences: clustered ---
@@ -168,19 +183,45 @@ occCluster.addTo(map);
 // --- leads ---
 const leadMarkers={{}};
 const leadsLayer=L.geoJSON(LEADS,{{pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:7,color:'#0b1526',weight:1.3,fillColor:mc(f.properties.primary_metal),fillOpacity:0.92}}),
-  onEachFeature:(f,l)=>{{const p=f.properties; leadMarkers[p.lead_id]=l;
-    l.bindPopup(`<b>#${{p.rank}} · ${{esc(p.name)}}</b> <span class=pk>${{esc(p.minfile)}}</span>
-      <span class=metal-chip style="background:${{mc(p.primary_metal)}}">${{esc(p.primary_metal)}}</span><br>
-      <b>${{esc(p.commodity)}}</b> · ${{esc(p.status)}} · score ${{p.score}}<br>
-      ${{p.deposit_open?'<b style="color:#15803d">◎ Deposit itself OPEN</b>':'<b style="color:#b45309">Deposit staked</b> — adjacent open ground'}}<br>
-      <b>Nearest community:</b> ${{esc(p.nearest_community)}} (${{p.community_km}} km)<br>
-      ${{p.deposit_size&&p.deposit_size!=='no tonnage on record'?`<b>Size:</b> ${{esc(p.deposit_size)}}<br>`:''}}${{p.grade_str?`<b>Grade:</b> ${{esc(p.grade_str)}}<br>`:''}}
-      ${{p.drill_highlights?`<b>Drill / assay:</b> ${{esc(p.drill_highlights)}}<br>`:''}}
-      ${{p.exploration_spend_str?`<b>Exploration spend:</b> ${{esc(p.exploration_spend_str)}}${{p.n_reports?` · ${{p.n_reports}} report(s)`:''}}${{p.last_work_year?` · last ${{p.last_work_year}}`:''}}${{p.operators?`<br><span class=pk>${{esc(p.operators)}}</span>`:''}}<br>`:''}}
-      ${{p.encumbrances?`<b style="color:#b45309">⚠ Harder to stake:</b> ${{esc(p.encumbrances)}}<br>`:''}}
-      <b>Open cells nearby:</b> ${{p.n_cells}} (~${{p.cells_area_ha}} ha)<br>
-      ${{p.minfile_url?`<a href="${{esc(p.minfile_url)}}" target=_blank>Full record ↗</a>`:''}}`);
-  }}}}).addTo(map);
+  onEachFeature:(f,l)=>{{const p=f.properties; leadMarkers[p.lead_id]=l; l.on('click',()=>select(p.lead_id));}}
+}}).addTo(map);
+
+// full detail in the sidebar (not a cramped popup) when a lead is clicked
+function detailHTML(p){{
+  const facts=[];
+  facts.push(`<div class=fact><span class=k>Commodities</span>${{esc(p.commodity)}}</div>`);
+  facts.push(`<div class=fact><span class=k>Status</span>${{esc(p.status)}}</div>`);
+  if(p.grade_str) facts.push(`<div class=fact><span class=k>Grade</span>${{esc(p.grade_str)}}</div>`);
+  if(p.deposit_size&&p.deposit_size!=='no tonnage on record') facts.push(`<div class=fact><span class=k>Size</span>${{esc(p.deposit_size)}}</div>`);
+  if(p.exploration_spend_str) facts.push(`<div class=fact><span class=k>Expl. spend</span>${{esc(p.exploration_spend_str)}}${{p.n_reports?` · ${{p.n_reports}} report(s)`:''}}${{p.last_work_year?` · last ${{p.last_work_year}}`:''}}</div>`);
+  if(p.operators) facts.push(`<div class=fact><span class=k>Operators</span>${{esc(p.operators)}}</div>`);
+  facts.push(`<div class=fact><span class=k>Nearest town</span>${{esc(p.nearest_community)}}${{p.community_km!=null?` · ${{p.community_km}} km`:''}}</div>`);
+  return `<div class=dback onclick="deselect()">← All leads</div>
+    <div class=dhd><span class=dscore>${{p.score}}</span><span class=dn>${{esc(p.name)}}</span>
+      <span class=dpill style="background:${{mc(p.primary_metal)}}22;color:${{mc(p.primary_metal)}}">${{esc(p.primary_metal)}}</span>
+      ${{p.deposit_open?'<span class="dpill p-open">deposit open</span>':''}}${{p.hard_to_stake?'<span class="dpill p-hard">harder to stake</span>':''}}
+      <div class=dsub>${{esc(p.minfile||'')}}</div></div>
+    ${{p.n_cells?`<div class=dground>◎ <b>Stakeable ground</b> — ${{p.n_cells}} open cell(s), ~${{p.cells_area_ha}} ha ${{p.deposit_open?'on and around the deposit':'adjacent'}}. Shown in magenta on the map, carved around existing claims (gold/grey). Verify in the official registry before staking.</div>`:''}}
+    <div class=dsec><div class=h>Qualifying details</div>${{facts.join('')}}
+      ${{p.drill_highlights?`<div class=h style="margin-top:10px">⛏ Drill / assay</div><div class=drillbox>${{esc(p.drill_highlights)}}</div>`:''}}
+      ${{p.encumbrances?`<div class=prodbox><b>⚠ Harder to stake.</b> ${{esc(p.encumbrances)}}</div>`:''}}</div>
+    ${{p.minfile_url?`<a class=dbtn href="${{esc(p.minfile_url)}}" target=_blank>Full record ↗</a>`:''}}`;
+}}
+let selId=null;
+function select(id){{
+  const f=LEADS.features.find(x=>x.properties.lead_id===id); if(!f) return;
+  const p=f.properties; selId=id;
+  document.getElementById('leadlist').style.display='none';
+  document.querySelector('.controls').style.display='none';
+  const det=document.getElementById('detail'); det.style.display='block'; det.innerHTML=detailHTML(p); det.scrollTop=0;
+  const l=leadMarkers[id]; if(l){{ map.setView(l.getLatLng(), Math.max(map.getZoom(),13)); }}
+}}
+function deselect(){{
+  selId=null;
+  document.getElementById('detail').style.display='none';
+  document.getElementById('leadlist').style.display='block';
+  document.querySelector('.controls').style.display='block';
+}}
 try{{map.fitBounds(leadsLayer.getBounds().pad(0.05));}}catch(e){{map.setView([50,-86],5);}}
 L.control.layers({{'Topographic':topo,'Street':osm}},{{}},{{position:'topleft'}}).addTo(map);
 
@@ -189,10 +230,10 @@ L.control.layers({{'Topographic':topo,'Street':osm}},{{}},{{position:'topleft'}}
   const q=new URLSearchParams(location.search);
   const lat=parseFloat(q.get('lat')), lon=parseFloat(q.get('lon')), lead=q.get('lead');
   if(isFinite(lat)&&isFinite(lon)){{ map.setView([lat,lon],12);
-    const l=lead&&leadMarkers[lead]; if(l){{setTimeout(()=>l.openPopup(),300);}} }}
+    if(lead&&leadMarkers[lead]){{ setTimeout(()=>select(lead),300); }} }}
 }})();
 
-document.getElementById('subline').textContent=`Updated ${{STATS.generated}} · green = open stakeable ground · click any lead`;
+document.getElementById('subline').textContent=`Updated ${{STATS.generated}} · magenta = open stakeable ground · click any lead for full detail`;
 document.getElementById('attribution').textContent=STATS.attribution;
 const S=[['n_leads','Leads'],['n_deposit_open','Deposit open'],['n_with_drill_highlights','Drill data'],['n_hard_to_stake','Harder stake'],['n_candidate_leads','Candidates'],['n_occurrences','Occurrences'],['n_claims_active','Claims'],['top_n_examined','Examined']];
 document.getElementById('stats').innerHTML=S.map(([k,l])=>`<div class=stat><b>${{(STATS[k]!=null&&STATS[k].toLocaleString)?STATS[k].toLocaleString():(STATS[k]??'—')}}</b><span>${{l}}</span></div>`).join('');
@@ -225,7 +266,7 @@ function render(){{
   document.querySelectorAll('th[data-k]').forEach(th=>th.classList.toggle('sorted',th.dataset.k===sortK));
   LEADS.features.forEach(f=>{{const p=f.properties,l=leadMarkers[p.lead_id];if(!l)return;passes(p)?(map.hasLayer(l)||l.addTo(leadsLayer)):leadsLayer.removeLayer(l);}});
 }}
-rowsEl.addEventListener('click',e=>{{const tr=e.target.closest('tr');if(!tr)return;const l=leadMarkers[tr.dataset.id];if(l){{map.setView(l.getLatLng(),12);l.openPopup();}}}});
+rowsEl.addEventListener('click',e=>{{const tr=e.target.closest('tr');if(!tr)return;if(tr.dataset.id)select(tr.dataset.id);}});
 document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{{const k=th.dataset.k;sortAsc=(k===sortK)?!sortAsc:(k==='rank'||k==='name');sortK=k;render();}}));
 ['fDep','fDrill'].forEach(id=>document.getElementById(id).addEventListener('change',render));
 document.getElementById('tClaims').addEventListener('change',e=>{{e.target.checked?claimsLayer.addTo(map):map.removeLayer(claimsLayer);}});
@@ -233,7 +274,7 @@ document.getElementById('tCells').addEventListener('change',e=>{{e.target.checke
 document.getElementById('tOcc').addEventListener('change',e=>{{e.target.checked?occCluster.addTo(map):map.removeLayer(occCluster);}});
 
 const legend=L.control({{position:'bottomleft'}});
-legend.onAdd=()=>{{const d=L.DomUtil.create('div','legend');d.innerHTML='<b>Leads by metal</b><br>'+present.map(m=>`<i style="background:${{mc(m)}}"></i>${{m}}`).join('<br>')+'<br><i style="background:#22c55e"></i>Open stakeable cell<br><i style="background:#64748b"></i>Active claim';return d;}};
+legend.onAdd=()=>{{const d=L.DomUtil.create('div','legend');d.innerHTML='<b>Leads by metal</b><br>'+present.map(m=>`<i style="background:${{mc(m)}}"></i>${{m}}`).join('<br>')+'<br><i style="background:#ff2fbf;border:1px solid #7a0050"></i>Open stakeable ground<br><i style="background:#64748b"></i>Active claim';return d;}};
 legend.addTo(map);
 render();
 </script></body></html>

@@ -394,6 +394,14 @@ def run_region(region):
     # sheds the long tail of spent pre-1980 workings and marginal showings that
     # otherwise flood the lightly-staked provinces.
     leads = leads[leads["score"] >= MIN_LEAD_SCORE].reset_index(drop=True)
+    # PRIORITY = a deposit you can actually STAKE. The deposit's own ground must be
+    # open. A deposit that is itself already staked is NOT a priority staking lead
+    # even when a cell next to it is free — all the proven value (grade, tonnage,
+    # exploration spend) sits on ground you can't get, and a lone adjacent cell is
+    # not a project. Those adjacent-drilling situations are Drill Radar context,
+    # not priority leads, so keep only deposit-open leads on the leads list.
+    if "deposit_open" in leads.columns:
+        leads = leads[leads["deposit_open"].astype(bool)].reset_index(drop=True)
     if leads.empty:
         for fn in ("leads.csv", "leads.geojson", "opencells.geojson", "claims_near.geojson",
                    "occurrences_all.geojson", "stats.json"):

@@ -217,7 +217,7 @@ async function showGround(p){{
     const fs=d.features.filter(f=>String(f.properties.lead_ids||'').split(',').indexOf(String(p.lead_id))>=0);
     if(fs.length){{
       groundLayer=L.geoJSON({{type:'FeatureCollection',features:fs}},
-        {{interactive:false,style:{{color:'#0f7a3a',weight:1.5,opacity:.95,fillColor:'#22c55e',fillOpacity:.34}}}}).addTo(map);
+        {{interactive:false,style:{{color:'#7a0050',weight:2,opacity:1,fillColor:'#ff2fbf',fillOpacity:.5}}}}).addTo(map);
       bounds=groundLayer.getBounds();
     }}
   }}catch(e){{}}
@@ -283,7 +283,7 @@ function detailHTML(p){{
       <span class="pill" style="background:${{col(p.dmetal)}}22;color:${{col(p.dmetal)}}">${{esc(p.dmetal)}}</span>
       ${{p.deposit_open?'<span class="pill p-open">deposit open</span>':''}}${{p.hard?'<span class="pill p-hard">harder to stake</span>':''}}
       <div class=dsub>${{esc(p.juris)}} · ${{esc(p.minfile||'')}}</div></div>
-    ${{(p.n_cells)?`<div class=ground>◎ <b>Stakeable ground</b> — ${{esc(p.n_cells)}} open cell(s), ~${{esc(p.cells_ha)}} ha ${{p.deposit_open?'on and around the deposit':'adjacent to the deposit'}}. The green block on the map is the real open ground carved around any existing claims (shown in gold). Verify exact cells in the official registry before staking.</div>`:''}}
+    ${{(p.n_cells)?`<div class=ground>◎ <b>Stakeable ground</b> — ${{esc(p.n_cells)}} open cell(s), ~${{esc(p.cells_ha)}} ha ${{p.deposit_open?'on and around the deposit':'adjacent to the deposit'}}. The magenta block on the map is the real open ground carved around any existing claims (shown in gold). Verify exact cells in the official registry before staking.</div>`:''}}
     <div class=chips>${{p.metals?`<span class=chip>${{esc(p.metals)}}</span>`:''}}${{p.grade?`<span class=chip>${{esc(p.grade)}}</span>`:''}}</div>
     <div class=sec><div class=sechd>Qualifying details</div>${{facts.join('')}}
       ${{p.production?`<div class=prodbox><b>Past production.</b> ${{esc(p.production)}}</div>`:''}}
@@ -317,7 +317,7 @@ const legend=L.control({{position:'bottomleft'}});
 legend.onAdd=()=>{{const d=L.DomUtil.create('div','legend');
   const ms=['Gold','Silver','Copper','Zinc','Lead','Nickel','Uranium','Lithium','Other metallic'];
   d.innerHTML='<b>Marker = lead</b> (size = score)<br>'+ms.map(m=>`<i style="background:${{col(m)}}"></i>${{m}}`).join('<br>')
-    +'<br><i style="background:#22c55e;border:1px solid #0f7a3a;border-radius:2px"></i>Open ground (stakeable)'
+    +'<br><i style="background:#ff2fbf;border:1px solid #7a0050;border-radius:2px"></i>Open ground (stakeable)'
     +'<br><i style="background:#c9a227;border:1px solid #8a6d3b;border-radius:2px"></i>Existing claims (staked)';return d;}};
 legend.addTo(map);
 refresh();
