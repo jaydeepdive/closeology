@@ -169,5 +169,16 @@ if __name__ == "__main__":
         con = store.connect()
         import json
         print(json.dumps(store.stats(con), indent=2))
+    elif mode == "urls":
+        # print recent DRILL-RESULT candidate URLs (listing works; the per-release
+        # fetch is what the wires throttle — those are done via WebFetch instead)
+        import re
+        s = sources.new_session()
+        sources.set_deadline(120)
+        cand = sources.nfc_incremental(s)
+        drill = [c["url"] for c in cand if sources.DRILL_KW.search(c["url"])]
+        n = limit if "--limit" in args else 40
+        for u in drill[:n]:
+            print(u)
     else:
         run(mode, limit)

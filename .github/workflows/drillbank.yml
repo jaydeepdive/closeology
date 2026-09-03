@@ -1,13 +1,10 @@
 name: closeology-drillbank
 
-# Fills the shared drill-and-assay bank (data/keep/drillbank.sqlite) from the
-# mining newswires. Runs on its OWN schedule and its OWN runner IPs, gently
-# paced, so the wires' datacenter rate-limiting can't starve it and it can never
-# stall the site build. The daily site build renders drill_radar.html from
-# whatever is banked here.
+# Best-effort requests-based crawl of the mining newswires into the drill bank.
+# NOTE: the wires rate-limit datacenter IPs (GitHub runners included), so this
+# yields little on its own — the reliable collector is the scheduled WebFetch
+# task (unthrottled). Kept as a manual/backfill supplement only (no cron).
 on:
-  schedule:
-    - cron: "0 */6 * * *"        # every 6 hours
   workflow_dispatch:
     inputs:
       mode:
