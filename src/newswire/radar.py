@@ -49,23 +49,52 @@ def _load(con):
                             "WHERE release_id=? AND lat IS NOT NULL", (rid,)).fetchall()
         ivs = con.execute("SELECT hole_id,from_m,to_m,length_m,element,grade,unit,is_subinterval "
                           "FROM intervals WHERE release_id=?", (rid,)).fetchall()
+        # per-hole best interval (for the on-map hole detail)
+        by_hole = {}
         best, best_s = None, -1
         for (hid, fr, to, ln, el, gr, un, sub) in ivs:
             if sub:
                 continue
             sc = _score_interval(el, gr, ln, un)
+            token = {"from": fr, "to": to, "len": ln, "el": el, "grade": gr, "unit": un, "sc": sc}
+            b = by_hole.get(hid)
+            if b is None or sc > b["sc"]:
+                by_hole[hid] = token
             if sc > best_s:
                 best_s = sc
                 best = {"hole": hid, "len": ln, "el": el, "grade": gr, "unit": un}
+        holes_d = []
+        for (hid, lat, lon, depth, az, dip) in holes:
+            holes_d.append({"hole": hid, "lat": lat, "lon": lon, "depth_m": depth,
+                            "azimuth": az, "dip": dip, "best": by_hole.get(hid)})
         pt = None
         if holes:
-            pt = {"lat": holes[0][1], "lon": holes[0][2], "n": len(holes)}
+            clat = sum(h[1] for h in holes) / len(holes)
+            clon = sum(h[2] for h in holes) / len(holes)
+            pt = {"lat": round(clat, 5), "lon": round(clon, 5), "n": len(holes)}
         items.append({"id": rid, "source": source, "url": url,
                       "company": company or (title or "")[:60], "title": title,
-                      "published": pub, "country": country, "n_holes": nh,
-                      "n_intervals": ni, "best": best, "pt": pt,
-                      "geo": bool(holes)})
+                      "published": pub, "country": country, "project": project,
+                      "n_holes": nh, "n_intervals": ni, "best": best, "pt": pt,
+                      "holes": holes_d, "geo": bool(holes)})
     return items
+
+
+def _holes_geojson(items):
+    feats = []
+    for it in items:
+        for h in it.get("holes", []):
+            b = h.get("best")
+            assay = (f"{b['len']:g} m @ {b['grade']:g} {b['unit']} {b['el']}"
+                     if b and b.get("grade") is not None and b.get("len") is not None else "")
+            feats.append({"type": "Feature",
+                          "geometry": {"type": "Point", "coordinates": [h["lon"], h["lat"]]},
+                          "properties": {"company": it["company"], "project": it.get("project") or "",
+                                         "region": it.get("country") or "", "hole": h["hole"],
+                                         "depth_m": h.get("depth_m"), "azimuth": h.get("azimuth"),
+                                         "dip": h.get("dip"), "assay": assay,
+                                         "date": (it.get("published") or "")[:10], "url": it["url"]}})
+    return {"type": "FeatureCollection", "features": feats}
 
 
 def build(site_dir="site"):
@@ -79,6 +108,8 @@ def build(site_dir="site"):
         st = _store.stats(con)
     finally:
         con.close()
+    # drill holes as a layer for the ONE unified map (holes vs open ground/claims)
+    json.dump(_holes_geojson(items), open(os.path.join(site_dir, "drill_holes.geojson"), "w"))
     _write(site_dir, items, st)
 
 
@@ -98,13 +129,20 @@ def _write(site_dir, items, st):
               open(os.path.join(site_dir, "drill_radar.json"), "w"))
     pts = [{"lat": i["pt"]["lat"], "lon": i["pt"]["lon"], "c": i["company"],
             "b": _best_str(i["best"]), "u": i["url"], "n": i["pt"]["n"]} for i in geo[:1500]]
+    def _map_link(i):
+        if not (i["geo"] and i["pt"]):
+            return ""
+        from urllib.parse import quote
+        u = (f"app.html?lat={i['pt']['lat']}&lon={i['pt']['lon']}&z=13&kind=drill"
+             f"&label={quote((i['company'] or 'Drill')[:50])}")
+        return f'<a class="mapbtn" href="{u}">🗺 map</a>'
     rows = "".join(
         f'<tr><td class=d>{(i["published"] or "")[:10]}</td><td>{_esc(i["company"])}'
         f'<div class=t>{_esc((i["title"] or "")[:110])}</div></td>'
         f'<td>{_esc(i["country"] or "")}</td>'
         f'<td class=b>{_esc(_best_str(i["best"]))}</td>'
         f'<td class=n>{i["n_holes"] or "—"}</td>'
-        f'<td>{"📍" if i["geo"] else ""}</td>'
+        f'<td>{_map_link(i)}</td>'
         f'<td><a href="{_esc(i["url"])}" target=_blank rel=noopener>release ↗</a></td></tr>'
         for i in items[:400])
     empty = ("<p class=note>The drill bank is still filling — the daily crawl adds new "
@@ -140,6 +178,8 @@ th{{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mu
 td.d{{white-space:nowrap;color:var(--mut);}} td.b{{font-weight:600;}} td.n{{text-align:center;}}
 .t{{color:var(--mut);font-size:11.5px;margin-top:2px;}}
 .note{{color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;}}
+.mapbtn{{display:inline-block;font-weight:600;font-size:12px;color:#fff !important;background:var(--red);padding:2px 9px;border-radius:6px;text-decoration:none;white-space:nowrap;}}
+.mapbtn:hover{{opacity:.9;}}
 .lead2{{color:var(--mut);max-width:820px;}}
 </style></head><body>
 {header}
@@ -168,7 +208,9 @@ const map=L.map('dmap').setView([58,-96],3);
 L.tileLayer('https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:17,attribution:'&copy; OpenTopoMap'}}).addTo(map);
 const g=[];
 PTS.forEach(p=>{{const m=L.circleMarker([p.lat,p.lon],{{radius:6,color:'#7a1620',weight:1,fillColor:'#D71920',fillOpacity:.7}});
-  m.bindPopup(`<b>${{p.c}}</b><br>${{p.b||''}}<br>${{p.n}} hole(s) located<br><a href="${{p.u}}" target=_blank>release ↗</a>`);
+  m.bindPopup(`<b>${{p.c}}</b><br>${{p.b||''}}<br>${{p.n}} hole(s) located<br>`+
+    `<a href="app.html?lat=${{p.lat}}&lon=${{p.lon}}&z=13&kind=drill&label=${{encodeURIComponent(p.c||'Drill')}}">🗺 see on the map (vs open ground)</a> · `+
+    `<a href="${{p.u}}" target=_blank>release ↗</a>`);
   m.addTo(map); g.push([p.lat,p.lon]);}});
 if(g.length) map.fitBounds(g,{{padding:[30,30],maxZoom:9}});
 </script></body></html>

@@ -146,7 +146,8 @@ def run(mode="incremental", limit=400, only=None, max_seconds=None):
             r = _process(session, con, d)
             counts[r] += 1
             con.commit()
-            time.sleep(1.6)   # be polite (avoid the wire's throttle/202)
+            import os as _os
+            time.sleep(float(_os.environ.get("NEWSWIRE_DELAY", "2.5")))  # gentle pacing
     con.commit()
     s = store.stats(con)
     print(f"[newswire] {mode} done in {int(time.time()-t0)}s: "

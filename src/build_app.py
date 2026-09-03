@@ -150,6 +150,8 @@ html,body{{height:100%;}} body{{display:flex;flex-direction:column;height:100vh;
 .legend i{{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;}}
 .own{{font-weight:600;color:var(--ink);}}
 .claimtip{{font-size:11.5px;line-height:1.35;}}
+.drillctl button{{font:600 12px/1 'Roboto',sans-serif;background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.12);}}
+.drillctl button.on{{background:#ff7a00;color:#fff;border-color:#c85f00;}}
 @media(max-width:820px){{#app{{flex-direction:column;}}#map{{height:50%;}}#side{{width:100%;max-width:100%;height:50%;}}}}
 </style></head><body>
 {header}
@@ -318,9 +320,41 @@ legend.onAdd=()=>{{const d=L.DomUtil.create('div','legend');
   const ms=['Gold','Silver','Copper','Zinc','Lead','Nickel','Uranium','Lithium','Other metallic'];
   d.innerHTML='<b>Marker = lead</b> (size = score)<br>'+ms.map(m=>`<i style="background:${{col(m)}}"></i>${{m}}`).join('<br>')
     +'<br><i style="background:#ff2fbf;border:1px solid #7a0050;border-radius:2px"></i>Open ground (stakeable)'
-    +'<br><i style="background:#c9a227;border:1px solid #8a6d3b;border-radius:2px"></i>Existing claims (staked)';return d;}};
+    +'<br><i style="background:#c9a227;border:1px solid #8a6d3b;border-radius:2px"></i>Existing claims (staked)'
+    +'<br><i style="background:#ff7a00"></i>Recent drill hole (⛏ toggle)';return d;}};
 legend.addTo(map);
 refresh();
+
+// ---- recent drill results from the newswire bank, as a toggleable layer, so you
+// can see drill holes sitting against the open ground (magenta) and claims (gold)
+let drillLayer=L.layerGroup(), drillLoaded=false, drillOn=false;
+async function loadDrill(){{
+  if(drillLoaded) return true; drillLoaded=true;
+  try{{
+    const r=await fetch('drill_holes.geojson'); if(!r.ok) return false; const d=await r.json();
+    (d.features||[]).forEach(f=>{{
+      const p=f.properties||{{}}, c=f.geometry.coordinates;
+      const m=L.circleMarker([c[1],c[0]],{{radius:5,color:'#111',weight:1,fillColor:'#ff7a00',fillOpacity:.95}});
+      m.bindPopup(`<b>${{esc(p.company)}}</b>${{p.project?(' — '+esc(p.project)):''}}<br>`+
+        `Hole <b>${{esc(p.hole)}}</b>${{p.assay?(' · <b>'+esc(p.assay)+'</b>'):''}}<br>`+
+        `${{p.depth_m!=null?('depth '+esc(p.depth_m)+' m'):''}}${{p.azimuth!=null?(' · az '+esc(p.azimuth)):''}}${{p.dip!=null?(' · dip '+esc(p.dip)):''}}<br>`+
+        `<span style="color:#888">${{esc(p.region||'')}}${{p.date?(' · '+esc(p.date)):''}}</span><br>`+
+        `<a href="${{esc(p.url)}}" target=_blank>release ↗</a>`);
+      drillLayer.addLayer(m);
+    }});
+  }}catch(e){{return false;}}
+  return true;
+}}
+async function showDrill(on){{ drillOn=on; await loadDrill();
+  if(on) map.addLayer(drillLayer); else map.removeLayer(drillLayer);
+  const b=document.getElementById('drillbtn'); if(b) b.classList.toggle('on',on);
+}}
+const drillCtl=L.control({{position:'topright'}});
+drillCtl.onAdd=()=>{{const d=L.DomUtil.create('div','drillctl');
+  d.innerHTML='<button id=drillbtn>⛏ Drill results</button>';
+  L.DomEvent.disableClickPropagation(d);
+  d.querySelector('button').onclick=()=>showDrill(!drillOn); return d;}};
+drillCtl.addTo(map);
 
 // ---- deep-link: center on a point from the daily radar / email and, if a lead
 // sits right there, open it; otherwise drop a labelled pin so the spot is obvious
@@ -338,6 +372,11 @@ refresh();
     return;
   }}
   const z=parseInt(q.get('z'))||12, kind=q.get('kind')||'', label=q.get('label')||'';
+  if(kind==='drill'){{ map.setView([lat,lon], z); showDrill(true).then(()=>{{
+      let bm=null,bd=1e9; drillLayer.eachLayer(m=>{{const ll=m.getLatLng();
+        const d=Math.hypot(ll.lat-lat,ll.lng-lon); if(d<bd){{bd=d;bm=m;}}}});
+      if(bm) bm.openPopup();
+    }}); return; }}
   // nearest lead to the target (match a radar item to its lead card)
   let best=null, bd=1e9;
   LEADS.forEach(p=>{{const d=Math.hypot((p.lat-lat)*111,(p.lon-lon)*111*Math.cos(lat*Math.PI/180));
