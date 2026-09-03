@@ -117,7 +117,8 @@ def run(mode="incremental", limit=400, only=None, max_seconds=None):
     counts = {"ok": 0, "empty": 0, "error": 0, "skipped": 0}
     if max_seconds is None:
         import os as _os
-        max_seconds = int(_os.environ.get("NEWSWIRE_MAX_SECONDS", "420"))
+        max_seconds = int(_os.environ.get("NEWSWIRE_MAX_SECONDS", "240"))
+    sources.set_deadline(max_seconds)   # hard cap on listings AND fetches
     t0 = time.time()
     stop = False
     for name, adapter in sources.ADAPTERS.items():

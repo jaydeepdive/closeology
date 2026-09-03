@@ -29,25 +29,45 @@ NFC_CATS = ["mining-metals", "precious-metals", "non-ferrous-metals",
             "energy-metals", "rare-earths", "diamonds"]
 
 
+# hard wall-clock deadline for the WHOLE crawl (listings + fetches). run.run sets
+# it; _get refuses to start a request past it, so a throttled wire can never
+# stall the CI build no matter how the retries fall.
+DEADLINE = None
+
+
+def set_deadline(seconds_from_now):
+    global DEADLINE
+    DEADLINE = time.time() + seconds_from_now
+
+
+def _expired():
+    return DEADLINE is not None and time.time() > DEADLINE
+
+
 def new_session():
     s = requests.Session()
     s.headers.update(UA)
     return s
 
 
-def _get(session, url, timeout=45, tries=4):
+def _get(session, url, timeout=20, tries=3):
     for k in range(tries):
+        if _expired():
+            return None
         try:
             r = session.get(url, timeout=timeout)
             if r.status_code == 200 and r.text:
                 return r.text
-            # 202/429/503 = throttle/challenge -> back off and retry
-            if r.status_code in (202, 429, 503):
-                time.sleep(3.0 * (k + 1))
+            if r.status_code in (202, 429, 503):     # throttle/challenge
+                if _expired():
+                    return None
+                time.sleep(min(3.0 * (k + 1), 6.0))
                 continue
         except Exception:
             pass
-        time.sleep(2.0 * (k + 1))
+        if _expired():
+            return None
+        time.sleep(min(1.5 * (k + 1), 4.0))
     return None
 
 
