@@ -49,10 +49,12 @@ def _load(con):
                             "WHERE release_id=? AND lat IS NOT NULL", (rid,)).fetchall()
         ivs = con.execute("SELECT hole_id,from_m,to_m,length_m,element,grade,unit,is_subinterval "
                           "FROM intervals WHERE release_id=?", (rid,)).fetchall()
-        # per-hole best interval (for the on-map hole detail)
-        by_hole = {}
+        # per-hole: best interval (for ranking) AND the FULL list of intervals
+        by_hole, all_by_hole = {}, {}
         best, best_s = None, -1
         for (hid, fr, to, ln, el, gr, un, sub) in ivs:
+            all_by_hole.setdefault(hid, []).append(
+                {"from": fr, "to": to, "len": ln, "el": el, "grade": gr, "unit": un, "sub": bool(sub)})
             if sub:
                 continue
             sc = _score_interval(el, gr, ln, un)
@@ -66,7 +68,8 @@ def _load(con):
         holes_d = []
         for (hid, lat, lon, depth, az, dip) in holes:
             holes_d.append({"hole": hid, "lat": lat, "lon": lon, "depth_m": depth,
-                            "azimuth": az, "dip": dip, "best": by_hole.get(hid)})
+                            "azimuth": az, "dip": dip, "best": by_hole.get(hid),
+                            "intervals": all_by_hole.get(hid, [])})
         pt = None
         if holes:
             clat = sum(h[1] for h in holes) / len(holes)
@@ -78,6 +81,68 @@ def _load(con):
                       "n_holes": nh, "n_intervals": ni, "best": best, "pt": pt,
                       "holes": holes_d, "geo": bool(holes)})
     return items
+
+
+_NAME2SLUG = {"Ontario": "on", "Quebec": "qc", "British Columbia": "bc", "Yukon": "yk",
+              "Newfoundland & Labrador": "nl", "Newfoundland": "nl", "Labrador": "nl",
+              "Saskatchewan": "sk", "Manitoba": "mb", "Northwest Territories": "nt",
+              "Nova Scotia": "ns", "New Brunswick": "nb", "Alberta": "ab", "Nunavut": "nu"}
+
+
+def _drill_open_ground(items, halo_m=1000):
+    """For each drill program, the OPEN stakeable ground around the whole cluster
+    of holes: tile a halo over all the holes and drop any cell that a currently
+    active claim touches. This is what you could peg on the geology they just
+    drilled. Uses the holes' own jurisdiction's live claim fabric."""
+    import math
+    import geopandas as gpd
+    from shapely.geometry import box
+    from shapely.geometry import mapping as _map
+    from newswire import geolocate
+    from config import GRID_M
+    feats, cache = [], {}
+    for it in items:
+        holes = [(h["lat"], h["lon"]) for h in it.get("holes", []) if h.get("lat") is not None]
+        if not holes:
+            continue
+        prov = geolocate.region_from_latlon(holes[0][0], holes[0][1])
+        slug = _NAME2SLUG.get(prov)
+        if not slug:
+            continue
+        if slug not in cache:
+            cp = os.path.join("data", slug, "claims.parquet")
+            try:
+                cache[slug] = gpd.read_parquet(cp) if os.path.exists(cp) else None
+            except Exception:
+                cache[slug] = None
+        claims = cache[slug]
+        ref = sum(h[0] for h in holes) / len(holes)
+        dlat = GRID_M / 111320.0
+        dlon = GRID_M / (111320.0 * max(0.2, math.cos(math.radians(ref))))
+        steps = int(halo_m // GRID_M) + 1
+        cells = set()
+        for (la, lo) in holes:
+            ci, cj = int(lo // dlon), int(la // dlat)
+            for di in range(-steps, steps + 1):
+                for dj in range(-steps, steps + 1):
+                    cells.add((ci + di, cj + dj))
+        cells = list(cells)
+        polys = [box(i * dlon, j * dlat, (i + 1) * dlon, (j + 1) * dlat) for (i, j) in cells]
+        openmask = [True] * len(polys)
+        if claims is not None and len(claims):
+            try:
+                cg = gpd.GeoDataFrame(geometry=polys, crs="EPSG:4326")
+                cl = claims.to_crs("EPSG:4326")
+                hit = gpd.sjoin(cg, cl[[cl.geometry.name]], predicate="intersects", how="left")
+                taken = set(hit[hit.index_right.notna()].index.tolist())
+                openmask = [i not in taken for i in range(len(polys))]
+            except Exception:
+                pass
+        for pg, ok in zip(polys, openmask):
+            if ok:
+                feats.append({"type": "Feature", "properties": {"rid": it["id"]},
+                              "geometry": _map(pg)})
+    return {"type": "FeatureCollection", "features": feats}
 
 
 def _holes_geojson(items):
@@ -93,6 +158,11 @@ def _holes_geojson(items):
                                          "region": it.get("country") or "", "hole": h["hole"],
                                          "depth_m": h.get("depth_m"), "azimuth": h.get("azimuth"),
                                          "dip": h.get("dip"), "assay": assay,
+                                         "rid": it["id"],
+                                         "intervals": [
+                                             {"f": iv.get("from"), "t": iv.get("to"), "l": iv.get("len"),
+                                              "e": iv.get("el"), "g": iv.get("grade"), "u": iv.get("unit"),
+                                              "s": iv.get("sub")} for iv in h.get("intervals", [])],
                                          "date": (it.get("published") or "")[:10], "url": it["url"]}})
     return {"type": "FeatureCollection", "features": feats}
 
@@ -110,6 +180,12 @@ def build(site_dir="site"):
         con.close()
     # drill holes as a layer for the ONE unified map (holes vs open ground/claims)
     json.dump(_holes_geojson(items), open(os.path.join(site_dir, "drill_holes.geojson"), "w"))
+    try:
+        og = _drill_open_ground(items)
+        json.dump(og, open(os.path.join(site_dir, "drill_open.geojson"), "w"))
+        print(f"[drill_radar] open ground around drilling: {len(og['features'])} cells")
+    except Exception as e:
+        print("[drill_radar] open-ground calc skipped:", str(e)[:120])
     _write(site_dir, items, st)
 
 

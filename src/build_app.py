@@ -328,18 +328,45 @@ refresh();
 // ---- recent drill results from the newswire bank, as a toggleable layer, so you
 // can see drill holes sitting against the open ground (magenta) and claims (gold)
 let drillLayer=L.layerGroup(), drillLoaded=false, drillOn=false;
+let drillGround=null, drillOpenData=null, drillByRid={{}};
+async function drillOpen(){{
+  if(drillOpenData) return drillOpenData;
+  try{{ const r=await fetch('drill_open.geojson'); drillOpenData = r.ok ? await r.json() : {{features:[]}}; }}
+  catch(e){{ drillOpenData={{features:[]}}; }}
+  return drillOpenData;
+}}
+async function showProgramGround(rid){{
+  if(drillGround){{map.removeLayer(drillGround);drillGround=null;}}
+  const holes=(drillByRid[rid]||[]);
+  const bounds=[];
+  holes.forEach(ll=>bounds.push(ll));
+  const d=await drillOpen();
+  const fs=(d.features||[]).filter(f=>f.properties&&f.properties.rid===rid);
+  if(fs.length){{
+    drillGround=L.geoJSON({{type:'FeatureCollection',features:fs}},
+      {{interactive:false,style:{{color:'#7a0050',weight:1,opacity:.9,fillColor:'#ff2fbf',fillOpacity:.4}}}}).addTo(map);
+    try{{drillGround.getBounds().getNorthEast()&&bounds.push([drillGround.getBounds().getNorth(),drillGround.getBounds().getEast()],[drillGround.getBounds().getSouth(),drillGround.getBounds().getWest()]);}}catch(e){{}}
+  }}
+  if(bounds.length){{ try{{map.fitBounds(bounds,{{padding:[50,50],maxZoom:14}});}}catch(e){{}} }}
+}}
 async function loadDrill(){{
   if(drillLoaded) return true; drillLoaded=true;
   try{{
     const r=await fetch('drill_holes.geojson'); if(!r.ok) return false; const d=await r.json();
     (d.features||[]).forEach(f=>{{
       const p=f.properties||{{}}, c=f.geometry.coordinates;
+      if(p.rid){{ (drillByRid[p.rid]=drillByRid[p.rid]||[]).push([c[1],c[0]]); }}
       const m=L.circleMarker([c[1],c[0]],{{radius:5,color:'#111',weight:1,fillColor:'#ff7a00',fillOpacity:.95}});
+      m.on('click',()=>{{ if(p.rid) showProgramGround(p.rid); }});
+      const g=v=>(v==null?'?':(''+v));
+      const ivs=(p.intervals||[]).map(x=>`<div style="font-size:11.5px${{x.s?';color:#777;padding-left:8px':''}}">`+
+        `${{x.s?'incl. ':''}}${{x.f!=null?g(x.f)+'–'+g(x.t)+'m':(g(x.l)+' m')}} · <b>${{g(x.g)}} ${{esc(x.u)}} ${{esc(x.e)}}</b></div>`).join('');
       m.bindPopup(`<b>${{esc(p.company)}}</b>${{p.project?(' — '+esc(p.project)):''}}<br>`+
-        `Hole <b>${{esc(p.hole)}}</b>${{p.assay?(' · <b>'+esc(p.assay)+'</b>'):''}}<br>`+
-        `${{p.depth_m!=null?('depth '+esc(p.depth_m)+' m'):''}}${{p.azimuth!=null?(' · az '+esc(p.azimuth)):''}}${{p.dip!=null?(' · dip '+esc(p.dip)):''}}<br>`+
-        `<span style="color:#888">${{esc(p.region||'')}}${{p.date?(' · '+esc(p.date)):''}}</span><br>`+
-        `<a href="${{esc(p.url)}}" target=_blank>release ↗</a>`);
+        `Hole <b>${{esc(p.hole)}}</b><br>`+
+        `<span style="color:#555">${{p.depth_m!=null?('depth '+g(p.depth_m)+' m'):''}}${{p.azimuth!=null?(' · az '+g(p.azimuth)):''}}${{p.dip!=null?(' · dip '+g(p.dip)):''}}</span>`+
+        `${{ivs?('<div style="margin-top:4px;border-top:1px solid #eee;padding-top:4px">'+ivs+'</div>'):''}}`+
+        `<div style="color:#888;margin-top:3px">${{esc(p.region||'')}}${{p.date?(' · '+esc(p.date)):''}}</div>`+
+        `<a href="${{esc(p.url)}}" target=_blank>release ↗</a>`,{{maxHeight:260}});
       drillLayer.addLayer(m);
     }});
   }}catch(e){{return false;}}
@@ -372,9 +399,13 @@ drillCtl.addTo(map);
     return;
   }}
   const z=parseInt(q.get('z'))||12, kind=q.get('kind')||'', label=q.get('label')||'';
-  if(kind==='drill'){{ map.setView([lat,lon], z); showDrill(true).then(()=>{{
-      let bm=null,bd=1e9; drillLayer.eachLayer(m=>{{const ll=m.getLatLng();
-        const d=Math.hypot(ll.lat-lat,ll.lng-lon); if(d<bd){{bd=d;bm=m;}}}});
+  if(kind==='drill'){{ map.setView([lat,lon], z); showDrill(true).then(async ()=>{{
+      let brid=null,bd=1e9;   // the program (release) whose holes are nearest
+      Object.keys(drillByRid).forEach(rid=>drillByRid[rid].forEach(ll=>{{
+        const dd=Math.hypot(ll[0]-lat,ll[1]-lon); if(dd<bd){{bd=dd;brid=rid;}}}}));
+      if(brid) await showProgramGround(brid);   // open ground around ALL its holes
+      let bm=null,bmd=1e9; drillLayer.eachLayer(m=>{{const ll=m.getLatLng();
+        const dd=Math.hypot(ll.lat-lat,ll.lng-lon); if(dd<bmd){{bmd=dd;bm=m;}}}});
       if(bm) bm.openPopup();
     }}); return; }}
   // nearest lead to the target (match a radar item to its lead card)
