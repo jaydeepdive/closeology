@@ -127,7 +127,6 @@ TEMPLATE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
     <div class="controls">
       <div class="chips" id="metalChips"></div>
       <div class="row">
-        <label><input type="checkbox" id="fDep"> Deposit open</label>
         <label><input type="checkbox" id="fDrill"> Has drill data</label>
         <label><input type="checkbox" id="tCells" checked> Open cells</label>
         <label><input type="checkbox" id="tClaims" checked> Claims</label>
@@ -235,7 +234,7 @@ L.control.layers({{'Topographic':topo,'Street':osm}},{{}},{{position:'topleft'}}
 
 document.getElementById('subline').textContent=`Updated ${{STATS.generated}} · magenta = open stakeable ground · click any lead for full detail`;
 document.getElementById('attribution').textContent=STATS.attribution;
-const S=[['n_leads','Leads'],['n_deposit_open','Deposit open'],['n_with_drill_highlights','Drill data'],['n_hard_to_stake','Harder stake'],['n_candidate_leads','Candidates'],['n_occurrences','Occurrences'],['n_claims_active','Claims'],['top_n_examined','Examined']];
+const S=[['n_leads','Stakeable leads'],['n_with_spend','With expl. spend'],['n_with_drill_highlights','Drill data'],['n_hard_to_stake','Harder stake'],['n_candidate_leads','Candidates'],['n_occurrences','Occurrences'],['n_claims_active','Claims'],['top_n_examined','Examined']];
 document.getElementById('stats').innerHTML=S.map(([k,l])=>`<div class=stat><b>${{(STATS[k]!=null&&STATS[k].toLocaleString)?STATS[k].toLocaleString():(STATS[k]??'—')}}</b><span>${{l}}</span></div>`).join('');
 
 function buckets(p){{let m=p.metal_buckets;if(Array.isArray(m))return m;return (m||p.primary_metal||'').split(';').filter(Boolean);}}
@@ -248,7 +247,6 @@ chipsEl.addEventListener('click',e=>{{const c=e.target.closest('.chip');if(!c)re
 
 const rowsEl=document.getElementById('leadrows'); let sortK='rank',sortAsc=true;
 function passes(p){{
-  if(document.getElementById('fDep').checked && !p.deposit_open) return false;
   if(document.getElementById('fDrill').checked && !(p.drill_highlights)) return false;
   return buckets(p).some(m=>selected.has(m));
 }}
@@ -268,7 +266,7 @@ function render(){{
 }}
 rowsEl.addEventListener('click',e=>{{const tr=e.target.closest('tr');if(!tr)return;if(tr.dataset.id)select(tr.dataset.id);}});
 document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{{const k=th.dataset.k;sortAsc=(k===sortK)?!sortAsc:(k==='rank'||k==='name');sortK=k;render();}}));
-['fDep','fDrill'].forEach(id=>document.getElementById(id).addEventListener('change',render));
+document.getElementById('fDrill').addEventListener('change',render);
 document.getElementById('tClaims').addEventListener('change',e=>{{e.target.checked?claimsLayer.addTo(map):map.removeLayer(claimsLayer);}});
 document.getElementById('tCells').addEventListener('change',e=>{{e.target.checked?cellLayer.addTo(map):map.removeLayer(cellLayer);}});
 document.getElementById('tOcc').addEventListener('change',e=>{{e.target.checked?occCluster.addTo(map):map.removeLayer(occCluster);}});
