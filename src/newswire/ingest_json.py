@@ -17,6 +17,21 @@ import json
 from newswire import store, geolocate
 
 
+def _source_of(url):
+    import re
+    m = re.search(r"https?://(?:www\.)?([^/]+)", url or "")
+    host = (m.group(1).lower() if m else "")
+    for key, name in (("newsfilecorp", "newsfilecorp"), ("thenewswire", "thenewswire"),
+                      ("newswire.ca", "cision"), ("prnewswire", "prnewswire"),
+                      ("globenewswire", "globenewswire"), ("accesswire", "accesswire"),
+                      ("businesswire", "businesswire"), ("juniorminingnetwork", "juniorminingnetwork"),
+                      ("miningnewsterminal", "miningnewsterminal"), ("stockwatch", "stockwatch"),
+                      ("theglobeandmail", "globeandmail")):
+        if key in host:
+            return name
+    return host or "other"
+
+
 def ingest(releases):
     con = store.connect()
     n_ok = n_holes = n_iv = 0
@@ -47,7 +62,7 @@ def ingest(releases):
                         "raw": iv.get("raw", "")})
         status = "ok" if (holes or ivs) else "empty"
         store.record_release(con, {
-            "id": rid, "source": r.get("source", "newsfilecorp"), "url": url,
+            "id": rid, "source": r.get("source") or _source_of(url), "url": url,
             "title": r.get("title"), "company": r.get("company"), "ticker": r.get("ticker"),
             "published": r.get("published"), "lang": "en", "status": status,
             "reason": None if status == "ok" else "no data extracted",
