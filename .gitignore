@@ -9,6 +9,9 @@ data/qc/_gpkg/
 data/on/
 data/minfile_db/
 !data/keep/**
+# MMP raw store exceeds GitHub's 100 MB file limit and is regenerated weekly by
+# the mmp-backbone workflow from the live gov sources — keep only the parquet exports.
+data/keep/mmp.sqlite
 # large generated site assets — rebuilt in CI + published via the Pages artifact.
 # Keep only the lightweight core pages (priority + hub) tracked for reference.
 site/*.html

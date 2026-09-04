@@ -40,6 +40,6 @@ jobs:
           git config user.name "closeology-bot"
           git config user.email "actions@github.com"
           git pull --no-edit -X ours origin main || true
-          git add -A data/keep/mmp.sqlite data/keep/mmp_*.parquet data/keep/mmp_collars_sample.csv 2>/dev/null || true
+          git add -A data/keep/mmp_*.parquet data/keep/mmp_collars_sample.csv 2>/dev/null || true
           git commit -m "MMP drillhole backbone refresh $(date -u +%Y-%m-%d) [skip ci]" || echo "no changes"
           git push || echo "nothing to push"
