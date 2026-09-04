@@ -1,7 +1,7 @@
 {
- "generated": "2026-09-04T14:00:23Z",
- "count": 17,
- "archived": 0,
+ "generated": "2026-09-04T15:48:39Z",
+ "count": 22,
+ "archived": 5,
  "reports": [
   {
    "id": "ni43101:b036fb083a329154",
@@ -144,6 +144,23 @@
    "has_method": true
   },
   {
+   "id": "sedar:W2541",
+   "company": "Fondaway Canyon",
+   "project": null,
+   "commodity": null,
+   "jurisdiction": "Nevada",
+   "source_url": "https://www.sedarplus.ca/csa-party/records/document.html?node=W2541",
+   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2541_Getchell_Fondaway.pdf",
+   "collected": "2026-09-04T15:48:08Z",
+   "collars": 30,
+   "assays": 152,
+   "resource_rows": 35,
+   "has_method": true,
+   "metallurgy_process": "AUTOCLAVE, AUTOCLAVES, CARBON-IN-LEACH, CIL, FLOTATION, GRAVITY CIRCUIT, GRAVITY CONCENTRATION, GRAVITY RECOVERY, HEAP LEACH, KNELSON, MERRILL-CROWE, POX, PRESSURE OXIDATION, ROAST, ROASTER, ROASTING, VAT LEACH, WHOLE ORE LEACH",
+   "refractory": "refractory",
+   "recovery": "recover \u00b187% of the gold | gold, for an overall recovery ranging from 93 to 95% | recovered 85.4% of the gold | gold and sulfide sulfur recoveries of 78.6% | go"
+  },
+  {
    "id": "ni43101:dd7e950301cf8df0",
    "company": "Pan",
    "project": "Pan",
@@ -228,6 +245,40 @@
    "has_method": true
   },
   {
+   "id": "sedar:W2754",
+   "company": "Moore Lake",
+   "project": null,
+   "commodity": null,
+   "jurisdiction": "Saskatchewan",
+   "source_url": "https://www.sedarplus.ca/csa-party/records/document.html?node=W2754",
+   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2754_Skyharbour_MooreLake.pdf",
+   "collected": "2026-09-04T15:48:34Z",
+   "collars": 128,
+   "assays": 0,
+   "resource_rows": 3,
+   "has_method": false,
+   "metallurgy_process": null,
+   "refractory": null,
+   "recovery": null
+  },
+  {
+   "id": "sedar:W2683",
+   "company": "Russell Lake",
+   "project": null,
+   "commodity": null,
+   "jurisdiction": "Saskatchewan",
+   "source_url": "https://www.sedarplus.ca/csa-party/records/document.html?node=W2683",
+   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2683_Skyharbour_RussellLake.pdf",
+   "collected": "2026-09-04T15:48:24Z",
+   "collars": 47,
+   "assays": 80,
+   "resource_rows": 5,
+   "has_method": false,
+   "metallurgy_process": null,
+   "refractory": null,
+   "recovery": null
+  },
+  {
    "id": "ni43101:c38a69827052e8a9",
    "company": "Oksut",
    "project": "Oksut",
@@ -240,6 +291,40 @@
    "assays": 0,
    "resource_rows": 3,
    "has_method": true
+  },
+  {
+   "id": "sedar:W2825",
+   "company": "Cila",
+   "project": null,
+   "commodity": null,
+   "jurisdiction": null,
+   "source_url": "https://www.sedarplus.ca/csa-party/records/document.html?node=W2825",
+   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2825_Miravalles_Cila.pdf",
+   "collected": "2026-09-04T15:48:39Z",
+   "collars": 0,
+   "assays": 0,
+   "resource_rows": 1,
+   "has_method": true,
+   "metallurgy_process": "FLOTATION",
+   "refractory": null,
+   "recovery": null
+  },
+  {
+   "id": "sedar:W2612",
+   "company": "Ongwe",
+   "project": null,
+   "commodity": null,
+   "jurisdiction": null,
+   "source_url": "https://www.sedarplus.ca/csa-party/records/document.html?node=W2612",
+   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2612_Ongwe.pdf",
+   "collected": "2026-09-04T15:48:16Z",
+   "collars": 37,
+   "assays": 8,
+   "resource_rows": 2,
+   "has_method": true,
+   "metallurgy_process": null,
+   "refractory": null,
+   "recovery": null
   }
  ]
 }

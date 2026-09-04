@@ -15,7 +15,13 @@
   "size_kb": 17272,
   "node": "W2541",
   "drm": "66ae03c0d015584b",
-  "doctype": "Technical report (NI 43-101)"
+  "doctype": "Technical report (NI 43-101)",
+  "file": "SLR_20260902_Getchell_FondawayCanyon_TechRpt_Rev1.pdf",
+  "project": "Fondaway Canyon",
+  "commodity": "Au",
+  "filing_ref": "W2541",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2541_Getchell_Fondaway.pdf",
+  "ingested": true
  },
  {
   "company": "Ongwe Minerals Inc. (formerly Great Quest Gold Ltd.)",
@@ -24,7 +30,13 @@
   "size_kb": 21081,
   "node": "W2612",
   "drm": "1cc333eb00dee40c",
-  "doctype": "Technical report (NI 43-101)"
+  "doctype": "Technical report (NI 43-101)",
+  "file": "Voluntary_Technical_Report_OGW.pdf",
+  "project": "Ongwe",
+  "commodity": "Au",
+  "filing_ref": "W2612",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2612_Ongwe.pdf",
+  "ingested": true
  },
  {
   "company": "Skyharbour Resources Ltd.",
@@ -33,7 +45,13 @@
   "size_kb": 7618,
   "node": "W2683",
   "drm": "f781b6144a19b147",
-  "doctype": "Technical report (NI 43-101)"
+  "doctype": "Technical report (NI 43-101)",
+  "file": "2026-08-18_Russell_Lake_NI_43-101_AIF_Technical_Report.pdf",
+  "project": "Russell Lake",
+  "commodity": "U",
+  "filing_ref": "W2683",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2683_Skyharbour_RussellLake.pdf",
+  "ingested": true
  },
  {
   "company": "Skyharbour Resources Ltd.",
@@ -42,7 +60,13 @@
   "size_kb": 14402,
   "node": "W2754",
   "drm": "366c6ce8686db4c2",
-  "doctype": "Technical report (NI 43-101)"
+  "doctype": "Technical report (NI 43-101)",
+  "file": "2026-08-20_Moore_Lake_NI_43-101_2026_Technical_Report_-_signed.pdf",
+  "project": "Moore Lake",
+  "commodity": "U",
+  "filing_ref": "W2754",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2754_Skyharbour_MooreLake.pdf",
+  "ingested": true
  },
  {
   "company": "Miravalles Gold Corp.",
@@ -51,7 +75,13 @@
   "size_kb": 1894,
   "node": "W2825",
   "drm": "f9c45b130afbd4b8",
-  "doctype": "Technical report (NI 43-101)"
+  "doctype": "Technical report (NI 43-101)",
+  "file": "CILA_PROJECT_Technical_Report_2026_Final.pdf",
+  "project": "Cila",
+  "commodity": "Au",
+  "filing_ref": "W2825",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_W2825_Miravalles_Cila.pdf",
+  "ingested": true
  },
  {
   "company": "Miravalles Gold Corp.",

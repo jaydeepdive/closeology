@@ -110,6 +110,30 @@
         "source": "ni43101:f924f53a0fe44c24",
         "rows": 26,
         "bytes": 13152
+      },
+      {
+        "file": "mmp/collars/sedar__W2541.parquet",
+        "source": "sedar:W2541",
+        "rows": 30,
+        "bytes": 12848
+      },
+      {
+        "file": "mmp/collars/sedar__W2612.parquet",
+        "source": "sedar:W2612",
+        "rows": 37,
+        "bytes": 12240
+      },
+      {
+        "file": "mmp/collars/sedar__W2683.parquet",
+        "source": "sedar:W2683",
+        "rows": 47,
+        "bytes": 13782
+      },
+      {
+        "file": "mmp/collars/sedar__W2754.parquet",
+        "source": "sedar:W2754",
+        "rows": 128,
+        "bytes": 15421
       }
     ],
     "assays": [
@@ -316,6 +340,24 @@
         "source": "ni43101:e1cfa0b2eebe3c7c",
         "rows": 1164,
         "bytes": 16395
+      },
+      {
+        "file": "mmp/assays/sedar__W2541.parquet",
+        "source": "sedar:W2541",
+        "rows": 152,
+        "bytes": 9596
+      },
+      {
+        "file": "mmp/assays/sedar__W2612.parquet",
+        "source": "sedar:W2612",
+        "rows": 8,
+        "bytes": 6250
+      },
+      {
+        "file": "mmp/assays/sedar__W2683.parquet",
+        "source": "sedar:W2683",
+        "rows": 80,
+        "bytes": 8010
       }
     ],
     "lithology": [
@@ -764,6 +806,36 @@
         "source": "ni43101:fde21413b31d5fe5",
         "rows": 12,
         "bytes": 10408
+      },
+      {
+        "file": "mmp/deposit_model/sedar__W2541.parquet",
+        "source": "sedar:W2541",
+        "rows": 35,
+        "bytes": 10879
+      },
+      {
+        "file": "mmp/deposit_model/sedar__W2612.parquet",
+        "source": "sedar:W2612",
+        "rows": 2,
+        "bytes": 9496
+      },
+      {
+        "file": "mmp/deposit_model/sedar__W2683.parquet",
+        "source": "sedar:W2683",
+        "rows": 5,
+        "bytes": 9786
+      },
+      {
+        "file": "mmp/deposit_model/sedar__W2754.parquet",
+        "source": "sedar:W2754",
+        "rows": 3,
+        "bytes": 9682
+      },
+      {
+        "file": "mmp/deposit_model/sedar__W2825.parquet",
+        "source": "sedar:W2825",
+        "rows": 1,
+        "bytes": 9371
       }
     ],
     "model_method": [
@@ -1210,17 +1282,49 @@
         "source": "ni43101:fde21413b31d5fe5",
         "rows": 1,
         "bytes": 17037
+      },
+      {
+        "file": "mmp/model_method/sedar__W2541.parquet",
+        "source": "sedar:W2541",
+        "rows": 1,
+        "bytes": 16275
+      },
+      {
+        "file": "mmp/model_method/sedar__W2612.parquet",
+        "source": "sedar:W2612",
+        "rows": 1,
+        "bytes": 28242
+      },
+      {
+        "file": "mmp/model_method/sedar__W2825.parquet",
+        "source": "sedar:W2825",
+        "rows": 1,
+        "bytes": 22539
+      }
+    ],
+    "metallurgy": [
+      {
+        "file": "mmp/metallurgy/sedar__W2541.parquet",
+        "source": "sedar:W2541",
+        "rows": 1,
+        "bytes": 17231
+      },
+      {
+        "file": "mmp/metallurgy/sedar__W2825.parquet",
+        "source": "sedar:W2825",
+        "rows": 1,
+        "bytes": 15285
       }
     ]
   },
   "totals": {
-    "collars": 801042,
+    "collars": 801284,
     "survey": 0,
-    "assays": 14116614,
+    "assays": 14116854,
     "lithology": 759931,
-    "deposit_model": 2068,
-    "model_method": 74,
-    "metallurgy": 0
+    "deposit_model": 2114,
+    "model_method": 77,
+    "metallurgy": 2
   },
-  "shard_count": 200
+  "shard_count": 217
 }
