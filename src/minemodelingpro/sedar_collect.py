@@ -284,21 +284,28 @@ def _download(page, url, dest, log):
         return {ok:r.ok, status:r.status, b64: btoa(bin)};
       } catch (e) { return {ok:false, error:String(e)}; }
     }"""
-    for attempt in range(3):
+    for attempt in range(2):
         try:
             res = page.evaluate(_JS, url)
         except Exception as e:
             log(f"  download error: {str(e)[:100]}"); time.sleep(4); continue
         if res.get("error"):
-            log(f"  fetch error a{attempt+1}: {str(res['error'])[:80]}"); time.sleep(5 + attempt * 4); continue
+            log(f"  fetch error a{attempt+1}: {str(res['error'])[:80]}"); time.sleep(5); continue
         data = base64.b64decode(res.get("b64") or "")
         if data[:5].startswith(b"%PDF"):
             open(dest, "wb").write(data)
             return True
-        # not a PDF — log a snippet so we can see WHAT it is (Akamai? SEDAR error?)
-        snip = data[:200].decode("latin-1", "replace").replace("\n", " ").replace("\r", " ")
-        log(f"  not a PDF (HTTP {res.get('status')}, {len(data)}B) a{attempt+1}: {snip[:140]}")
-        time.sleep(6 + attempt * 5)          # back off; token/rate may recover
+        dbg = os.path.join(os.path.dirname(DOWNLOADS), "sedar_debug_last.html")
+        try:
+            open(dbg, "wb").write(data)          # keep the offending page for inspection
+        except Exception:
+            pass
+        title = ""
+        m = re.search(rb"<title[^>]*>(.*?)</title>", data, re.I | re.S)
+        if m:
+            title = m.group(1).decode("latin-1", "replace").strip()[:120]
+        log(f"  not a PDF (HTTP {res.get('status')}, {len(data)}B) title={title!r}")
+        time.sleep(6)
     return False
 
 
@@ -352,6 +359,7 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
             # didn't fully take (belt-and-suspenders on the doctype cascade)
             return [r for r in rs if any("43-101" in c for c in (r.get("cells") or []))]
 
+        consec_fail = 0
         for pageno in range(1, max_pages + 1):
             rows = _harvest()
             if not rows:                          # results may still be re-rendering
@@ -369,6 +377,17 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
                 else:
                     time.sleep(throttle)          # space EVERY attempt (be gentle)
                     ok = _download(page, r["url"], dest, log)
+                if not ok:
+                    consec_fail += 1
+                    if consec_fail >= 6:
+                        log("aborting: 6 downloads in a row returned HTML not PDF — see "
+                            "data/keep/sedar_debug_last.html. Likely an expired download token.")
+                        _save_ledger(ledger)
+                        if not cdp:
+                            context.close()
+                        return {"downloaded": downloaded, "aborted": True}
+                    continue
+                consec_fail = 0
                 if ok:
                     downloaded += 1
                     have.add(key)
