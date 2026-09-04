@@ -167,6 +167,24 @@ def _holes_geojson(items):
     return {"type": "FeatureCollection", "features": feats}
 
 
+_CA_REGIONS = {
+    "canada", "ontario", "quebec", "québec", "british columbia", "alberta",
+    "saskatchewan", "manitoba", "yukon", "nunavut", "northwest territories",
+    "nova scotia", "new brunswick", "prince edward island",
+    "newfoundland", "newfoundland & labrador", "newfoundland and labrador", "labrador",
+}
+
+
+def _is_canada(country):
+    c = (country or "").strip().lower()
+    if not c:
+        return False
+    if c in _CA_REGIONS:
+        return True
+    # tolerate "..., Canada" and province substrings
+    return "canada" in c or any(r in c for r in _CA_REGIONS if len(r) > 6)
+
+
 def build(site_dir="site"):
     from newswire import store as _store
     if not os.path.exists(_store.DB_PATH):
@@ -178,7 +196,10 @@ def build(site_dir="site"):
         st = _store.stats(con)
     finally:
         con.close()
-    # drill holes as a layer for the ONE unified map (holes vs open ground/claims)
+    # Closeology is Canada-only for now, and every radar item must be viewable on
+    # the map — so the radar/map/open-ground use only Canadian, geolocated items.
+    # (The bank + MineModelingPro keep everything, worldwide.)
+    items = [i for i in items if _is_canada(i.get("country")) and i.get("geo") and i.get("pt")]
     json.dump(_holes_geojson(items), open(os.path.join(site_dir, "drill_holes.geojson"), "w"))
     try:
         og = _drill_open_ground(items)

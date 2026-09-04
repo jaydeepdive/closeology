@@ -50,7 +50,7 @@ _METH_PAGE = re.compile(r"kriging|inverse distance|block model|specific gravity|
 
 # bump when the extractor changes so --refresh re-processes reports once (and
 # only once) under the new engine, staying resumable across CI runs.
-EXTRACTOR_VERSION = "2"          # v2 = Camelot appendix collar/assay tables
+EXTRACTOR_VERSION = "3"          # v3 = multi-page block capture + title-row fix
 
 
 def _rid(url):
@@ -187,9 +187,16 @@ def _merge_header(rows, max_head=4):
     if data_start == 0:
         data_start = 1
     ncol = max(len(r) for r in rows) if rows else 0
+    # header rows only — but skip "title" rows (a single non-empty cell spanning
+    # the table, e.g. "Table 9-4 ... Drillholes") so a title can't contaminate a
+    # column header (the classic "drillholes" -> false hole-id match).
+    hrows = [r for r in range(data_start)
+             if sum(1 for c in rows[r] if str(c).strip()) >= 2]
+    if not hrows:
+        hrows = list(range(data_start))
     heads = []
     for c in range(ncol):
-        parts = [str(rows[r][c]).strip() for r in range(data_start)
+        parts = [str(rows[r][c]).strip() for r in hrows
                  if c < len(rows[r]) and str(rows[r][c]).strip()]
         heads.append(" ".join(parts).lower())
     return heads, data_start
@@ -229,68 +236,98 @@ def _map_columns(heads):
     return m
 
 
-def extract_drill_tables(path, pages_text, max_pages=80):
+_ASSAY_ROW = re.compile(r"^\s*[A-Za-z0-9\-\/]{0,16}\s*\d{1,4}\.\d+\s+\d{1,4}\.\d+")
+_COLLAR_ROW = re.compile(r"\b\d{5,6}(?:\.\d+)?\b\s+\b\d{6,7}(?:\.\d+)?\b")
+
+
+def _page_kind(t):
+    """Classify a page by DATA-ROW density (not header keywords) so multi-page
+    tables are captured whole — continuation pages have data rows but no header."""
+    lines = (t or "").split("\n")
+    a = sum(1 for l in lines if _ASSAY_ROW.match(l))
+    c = sum(1 for l in lines if _COLLAR_ROW.search(l))
+    if c >= 3 and c >= a:
+        return "collar"
+    if a >= 4:
+        return "assay"
+    return None
+
+
+def _blocks(pages_text):
+    """Maximal runs of consecutive data pages of the same kind. A run = one
+    logical table that may span tens of pages; we parse the whole run."""
+    kinds = [_page_kind(t) for t in pages_text]
+    out, i, n = [], 0, len(kinds)
+    while i < n:
+        if not kinds[i]:
+            i += 1; continue
+        j = i
+        while j + 1 < n and kinds[j + 1] == kinds[i]:
+            j += 1
+        out.append((kinds[i], i, j))
+        i = j + 1
+    return out
+
+
+def extract_drill_tables(path, pages_text, max_block_pages=60):
+    """Extract full collar + assay tables from appendices, following each table
+    across ALL its pages (column mapping + hole-id carried forward; continuation
+    pages have no header and reuse the block's mapping)."""
     import warnings; warnings.filterwarnings("ignore")
     import camelot
-    coll_p, assay_p = _candidate_pages(pages_text)
-    pages = sorted(set(coll_p + assay_p))[:max_pages]
-    collars, assays = [], []
-    if not pages:
-        return collars, assays
-    # camelot in modest chunks to bound memory
-    for start in range(0, len(pages), 20):
-        chunk = pages[start:start + 20]
+    collars, assays = {}, {}
+    for kind, s, e in _blocks(pages_text):
+        e = min(e, s + max_block_pages - 1)
         try:
-            tabs = camelot.read_pdf(path, pages=",".join(map(str, chunk)), flavor="stream")
+            tabs = camelot.read_pdf(path, pages=f"{s + 1}-{e + 1}", flavor="stream")
         except Exception:
             continue
+        cm = None
+        last_hole = None
         for tb in tabs:
             rows = tb.df.values.tolist()
-            if len(rows) < 3:
+            if len(rows) < 2:
                 continue
             heads, ds = _merge_header(rows)
-            cm = _map_columns(heads)
-            is_collar = "easting" in cm and "northing" in cm and "hole" in cm
-            is_assay = "from" in cm and "to" in cm and cm["elements"] and "hole" in cm
-            if not (is_collar or is_assay):
+            m = _map_columns(heads)
+            has_hdr = ("easting" in m and "northing" in m) or ("from" in m and "to" in m and m["elements"])
+            if has_hdr:
+                cm = m; start = ds
+            elif cm is not None:
+                m = cm; start = 0          # continuation page: reuse mapping, all rows are data
+            else:
                 continue
-            last_hole = None
-            for r in rows[ds:]:
+            is_collar = "easting" in m and "northing" in m
+            is_assay = "from" in m and "to" in m and m["elements"]
+            for r in rows[start:]:
                 def cell(k):
-                    return r[cm[k]] if k in cm and cm[k] < len(r) else None
+                    return r[m[k]] if k in m and m[k] < len(r) else None
                 hid = str(cell("hole") or "").strip()
                 if hid:
                     last_hole = hid
                 hid = hid or last_hole
-                if not hid or hid.lower() in ("total", "average", "mean"):
+                if not hid or hid.lower() in ("total", "average", "mean", "hole", "hole id"):
                     continue
                 if is_collar:
-                    e, n = _num_cell(cell("easting")), _num_cell(cell("northing"))
-                    if e is None or n is None:
-                        continue
-                    collars.append({"native_id": hid, "easting": e, "northing": n,
-                                    "elev_m": _num_cell(cell("elev")), "azimuth": _num_cell(cell("azimuth")),
-                                    "dip": _num_cell(cell("dip")), "depth_m": _num_cell(cell("depth"))})
+                    ea, no = _num_cell(cell("easting")), _num_cell(cell("northing"))
+                    if ea is not None and no is not None:
+                        collars[hid] = {"native_id": hid, "easting": ea, "northing": no,
+                                        "elev_m": _num_cell(cell("elev")), "azimuth": _num_cell(cell("azimuth")),
+                                        "dip": _num_cell(cell("dip")), "depth_m": _num_cell(cell("depth"))}
                 if is_assay:
                     fr, to = _num_cell(cell("from")), _num_cell(cell("to"))
                     if fr is None or to is None:
                         continue
                     ln = _num_cell(cell("length"))
                     ln = ln if ln is not None else (round(to - fr, 2) if to >= fr else None)
-                    for ci, el, unit in cm["elements"]:
+                    for ci, el, unit in m["elements"]:
                         g = _num_cell(r[ci]) if ci < len(r) else None
                         if g is None:
                             continue
-                        assays.append({"native_id": hid, "from_m": fr, "to_m": to, "length_m": ln,
-                                       "element": el, "grade": g, "unit": unit, "is_subinterval": 0})
-    # de-dupe
-    cu = {c["native_id"]: c for c in collars}
-    seen = set(); ua = []
-    for a in assays:
-        k = (a["native_id"], a["from_m"], a["to_m"], a["element"])
-        if k not in seen:
-            seen.add(k); ua.append(a)
-    return list(cu.values()), ua
+                        assays[(hid, fr, to, el)] = {"native_id": hid, "from_m": fr, "to_m": to,
+                                                     "length_m": ln, "element": el, "grade": g,
+                                                     "unit": unit, "is_subinterval": 0}
+    return list(collars.values()), list(assays.values())
 
 
 def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_date=None, drill_tables=True):
