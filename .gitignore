@@ -24,3 +24,7 @@ site/*.png
 __pycache__/
 *.pyc
 src/access_parser/
+
+# SEDAR PDFs are retained in the report-archive release, not git
+data/keep/sedar_pdfs/
+data/keep/sedar_profile/
