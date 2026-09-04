@@ -268,48 +268,50 @@ def _find_results_tab(browser, log):
     return None, (ctxs[0] if ctxs else None)
 
 
-def _download(context, url, dest, log):
-    """Download one PDF by NAVIGATING a throwaway tab to the resource URL. The
-    resource endpoint serves the PDF as an attachment to a real top-level
-    navigation (Sec-Fetch-Mode: navigate) but returns a SEDAR system-error page to
-    an XHR/fetch — so we let Chrome do the navigation and capture the download,
-    then close the tab (the results page is untouched)."""
-    dp = None
-    try:
-        dp = context.new_page()
+_FETCH_JS = """async (u) => {
+  try {
+    const r = await fetch(u, {credentials: 'include'});
+    const b = new Uint8Array(await r.arrayBuffer());
+    let s = ''; const c = 0x8000;
+    for (let i = 0; i < b.length; i += c) s += String.fromCharCode.apply(null, b.subarray(i, i + c));
+    return {status: r.status, b64: btoa(s)};
+  } catch (e) { return {error: String(e)}; }
+}"""
+
+
+def _download(page, url, dest, log):
+    """Fetch the PDF from inside the results page (same-origin, trusted session).
+    Returns 'ok', 'throttled' (SEDAR system-error page → the per-session download
+    limit), or 'fail'. When not throttled this pulls PDFs cleanly; the batch stops
+    on throttle so a fresh session next run resumes."""
+    import base64
+    for attempt in range(2):
         try:
-            with dp.expect_download(timeout=45000) as di:
-                try:
-                    dp.goto(url, timeout=40000)   # becomes a download -> goto raises ERR_ABORTED
-                except Exception:
-                    pass
-            di.value.save_as(dest)
-        finally:
-            try:
-                dp.close()
-            except Exception:
-                pass
-        if os.path.exists(dest) and os.path.getsize(dest) > 1000:
-            with open(dest, "rb") as fh:
-                if fh.read(5).startswith(b"%PDF"):
-                    return True
-            try:
-                os.remove(dest)
-            except Exception:
-                pass
-        log(f"  no PDF produced for {os.path.basename(dest)}")
-        return False
-    except Exception as e:
-        if dp:
-            try:
-                dp.close()
-            except Exception:
-                pass
-        log(f"  download error: {str(e)[:110]}")
-        return False
+            res = page.evaluate(_FETCH_JS, url)
+        except Exception as e:
+            log(f"  fetch exception a{attempt+1}: {str(e)[:90]}"); time.sleep(5); continue
+        if res.get("error"):
+            log(f"  fetch error a{attempt+1}: {str(res['error'])[:80]}"); time.sleep(6); continue
+        data = base64.b64decode(res.get("b64") or "")
+        if data[:5].startswith(b"%PDF"):
+            open(dest, "wb").write(data)
+            return "ok"
+        try:
+            open(os.path.join(os.path.dirname(DOWNLOADS), "sedar_debug_last.html"), "wb").write(data)
+        except Exception:
+            pass
+        m = re.search(rb"error code (\d{8}-\d{6}-\d+)", data)
+        throttled = b"unexpected system error" in data or bool(m)
+        log(f"  {'THROTTLED' if throttled else 'not a PDF'} (HTTP {res.get('status')}, {len(data)}B)"
+            f"{' ' + m.group(1).decode() if m else ''}")
+        if throttled:
+            return "throttled"
+        time.sleep(6)
+    return "fail"
 
 
-def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, chrome=False, log=print):
+def collect(max_pages=40, headful=False, cdp=None, ingest=False, throttle=8.0,
+            chrome=False, limit=25, log=print):
     from playwright.sync_api import sync_playwright
     os.makedirs(DOWNLOADS, exist_ok=True)
     ledger = _load_ledger()
@@ -359,47 +361,55 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
             # didn't fully take (belt-and-suspenders on the doctype cascade)
             return [r for r in rs if any("43-101" in c for c in (r.get("cells") or []))]
 
-        consec_fail = 0
+        stopped = None
         for pageno in range(1, max_pages + 1):
             rows = _harvest()
             if not rows:                          # results may still be re-rendering
                 page.wait_for_timeout(3500); rows = _harvest()
             log(f"page {pageno}: {len(rows)} NI 43-101 report(s) on this page")
             for r in rows:
+                if limit and downloaded >= limit:
+                    stopped = "limit"; break
                 company, submitted, jurisdiction, size_kb = _row_meta(r.get("cells") or [])
                 profile = _profile_num(r.get("cells") or [])
                 key = _stable_key(company, submitted) or ("node-" + r["node"])
                 if key in have:
-                    continue
+                    continue                      # already owned — skipping is free (no download)
                 dest = os.path.join(DOWNLOADS, f"sedar_{key}.pdf")
                 if os.path.exists(dest):
-                    ok = True
+                    res = "ok"
                 else:
-                    time.sleep(throttle)          # space EVERY attempt (be gentle)
-                    ok = _download(context, r["url"], dest, log)
-                if not ok:
-                    consec_fail += 1
-                    if consec_fail >= 6:
-                        log("aborting: 6 downloads in a row returned HTML not PDF — see "
-                            "data/keep/sedar_debug_last.html. Likely an expired download token.")
-                        _save_ledger(ledger)
-                        if not cdp:
-                            context.close()
-                        return {"downloaded": downloaded, "aborted": True}
-                    continue
-                consec_fail = 0
-                if ok:
-                    downloaded += 1
-                    have.add(key)
-                    row = {"key": key, "node": r["node"], "drm": r.get("drmKey"),
-                           "file": os.path.basename(dest), "filing_ref": key,
-                           "company": company, "profile": profile, "submitted": submitted,
-                           "jurisdiction": jurisdiction, "size_kb": size_kb,
-                           "doctype": DOCTYPE, "sedar_url": r["url"],
-                           "collected": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z"}
-                    ledger.append(row); new_rows.append(row)
-                    log(f"  ✓ {company or key} ({size_kb or '?'} KB)")
-                    _save_ledger(ledger)          # checkpoint after every file
+                    time.sleep(throttle)          # space every download (be gentle)
+                    res = _download(page, r["url"], dest, log)
+                if res == "throttled":
+                    # SEDAR's per-session download limit — stop cleanly; a fresh
+                    # session on the next scheduled batch resumes from here.
+                    log(f"SEDAR download limit reached after {downloaded} this batch — stopping; "
+                        f"next batch (fresh session) continues.")
+                    stopped = "throttled"; break
+                if res != "ok":
+                    continue                      # transient miss; try more rows
+                downloaded += 1
+                have.add(key)
+                row = {"key": key, "node": r["node"], "drm": r.get("drmKey"),
+                       "file": os.path.basename(dest), "filing_ref": key,
+                       "company": company, "profile": profile, "submitted": submitted,
+                       "jurisdiction": jurisdiction, "size_kb": size_kb,
+                       "doctype": DOCTYPE, "sedar_url": r["url"],
+                       "collected": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z"}
+                ledger.append(row); new_rows.append(row)
+                log(f"  ✓ {company or key} ({size_kb or '?'} KB)  [{downloaded}]")
+                _save_ledger(ledger)              # checkpoint after every file
+                if os.environ.get("GITHUB_TOKEN"):   # retain the PDF durably (additive)
+                    try:
+                        from minemodelingpro import report_archive
+                        url = report_archive.archive_pdf(dest, "sedar_" + key)
+                        if url:
+                            row["archive_url"] = url; _save_ledger(ledger)
+                    except Exception as e:
+                        log(f"  archive skip: {str(e)[:60]}")
+            if stopped:
+                break
             # next page
             try:
                 nxt = page.get_by_text(re.compile(r"Next\s*»")).first
@@ -421,15 +431,16 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
 
 def main():
     ap = argparse.ArgumentParser(description="Headless SEDAR+ 43-101 collector (no Claude-in-Chrome)")
-    ap.add_argument("--max-pages", type=int, default=2, help="result pages to walk (30 reports/page)")
+    ap.add_argument("--limit", type=int, default=25, help="max NEW reports to download this batch (default 25)")
+    ap.add_argument("--max-pages", type=int, default=40, help="max result pages to walk looking for new reports")
     ap.add_argument("--headful", action="store_true", help="show the browser (debugging)")
     ap.add_argument("--cdp", type=int, default=None, help="attach to Chrome on this remote-debugging port")
     ap.add_argument("--chrome", action="store_true", help="launch your real installed Chrome (channel=chrome) and search automatically — the hands-off mode")
     ap.add_argument("--ingest", action="store_true", help="extract downloaded PDFs after collecting")
-    ap.add_argument("--throttle", type=float, default=2.0, help="seconds between downloads")
+    ap.add_argument("--throttle", type=float, default=8.0, help="seconds between downloads (be gentle)")
     a = ap.parse_args()
     collect(max_pages=a.max_pages, headful=a.headful, cdp=a.cdp, ingest=a.ingest,
-            throttle=a.throttle, chrome=a.chrome)
+            throttle=a.throttle, chrome=a.chrome, limit=a.limit)
 
 
 if __name__ == "__main__":

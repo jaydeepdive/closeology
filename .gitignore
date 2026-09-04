@@ -28,3 +28,8 @@ src/access_parser/
 # SEDAR PDFs are retained in the report-archive release, not git
 data/keep/sedar_pdfs/
 data/keep/sedar_profile/
+data/keep/sedar_batch.log
+data/keep/sedar_launchd.out
+data/keep/sedar_launchd.err
+data/keep/sedar_debug_last.html
+data/keep/sedar_cursor.json
