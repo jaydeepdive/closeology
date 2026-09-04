@@ -268,45 +268,45 @@ def _find_results_tab(browser, log):
     return None, (ctxs[0] if ctxs else None)
 
 
-def _download(page, url, dest, log):
-    """Download one PDF by fetching it FROM INSIDE the results page — a same-origin
-    fetch runs on the real browser's network stack (the fingerprint + cookies
-    Akamai already trusts for this session), unlike Playwright's API-request client
-    which Akamai 403s. Bytes come back base64 and are written locally."""
-    import base64
-    _JS = """async (u) => {
-      try {
-        const r = await fetch(u, {credentials: 'include'});
-        const bytes = new Uint8Array(await r.arrayBuffer());
-        let bin = ''; const chunk = 0x8000;
-        for (let i = 0; i < bytes.length; i += chunk)
-          bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
-        return {ok:r.ok, status:r.status, b64: btoa(bin)};
-      } catch (e) { return {ok:false, error:String(e)}; }
-    }"""
-    for attempt in range(2):
+def _download(context, url, dest, log):
+    """Download one PDF by NAVIGATING a throwaway tab to the resource URL. The
+    resource endpoint serves the PDF as an attachment to a real top-level
+    navigation (Sec-Fetch-Mode: navigate) but returns a SEDAR system-error page to
+    an XHR/fetch — so we let Chrome do the navigation and capture the download,
+    then close the tab (the results page is untouched)."""
+    dp = None
+    try:
+        dp = context.new_page()
         try:
-            res = page.evaluate(_JS, url)
-        except Exception as e:
-            log(f"  download error: {str(e)[:100]}"); time.sleep(4); continue
-        if res.get("error"):
-            log(f"  fetch error a{attempt+1}: {str(res['error'])[:80]}"); time.sleep(5); continue
-        data = base64.b64decode(res.get("b64") or "")
-        if data[:5].startswith(b"%PDF"):
-            open(dest, "wb").write(data)
-            return True
-        dbg = os.path.join(os.path.dirname(DOWNLOADS), "sedar_debug_last.html")
-        try:
-            open(dbg, "wb").write(data)          # keep the offending page for inspection
-        except Exception:
-            pass
-        title = ""
-        m = re.search(rb"<title[^>]*>(.*?)</title>", data, re.I | re.S)
-        if m:
-            title = m.group(1).decode("latin-1", "replace").strip()[:120]
-        log(f"  not a PDF (HTTP {res.get('status')}, {len(data)}B) title={title!r}")
-        time.sleep(6)
-    return False
+            with dp.expect_download(timeout=45000) as di:
+                try:
+                    dp.goto(url, timeout=40000)   # becomes a download -> goto raises ERR_ABORTED
+                except Exception:
+                    pass
+            di.value.save_as(dest)
+        finally:
+            try:
+                dp.close()
+            except Exception:
+                pass
+        if os.path.exists(dest) and os.path.getsize(dest) > 1000:
+            with open(dest, "rb") as fh:
+                if fh.read(5).startswith(b"%PDF"):
+                    return True
+            try:
+                os.remove(dest)
+            except Exception:
+                pass
+        log(f"  no PDF produced for {os.path.basename(dest)}")
+        return False
+    except Exception as e:
+        if dp:
+            try:
+                dp.close()
+            except Exception:
+                pass
+        log(f"  download error: {str(e)[:110]}")
+        return False
 
 
 def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, chrome=False, log=print):
@@ -376,7 +376,7 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
                     ok = True
                 else:
                     time.sleep(throttle)          # space EVERY attempt (be gentle)
-                    ok = _download(page, r["url"], dest, log)
+                    ok = _download(context, r["url"], dest, log)
                 if not ok:
                     consec_fail += 1
                     if consec_fail >= 6:
