@@ -176,8 +176,52 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
     return {"resources": len(dm), "method": bool(meth)}
 
 
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+QUEUE = os.path.join(_ROOT, "data", "keep", "mmp_report_queue.json")
+
+
+def _already(con, url):
+    return con.execute("SELECT 1 FROM sources WHERE id=?", (_rid(url),)).fetchone() is not None
+
+
+def run_queue(path=QUEUE, limit=None, max_seconds=None):
+    """Ingest every report in the queue not already in the store. Idempotent and
+    resumable (skips ingested reports), time-budgeted for CI. Shards at the end."""
+    import json
+    import time
+    from minemodelingpro import shards
+    q = json.load(open(path))
+    con = store.connect()
+    todo = [r for r in q if not _already(con, r["url"])]
+    con.close()
+    print(f"[43-101] queue: {len(q)} reports, {len(todo)} new to ingest")
+    t0 = time.time()
+    done = ok = 0
+    for r in todo:
+        if limit and done >= limit:
+            break
+        if max_seconds and time.time() - t0 > max_seconds:
+            print(f"[43-101] time budget reached — {done} done this run, rest resume next run")
+            break
+        done += 1
+        try:
+            res = ingest_report(r["url"], project=r.get("project"),
+                                commodity=r.get("commodity"), jurisdiction=r.get("jurisdiction"))
+            ok += 1
+        except Exception as e:
+            print(f"[43-101] FAILED {r.get('project') or r['url']}: {str(e)[:120]}")
+    shards.export_shards()
+    print(f"[43-101] run complete: {ok}/{done} ingested this run")
+    return {"new": len(todo), "ingested_this_run": ok}
+
+
 if __name__ == "__main__":
     a = sys.argv[1:]
-    ingest_report(a[0], project=a[1] if len(a) > 1 else None,
-                  commodity=a[2] if len(a) > 2 else None,
-                  jurisdiction=a[3] if len(a) > 3 else None)
+    if a and a[0] == "queue":
+        limit = int(a[a.index("--limit") + 1]) if "--limit" in a else None
+        secs = int(a[a.index("--max-seconds") + 1]) if "--max-seconds" in a else None
+        run_queue(limit=limit, max_seconds=secs)
+    elif a:
+        ingest_report(a[0], project=a[1] if len(a) > 1 else None,
+                      commodity=a[2] if len(a) > 2 else None,
+                      jurisdiction=a[3] if len(a) > 3 else None)

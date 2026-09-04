@@ -1,0 +1,284 @@
+[
+ {
+  "url": "https://minedocs.com/27/Bralorne-MRR-TR-01202023.pdf",
+  "project": "Bralorne",
+  "commodity": "Au",
+  "jurisdiction": "British Columbia"
+ },
+ {
+  "url": "https://minedocs.com/19/Island-Gold-Expansion-PFS-6282022.pdf",
+  "project": "Island-Gold",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://minedocs.com/11/Oksut_Technical_Report__Construc_09032015.pdf",
+  "project": "Oksut",
+  "commodity": "Au",
+  "jurisdiction": "Turkey"
+ },
+ {
+  "url": "https://minedocs.com/26/San-Agustin-TR-06202024.pdf",
+  "project": "San-Agustin",
+  "commodity": "Au-Ag",
+  "jurisdiction": "Mexico"
+ },
+ {
+  "url": "https://minedocs.com/32/Pan-TR-09012025.pdf",
+  "project": "Pan",
+  "commodity": "Au",
+  "jurisdiction": "Nevada"
+ },
+ {
+  "url": "https://minedocs.com/29/Queensway-Gold-Project-PEA-06302025.pdf",
+  "project": "Queensway-Gold",
+  "commodity": "Au",
+  "jurisdiction": "Newfoundland"
+ },
+ {
+  "url": "https://minedocs.com/22/MVC-TR-212022.pdf",
+  "project": "MVC",
+  "commodity": "Cu",
+  "jurisdiction": "Chile"
+ },
+ {
+  "url": "https://minedocs.com/21/Springpole_Gold-PFS-01202021.pdf",
+  "project": "Springpole Gold",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://minedocs.com/21/Empire-MR-10302020.pdf",
+  "project": "Empire",
+  "commodity": "Cu-Co",
+  "jurisdiction": "Idaho"
+ },
+ {
+  "url": "https://minedocs.com/25/Cascabel-PFS-03082024.pdf",
+  "project": "Cascabel",
+  "commodity": "Cu",
+  "jurisdiction": "Ecuador"
+ },
+ {
+  "url": "https://minedocs.com/30/Altar-PEA-09012025.pdf",
+  "project": "Altar",
+  "commodity": "Cu",
+  "jurisdiction": "Argentina"
+ },
+ {
+  "url": "https://minedocs.com/22/Didipio-TR-12312021.pdf",
+  "project": "Didipio",
+  "commodity": "Au-Cu",
+  "jurisdiction": "Philippines"
+ },
+ {
+  "url": "https://minedocs.com/21/COPPER_MOUNTAIN_MINE-TR-09012020.pdf",
+  "project": "COPPER MOUNTAIN MINE",
+  "commodity": "Cu",
+  "jurisdiction": "British Columbia"
+ },
+ {
+  "url": "https://minedocs.com/26/Tuvatu-TR-06242024.pdf",
+  "project": "Tuvatu",
+  "commodity": "Au",
+  "jurisdiction": "Fiji"
+ },
+ {
+  "url": "https://minedocs.com/22/Caserones-TR-02282022.pdf",
+  "project": "Caserones",
+  "commodity": "Cu",
+  "jurisdiction": "Chile"
+ },
+ {
+  "url": "https://minedocs.com/28/Aranzazu-TR-03282025.pdf",
+  "project": "Aranzazu",
+  "commodity": "Cu-Au-Ag",
+  "jurisdiction": "Mexico"
+ },
+ {
+  "url": "https://minedocs.com/23/Cordero-PFS-01202023.pdf",
+  "project": "Cordero",
+  "commodity": "Ag",
+  "jurisdiction": "Mexico"
+ },
+ {
+  "url": "https://minedocs.com/20/Josemaria-Resources-Inc-TR-FS-11052020.pdf",
+  "project": "Josemaria-Resources-Inc",
+  "commodity": "Cu-Au",
+  "jurisdiction": "Argentina"
+ },
+ {
+  "url": "https://minedocs.com/25/Revenue-Virginius-Mine-NI-43-101-Technical-Report-Feasibility-Study-12312021.pdf",
+  "project": "Revenue-Virginius",
+  "commodity": "Ag",
+  "jurisdiction": "Colorado"
+ },
+ {
+  "url": "https://minedocs.com/27/Sunshine-TR-12212023.pdf",
+  "project": "Sunshine",
+  "commodity": "Ag",
+  "jurisdiction": "Idaho"
+ },
+ {
+  "url": "https://minedocs.com/20/Posse-FS-06152020.pdf",
+  "project": "Posse",
+  "commodity": "Au",
+  "jurisdiction": "Brazil"
+ },
+ {
+  "url": "https://minedocs.com/21/Altan-Tsagaan-Ovoo-FS-10272021.pdf",
+  "project": "Altan-Tsagaan-Ovoo",
+  "commodity": "Au",
+  "jurisdiction": "Mongolia"
+ },
+ {
+  "url": "https://minedocs.com/25/Baptiste-PFS-10182023.pdf",
+  "project": "Baptiste",
+  "commodity": "Ni",
+  "jurisdiction": "British Columbia"
+ },
+ {
+  "url": "https://minedocs.com/27/Zeus-MR-05152024.pdf",
+  "project": "Zeus",
+  "commodity": null,
+  "jurisdiction": null
+ },
+ {
+  "url": "https://minedocs.com/30/CarLang-A-PEA-05052025.pdf",
+  "project": "CarLang-A",
+  "commodity": null,
+  "jurisdiction": null
+ },
+ {
+  "url": "https://minedocs.com/24/LaRonde-Complex-Agnico-TR-03242023.pdf",
+  "project": "LaRonde",
+  "commodity": "Au",
+  "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://minedocs.com/27/PAK-PFS-05312023.pdf",
+  "project": "PAK",
+  "commodity": "Li",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://minedocs.com/30/Thunder-Bay-North-PEA-10092025.pdf",
+  "project": "Thunder-Bay-North",
+  "commodity": "PGE-Cu-Ni",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://minedocs.com/21/Kobada-DFS-09292021.pdf",
+  "project": "Kobada",
+  "commodity": "Au",
+  "jurisdiction": "Mali"
+ },
+ {
+  "url": "https://minedocs.com/28/Muntanga-FS-01233025.pdf",
+  "project": "Muntanga",
+  "commodity": "U",
+  "jurisdiction": "Zambia"
+ },
+ {
+  "url": "https://minedocs.com/29/OBrien-PEA-06272025.pdf",
+  "project": "OBrien",
+  "commodity": "Au",
+  "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://minedocs.com/30/Quinchia-Gold-PEA-09182025.pdf",
+  "project": "Quinchia-Gold",
+  "commodity": "Au",
+  "jurisdiction": "Colombia"
+ },
+ {
+  "url": "https://minedocs.com/22/Rainy-River-TR-03282022.pdf",
+  "project": "Rainy-River",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://minedocs.com/27/Croinor-MR-06172024.pdf",
+  "project": "Croinor",
+  "commodity": "Au",
+  "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://minedocs.com/19/Cote-updated-TR-10182021.pdf",
+  "project": "Cote-updated",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://minedocs.com/27/Perron-PEA-09052024.pdf",
+  "project": "Perron",
+  "commodity": "Au",
+  "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://minedocs.com/22/Adumbi-PEA-12152021.pdf",
+  "project": "Adumbi",
+  "commodity": "Au",
+  "jurisdiction": "DRC"
+ },
+ {
+  "url": "https://minedocs.com/11/Salave_Technical_Report_10312018.pdf",
+  "project": "Salave",
+  "commodity": "Au",
+  "jurisdiction": "Spain"
+ },
+ {
+  "url": "https://minedocs.com/20/Tonopah-PEA-04-29-2020.pdf",
+  "project": "Tonopah",
+  "commodity": "Ag",
+  "jurisdiction": "Nevada"
+ },
+ {
+  "url": "https://minedocs.com/26/SantaCruz-PEA-TRS-07272023.pdf",
+  "project": "SantaCruz",
+  "commodity": "Ag",
+  "jurisdiction": "Mexico"
+ },
+ {
+  "url": "https://minedocs.com/21/Hidden-Bay-PEA-02152011.pdf",
+  "project": "Hidden-Bay",
+  "commodity": "U",
+  "jurisdiction": "Saskatchewan"
+ },
+ {
+  "url": "https://minedocs.com/23/Rajapalot-PEA-10152022.pdf",
+  "project": "Rajapalot",
+  "commodity": "Au",
+  "jurisdiction": "Finland"
+ },
+ {
+  "url": "https://minedocs.com/26/Haile-TR-12312023.pdf",
+  "project": "Haile",
+  "commodity": "Au",
+  "jurisdiction": "South Carolina"
+ },
+ {
+  "url": "https://minedocs.com/24/ChangShanHao_CSH_TR_08192022.pdf",
+  "project": "ChangShanHao CSH",
+  "commodity": "Au",
+  "jurisdiction": "China"
+ },
+ {
+  "url": "https://minedocs.com/28/Carlin-TR-12312024.pdf",
+  "project": "Carlin",
+  "commodity": "Au",
+  "jurisdiction": "Nevada"
+ },
+ {
+  "url": "https://minedocs.com/22/Songwe_Hill-TR-070121022.pdf",
+  "project": "Songwe Hill",
+  "commodity": "REE",
+  "jurisdiction": "Malawi"
+ },
+ {
+  "url": "https://minedocs.com/23/Eagle%E2%80%99s_Nest_FS_09042012.pdf",
+  "project": "Eagle s Nest",
+  "commodity": "Ni-Cu-PGE",
+  "jurisdiction": "Ontario"
+ }
+]

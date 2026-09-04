@@ -33,6 +33,9 @@ jobs:
         run: pip install -r requirements.txt
       - name: Refresh provincial collar backbone
         run: |
+          # load the full current store (gov + 43-101 + news) from committed shards
+          # so refreshing gov collars never drops the report/assay data
+          PYTHONPATH=src python -m minemodelingpro.shards rebuild || true
           PYTHONPATH=src python -m minemodelingpro.gov_drillholes ${{ github.event.inputs.sources }}
           PYTHONPATH=src python -m minemodelingpro.export   # merges news + writes size-capped shards
       - name: Commit the MMP shard store
