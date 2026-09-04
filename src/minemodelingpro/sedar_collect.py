@@ -192,19 +192,34 @@ def _find_results_tab(browser, log):
     return None, (ctxs[0] if ctxs else None)
 
 
-def _download(context, url, dest, log):
-    """Download one PDF via the browser context's request (shares Akamai cookies)."""
+def _download(page, url, dest, log):
+    """Download one PDF by fetching it FROM INSIDE the results page — a same-origin
+    fetch runs on the real browser's network stack (the fingerprint + cookies
+    Akamai already trusts for this session), unlike Playwright's API-request client
+    which Akamai 403s. Bytes come back base64 and are written locally."""
+    import base64
     try:
-        resp = context.request.get(url, timeout=120000)
-        if resp.status != 200:
-            log(f"  download {resp.status} for {os.path.basename(dest)}"); return False
-        body = resp.body()
-        if not body[:5].startswith(b"%PDF"):
-            log(f"  not a PDF (Akamai challenge?) for {os.path.basename(dest)}"); return False
-        open(dest, "wb").write(body)
+        res = page.evaluate("""async (u) => {
+          try {
+            const r = await fetch(u, {credentials: 'include'});
+            if (!r.ok) return {ok:false, status:r.status};
+            const bytes = new Uint8Array(await r.arrayBuffer());
+            let bin = ''; const chunk = 0x8000;
+            for (let i = 0; i < bytes.length; i += chunk)
+              bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+            return {ok:true, b64: btoa(bin)};
+          } catch (e) { return {ok:false, error:String(e)}; }
+        }""", url)
+        if not res.get("ok"):
+            log(f"  download {res.get('status') or res.get('error')} for {os.path.basename(dest)}")
+            return False
+        data = base64.b64decode(res["b64"])
+        if not data[:5].startswith(b"%PDF"):
+            log(f"  not a PDF ({len(data)} bytes) for {os.path.basename(dest)}"); return False
+        open(dest, "wb").write(data)
         return True
     except Exception as e:
-        log(f"  download error: {str(e)[:100]}"); return False
+        log(f"  download error: {str(e)[:120]}"); return False
 
 
 def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, log=print):
@@ -241,7 +256,7 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, lo
                     continue
                 company, submitted, jurisdiction, size_kb = _row_meta(r.get("cells") or [])
                 dest = os.path.join(DOWNLOADS, f"sedar_{node}.pdf")
-                if os.path.exists(dest) or _download(context, r["url"], dest, log):
+                if os.path.exists(dest) or _download(page, r["url"], dest, log):
                     downloaded += 1
                     have.add(node)
                     row = {"node": node, "drm": r.get("drmKey"),
