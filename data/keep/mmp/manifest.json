@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-04T01:59:34Z",
+  "generated": "2026-09-04T04:27:20Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -58,6 +58,18 @@
         "bytes": 26421
       },
       {
+        "file": "mmp/collars/ni43101__2fba905c718b43f6.parquet",
+        "source": "ni43101:2fba905c718b43f6",
+        "rows": 10,
+        "bytes": 11977
+      },
+      {
+        "file": "mmp/collars/ni43101__3cb7ce94461ba6a1.parquet",
+        "source": "ni43101:3cb7ce94461ba6a1",
+        "rows": 24,
+        "bytes": 12363
+      },
+      {
         "file": "mmp/collars/ni43101__a9084a09533adc1a.parquet",
         "source": "ni43101:a9084a09533adc1a",
         "rows": 44,
@@ -114,6 +126,12 @@
         "bytes": 6829
       },
       {
+        "file": "mmp/assays/ni43101__0d3b5338ca17092f.parquet",
+        "source": "ni43101:0d3b5338ca17092f",
+        "rows": 464,
+        "bytes": 15349
+      },
+      {
         "file": "mmp/assays/ni43101__1f4fea7f67d5d49f.parquet",
         "source": "ni43101:1f4fea7f67d5d49f",
         "rows": 47,
@@ -136,6 +154,18 @@
         "source": "ni43101:2dee680882db85f4",
         "rows": 104,
         "bytes": 7570
+      },
+      {
+        "file": "mmp/assays/ni43101__2fba905c718b43f6.parquet",
+        "source": "ni43101:2fba905c718b43f6",
+        "rows": 13,
+        "bytes": 6611
+      },
+      {
+        "file": "mmp/assays/ni43101__3cb7ce94461ba6a1.parquet",
+        "source": "ni43101:3cb7ce94461ba6a1",
+        "rows": 15,
+        "bytes": 6738
       },
       {
         "file": "mmp/assays/ni43101__5798bc9d08836c1d.parquet",
@@ -166,6 +196,12 @@
         "source": "ni43101:80e78e015a3bf6af",
         "rows": 1176,
         "bytes": 27778
+      },
+      {
+        "file": "mmp/assays/ni43101__9e298d88a63fdce2.parquet",
+        "source": "ni43101:9e298d88a63fdce2",
+        "rows": 13,
+        "bytes": 6611
       },
       {
         "file": "mmp/assays/ni43101__a1174c35746660a2.parquet",
@@ -632,6 +668,78 @@
         "source": "ni43101:af8bf51c46c51ae0",
         "rows": 25,
         "bytes": 10366
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__0d3b5338ca17092f.parquet",
+        "source": "ni43101:0d3b5338ca17092f",
+        "rows": 73,
+        "bytes": 12821
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__f003f38b30613f72.parquet",
+        "source": "ni43101:f003f38b30613f72",
+        "rows": 7,
+        "bytes": 9811
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__2fba905c718b43f6.parquet",
+        "source": "ni43101:2fba905c718b43f6",
+        "rows": 128,
+        "bytes": 14638
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__9e298d88a63fdce2.parquet",
+        "source": "ni43101:9e298d88a63fdce2",
+        "rows": 108,
+        "bytes": 13751
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__fc0459acc13255fa.parquet",
+        "source": "ni43101:fc0459acc13255fa",
+        "rows": 27,
+        "bytes": 11173
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__9c882e2a2ca4d7e7.parquet",
+        "source": "ni43101:9c882e2a2ca4d7e7",
+        "rows": 26,
+        "bytes": 10254
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__fde21413b31d5fe5.parquet",
+        "source": "ni43101:fde21413b31d5fe5",
+        "rows": 12,
+        "bytes": 10408
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__9a3f5af86943e36e.parquet",
+        "source": "ni43101:9a3f5af86943e36e",
+        "rows": 17,
+        "bytes": 9860
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__fafd8fbe68150140.parquet",
+        "source": "ni43101:fafd8fbe68150140",
+        "rows": 17,
+        "bytes": 10359
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__da2ccfd672eaac6a.parquet",
+        "source": "ni43101:da2ccfd672eaac6a",
+        "rows": 63,
+        "bytes": 11647
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__6bceafca23d4f199.parquet",
+        "source": "ni43101:6bceafca23d4f199",
+        "rows": 14,
+        "bytes": 9976
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__3cb7ce94461ba6a1.parquet",
+        "source": "ni43101:3cb7ce94461ba6a1",
+        "rows": 13,
+        "bytes": 10403
       }
     ],
     "model_method": [
@@ -652,6 +760,12 @@
         "source": "ni43101:065c721c382ba0f2",
         "rows": 1,
         "bytes": 15937
+      },
+      {
+        "file": "mmp/model_method/ni43101__0d3b5338ca17092f.parquet",
+        "source": "ni43101:0d3b5338ca17092f",
+        "rows": 1,
+        "bytes": 15143
       },
       {
         "file": "mmp/model_method/ni43101__1dc1b0ca2b83f1b0.parquet",
@@ -702,10 +816,22 @@
         "bytes": 15677
       },
       {
+        "file": "mmp/model_method/ni43101__2fba905c718b43f6.parquet",
+        "source": "ni43101:2fba905c718b43f6",
+        "rows": 1,
+        "bytes": 15823
+      },
+      {
         "file": "mmp/model_method/ni43101__397c41cdfe54dcbc.parquet",
         "source": "ni43101:397c41cdfe54dcbc",
         "rows": 1,
         "bytes": 15542
+      },
+      {
+        "file": "mmp/model_method/ni43101__3cb7ce94461ba6a1.parquet",
+        "source": "ni43101:3cb7ce94461ba6a1",
+        "rows": 1,
+        "bytes": 17166
       },
       {
         "file": "mmp/model_method/ni43101__4198727dc750914e.parquet",
@@ -756,6 +882,12 @@
         "bytes": 16911
       },
       {
+        "file": "mmp/model_method/ni43101__6bceafca23d4f199.parquet",
+        "source": "ni43101:6bceafca23d4f199",
+        "rows": 1,
+        "bytes": 17488
+      },
+      {
         "file": "mmp/model_method/ni43101__6eedbe8b55243cf3.parquet",
         "source": "ni43101:6eedbe8b55243cf3",
         "rows": 1,
@@ -804,6 +936,18 @@
         "bytes": 16008
       },
       {
+        "file": "mmp/model_method/ni43101__9a3f5af86943e36e.parquet",
+        "source": "ni43101:9a3f5af86943e36e",
+        "rows": 1,
+        "bytes": 17736
+      },
+      {
+        "file": "mmp/model_method/ni43101__9c882e2a2ca4d7e7.parquet",
+        "source": "ni43101:9c882e2a2ca4d7e7",
+        "rows": 1,
+        "bytes": 16881
+      },
+      {
         "file": "mmp/model_method/ni43101__9d5d438d55f42260.parquet",
         "source": "ni43101:9d5d438d55f42260",
         "rows": 1,
@@ -814,6 +958,12 @@
         "source": "ni43101:9dbe9ce3d055e4e2",
         "rows": 1,
         "bytes": 15475
+      },
+      {
+        "file": "mmp/model_method/ni43101__9e298d88a63fdce2.parquet",
+        "source": "ni43101:9e298d88a63fdce2",
+        "rows": 1,
+        "bytes": 15282
       },
       {
         "file": "mmp/model_method/ni43101__9fff09471183dcce.parquet",
@@ -966,6 +1116,12 @@
         "bytes": 19922
       },
       {
+        "file": "mmp/model_method/ni43101__da2ccfd672eaac6a.parquet",
+        "source": "ni43101:da2ccfd672eaac6a",
+        "rows": 1,
+        "bytes": 15959
+      },
+      {
         "file": "mmp/model_method/ni43101__dd7e950301cf8df0.parquet",
         "source": "ni43101:dd7e950301cf8df0",
         "rows": 1,
@@ -996,6 +1152,12 @@
         "bytes": 15886
       },
       {
+        "file": "mmp/model_method/ni43101__f003f38b30613f72.parquet",
+        "source": "ni43101:f003f38b30613f72",
+        "rows": 1,
+        "bytes": 15894
+      },
+      {
         "file": "mmp/model_method/ni43101__f4fa78a39fb80963.parquet",
         "source": "ni43101:f4fa78a39fb80963",
         "rows": 1,
@@ -1006,16 +1168,34 @@
         "source": "ni43101:f924f53a0fe44c24",
         "rows": 1,
         "bytes": 15939
+      },
+      {
+        "file": "mmp/model_method/ni43101__fafd8fbe68150140.parquet",
+        "source": "ni43101:fafd8fbe68150140",
+        "rows": 1,
+        "bytes": 16598
+      },
+      {
+        "file": "mmp/model_method/ni43101__fc0459acc13255fa.parquet",
+        "source": "ni43101:fc0459acc13255fa",
+        "rows": 1,
+        "bytes": 15825
+      },
+      {
+        "file": "mmp/model_method/ni43101__fde21413b31d5fe5.parquet",
+        "source": "ni43101:fde21413b31d5fe5",
+        "rows": 1,
+        "bytes": 17037
       }
     ]
   },
   "totals": {
-    "collars": 415029,
+    "collars": 415063,
     "survey": 0,
-    "assays": 9147,
+    "assays": 9652,
     "lithology": 759931,
-    "deposit_model": 1563,
-    "model_method": 62
+    "deposit_model": 2068,
+    "model_method": 74
   },
-  "shard_count": 166
+  "shard_count": 196
 }
