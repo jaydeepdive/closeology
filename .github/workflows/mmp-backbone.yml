@@ -34,12 +34,14 @@ jobs:
       - name: Refresh provincial collar backbone
         run: |
           PYTHONPATH=src python -m minemodelingpro.gov_drillholes ${{ github.event.inputs.sources }}
-          PYTHONPATH=src python -m minemodelingpro.export
-      - name: Commit the MMP store + exports
+          PYTHONPATH=src python -m minemodelingpro.export   # merges news + writes size-capped shards
+      - name: Commit the MMP shard store
         run: |
           git config user.name "closeology-bot"
           git config user.email "actions@github.com"
           git pull --no-edit -X ours origin main || true
-          git add -A data/keep/mmp_*.parquet data/keep/mmp_collars_sample.csv 2>/dev/null || true
+          # retire any legacy monolithic exports (superseded by the shard store)
+          git rm -q --cached --ignore-unmatch data/keep/mmp_collars.parquet data/keep/mmp_assays.parquet data/keep/mmp_lithology.parquet data/keep/mmp_deposit_models.parquet 2>/dev/null || true
+          git add -A data/keep/mmp data/keep/mmp_collars_sample.csv 2>/dev/null || true
           git commit -m "MMP drillhole backbone refresh $(date -u +%Y-%m-%d) [skip ci]" || echo "no changes"
           git push || echo "nothing to push"

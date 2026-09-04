@@ -1,0 +1,80 @@
+{
+  "generated": "2026-09-04T00:27:47Z",
+  "max_bytes": 94371840,
+  "tables": {
+    "collars": [
+      {
+        "file": "mmp/collars/gov__nb.parquet",
+        "source": "gov:nb",
+        "rows": 16238,
+        "bytes": 651965
+      },
+      {
+        "file": "mmp/collars/gov__on.parquet",
+        "source": "gov:on",
+        "rows": 172476,
+        "bytes": 6866626
+      },
+      {
+        "file": "mmp/collars/gov__qc.parquet",
+        "source": "gov:qc",
+        "rows": 189555,
+        "bytes": 8887721
+      },
+      {
+        "file": "mmp/collars/gov__sk.parquet",
+        "source": "gov:sk",
+        "rows": 33433,
+        "bytes": 1512537
+      },
+      {
+        "file": "mmp/collars/gov__yk.parquet",
+        "source": "gov:yk",
+        "rows": 1916,
+        "bytes": 93720
+      },
+      {
+        "file": "mmp/collars/news__juniorminingnetwork.parquet",
+        "source": "news:juniorminingnetwork",
+        "rows": 170,
+        "bytes": 24915
+      },
+      {
+        "file": "mmp/collars/news__newsfilecorp.parquet",
+        "source": "news:newsfilecorp",
+        "rows": 45,
+        "bytes": 15731
+      }
+    ],
+    "assays": [
+      {
+        "file": "mmp/assays/news__juniorminingnetwork.parquet",
+        "source": "news:juniorminingnetwork",
+        "rows": 1601,
+        "bytes": 26707
+      },
+      {
+        "file": "mmp/assays/news__newsfilecorp.parquet",
+        "source": "news:newsfilecorp",
+        "rows": 231,
+        "bytes": 9550
+      }
+    ],
+    "lithology": [
+      {
+        "file": "mmp/lithology/gov__qc.parquet",
+        "source": "gov:qc",
+        "rows": 759931,
+        "bytes": 12418378
+      }
+    ]
+  },
+  "totals": {
+    "collars": 413833,
+    "survey": 0,
+    "assays": 1832,
+    "lithology": 759931,
+    "deposit_model": 0
+  },
+  "shard_count": 10
+}

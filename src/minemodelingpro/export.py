@@ -20,6 +20,8 @@ import os
 import sqlite3
 import pandas as pd
 
+from minemodelingpro import store
+
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 KEEP = os.path.join(_ROOT, "data", "keep")
 NEWS_DB = os.path.join(KEEP, "drillbank.sqlite")
@@ -96,28 +98,58 @@ def export(out=KEEP):
     if not os.path.exists(MMP_DB):
         print("[mmp] gov store absent — skipping export (owned by mmp-backbone workflow)")
         return {"collars": 0, "assays": 0, "models": 0, "skipped": True}
-    collars, assays, models = [], [], []
-    _gov(collars, assays, models)
+    # Merge the news bank's recent full-assay releases INTO the working store so
+    # the shard store is the single canonical home for all MMP data (gov +
+    # 43-101 + news), then persist everything as size-capped per-source shards.
+    from minemodelingpro import shards
+    _import_news()
+    meta = shards.export_shards(MMP_DB)
+    # a small quick-look sample from the shards
+    dc = shards.load_table("collars")
+    if len(dc):
+        dc.head(3000).to_csv(os.path.join(out, "mmp_collars_sample.csv"), index=False)
+    tot = (meta or {}).get("totals", {})
+    print(f"[mmp] shard store: {tot.get('collars',0)} collars, {tot.get('assays',0)} assays, "
+          f"{tot.get('lithology',0)} lithology rows across {(meta or {}).get('shard_count',0)} shards")
+    return {"collars": tot.get("collars", 0), "assays": tot.get("assays", 0)}
+
+
+def _import_news():
+    """Copy the news bank (drillbank.sqlite) collars + assays into the MMP working
+    store under 'news:*' sources, so shards hold the complete record."""
+    if not os.path.exists(NEWS_DB):
+        return
+    collars, assays, _ = [], [], []
     _news(collars, assays)
-    os.makedirs(out, exist_ok=True)
-    dc = pd.DataFrame(collars, columns=_COLLAR_COLS)
-    da = pd.DataFrame(assays, columns=_ASSAY_COLS)
-    dc.to_parquet(os.path.join(out, "mmp_collars.parquet"))
-    da.to_parquet(os.path.join(out, "mmp_assays.parquet"))
-    if models:
-        pd.DataFrame(models).to_parquet(os.path.join(out, "mmp_deposit_models.parquet"))
-    # lithology (downhole geology, e.g. Quebec SIGEOM) — modelling context
-    if os.path.exists(MMP_DB):
-        lith = pd.read_sql_query("SELECT source_id AS source, hole_uid, from_m, to_m, rock, note "
-                                 "FROM lithology", sqlite3.connect(MMP_DB))
-        if len(lith):
-            lith.to_parquet(os.path.join(out, "mmp_lithology.parquet"))
-    dc.head(3000).to_csv(os.path.join(out, "mmp_collars_sample.csv"), index=False)
-    by = dc.groupby("source_kind").size().to_dict() if len(dc) else {}
-    print(f"[mmp] exported {len(dc)} collars ({int(dc['lat'].notna().sum()) if len(dc) else 0} located), "
-          f"{len(da)} assays, {len(models)} deposit-model rows -> data/keep/mmp_*.parquet")
-    print(f"[mmp] collars by kind: {by}")
-    return {"collars": len(dc), "assays": len(da), "models": len(models)}
+    if not collars and not assays:
+        return
+    con = store.connect(MMP_DB)
+    crows = [{"hole_uid": c["hole_uid"], "source_id": c["source_kind"] + ":" + str(c["source"]),
+              "native_id": c["native_id"], "company": c["company"], "project": c["project"],
+              "jurisdiction": c["jurisdiction"], "lat": c["lat"], "lon": c["lon"],
+              "easting": c["easting"], "northing": c["northing"], "utm_zone": c["utm_zone"],
+              "utm_hemi": c["utm_hemi"], "datum": c["datum"], "elev_m": c["elev_m"],
+              "azimuth": c["azimuth"], "dip": c["dip"], "depth_m": c["depth_m"],
+              "year_drilled": c["year_drilled"], "has_assay": c["has_assay"],
+              "assay_flags": c["assay_flags"], "report_ref": c["report_ref"], "url": c["url"]}
+             for c in collars]
+    con.execute("DELETE FROM collars WHERE source_id LIKE 'news:%'")
+    if crows:
+        con.executemany("""INSERT OR REPLACE INTO collars
+            (hole_uid,source_id,native_id,company,project,jurisdiction,lat,lon,easting,northing,
+             utm_zone,utm_hemi,datum,elev_m,azimuth,dip,depth_m,year_drilled,has_assay,assay_flags,report_ref,url)
+            VALUES (:hole_uid,:source_id,:native_id,:company,:project,:jurisdiction,:lat,:lon,:easting,:northing,
+             :utm_zone,:utm_hemi,:datum,:elev_m,:azimuth,:dip,:depth_m,:year_drilled,:has_assay,:assay_flags,:report_ref,:url)""", crows)
+    con.execute("DELETE FROM assays WHERE source_id LIKE 'news:%'")
+    arows = [{"source_id": "news:" + str(a["source"]), "hole_uid": a["hole_uid"],
+              "native_id": a["native_id"], "from_m": a["from_m"], "to_m": a["to_m"],
+              "length_m": a["length_m"], "element": a["element"], "grade": a["grade"],
+              "unit": a["unit"], "is_subinterval": a["is_subinterval"]} for a in assays]
+    if arows:
+        con.executemany("""INSERT INTO assays
+            (source_id,hole_uid,native_id,from_m,to_m,length_m,element,grade,unit,is_subinterval)
+            VALUES (:source_id,:hole_uid,:native_id,:from_m,:to_m,:length_m,:element,:grade,:unit,:is_subinterval)""", arows)
+    con.commit(); con.close()
 
 
 if __name__ == "__main__":
