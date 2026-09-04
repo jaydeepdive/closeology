@@ -120,9 +120,66 @@ def region_from_latlon(lat, lon):
     return "International"
 
 
+_PROV_NAMES_CACHE = None
+_CA_HINT = {"canada", "ontario", "quebec", "qu\xe9bec", "british columbia", "alberta",
+            "saskatchewan", "manitoba", "yukon", "nunavut", "northwest territories",
+            "nova scotia", "new brunswick", "prince edward island", "newfoundland",
+            "newfoundland & labrador", "labrador"}
+
+
+def _prov_names():
+    global _PROV_NAMES_CACHE
+    if _PROV_NAMES_CACHE is None:
+        _PROV_NAMES_CACHE = {n for n, _ in _prov_polys()}
+    return _PROV_NAMES_CACHE
+
+
+def _in_province(lat, lon):
+    return lat is not None and region_from_latlon(lat, lon) in _prov_names()
+
+
+def _canada_hint(region):
+    r = (region or "").strip().lower()
+    return (not r) or r in _CA_HINT or "canada" in r or any(p in r for p in _CA_HINT if len(p) > 6)
+
+
+def _snap_canada(e, nth, hemi, datum, region):
+    """A guessed UTM zone can land a Canadian collar in a lake/ocean (no province
+    matches). Try the plausible zones and keep the one that lands inside a real
+    province — preferring the zones of the hinted region. Corrects wrong-zone
+    guesses so the hole plots where it actually is."""
+    if not _canada_hint(region):
+        return None
+    order = []
+    info = _REGION.get(region)
+    if info:
+        order += info[0]
+    order += list(range(7, 23))            # full Canadian UTM span
+    seen, hits = set(), []
+    for z in order:
+        if z in seen:
+            continue
+        seen.add(z)
+        lat, lon = utm_to_ll(e, nth, z, hemi or "N", datum or "NAD83")
+        prov = region_from_latlon(lat, lon) if lat is not None else None
+        if prov in _prov_names():
+            hits.append((lat, lon, z, prov))
+    if not hits:
+        return None
+    # prefer a hit whose province matches the text hint, else the first (zones
+    # were tried hint-first, so the first hit is the most plausible)
+    rlow = (region or "").lower()
+    for lat, lon, z, prov in hits:
+        if prov.lower() in rlow or prov.lower() in _CA_HINT and prov.lower() in rlow:
+            return lat, lon, z
+    return hits[0][:3]
+
+
 def locate_holes(holes, zone, hemi, datum, region=None):
     """Fill lat/lon on each hole dict in place; returns count located. If the
-    release stated no zone, infer it from `region` (country/province)."""
+    release stated no zone, infer it from `region`; and if a Canadian collar
+    lands outside every province (wrong-zone guess), snap it to the zone that
+    places it inside a real province."""
     n = 0
     for h in holes:
         if h.get("lat") is not None and h.get("lon") is not None:
@@ -139,6 +196,11 @@ def locate_holes(holes, zone, hemi, datum, region=None):
             lat, lon = utm_to_ll(e, nth, z, h.get("utm_hemi") or hemi, h.get("datum") or datum)
         if lat is None and region:
             lat, lon, z = _infer(e, nth, region, datum, hemi or "N")
+        # correct a wrong-zone guess that fell outside every Canadian province
+        if lat is not None and not _in_province(lat, lon):
+            snap = _snap_canada(e, nth, h.get("utm_hemi") or hemi, h.get("datum") or datum, region)
+            if snap:
+                lat, lon, z = snap
         if lat is not None:
             h["lat"], h["lon"], h["utm_zone"] = lat, lon, z
             h["utm_hemi"] = h.get("utm_hemi") or hemi or "N"

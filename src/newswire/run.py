@@ -159,9 +159,57 @@ def run(mode="incremental", limit=400, only=None, max_seconds=None):
     return counts
 
 
+def repair(con=None):
+    """Re-geolocate every banked hole with the current logic (wrong-zone snap to
+    province) and relabel each release by where its holes actually are. Fixes
+    collars that were plotted in lakes/oceans and releases stuck on generic
+    'Canada'. Idempotent."""
+    from collections import Counter
+    own = con is None
+    if own:
+        con = store.connect()
+    rels = con.execute("SELECT id, country, utm_zone, utm_hemi, datum, title FROM releases").fetchall()
+    fixed_pts = relabelled = 0
+    for rid, country, rz, rh, rd, title in rels:
+        cur = con.execute("""SELECT hole_id, project, easting, northing, utm_zone, utm_hemi,
+            datum, lat, lon, elev_m, azimuth, dip, depth_m FROM holes WHERE release_id=?""", (rid,))
+        cols = [d[0] for d in cur.description]
+        holes = [dict(zip(cols, r)) for r in cur.fetchall()]
+        if not holes:
+            continue
+        # sharpen the region hint from the release title when the stored country
+        # is generic — a title like "...Langis Project in Ontario" pins the zones.
+        hint = country
+        if not country or country in ("Canada", None):
+            hint = _country(title or "") or country
+        before = [(h.get("lat"), h.get("lon")) for h in holes]
+        for h in holes:
+            h["lat"] = h["lon"] = None          # force re-geolocation
+        geolocate.locate_holes(holes, rz, rh, rd, region=hint)
+        for (blat, blon), h in zip(before, holes):
+            if (h.get("lat"), h.get("lon")) != (blat, blon):
+                fixed_pts += 1
+        store.replace_holes(con, rid, holes)
+        regs = [geolocate.region_from_latlon(h.get("lat"), h.get("lon")) for h in holes if h.get("lat") is not None]
+        regs = [r for r in regs if r and r not in ("Canada", "USA", "International")]
+        if regs:
+            new_country = Counter(regs).most_common(1)[0][0]
+            if new_country != country:
+                con.execute("UPDATE releases SET country=? WHERE id=?", (new_country, rid))
+                relabelled += 1
+    con.commit()
+    print(f"[repair] re-geolocated {fixed_pts} holes, relabelled {relabelled} releases")
+    if own:
+        con.close()
+    return {"fixed_points": fixed_pts, "relabelled": relabelled}
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     mode = args[0] if args and not args[0].startswith("-") else "incremental"
+    if mode == "repair":
+        repair()
+        sys.exit(0)
     limit = 400
     if "--limit" in args:
         limit = int(args[args.index("--limit") + 1])

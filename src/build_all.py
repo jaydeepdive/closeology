@@ -254,6 +254,8 @@ def main():
     # and can never stall it. Here we only render what's already banked.
     try:
         from newswire import radar as nw_radar
+        from newswire import run as nw_run
+        nw_run.repair()          # snap wrong-zone collars into their real province + relabel
         nw_radar.build("site")
         from minemodelingpro import export as mmp_export
         mmp_export.export()

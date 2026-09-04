@@ -50,7 +50,7 @@ _METH_PAGE = re.compile(r"kriging|inverse distance|block model|specific gravity|
 
 # bump when the extractor changes so --refresh re-processes reports once (and
 # only once) under the new engine, staying resumable across CI runs.
-EXTRACTOR_VERSION = "3"          # v3 = multi-page block capture + title-row fix
+EXTRACTOR_VERSION = "4"          # v4 = header-seeded blocks (short header-led tables)
 
 
 def _rid(url):
@@ -240,31 +240,56 @@ _ASSAY_ROW = re.compile(r"^\s*[A-Za-z0-9\-\/]{0,16}\s*\d{1,4}\.\d+\s+\d{1,4}\.\d
 _COLLAR_ROW = re.compile(r"\b\d{5,6}(?:\.\d+)?\b\s+\b\d{6,7}(?:\.\d+)?\b")
 
 
-def _page_kind(t):
-    """Classify a page by DATA-ROW density (not header keywords) so multi-page
-    tables are captured whole — continuation pages have data rows but no header."""
+def _real_collar_hdr(line):
+    w = line.split()
+    return len(w) < 16 and re.search(r"\beasting\b", line, re.I) and re.search(r"\bnorthing\b", line, re.I)
+
+
+def _real_assay_hdr(line):
+    w = line.split()
+    return (len(w) < 16 and re.search(r"\bfrom\b", line, re.I) and re.search(r"\bto\b", line, re.I)
+            and re.search(r"\b(au|ag|cu|pb|zn|ni|co|mo|g/t|grade|width)\b", line, re.I))
+
+
+def _page_signals(t):
+    """(kind_by_density, header_kind, n_assay_rows, n_collar_rows) for a page.
+    Density catches continuation pages (no header); a real short-line header
+    catches short/header-led tables that density alone would skip. Prose has
+    neither (its 'from ... to' is a sentence, not a short header line)."""
     lines = (t or "").split("\n")
     a = sum(1 for l in lines if _ASSAY_ROW.match(l))
     c = sum(1 for l in lines if _COLLAR_ROW.search(l))
-    if c >= 3 and c >= a:
-        return "collar"
-    if a >= 4:
-        return "assay"
-    return None
+    dens = "collar" if (c >= 3 and c >= a) else ("assay" if a >= 4 else None)
+    hdr = None
+    for l in lines:
+        if _real_collar_hdr(l):
+            hdr = "collar"; break
+        if _real_assay_hdr(l):
+            hdr = "assay"; break
+    return dens, hdr, a, c
 
 
 def _blocks(pages_text):
-    """Maximal runs of consecutive data pages of the same kind. A run = one
-    logical table that may span tens of pages; we parse the whole run."""
-    kinds = [_page_kind(t) for t in pages_text]
-    out, i, n = [], 0, len(kinds)
+    """One logical table = a run of pages that starts at a real header (or a dense
+    data page) and continues while data rows of that kind persist. Captures both
+    short header-led tables and tables spanning tens of pages."""
+    sig = [_page_signals(t) for t in pages_text]
+    n = len(sig)
+    out, i = [], 0
     while i < n:
-        if not kinds[i]:
+        dens, hdr, a, c = sig[i]
+        kind = hdr or dens
+        if not kind:
             i += 1; continue
         j = i
-        while j + 1 < n and kinds[j + 1] == kinds[i]:
-            j += 1
-        out.append((kinds[i], i, j))
+        while j + 1 < n:
+            nd, nh, na, nc = sig[j + 1]
+            rows = nc if kind == "collar" else na
+            if nh == kind or nd == kind or rows >= 2:   # >=2 real data rows to continue
+                j += 1
+            else:
+                break
+        out.append((kind, i, j))
         i = j + 1
     return out
 
