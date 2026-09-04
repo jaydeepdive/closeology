@@ -63,6 +63,44 @@ def _digits(s):
     return int(m.group().replace(",", "")) if m else None
 
 
+_MON = {m: i for i, m in enumerate(
+    ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 1)}
+
+
+def _profile_num(cells):
+    for c in cells:
+        m = re.search(r"\((\d{5,})\)", c)
+        if m:
+            return m.group(1)
+    return None
+
+
+def _submitted_compact(submitted):
+    """'03 Sep 2026 19:01 EDT' -> '20260903T1901' (stable across sessions)."""
+    if not submitted:
+        return None
+    m = re.search(r"(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})(?:\s+(\d{1,2}):(\d{2}))?", submitted)
+    if not m:
+        return re.sub(r"[^0-9A-Za-z]", "", submitted)[:16] or None
+    d, mon, y, hh, mm = m.groups()
+    return f"{y}{_MON.get(mon.title(), 0):02d}{int(d):02d}T{(hh or '00').zfill(2)}{mm or '00'}"
+
+
+def _slug(s):
+    return re.sub(r"[^a-z0-9]+", "-", str(s or "").lower()).strip("-")[:44]
+
+
+def _stable_key(company, submitted):
+    """DEDUP KEY: issuer + exact submitted datetime — stable across SEDAR sessions,
+    unlike the per-session `node` handle. Two filings never share an issuer AND a
+    to-the-minute submission time."""
+    sc = _submitted_compact(submitted)
+    base = _slug(company)
+    if not base and not sc:
+        return None
+    return f"{base}_{sc}" if sc else base
+
+
 # ---- page scraping (runs in the browser via page.evaluate) ----------------
 # Reads every result row's resource link (node/drmKey/drr/id live in the href)
 # plus the row's visible metadata. Resilient to column reordering: it keys off
@@ -222,11 +260,18 @@ def _download(page, url, dest, log):
         log(f"  download error: {str(e)[:120]}"); return False
 
 
-def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, log=print):
+def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, chrome=False, log=print):
     from playwright.sync_api import sync_playwright
     os.makedirs(DOWNLOADS, exist_ok=True)
     ledger = _load_ledger()
-    have = {r.get("node") for r in ledger if r.get("node")}
+    have = set()
+    for r in ledger:
+        for k in (r.get("key"), r.get("filing_ref")):
+            if k:
+                have.add(str(k))
+        sk = _stable_key(r.get("company"), r.get("submitted"))   # migrate legacy rows
+        if sk:
+            have.add(sk)
     new_rows, downloaded = [], 0
 
     with sync_playwright() as pw:
@@ -238,12 +283,16 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, lo
                     "(sedarplus.ca > Search > Documents > Document type: Technical report (NI 43-101) > Search).")
                 return {"downloaded": 0}
         else:
-            context = pw.chromium.launch_persistent_context(
-                PROFILE, headless=not headful, accept_downloads=True,
-                args=["--disable-blink-features=AutomationControlled"],
-                user_agent=("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-                            "(KHTML, like Gecko) Chrome/128.0 Safari/537.36"))
-            page = context.new_page()
+            kw = dict(headless=not headful, accept_downloads=True,
+                      args=["--disable-blink-features=AutomationControlled"],
+                      user_agent=("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                                  "(KHTML, like Gecko) Chrome/128.0 Safari/537.36"))
+            if chrome:                       # real installed Chrome — passes Akamai like any Chrome
+                kw["channel"] = "chrome"
+                kw.pop("user_agent", None)   # let real Chrome send its own UA
+                kw["headless"] = False       # headed real Chrome is the reliable fingerprint
+            context = pw.chromium.launch_persistent_context(PROFILE, **kw)
+            page = context.pages[0] if context.pages else context.new_page()
             _open_search(page, log)
 
         for pageno in range(1, max_pages + 1):
@@ -251,22 +300,23 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, lo
             rows = page.evaluate(_ROW_JS)
             log(f"page {pageno}: {len(rows)} documents listed")
             for r in rows:
-                node = r["node"]
-                if node in have:
-                    continue
                 company, submitted, jurisdiction, size_kb = _row_meta(r.get("cells") or [])
-                dest = os.path.join(DOWNLOADS, f"sedar_{node}.pdf")
+                profile = _profile_num(r.get("cells") or [])
+                key = _stable_key(company, submitted) or ("node-" + r["node"])
+                if key in have:
+                    continue
+                dest = os.path.join(DOWNLOADS, f"sedar_{key}.pdf")
                 if os.path.exists(dest) or _download(page, r["url"], dest, log):
                     downloaded += 1
-                    have.add(node)
-                    row = {"node": node, "drm": r.get("drmKey"),
-                           "file": os.path.basename(dest), "filing_ref": node,
-                           "company": company, "submitted": submitted,
+                    have.add(key)
+                    row = {"key": key, "node": r["node"], "drm": r.get("drmKey"),
+                           "file": os.path.basename(dest), "filing_ref": key,
+                           "company": company, "profile": profile, "submitted": submitted,
                            "jurisdiction": jurisdiction, "size_kb": size_kb,
                            "doctype": DOCTYPE, "sedar_url": r["url"],
                            "collected": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z"}
                     ledger.append(row); new_rows.append(row)
-                    log(f"  ✓ {company or node} ({size_kb or '?'} KB)")
+                    log(f"  ✓ {company or key} ({size_kb or '?'} KB)")
                     _save_ledger(ledger)          # checkpoint after every file
                     time.sleep(throttle)          # be gentle; slowness is fine
             # next page
@@ -293,10 +343,12 @@ def main():
     ap.add_argument("--max-pages", type=int, default=2, help="result pages to walk (30 reports/page)")
     ap.add_argument("--headful", action="store_true", help="show the browser (debugging)")
     ap.add_argument("--cdp", type=int, default=None, help="attach to Chrome on this remote-debugging port")
+    ap.add_argument("--chrome", action="store_true", help="launch your real installed Chrome (channel=chrome) and search automatically — the hands-off mode")
     ap.add_argument("--ingest", action="store_true", help="extract downloaded PDFs after collecting")
     ap.add_argument("--throttle", type=float, default=2.0, help="seconds between downloads")
     a = ap.parse_args()
-    collect(max_pages=a.max_pages, headful=a.headful, cdp=a.cdp, ingest=a.ingest, throttle=a.throttle)
+    collect(max_pages=a.max_pages, headful=a.headful, cdp=a.cdp, ingest=a.ingest,
+            throttle=a.throttle, chrome=a.chrome)
 
 
 if __name__ == "__main__":
