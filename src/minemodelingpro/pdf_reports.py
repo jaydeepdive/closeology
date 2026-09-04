@@ -50,7 +50,7 @@ _METH_PAGE = re.compile(r"kriging|inverse distance|block model|specific gravity|
 
 # bump when the extractor changes so --refresh re-processes reports once (and
 # only once) under the new engine, staying resumable across CI runs.
-EXTRACTOR_VERSION = "4"          # v4 = header-seeded blocks (short header-led tables)
+EXTRACTOR_VERSION = "5"          # v5 = retain source PDF in archive + report index
 
 
 def _rid(url):
@@ -363,6 +363,13 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
         pages_text = [pg.extract_text() or "" for pg in pdf.pages]
     res = extract_resources(pages_text)
     meth = extract_methodology(pages_text)
+    # retain the source PDF in the durable archive (idempotent; skipped without a token)
+    archive_url = None
+    try:
+        from minemodelingpro import report_archive
+        archive_url = report_archive.archive_pdf(path, sid.replace(":", "_"))
+    except Exception as e:
+        print(f"[43-101] archive skipped: {str(e)[:80]}")
     collars, assays = ([], [])
     if drill_tables:
         try:
@@ -422,7 +429,8 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
         "pulled_at": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
         "n_collars": len(collars), "n_assays": len(assays),
         "note": f"ev{EXTRACTOR_VERSION}; {len(dm)} resource rows; method={'y' if meth else 'n'}; "
-                f"{len(collars)} collars; {len(assays)} assays"})
+                f"{len(collars)} collars; {len(assays)} assays"
+                + (f"; archive={archive_url}" if archive_url else "")})
     con.commit(); con.close()
     print(f"[43-101] {project or url}: {len(dm)} resource rows, {len(collars)} collars, "
           f"{len(assays)} assays | method={meth['estimation_method'] if meth else None}")
@@ -474,6 +482,11 @@ def run_queue(path=QUEUE, limit=None, max_seconds=None, refresh=False):
         except Exception as e:
             print(f"[43-101] FAILED {r.get('project') or r['url']}: {str(e)[:120]}")
     shards.export_shards()
+    try:
+        from minemodelingpro import report_archive
+        report_archive.build_index()
+    except Exception as e:
+        print(f"[43-101] index build skipped: {str(e)[:80]}")
     print(f"[43-101] run complete: {ok}/{done} ingested this run")
     return {"new": len(todo), "ingested_this_run": ok}
 

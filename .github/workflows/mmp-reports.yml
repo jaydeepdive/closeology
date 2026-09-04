@@ -36,6 +36,9 @@ jobs:
       - name: Python deps
         run: pip install -r requirements.txt
       - name: Rebuild working store from committed shards, then ingest queue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # retain each PDF in the report-archive release
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           PYTHONPATH=src python -m minemodelingpro.shards rebuild
           PYTHONPATH=src python -m minemodelingpro.pdf_reports queue \
@@ -46,6 +49,6 @@ jobs:
           git config user.name "closeology-bot"
           git config user.email "actions@github.com"
           git pull --no-edit -X ours origin main || true
-          git add -A data/keep/mmp data/keep/mmp_report_queue.json data/keep/mmp_collars_sample.csv 2>/dev/null || true
+          git add -A data/keep/mmp data/keep/mmp_report_queue.json data/keep/mmp_reports_index.json data/keep/mmp_collars_sample.csv 2>/dev/null || true
           git commit -m "MMP 43-101 report ingest $(date -u +%Y-%m-%d) [skip ci]" || echo "no changes"
           git push || echo "nothing to push"
