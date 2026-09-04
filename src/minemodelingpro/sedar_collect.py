@@ -167,16 +167,29 @@ def _open_search(page, log):
     log("results loaded")
 
 
-def _find_results_tab(context, log):
-    """CDP-attach mode: find an open tab already showing SEDAR results."""
-    for pg in context.pages:
-        try:
-            if "sedarplus.ca" in (pg.url or "") and pg.query_selector('a[href*="resource.html"]'):
-                log(f"attached to open SEDAR tab: {pg.url[:80]}")
-                return pg
-        except Exception:
-            continue
-    return None
+def _find_results_tab(browser, log):
+    """CDP-attach mode: scan every context/tab for one already showing SEDAR
+    results. Returns (page, its_context) so downloads reuse that tab's cookies."""
+    ctxs = browser.contexts or []
+    # a SEDAR tab with results already rendered
+    for ctx in ctxs:
+        for pg in ctx.pages:
+            try:
+                if "sedarplus.ca" in (pg.url or "") and pg.query_selector('a[href*="resource.html"]'):
+                    log(f"attached to SEDAR results tab: {pg.url[:80]}")
+                    return pg, ctx
+            except Exception:
+                continue
+    # any SEDAR tab (results maybe not loaded yet)
+    for ctx in ctxs:
+        for pg in ctx.pages:
+            try:
+                if "sedarplus.ca" in (pg.url or ""):
+                    log(f"found a SEDAR tab (no results yet): {pg.url[:80]}")
+                    return pg, ctx
+            except Exception:
+                continue
+    return None, (ctxs[0] if ctxs else None)
 
 
 def _download(context, url, dest, log):
@@ -204,10 +217,10 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, lo
     with sync_playwright() as pw:
         if cdp:
             browser = pw.chromium.connect_over_cdp(f"http://localhost:{cdp}")
-            context = browser.contexts[0] if browser.contexts else browser.new_context(accept_downloads=True)
-            page = _find_results_tab(context, log)
+            page, context = _find_results_tab(browser, log)
             if page is None:
-                log("no open SEDAR results tab found — open the NI 43-101 search in that Chrome first.")
+                log("no SEDAR tab found in that Chrome — open the NI 43-101 search there first "
+                    "(sedarplus.ca > Search > Documents > Document type: Technical report (NI 43-101) > Search).")
                 return {"downloaded": 0}
         else:
             context = pw.chromium.launch_persistent_context(
