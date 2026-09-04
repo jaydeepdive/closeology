@@ -153,56 +153,94 @@ def _row_meta(cells):
     return company, submitted, jurisdiction, size_kb
 
 
+def _click_text(page, label, log):
+    """Click the first visible element whose exact text matches `label`."""
+    try:
+        el = page.get_by_text(re.compile(r"^\s*" + re.escape(label) + r"\s*$", re.I))
+        if el.count():
+            el.first.click(timeout=6000)
+            return True
+    except Exception as e:
+        log(f"  click '{label}': {str(e)[:60]}")
+    return False
+
+
+def _set_select(page, want_regex, label=""):
+    """Select the first <select> option whose text matches want_regex, firing a
+    change event so SEDAR+'s cascade updates. Returns the chosen option text."""
+    got = page.evaluate("""(rx) => {
+      const re = new RegExp(rx, 'i');
+      for (const s of Array.from(document.querySelectorAll('select'))) {
+        for (let i = 0; i < s.options.length; i++) {
+          if (re.test((s.options[i].text || '').trim())) {
+            s.selectedIndex = i;
+            s.dispatchEvent(new Event('change', {bubbles: true}));
+            return (s.options[i].text || '').trim();
+          }
+        }
+      }
+      return null;
+    }""", want_regex)
+    return got
+
+
 def _open_search(page, log):
-    """Drive the SEDAR+ document search to NI 43-101 reports, newest first."""
-    log("opening search …")
-    page.goto(SEARCH_URL, wait_until="domcontentloaded", timeout=90000)
-    page.wait_for_timeout(2500)
-    # reveal advanced fields if collapsed
-    for label in ["Show advanced search", "Advanced search"]:
+    """From the SEDAR+ home, walk to the Documents search and filter to NI 43-101
+    technical reports. The results view is a fresh per-session URL, so we click
+    through rather than navigate to a static page. Best-effort throughout: if the
+    filter cascade doesn't fully take, collect() still keeps only 43-101 rows and
+    the human can finish the search in the open window."""
+    log("opening SEDAR+ home …")
+    try:
+        page.goto("https://www.sedarplus.ca/home/", wait_until="domcontentloaded", timeout=90000)
+    except Exception as e:
+        log(f"  home nav: {str(e)[:80]}")
+    page.wait_for_timeout(3500)
+    if _click_text(page, "Search SEDAR+", log):
+        page.wait_for_timeout(1500)
+    if _click_text(page, "Documents", log):
+        page.wait_for_timeout(3500)
+    log(f"  on: {page.url[:80]}")
+    # filter cascade: Continuous disclosure -> Technical Report -> NI 43-101 subtype
+    for regex, lbl, wait in [
+            (r"^Continuous disclosure$", "category", 2000),
+            (r"^Technical [Rr]eport$", "type", 2000),
+            (r"Technical report \(NI 43-101\)", "subtype", 1200)]:
         try:
-            el = page.get_by_text(label, exact=False)
-            if el.count():
-                el.first.click(timeout=4000); page.wait_for_timeout(800); break
-        except Exception:
-            pass
-    # set the document type to NI 43-101 (try a few control shapes)
-    set_ok = False
-    for how in ("label", "placeholder", "combobox"):
-        try:
-            if how == "label":
-                box = page.get_by_label(re.compile("document type", re.I))
-            elif how == "placeholder":
-                box = page.get_by_placeholder(re.compile("document type", re.I))
-            else:
-                box = page.get_by_role("combobox")
-            if not box.count():
-                continue
-            box.first.click(timeout=4000)
-            box.first.fill(DOCTYPE) if how != "combobox" else box.first.type(DOCTYPE, delay=25)
-            page.wait_for_timeout(900)
-            opt = page.get_by_text(DOCTYPE, exact=False)
-            if opt.count():
-                opt.first.click(timeout=4000)
-            set_ok = True
-            log(f"document type set via {how}")
-            break
+            got = _set_select(page, regex, lbl)
+            if got:
+                log(f"  filter {lbl}: {got}")
+            page.wait_for_timeout(wait)
         except Exception as e:
-            log(f"  doctype via {how} failed: {str(e)[:80]}")
-    if not set_ok:
-        log("WARN: could not set document type automatically — searching unfiltered; "
-            "use --cdp to reuse a search you set up by hand.")
-    # submit
-    for how in (lambda: page.get_by_role("button", name=re.compile("^search$", re.I)),
-                lambda: page.get_by_text(re.compile("^Search$"))):
+            log(f"  filter {lbl}: {str(e)[:60]}")
+    # submit the search (the form's button, not the nav item)
+    for how in (lambda: page.get_by_role("button", name=re.compile(r"^\s*Search\s*$", re.I)),
+                lambda: page.locator("button:has-text('Search')")):
         try:
             b = how()
             if b.count():
-                b.first.click(timeout=5000); break
+                b.last.click(timeout=6000); break
         except Exception:
             pass
-    page.wait_for_selector('a[href*="resource.html"]', timeout=60000)
-    log("results loaded")
+    page.wait_for_timeout(3000)
+
+
+def _await_results(context, log, timeout=210):
+    """Poll every tab for a rendered results list. In --chrome mode this lets the
+    human finish/adjust the search in the open window if the auto-walk fell short."""
+    log("waiting for a results list… (if the browser is sitting on the SEDAR home or an "
+        "empty search, click Search > Documents, filter to Technical report (NI 43-101), Search)")
+    end = time.time() + timeout
+    while time.time() < end:
+        for pg in list(context.pages):
+            try:
+                if pg.query_selector('a[href*="resource.html"]'):
+                    log(f"results detected: {pg.url[:80]}")
+                    return pg
+            except Exception:
+                continue
+        time.sleep(3)
+    return None
 
 
 def _find_results_tab(browser, log):
@@ -294,11 +332,21 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
             context = pw.chromium.launch_persistent_context(PROFILE, **kw)
             page = context.pages[0] if context.pages else context.new_page()
             _open_search(page, log)
+            got = _await_results(context, log, timeout=(210 if chrome else 8))
+            if got is None:
+                log("no results list appeared — nothing to collect.")
+                if not (headful or chrome):
+                    context.close()
+                return {"downloaded": 0}
+            page = got
 
         for pageno in range(1, max_pages + 1):
             page.wait_for_selector('a[href*="resource.html"]', timeout=60000)
             rows = page.evaluate(_ROW_JS)
-            log(f"page {pageno}: {len(rows)} documents listed")
+            # keep only NI 43-101 technical reports, even if the server-side filter
+            # didn't fully take (belt-and-suspenders on the doctype cascade)
+            rows = [r for r in rows if any("43-101" in c for c in (r.get("cells") or []))]
+            log(f"page {pageno}: {len(rows)} NI 43-101 report(s) on this page")
             for r in rows:
                 company, submitted, jurisdiction, size_kb = _row_meta(r.get("cells") or [])
                 profile = _profile_num(r.get("cells") or [])
