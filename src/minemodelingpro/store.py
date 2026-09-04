@@ -93,8 +93,22 @@ CREATE TABLE IF NOT EXISTS model_method (
     method_text TEXT,             -- the narrative excerpt (training/RAG material)
     report_url TEXT, report_date TEXT
 );
+CREATE TABLE IF NOT EXISTS metallurgy (
+    id TEXT PRIMARY KEY,          -- source_id + ':met'
+    source_id TEXT, project TEXT, jurisdiction TEXT, commodity TEXT,
+    process_types TEXT,           -- CIL/CIP/heap leach/flotation/POX/roasting/BIOX/gravity/...
+    refractory TEXT,              -- 'refractory' | 'non-refractory' | 'double refractory' | 'preg-robbing' | null
+    recovery_summary TEXT,        -- headline recovery statement(s)
+    recoveries TEXT,              -- captured recovery % values (element -> %, best effort)
+    grind_p80_um REAL,            -- primary grind size (P80, microns)
+    reagent_notes TEXT,           -- cyanide/lime/reagent consumption
+    throughput TEXT,              -- plant throughput (tpd / Mtpa)
+    met_text TEXT,                -- metallurgy narrative excerpt (training/RAG)
+    report_url TEXT, report_date TEXT
+);
 CREATE INDEX IF NOT EXISTS ix_collars_src ON collars(source_id);
 CREATE INDEX IF NOT EXISTS ix_model_method_src ON model_method(source_id);
+CREATE INDEX IF NOT EXISTS ix_metallurgy_src ON metallurgy(source_id);
 CREATE INDEX IF NOT EXISTS ix_collars_juris ON collars(jurisdiction);
 CREATE INDEX IF NOT EXISTS ix_assays_hole ON assays(hole_uid);
 CREATE INDEX IF NOT EXISTS ix_assays_src ON assays(source_id);

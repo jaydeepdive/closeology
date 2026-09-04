@@ -93,6 +93,12 @@ def build_index(db=None):
             prev = {e["id"]: e for e in json.load(open(INDEX)).get("reports", [])}
         except Exception:
             prev = {}
+    met = {}
+    try:
+        for mr in con.execute("SELECT source_id, process_types, refractory, recovery_summary FROM metallurgy"):
+            met[mr[0]] = {"process": mr[1], "refractory": mr[2], "recovery": mr[3]}
+    except Exception:
+        pass
     rows = con.execute("""SELECT id, name, url, jurisdiction, pulled_at, n_collars, n_assays, note
                           FROM sources WHERE kind IN ('ni43101','assessment')""").fetchall()
     out = []
@@ -102,6 +108,7 @@ def build_index(db=None):
         m = re.search(r"(\d+)\s+resource rows", note)
         am = re.search(r"archive=(\S+)", note)
         q = qmeta.get(d["url"], {})
+        mm = met.get(d["id"], {})
         out.append({
             "id": d["id"], "company": d.get("name"), "project": q.get("project"),
             "commodity": q.get("commodity"), "jurisdiction": d.get("jurisdiction") or q.get("jurisdiction"),
@@ -110,7 +117,10 @@ def build_index(db=None):
             "collected": d.get("pulled_at"),
             "collars": d.get("n_collars"), "assays": d.get("n_assays"),
             "resource_rows": int(m.group(1)) if m else 0,
-            "has_method": "method=y" in note})
+            "has_method": "method=y" in note,
+            "metallurgy_process": mm.get("process"),
+            "refractory": mm.get("refractory"),
+            "recovery": (mm.get("recovery") or "")[:160] or None})
     con.close()
     out.sort(key=lambda e: (e.get("jurisdiction") or "zz", e.get("company") or ""))
     archived = sum(1 for e in out if e.get("archive_url"))

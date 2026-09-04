@@ -50,7 +50,7 @@ _METH_PAGE = re.compile(r"kriging|inverse distance|block model|specific gravity|
 
 # bump when the extractor changes so --refresh re-processes reports once (and
 # only once) under the new engine, staying resumable across CI runs.
-EXTRACTOR_VERSION = "5"          # v5 = retain source PDF in archive + report index
+EXTRACTOR_VERSION = "6"          # v6 = metallurgy capture (recovery / process / refractory)
 
 
 def _rid(url):
@@ -355,6 +355,58 @@ def extract_drill_tables(path, pages_text, max_block_pages=60):
     return list(collars.values()), list(assays.values())
 
 
+_MET_PAGE = re.compile(r"metallurg|recover(y|ies)|leach|flotation|oxidation|cyanid|"
+                       r"comminut|grind|concentrate|tailings|assay recovery|roast", re.I)
+_PROCESS = re.compile(r"\b(CIL|CIP|carbon[- ]in[- ]leach|carbon[- ]in[- ]pulp|heap leach|"
+                      r"agitat(?:ed|ion) leach|whole[- ]ore leach|flotation|pressure oxidation|POX|"
+                      r"autoclav\w*|roast\w*|bio[- ]?oxidation|BIOX|gravity (?:concentration|recovery|circuit)|"
+                      r"Merrill[- ]Crowe|Albion|ultra[- ]?fine grind\w*|resin[- ]in[- ]leach|RIL|"
+                      r"dump leach|vat leach|SART|Knelson|dense media|magnetic separation)\b", re.I)
+_REFRACTORY = re.compile(r"\b(double\s+refractory|partially\s+refractory|non[- ]refractory|"
+                         r"not\s+refractory|refractory|preg[- ]robbing)\b", re.I)
+_RECOV = re.compile(r"((?:gold|silver|copper|au|ag|cu|zinc|zn|lead|pb|nickel|ni|overall|average|life[- ]of[- ]mine)"
+                    r"[^.\n]{0,40}?recover\w*[^.\n]{0,25}?(\d{1,3}(?:\.\d)?)\s*%|"
+                    r"recover\w*[^.\n]{0,25}?(\d{1,3}(?:\.\d)?)\s*%[^.\n]{0,30}?(?:gold|silver|copper|au|ag|cu))", re.I)
+_P80 = re.compile(r"P\s*80[^.\n]{0,30}?(\d{2,4})\s*(?:µm|um|microns?|µm)", re.I)
+_CN = re.compile(r"(?:cyanide|NaCN|lime)[^.\n]{0,40}?(\d+\.?\d*)\s*kg\s*/\s*t", re.I)
+_TPUT = re.compile(r"(\d[\d,]*\.?\d*)\s*(?:tpd|t/d|tonnes per day|Mtpa|Mt/a|ktpa)", re.I)
+
+
+def extract_metallurgy(pages_text):
+    """Capture metallurgical/process data when present: recovery, process route,
+    (for gold) whether the ore is refractory, grind size, reagent consumption,
+    throughput — plus the narrative for training. Returns None if the report has
+    no metallurgy content (which is expected for many technical reports)."""
+    met_pages = [t for t in pages_text if t and len(_MET_PAGE.findall(t)) >= 3]
+    blob = "\n".join(met_pages)
+    if not blob or len(met_pages) < 1:
+        return None
+    procs = sorted({re.sub(r"\s+", " ", m).strip().upper() for m in _PROCESS.findall(blob)})
+    procs = [p for p in procs if p]
+    refr = None
+    rm = _REFRACTORY.search(blob)
+    if rm:
+        refr = re.sub(r"\s+", " ", rm.group(0)).strip().lower()
+    recs = []
+    for m in _RECOV.finditer(blob):
+        recs.append(re.sub(r"\s+", " ", m.group(0)).strip()[:80])
+    p80 = _P80.search(blob)
+    cn = _CN.search(blob)
+    tput = _TPUT.search(blob)
+    if not (procs or refr or recs):
+        return None
+    return {
+        "process_types": ", ".join(procs) or None,
+        "refractory": refr,
+        "recovery_summary": " | ".join(dict.fromkeys(recs))[:400] or None,
+        "recoveries": " | ".join(dict.fromkeys(recs))[:400] or None,
+        "grind_p80_um": float(p80.group(1)) if p80 else None,
+        "reagent_notes": re.sub(r"\s+", " ", cn.group(0)).strip()[:120] if cn else None,
+        "throughput": re.sub(r"\s+", " ", tput.group(0)).strip()[:60] if tput else None,
+        "met_text": re.sub(r"\s+", " ", blob)[:12000],
+    }
+
+
 def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_date=None, drill_tables=True):
     import pdfplumber
     sid = _rid(url)
@@ -363,6 +415,7 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
         pages_text = [pg.extract_text() or "" for pg in pdf.pages]
     res = extract_resources(pages_text)
     meth = extract_methodology(pages_text)
+    met = extract_metallurgy(pages_text)
     # retain the source PDF in the durable archive (idempotent; skipped without a token)
     archive_url = None
     try:
@@ -423,6 +476,20 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
             "compositing": meth["compositing"], "classification": meth["classification"],
             "section_ref": f"{meth['n_method_pages']} methodology pages", "method_text": meth["method_text"],
             "report_url": url, "report_date": report_date})
+    # metallurgy (recovery / process route / refractory) when present
+    con.execute("DELETE FROM metallurgy WHERE source_id=?", (sid,))
+    if met:
+        con.execute("""INSERT INTO metallurgy
+            (id,source_id,project,jurisdiction,commodity,process_types,refractory,recovery_summary,
+             recoveries,grind_p80_um,reagent_notes,throughput,met_text,report_url,report_date)
+            VALUES (:id,:source_id,:project,:jurisdiction,:commodity,:process_types,:refractory,:recovery_summary,
+             :recoveries,:grind_p80_um,:reagent_notes,:throughput,:met_text,:report_url,:report_date)""", {
+            "id": f"{sid}:met", "source_id": sid, "project": project, "jurisdiction": jurisdiction,
+            "commodity": commodity, "process_types": met["process_types"], "refractory": met["refractory"],
+            "recovery_summary": met["recovery_summary"], "recoveries": met["recoveries"],
+            "grind_p80_um": met["grind_p80_um"], "reagent_notes": met["reagent_notes"],
+            "throughput": met["throughput"], "met_text": met["met_text"],
+            "report_url": url, "report_date": report_date})
     store.record_source(con, {
         "id": sid, "kind": "ni43101", "name": project or url.rsplit("/", 1)[-1],
         "url": url, "jurisdiction": jurisdiction,
@@ -433,8 +500,10 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
                 + (f"; archive={archive_url}" if archive_url else "")})
     con.commit(); con.close()
     print(f"[43-101] {project or url}: {len(dm)} resource rows, {len(collars)} collars, "
-          f"{len(assays)} assays | method={meth['estimation_method'] if meth else None}")
-    return {"resources": len(dm), "collars": len(collars), "assays": len(assays), "method": bool(meth)}
+          f"{len(assays)} assays | method={meth['estimation_method'] if meth else None} | "
+          f"met={ {k: v for k, v in (met or {}).items() if k not in ('met_text',) and v} if met else None}")
+    return {"resources": len(dm), "collars": len(collars), "assays": len(assays),
+            "method": bool(meth), "metallurgy": bool(met)}
 
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
