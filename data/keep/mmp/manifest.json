@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-04T14:46:07Z",
+  "generated": "2026-09-04T15:28:20Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -32,6 +32,12 @@
         "source": "gov:yk",
         "rows": 1916,
         "bytes": 93720
+      },
+      {
+        "file": "mmp/collars/gov_geo__bc_rgs.parquet",
+        "source": "gov_geo:bc_rgs",
+        "rows": 53028,
+        "bytes": 1664143
       },
       {
         "file": "mmp/collars/gov_geo__yk_geochem.parquet",
@@ -107,6 +113,12 @@
       }
     ],
     "assays": [
+      {
+        "file": "mmp/assays/gov_geo__bc_rgs.parquet",
+        "source": "gov_geo:bc_rgs",
+        "rows": 1757205,
+        "bytes": 3672351
+      },
       {
         "file": "mmp/assays/gov_geo__yk_geochem.parquet",
         "source": "gov_geo:yk_geochem",
@@ -1202,13 +1214,13 @@
     ]
   },
   "totals": {
-    "collars": 748014,
+    "collars": 801042,
     "survey": 0,
-    "assays": 12359409,
+    "assays": 14116614,
     "lithology": 759931,
     "deposit_model": 2068,
     "model_method": 74,
     "metallurgy": 0
   },
-  "shard_count": 198
+  "shard_count": 200
 }
