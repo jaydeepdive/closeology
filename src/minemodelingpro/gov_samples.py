@@ -27,7 +27,31 @@ _ELEM_OK = {"au", "ag", "cu", "pb", "zn", "ni", "co", "mo", "as", "sb", "bi", "w
             "hg", "re", "pt", "pd", "au", "ce", "la", "nd", "y", "sc", "zr", "nb", "ta",
             "hf", "sn", "in", "b", "cl", "br", "f"}
 _UNIT = {"ppb": "ppb", "ppm": "ppm", "pct": "%", "percent": "%", "gt": "g/t", "g_t": "g/t",
-         "ppt": "ppt", "oz": "oz/t"}
+         "ppt": "ppt", "oz": "oz/t", "percentage": "%"}
+
+# Full-name column style (BC RGS etc.): "<ELEMENTNAME>_<METHOD>_<UNIT>", e.g.
+# GOLD_ICPMS_PPB, ARSENIC_INAA_PPM, IRON_AAS_PERCENTAGE. Same element is often
+# reported by several methods; we keep one value per element per sample, in this
+# method-preference order (ICPMS/FA best for trace metals, INAA for the rest).
+_ELEM_NAME = {
+    "aluminium": "Al", "aluminum": "Al", "antimony": "Sb", "arsenic": "As", "barium": "Ba",
+    "beryllium": "Be", "bismuth": "Bi", "boron": "B", "bromine": "Br", "cadmium": "Cd",
+    "calcium": "Ca", "cerium": "Ce", "cesium": "Cs", "chromium": "Cr", "cobalt": "Co",
+    "copper": "Cu", "europium": "Eu", "fluorine": "F", "gallium": "Ga", "gold": "Au",
+    "hafnium": "Hf", "iron": "Fe", "lanthanum": "La", "lead": "Pb", "lithium": "Li",
+    "lutetium": "Lu", "magnesium": "Mg", "manganese": "Mn", "mercury": "Hg",
+    "molybdenum": "Mo", "neodymium": "Nd", "nickel": "Ni", "niobium": "Nb",
+    "phosphorus": "P", "potassium": "K", "rubidium": "Rb", "samarium": "Sm",
+    "scandium": "Sc", "selenium": "Se", "silver": "Ag", "sodium": "Na", "strontium": "Sr",
+    "sulphur": "S", "sulfur": "S", "tantalum": "Ta", "tellurium": "Te", "terbium": "Tb",
+    "thallium": "Tl", "thorium": "Th", "tin": "Sn", "titanium": "Ti", "tungsten": "W",
+    "uranium": "U", "vanadium": "V", "ytterbium": "Yb", "yttrium": "Y", "zinc": "Zn",
+    "zirconium": "Zr", "palladium": "Pd", "platinum": "Pt", "rhenium": "Re",
+    "germanium": "Ge", "indium": "In"}
+_METHOD_RANK = {"icpms": 0, "icpes": 1, "icp": 1, "fa": 2, "inaa": 3, "naa": 3,
+                "aas": 4, "nadnc": 5, "color": 6, "ion": 6}
+_FULLCOL = re.compile(
+    r"^([A-Za-z]+)_([A-Za-z]+)_(PPM|PPB|PERCENTAGE|PCT|PERCENT|GT|G_T)(_\d+)?$", re.I)
 
 
 def _num(v):
@@ -57,6 +81,15 @@ SOURCES = {
         "report_field": None, "method_field": None,
         "lat_field": "LATITUDE_DD", "lon_field": "LONGITUDE_DD",
     },
+    "bc_rgs": {
+        "name": "British Columbia Regional Geochemical Survey (RGS)",
+        "jurisdiction": "British Columbia",
+        "layer": "https://delivery.maps.gov.bc.ca/arcgis/rest/services/mpcm/bcgwpub/MapServer/564",
+        "id_fields": ["MASTER_ID", "REG_GEOCHMCL_SURV_PNT_SP_ID", "OBJECTID"],
+        "type_field": "MATERIAL", "report_field": None, "method_field": None,
+        "lat_field": "LATITUDE", "lon_field": "LONGITUDE",
+        "column_style": "fullname",
+    },
 }
 
 
@@ -76,6 +109,45 @@ def _element_cols(feats):
     return cols
 
 
+def _element_cols_full(feats):
+    """Detect full-name element columns (GOLD_ICPMS_PPB style) across a sample of
+    features (scan several rows — any one row has many nulls). Returns a dict
+    element_symbol -> ordered list of (column, unit, method_rank), best first."""
+    cols = {}
+    for ft in feats[:200]:
+        props = ft.get("properties", {}) or {}
+        for name in props:
+            m = _FULLCOL.match(name)
+            if not m:
+                continue
+            el_name, method, unit = m.group(1).lower(), m.group(2).lower(), m.group(3).lower()
+            sym = _ELEM_NAME.get(el_name)
+            if not sym or unit not in _UNIT:
+                continue
+            rank = _METHOD_RANK.get(method, 9)
+            entry = (name, _UNIT[unit], rank)
+            cols.setdefault(sym, [])
+            if entry not in cols[sym]:
+                cols[sym].append(entry)
+    for sym in cols:
+        cols[sym].sort(key=lambda e: e[2])          # best method first
+    return cols
+
+
+def _emit_assays_full(p, uid, native, sid, ecols_full):
+    """One assay row per element, taking the value from the best available method."""
+    out = []
+    for sym, choices in ecols_full.items():
+        for col, unit, _rank in choices:
+            val = _num(p.get(col))
+            if val is not None:
+                out.append({"source_id": sid, "hole_uid": uid, "native_id": native,
+                            "from_m": None, "to_m": None, "length_m": None,
+                            "element": sym, "grade": val, "unit": unit, "is_subinterval": 0})
+                break
+    return out
+
+
 def ingest_source(key, cfg=None, limit=None):
     cfg = cfg or SOURCES[key]
     sid = f"gov_geo:{key}"
@@ -84,9 +156,17 @@ def ingest_source(key, cfg=None, limit=None):
     feats = arcgis_common.fetch_layer(cfg["layer"], out_fields="*", where=where, geom=True)
     if limit:
         feats = feats[:limit]
-    ecols = _element_cols(feats)
-    print(f"[geo:{key}] {len(feats)} samples, {len(ecols)} element columns "
-          f"({', '.join(e for _, e, _ in ecols[:12])}{'…' if len(ecols) > 12 else ''})")
+    style = cfg.get("column_style", "symbol")
+    if style == "fullname":
+        ecols_full = _element_cols_full(feats)
+        ecols = []
+        print(f"[geo:{key}] {len(feats)} samples, {len(ecols_full)} elements "
+              f"({', '.join(list(ecols_full)[:14])}{'…' if len(ecols_full) > 14 else ''})")
+    else:
+        ecols_full = None
+        ecols = _element_cols(feats)
+        print(f"[geo:{key}] {len(feats)} samples, {len(ecols)} element columns "
+              f"({', '.join(e for _, e, _ in ecols[:12])}{'…' if len(ecols) > 12 else ''})")
     collars, assays, seen = [], [], set()
     for ft in feats:
         p = ft.get("properties", {}) or {}
@@ -115,13 +195,16 @@ def ingest_source(key, cfg=None, limit=None):
             "elev_m": None, "azimuth": None, "dip": None, "depth_m": None, "year_drilled": None,
             "has_assay": 1, "assay_flags": p.get(cfg.get("type_field")) or None,
             "report_ref": p.get(cfg.get("report_field")) or None, "url": cfg["layer"]})
-        for col, el, unit in ecols:
-            val = _num(p.get(col))
-            if val is None:
-                continue
-            assays.append({"source_id": sid, "hole_uid": uid, "native_id": native,
-                           "from_m": None, "to_m": None, "length_m": None,
-                           "element": el, "grade": val, "unit": unit, "is_subinterval": 0})
+        if ecols_full is not None:
+            assays.extend(_emit_assays_full(p, uid, native, sid, ecols_full))
+        else:
+            for col, el, unit in ecols:
+                val = _num(p.get(col))
+                if val is None:
+                    continue
+                assays.append({"source_id": sid, "hole_uid": uid, "native_id": native,
+                               "from_m": None, "to_m": None, "length_m": None,
+                               "element": el, "grade": val, "unit": unit, "is_subinterval": 0})
     con = store.connect()
     store.replace_collars(con, sid, collars)
     store.replace_assays(con, sid, assays)
@@ -130,7 +213,8 @@ def ingest_source(key, cfg=None, limit=None):
         "jurisdiction": cfg["jurisdiction"],
         "pulled_at": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
         "n_collars": len(collars), "n_assays": len(assays),
-        "note": f"{len(ecols)} elements; point geochem samples"})
+        "note": f"{len(ecols_full) if ecols_full is not None else len(ecols)} elements; "
+                f"point geochem samples"})
     con.commit()
     s = store.stats(con)
     con.close()

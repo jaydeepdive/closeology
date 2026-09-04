@@ -418,5 +418,113 @@
   "project": "MontSorcier",
   "commodity": "Fe-V",
   "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://www.gov.nl.ca/em/files/Buchans-Lundberg.pdf",
+  "project": "Buchans-Lundberg",
+  "commodity": "Zn",
+  "jurisdiction": "Newfoundland and Labrador"
+ },
+ {
+  "url": "https://s28.q4cdn.com/380852864/files/doc_downloads/2025/2025-43-101-Rainy-River-FINAL.pdf",
+  "project": "Rainy River",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://www.equinoxgold.com/wp-content/uploads/2026/03/2026-03-Greenstone-Tech-Report.pdf",
+  "project": "Greenstone",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://s24.q4cdn.com/779615370/files/doc_downloads/2025/08/NI-43-101-Island-Gold-District-August-6-2025-FINAL.pdf",
+  "project": "Island Gold District",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://osiskodev.com/_resources/reports/Trixie-NI-43-101-Report-2024-Fina-2024.04.25.pdf",
+  "project": "Trixie",
+  "commodity": "Au",
+  "jurisdiction": "Utah"
+ },
+ {
+  "url": "https://talamoremining.com/site/assets/files/6192/ni_43-101_tr_coffee_project_mre_06oct2025_final.pdf",
+  "project": "Coffee",
+  "commodity": "Au",
+  "jurisdiction": "Yukon"
+ },
+ {
+  "url": "https://esgold.com/wp-content/uploads/2025/09/ESGold_2025-09-03_Montauban_2025_PEA_Report.pdf",
+  "project": "Montauban",
+  "commodity": "Au",
+  "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://hemlomining.com/_resources/reports/Technnical_Report_Hemlo_SLR_20251027_Carcetti_Hemlo_NI43-101.pdf",
+  "project": "Hemlo",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://s23.q4cdn.com/405985100/files/doc_downloads/tech_reports/canada/cmm-ni-43-101-technical-report-dec-5-2023.pdf",
+  "project": "CMM Critical Minerals",
+  "commodity": "Cu",
+  "jurisdiction": "Canada"
+ },
+ {
+  "url": "https://canadiancopper.com/wp-content/uploads/2026/01/Murray-Brook-43-101-PEA-FINAL-JuL71330.pdf",
+  "project": "Murray Brook",
+  "commodity": "Cu",
+  "jurisdiction": "New Brunswick"
+ },
+ {
+  "url": "https://wp-canadanickel-2025.s3.ca-central-1.amazonaws.com/media/2026/02/Caracle_CanadaNickel-Reid-Update-TR_MRE-Feb26_2026-F.pdf",
+  "project": "Reid Nickel",
+  "commodity": "Ni",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://www.pecoycopper.com/_resources/reports/Pecoy_43101.pdf",
+  "project": "Pecoy",
+  "commodity": "Cu",
+  "jurisdiction": "Peru"
+ },
+ {
+  "url": "https://s205.q4cdn.com/243646470/files/doc_downloads/Canadian_Malartic/NI-43-101-Technical-Report-Canadian-Malartic-Mine.pdf",
+  "project": "Canadian Malartic",
+  "commodity": "Au",
+  "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://minedocs.com/28/Fenelon-PEA-03212025.pdf",
+  "project": "Fenelon",
+  "commodity": "Au",
+  "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://s21.q4cdn.com/390685383/files/technical_reports/Manitoba/NI43-101TartanTR.pdf",
+  "project": "Tartan Lake",
+  "commodity": "Au",
+  "jurisdiction": "Manitoba"
+ },
+ {
+  "url": "https://s28.q4cdn.com/583965976/files/doc_multimedia/portfolios/cote_gold-feasibility-report.pdf",
+  "project": "Cote Gold",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://s204.q4cdn.com/324791784/files/doc_downloads/2025/10/20/Gramalote-Technical-Report.pdf",
+  "project": "Gramalote",
+  "commodity": "Au",
+  "jurisdiction": "Colombia"
+ },
+ {
+  "url": "https://www.usgoldmining.us/_resources/pdfs/NI-43-101-Resource-Estimate_March-2-2026.pdf",
+  "project": "Whistler",
+  "commodity": "Au",
+  "jurisdiction": "Alaska"
  }
 ]
