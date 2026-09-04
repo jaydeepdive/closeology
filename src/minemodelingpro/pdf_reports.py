@@ -48,6 +48,11 @@ _METH_PAGE = re.compile(r"kriging|inverse distance|block model|specific gravity|
                         r"search ellipse|composit|capp|cut-?off|variogram|estimation domain|wireframe", re.I)
 
 
+# bump when the extractor changes so --refresh re-processes reports once (and
+# only once) under the new engine, staying resumable across CI runs.
+EXTRACTOR_VERSION = "2"          # v2 = Camelot appendix collar/assay tables
+
+
 def _rid(url):
     return "ni43101:" + hashlib.sha1(url.encode()).hexdigest()[:16]
 
@@ -354,7 +359,7 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
         "url": url, "jurisdiction": jurisdiction,
         "pulled_at": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
         "n_collars": len(collars), "n_assays": len(assays),
-        "note": f"{len(dm)} resource rows; method={'y' if meth else 'n'}; "
+        "note": f"ev{EXTRACTOR_VERSION}; {len(dm)} resource rows; method={'y' if meth else 'n'}; "
                 f"{len(collars)} collars; {len(assays)} assays"})
     con.commit(); con.close()
     print(f"[43-101] {project or url}: {len(dm)} resource rows, {len(collars)} collars, "
@@ -370,6 +375,12 @@ def _already(con, url):
     return con.execute("SELECT 1 FROM sources WHERE id=?", (_rid(url),)).fetchone() is not None
 
 
+def _current(con, url):
+    """True if the report is ingested AND under the current extractor version."""
+    r = con.execute("SELECT note FROM sources WHERE id=?", (_rid(url),)).fetchone()
+    return bool(r) and f"ev{EXTRACTOR_VERSION}" in (r[0] or "")
+
+
 def run_queue(path=QUEUE, limit=None, max_seconds=None, refresh=False):
     """Ingest every report in the queue not already in the store. Idempotent and
     resumable (skips ingested reports), time-budgeted for CI. Shards at the end.
@@ -379,7 +390,10 @@ def run_queue(path=QUEUE, limit=None, max_seconds=None, refresh=False):
     from minemodelingpro import shards
     q = json.load(open(path))
     con = store.connect()
-    todo = q if refresh else [r for r in q if not _already(con, r["url"])]
+    # refresh: re-do reports not yet at the current extractor version (resumable);
+    # normal: only reports not ingested at all.
+    todo = [r for r in q if not _current(con, r["url"])] if refresh \
+        else [r for r in q if not _already(con, r["url"])]
     con.close()
     print(f"[43-101] queue: {len(q)} reports, {len(todo)} new to ingest")
     t0 = time.time()
