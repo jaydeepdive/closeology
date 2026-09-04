@@ -339,13 +339,19 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
                     context.close()
                 return {"downloaded": 0}
             page = got
+            page.wait_for_timeout(4000)          # let the filtered results settle
 
-        for pageno in range(1, max_pages + 1):
+        def _harvest():
             page.wait_for_selector('a[href*="resource.html"]', timeout=60000)
-            rows = page.evaluate(_ROW_JS)
+            rs = page.evaluate(_ROW_JS)
             # keep only NI 43-101 technical reports, even if the server-side filter
             # didn't fully take (belt-and-suspenders on the doctype cascade)
-            rows = [r for r in rows if any("43-101" in c for c in (r.get("cells") or []))]
+            return [r for r in rs if any("43-101" in c for c in (r.get("cells") or []))]
+
+        for pageno in range(1, max_pages + 1):
+            rows = _harvest()
+            if not rows:                          # results may still be re-rendering
+                page.wait_for_timeout(3500); rows = _harvest()
             log(f"page {pageno}: {len(rows)} NI 43-101 report(s) on this page")
             for r in rows:
                 company, submitted, jurisdiction, size_kb = _row_meta(r.get("cells") or [])
