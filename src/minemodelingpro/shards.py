@@ -35,7 +35,7 @@ KEEP = os.path.join(_ROOT, "data", "keep")
 SHARD_DIR = os.path.join(KEEP, "mmp")
 MANIFEST = os.path.join(SHARD_DIR, "manifest.json")
 MAX_BYTES = 90 * 1024 * 1024          # keep every shard safely under GitHub's 100 MB
-TABLES = ["collars", "survey", "assays", "lithology", "deposit_model"]
+TABLES = ["collars", "survey", "assays", "lithology", "deposit_model", "model_method"]
 
 
 def _safe(source_id):

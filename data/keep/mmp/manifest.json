@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-04T00:27:47Z",
+  "generated": "2026-09-04T00:39:26Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -67,6 +67,58 @@
         "rows": 759931,
         "bytes": 12418378
       }
+    ],
+    "deposit_model": [
+      {
+        "file": "mmp/deposit_model/ni43101__b036fb083a329154.parquet",
+        "source": "ni43101:b036fb083a329154",
+        "rows": 14,
+        "bytes": 10170
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__971a51cb8f4778c7.parquet",
+        "source": "ni43101:971a51cb8f4778c7",
+        "rows": 5,
+        "bytes": 9724
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__9d5d438d55f42260.parquet",
+        "source": "ni43101:9d5d438d55f42260",
+        "rows": 20,
+        "bytes": 10480
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__1f4fea7f67d5d49f.parquet",
+        "source": "ni43101:1f4fea7f67d5d49f",
+        "rows": 32,
+        "bytes": 11080
+      }
+    ],
+    "model_method": [
+      {
+        "file": "mmp/model_method/ni43101__1f4fea7f67d5d49f.parquet",
+        "source": "ni43101:1f4fea7f67d5d49f",
+        "rows": 1,
+        "bytes": 17994
+      },
+      {
+        "file": "mmp/model_method/ni43101__971a51cb8f4778c7.parquet",
+        "source": "ni43101:971a51cb8f4778c7",
+        "rows": 1,
+        "bytes": 16008
+      },
+      {
+        "file": "mmp/model_method/ni43101__9d5d438d55f42260.parquet",
+        "source": "ni43101:9d5d438d55f42260",
+        "rows": 1,
+        "bytes": 17280
+      },
+      {
+        "file": "mmp/model_method/ni43101__b036fb083a329154.parquet",
+        "source": "ni43101:b036fb083a329154",
+        "rows": 1,
+        "bytes": 16677
+      }
     ]
   },
   "totals": {
@@ -74,7 +126,8 @@
     "survey": 0,
     "assays": 1832,
     "lithology": 759931,
-    "deposit_model": 0
+    "deposit_model": 71,
+    "model_method": 4
   },
-  "shard_count": 10
+  "shard_count": 18
 }

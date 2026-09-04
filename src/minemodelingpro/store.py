@@ -77,7 +77,24 @@ CREATE TABLE IF NOT EXISTS deposit_model (
     cutoff REAL, cutoff_unit TEXT, commodity TEXT,
     report_url TEXT, report_date TEXT, note TEXT
 );
+CREATE TABLE IF NOT EXISTS model_method (
+    id TEXT PRIMARY KEY,          -- source_id + ':' + section/zone
+    source_id TEXT, project TEXT, jurisdiction TEXT, commodity TEXT,
+    estimation_method TEXT,       -- OK / ID2 / ID3 / NN / MIK / ...
+    software TEXT,                 -- Leapfrog / Vulcan / Datamine / GEMS / Surpac ...
+    block_size TEXT,              -- e.g. "10 x 10 x 5 m"
+    compositing_m TEXT,
+    capping TEXT,                 -- top-cut / grade capping note
+    density TEXT,                 -- bulk density t/m3 (by domain)
+    cutoff TEXT, cutoff_basis TEXT,   -- e.g. "0.3 g/t Au", "US$75/t NSR"
+    search_params TEXT,           -- search ellipse ranges / orientation
+    compositing TEXT, domaining TEXT, classification TEXT, qaqc TEXT,
+    section_ref TEXT,             -- e.g. "Section 14"
+    method_text TEXT,             -- the narrative excerpt (training/RAG material)
+    report_url TEXT, report_date TEXT
+);
 CREATE INDEX IF NOT EXISTS ix_collars_src ON collars(source_id);
+CREATE INDEX IF NOT EXISTS ix_model_method_src ON model_method(source_id);
 CREATE INDEX IF NOT EXISTS ix_collars_juris ON collars(jurisdiction);
 CREATE INDEX IF NOT EXISTS ix_assays_hole ON assays(hole_uid);
 CREATE INDEX IF NOT EXISTS ix_assays_src ON assays(source_id);
