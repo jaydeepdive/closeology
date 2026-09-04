@@ -274,28 +274,32 @@ def _download(page, url, dest, log):
     Akamai already trusts for this session), unlike Playwright's API-request client
     which Akamai 403s. Bytes come back base64 and are written locally."""
     import base64
-    try:
-        res = page.evaluate("""async (u) => {
-          try {
-            const r = await fetch(u, {credentials: 'include'});
-            if (!r.ok) return {ok:false, status:r.status};
-            const bytes = new Uint8Array(await r.arrayBuffer());
-            let bin = ''; const chunk = 0x8000;
-            for (let i = 0; i < bytes.length; i += chunk)
-              bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
-            return {ok:true, b64: btoa(bin)};
-          } catch (e) { return {ok:false, error:String(e)}; }
-        }""", url)
-        if not res.get("ok"):
-            log(f"  download {res.get('status') or res.get('error')} for {os.path.basename(dest)}")
-            return False
-        data = base64.b64decode(res["b64"])
-        if not data[:5].startswith(b"%PDF"):
-            log(f"  not a PDF ({len(data)} bytes) for {os.path.basename(dest)}"); return False
-        open(dest, "wb").write(data)
-        return True
-    except Exception as e:
-        log(f"  download error: {str(e)[:120]}"); return False
+    _JS = """async (u) => {
+      try {
+        const r = await fetch(u, {credentials: 'include'});
+        const bytes = new Uint8Array(await r.arrayBuffer());
+        let bin = ''; const chunk = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunk)
+          bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+        return {ok:r.ok, status:r.status, b64: btoa(bin)};
+      } catch (e) { return {ok:false, error:String(e)}; }
+    }"""
+    for attempt in range(3):
+        try:
+            res = page.evaluate(_JS, url)
+        except Exception as e:
+            log(f"  download error: {str(e)[:100]}"); time.sleep(4); continue
+        if res.get("error"):
+            log(f"  fetch error a{attempt+1}: {str(res['error'])[:80]}"); time.sleep(5 + attempt * 4); continue
+        data = base64.b64decode(res.get("b64") or "")
+        if data[:5].startswith(b"%PDF"):
+            open(dest, "wb").write(data)
+            return True
+        # not a PDF — log a snippet so we can see WHAT it is (Akamai? SEDAR error?)
+        snip = data[:200].decode("latin-1", "replace").replace("\n", " ").replace("\r", " ")
+        log(f"  not a PDF (HTTP {res.get('status')}, {len(data)}B) a{attempt+1}: {snip[:140]}")
+        time.sleep(6 + attempt * 5)          # back off; token/rate may recover
+    return False
 
 
 def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, chrome=False, log=print):
@@ -360,7 +364,12 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
                 if key in have:
                     continue
                 dest = os.path.join(DOWNLOADS, f"sedar_{key}.pdf")
-                if os.path.exists(dest) or _download(page, r["url"], dest, log):
+                if os.path.exists(dest):
+                    ok = True
+                else:
+                    time.sleep(throttle)          # space EVERY attempt (be gentle)
+                    ok = _download(page, r["url"], dest, log)
+                if ok:
                     downloaded += 1
                     have.add(key)
                     row = {"key": key, "node": r["node"], "drm": r.get("drmKey"),
@@ -372,7 +381,6 @@ def collect(max_pages=2, headful=False, cdp=None, ingest=False, throttle=2.0, ch
                     ledger.append(row); new_rows.append(row)
                     log(f"  ✓ {company or key} ({size_kb or '?'} KB)")
                     _save_ledger(ledger)          # checkpoint after every file
-                    time.sleep(throttle)          # be gentle; slowness is fine
             # next page
             try:
                 nxt = page.get_by_text(re.compile(r"Next\s*»")).first
