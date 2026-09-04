@@ -1,0 +1,272 @@
+[
+ {
+  "company": "Laramide Resources Ltd.",
+  "submitted": "03 Sep 2026 21:49",
+  "jurisdiction": "Ontario",
+  "size_kb": 21646,
+  "node": "W2470",
+  "drm": "7d9f844a9437be1c",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Getchell Gold Corp.",
+  "submitted": "03 Sep 2026 19:01",
+  "jurisdiction": "British Columbia",
+  "size_kb": 17272,
+  "node": "W2541",
+  "drm": "66ae03c0d015584b",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Ongwe Minerals Inc. (formerly Great Quest Gold Ltd.)",
+  "submitted": "03 Sep 2026 16:59",
+  "jurisdiction": "British Columbia",
+  "size_kb": 21081,
+  "node": "W2612",
+  "drm": "1cc333eb00dee40c",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Skyharbour Resources Ltd.",
+  "submitted": "03 Sep 2026 12:15",
+  "jurisdiction": "British Columbia",
+  "size_kb": 7618,
+  "node": "W2683",
+  "drm": "f781b6144a19b147",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Skyharbour Resources Ltd.",
+  "submitted": "03 Sep 2026 12:09",
+  "jurisdiction": "British Columbia",
+  "size_kb": 14402,
+  "node": "W2754",
+  "drm": "366c6ce8686db4c2",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Miravalles Gold Corp.",
+  "submitted": "03 Sep 2026 08:21",
+  "jurisdiction": "British Columbia",
+  "size_kb": 1894,
+  "node": "W2825",
+  "drm": "f9c45b130afbd4b8",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Miravalles Gold Corp.",
+  "submitted": "03 Sep 2026 06:22",
+  "jurisdiction": "British Columbia",
+  "size_kb": 1894,
+  "node": "W2896",
+  "drm": "07429e3ce4ed83f7",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Edison Lithium Corp.",
+  "submitted": "02 Sep 2026 21:08",
+  "jurisdiction": "British Columbia",
+  "size_kb": 4404,
+  "node": "W2967",
+  "drm": "d93c7de2162def68",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Mining Americas Inc. (formerly Minera Alamos Inc.) (000009698)",
+  "submitted": "02 Sep 2026 21:04",
+  "jurisdiction": "Ontario",
+  "size_kb": 14013,
+  "node": "W3038",
+  "drm": "0563af6f9961d813",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Patriot Resources Corp.",
+  "submitted": "01 Sep 2026 17:47",
+  "jurisdiction": "British Columbia",
+  "size_kb": 4977,
+  "node": "W3109",
+  "drm": "827a57e5491f45de",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Lightning Resource Corp. (000028340)",
+  "submitted": "01 Sep 2026 17:19",
+  "jurisdiction": "British Columbia",
+  "size_kb": 60598,
+  "node": "W3180",
+  "drm": "30f437ec94780bcc",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Goldgroup Mining Inc. (000003703)",
+  "submitted": "31 Aug 2026 18:40",
+  "jurisdiction": "British Columbia",
+  "size_kb": 11953,
+  "node": "W3251",
+  "drm": "86058a00283228a2",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Goldgroup Mining Inc. (000003703)",
+  "submitted": "31 Aug 2026 18:36",
+  "jurisdiction": "British Columbia",
+  "size_kb": 17841,
+  "node": "W3322",
+  "drm": "9e5ede70b691e95c",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Silver Hammer Mining Corp.",
+  "submitted": "28 Aug 2026 19:04",
+  "jurisdiction": "British Columbia",
+  "size_kb": 14722,
+  "node": "W3393",
+  "drm": "d14f629d361ce8f0",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Stroud Resources Ltd.",
+  "submitted": "28 Aug 2026 18:57",
+  "jurisdiction": "Ontario",
+  "size_kb": 14665,
+  "node": "W3464",
+  "drm": "ab60e2279444cb44",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "NextSource Materials Inc.",
+  "submitted": "28 Aug 2026 10:29",
+  "jurisdiction": "Ontario",
+  "size_kb": 29348,
+  "node": "W3535",
+  "drm": "3381e606362d3ab2",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Abasca Resources Inc.",
+  "submitted": "27 Aug 2026 20:14",
+  "jurisdiction": "British Columbia",
+  "size_kb": 14782,
+  "node": "W3606",
+  "drm": "f6e6430b52f91f81",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Galway Metals Inc.",
+  "submitted": "27 Aug 2026 17:33",
+  "jurisdiction": "Ontario",
+  "size_kb": 9779,
+  "node": "W3677",
+  "drm": "6aae12475ad759e3",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "NevGold Corp.",
+  "submitted": "27 Aug 2026 16:56",
+  "jurisdiction": "British Columbia",
+  "size_kb": 12636,
+  "node": "W3748",
+  "drm": "79cc778bc01d6936",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Silver One Resources Inc.",
+  "submitted": "27 Aug 2026 15:29",
+  "jurisdiction": "British Columbia",
+  "size_kb": 11997,
+  "node": "W3819",
+  "drm": "1855ebe4332c9a6d",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "First Majestic Silver Corp.",
+  "submitted": "25 Aug 2026 16:50",
+  "jurisdiction": "British Columbia",
+  "size_kb": 18613,
+  "node": "W3890",
+  "drm": "8ef48aa0e080adf2",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Centauri Minerals Inc. (000110017)",
+  "submitted": "24 Aug 2026 13:14",
+  "jurisdiction": "British Columbia",
+  "size_kb": 11797,
+  "node": "W3961",
+  "drm": "69cb8326aa192ce1",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "First Phosphate Corp.",
+  "submitted": "24 Aug 2026 07:56",
+  "jurisdiction": "Ontario",
+  "size_kb": 15884,
+  "node": "W4032",
+  "drm": "1c0260e76323cc77",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "First Phosphate Corp.",
+  "submitted": "24 Aug 2026 07:56",
+  "jurisdiction": "Ontario",
+  "size_kb": 14735,
+  "node": "W4103",
+  "drm": "9c4d8c106d9377c2",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Loyalist Exploration Limited",
+  "submitted": "21 Aug 2026 17:26",
+  "jurisdiction": "Ontario",
+  "size_kb": 10081,
+  "node": "W4174",
+  "drm": "d4a75de28412e6e2",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Mako Mining Corp. (000024156)",
+  "submitted": "21 Aug 2026 16:31",
+  "jurisdiction": "British Columbia",
+  "size_kb": 16888,
+  "node": "W4245",
+  "drm": "326645325b34c33f",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "OROGENIC GOLD CORP. (000112757)",
+  "submitted": "21 Aug 2026 15:59",
+  "jurisdiction": "Alberta",
+  "size_kb": 10356,
+  "node": "W4316",
+  "drm": "271b36519ec7034f",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Blackcomb Silver Corp. (000110151)",
+  "submitted": "21 Aug 2026 14:55",
+  "jurisdiction": "British Columbia",
+  "size_kb": 19868,
+  "node": "W4387",
+  "drm": "02ab6a50ae94ba38",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "Strategic Metals Ltd.",
+  "submitted": "20 Aug 2026 07:06",
+  "jurisdiction": "British Columbia",
+  "size_kb": 3088,
+  "node": "W4458",
+  "drm": "5e808bfb7e97ce92",
+  "doctype": "Technical report (NI 43-101)"
+ },
+ {
+  "company": "StrikePoint Gold Inc.",
+  "submitted": "18 Aug 2026 16:23",
+  "jurisdiction": "British Columbia",
+  "size_kb": 9603,
+  "node": "W4529",
+  "drm": "992f3411acfeaaac",
+  "doctype": "Technical report (NI 43-101)"
+ }
+]
