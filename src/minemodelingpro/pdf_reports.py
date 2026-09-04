@@ -407,10 +407,15 @@ def extract_metallurgy(pages_text):
     }
 
 
-def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_date=None, drill_tables=True):
+def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_date=None,
+                  drill_tables=True, source_id=None, pdf_path=None):
+    """Extract + retain a technical report. `url` is the citable source (a web
+    URL, or a SEDAR filing reference). `pdf_path` ingests an already-downloaded
+    file (e.g. a SEDAR PDF in Downloads) instead of fetching. `source_id` gives a
+    stable id (e.g. sedar:<filing>) so re-ingesting the same filing is idempotent."""
     import pdfplumber
-    sid = _rid(url)
-    path = fetch_pdf(url)
+    sid = source_id or _rid(url)
+    path = pdf_path if (pdf_path and os.path.exists(pdf_path)) else fetch_pdf(url)
     with pdfplumber.open(path) as pdf:
         pages_text = [pg.extract_text() or "" for pg in pdf.pages]
     res = extract_resources(pages_text)
