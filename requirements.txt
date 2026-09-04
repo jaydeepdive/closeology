@@ -8,3 +8,6 @@ pandas
 openpyxl
 construct
 tabulate
+pdfplumber
+camelot-py
+opencv-python-headless

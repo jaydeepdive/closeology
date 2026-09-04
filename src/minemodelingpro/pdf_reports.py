@@ -125,7 +125,170 @@ def extract_methodology(pages_text):
     }
 
 
-def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_date=None):
+# --------------------------------------------------------- appendix drill tables
+# Full collar + assay tables live in the report appendices as BORDERLESS tables.
+# Camelot's stream flavour reconstructs them from text alignment (pdfplumber's
+# text strategy over-fragments columns). We pre-scan text for candidate pages so
+# Camelot only parses the table pages (it is slow), then map columns by header.
+_ELEM = {"au": ("Au", "g/t"), "gold": ("Au", "g/t"), "ag": ("Ag", "g/t"), "silver": ("Ag", "g/t"),
+         "cu": ("Cu", "%"), "copper": ("Cu", "%"), "pb": ("Pb", "%"), "lead": ("Pb", "%"),
+         "zn": ("Zn", "%"), "zinc": ("Zn", "%"), "ni": ("Ni", "%"), "nickel": ("Ni", "%"),
+         "co": ("Co", "%"), "mo": ("Mo", "%"), "moly": ("Mo", "%"), "sn": ("Sn", "%"),
+         "w": ("W", "%"), "wo3": ("WO3", "%"), "u3o8": ("U3O8", "%"), "u": ("U", "%"),
+         "li2o": ("Li2O", "%"), "li": ("Li", "%"), "sb": ("Sb", "%"), "v2o5": ("V2O5", "%"),
+         "fe": ("Fe", "%"), "mn": ("Mn", "%"), "cr2o3": ("Cr2O3", "%"), "pt": ("Pt", "g/t"),
+         "pd": ("Pd", "g/t"), "aueq": ("AuEq", "g/t"), "ageq": ("AgEq", "g/t"),
+         "cueq": ("CuEq", "%"), "reo": ("REO", "%"), "treo": ("TREO", "%")}
+_COL_C = re.compile(r"easting|northing|utm[_ ]?[en]\b|azimuth|\bdip\b|\bcollar\b", re.I)
+_COL_A = re.compile(r"\bfrom\b|\bto\s*\(|\binterval\b|\bassay", re.I)
+
+
+def _num_cell(s):
+    if s is None:
+        return None
+    s = str(s).replace(",", "").replace("−", "-").strip()
+    m = re.match(r"-?\d+\.?\d*", s.lstrip("~<>= "))
+    try:
+        return float(m.group(0)) if m else None
+    except ValueError:
+        return None
+
+
+def _candidate_pages(pages_text):
+    """1-indexed pages likely holding collar or assay tables (strict, to skip prose)."""
+    coll, assay = [], []
+    for i, t in enumerate(pages_text):
+        low = (t or "").lower()
+        if "easting" in low and "northing" in low and len(re.findall(r"\b\d{5,7}\b", t or "")) >= 6:
+            coll.append(i + 1)
+        if re.search(r"\bfrom\b", low) and re.search(r"\bto\b", low) and \
+           re.search(r"\b(au|ag|cu|pb|zn|g/t|grade)\b", low) and len(re.findall(r"\d+\.\d", t or "")) >= 8:
+            assay.append(i + 1)
+    return coll, assay
+
+
+def _merge_header(rows, max_head=4):
+    """Combine the leading header rows (until the first mostly-numeric row) into a
+    per-column header string. Returns (col_headers, data_start_index)."""
+    data_start = 0
+    for idx, r in enumerate(rows[:max_head + 1]):
+        nums = sum(1 for c in r if _num_cell(c) is not None)
+        cells = sum(1 for c in r if str(c).strip())
+        if cells and nums >= max(2, cells // 2):
+            data_start = idx
+            break
+    else:
+        data_start = min(max_head, len(rows) - 1)
+    if data_start == 0:
+        data_start = 1
+    ncol = max(len(r) for r in rows) if rows else 0
+    heads = []
+    for c in range(ncol):
+        parts = [str(rows[r][c]).strip() for r in range(data_start)
+                 if c < len(rows[r]) and str(rows[r][c]).strip()]
+        heads.append(" ".join(parts).lower())
+    return heads, data_start
+
+
+def _map_columns(heads):
+    m = {"elements": []}
+    for i, h in enumerate(heads):
+        if not h:
+            continue
+        if re.search(r"hole.*(id|no|number|name)|^hole$|ddh|bhid|drill ?hole|hole id", h):
+            m.setdefault("hole", i)
+        elif "easting" in h or re.search(r"utm[_ ]?e\b|^east", h):
+            m.setdefault("easting", i)
+        elif "northing" in h or re.search(r"utm[_ ]?n\b|^north", h):
+            m.setdefault("northing", i)
+        elif re.search(r"elev|^rl\b|elevation", h):
+            m.setdefault("elev", i)
+        elif re.search(r"azimuth|\baz\b", h):
+            m.setdefault("azimuth", i)
+        elif re.search(r"\bdip\b|inclination|incl", h):
+            m.setdefault("dip", i)
+        elif re.search(r"^from|\bfrom\b", h):
+            m.setdefault("from", i)
+        elif re.search(r"^to\b|\bto\b|\bto\(", h):
+            m.setdefault("to", i)
+        elif re.search(r"length|width|interval|thickness|core len", h):
+            m.setdefault("length", i)
+        elif re.search(r"depth|eoh|total depth|hole length|final depth", h):
+            m.setdefault("depth", i)
+        else:
+            tok = re.sub(r"[^a-z0-9]", "", re.split(r"[\s(]", h)[0])
+            if tok in _ELEM:
+                el, unit = _ELEM[tok]
+                u = "g/t" if "g/t" in h or "gpt" in h or "g/t" in h else ("%" if "%" in h or "pct" in h else unit)
+                m["elements"].append((i, el, u))
+    return m
+
+
+def extract_drill_tables(path, pages_text, max_pages=80):
+    import warnings; warnings.filterwarnings("ignore")
+    import camelot
+    coll_p, assay_p = _candidate_pages(pages_text)
+    pages = sorted(set(coll_p + assay_p))[:max_pages]
+    collars, assays = [], []
+    if not pages:
+        return collars, assays
+    # camelot in modest chunks to bound memory
+    for start in range(0, len(pages), 20):
+        chunk = pages[start:start + 20]
+        try:
+            tabs = camelot.read_pdf(path, pages=",".join(map(str, chunk)), flavor="stream")
+        except Exception:
+            continue
+        for tb in tabs:
+            rows = tb.df.values.tolist()
+            if len(rows) < 3:
+                continue
+            heads, ds = _merge_header(rows)
+            cm = _map_columns(heads)
+            is_collar = "easting" in cm and "northing" in cm and "hole" in cm
+            is_assay = "from" in cm and "to" in cm and cm["elements"] and "hole" in cm
+            if not (is_collar or is_assay):
+                continue
+            last_hole = None
+            for r in rows[ds:]:
+                def cell(k):
+                    return r[cm[k]] if k in cm and cm[k] < len(r) else None
+                hid = str(cell("hole") or "").strip()
+                if hid:
+                    last_hole = hid
+                hid = hid or last_hole
+                if not hid or hid.lower() in ("total", "average", "mean"):
+                    continue
+                if is_collar:
+                    e, n = _num_cell(cell("easting")), _num_cell(cell("northing"))
+                    if e is None or n is None:
+                        continue
+                    collars.append({"native_id": hid, "easting": e, "northing": n,
+                                    "elev_m": _num_cell(cell("elev")), "azimuth": _num_cell(cell("azimuth")),
+                                    "dip": _num_cell(cell("dip")), "depth_m": _num_cell(cell("depth"))})
+                if is_assay:
+                    fr, to = _num_cell(cell("from")), _num_cell(cell("to"))
+                    if fr is None or to is None:
+                        continue
+                    ln = _num_cell(cell("length"))
+                    ln = ln if ln is not None else (round(to - fr, 2) if to >= fr else None)
+                    for ci, el, unit in cm["elements"]:
+                        g = _num_cell(r[ci]) if ci < len(r) else None
+                        if g is None:
+                            continue
+                        assays.append({"native_id": hid, "from_m": fr, "to_m": to, "length_m": ln,
+                                       "element": el, "grade": g, "unit": unit, "is_subinterval": 0})
+    # de-dupe
+    cu = {c["native_id"]: c for c in collars}
+    seen = set(); ua = []
+    for a in assays:
+        k = (a["native_id"], a["from_m"], a["to_m"], a["element"])
+        if k not in seen:
+            seen.add(k); ua.append(a)
+    return list(cu.values()), ua
+
+
+def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_date=None, drill_tables=True):
     import pdfplumber
     sid = _rid(url)
     path = fetch_pdf(url)
@@ -133,8 +296,30 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
         pages_text = [pg.extract_text() or "" for pg in pdf.pages]
     res = extract_resources(pages_text)
     meth = extract_methodology(pages_text)
+    collars, assays = ([], [])
+    if drill_tables:
+        try:
+            collars, assays = extract_drill_tables(path, pages_text)
+        except Exception as e:
+            print(f"[43-101] drill-table extract skipped: {str(e)[:100]}")
 
     con = store.connect()
+    # collars + assays from appendix drill tables
+    con.execute("DELETE FROM collars WHERE source_id=?", (sid,))
+    if collars:
+        crow = [{"hole_uid": f"{sid}:{c['native_id']}", "source_id": sid, "native_id": c["native_id"],
+                 "company": None, "project": project, "jurisdiction": jurisdiction, "lat": None, "lon": None,
+                 "easting": c["easting"], "northing": c["northing"], "utm_zone": None, "utm_hemi": "N",
+                 "datum": None, "elev_m": c["elev_m"], "azimuth": c["azimuth"], "dip": c["dip"],
+                 "depth_m": c["depth_m"], "year_drilled": None, "has_assay": 1, "assay_flags": None,
+                 "report_ref": None, "url": url} for c in collars]
+        store.replace_collars(con, sid, crow)
+    con.execute("DELETE FROM assays WHERE source_id=?", (sid,))
+    if assays:
+        arow = [{"source_id": sid, "hole_uid": f"{sid}:{a['native_id']}", "native_id": a["native_id"],
+                 "from_m": a["from_m"], "to_m": a["to_m"], "length_m": a["length_m"], "element": a["element"],
+                 "grade": a["grade"], "unit": a["unit"], "is_subinterval": a["is_subinterval"]} for a in assays]
+        store.replace_assays(con, sid, arow)
     # deposit_model rows
     con.execute("DELETE FROM deposit_model WHERE source_id=?", (sid,))
     dm = []
@@ -168,12 +353,13 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
         "id": sid, "kind": "ni43101", "name": project or url.rsplit("/", 1)[-1],
         "url": url, "jurisdiction": jurisdiction,
         "pulled_at": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
-        "n_collars": 0, "n_assays": 0,
-        "note": f"{len(dm)} resource rows; method={'y' if meth else 'n'}"})
+        "n_collars": len(collars), "n_assays": len(assays),
+        "note": f"{len(dm)} resource rows; method={'y' if meth else 'n'}; "
+                f"{len(collars)} collars; {len(assays)} assays"})
     con.commit(); con.close()
-    print(f"[43-101] {project or url}: {len(dm)} resource rows | "
-          f"method: { {k: v for k, v in (meth or {}).items() if k not in ('method_text','n_method_pages') and v} }")
-    return {"resources": len(dm), "method": bool(meth)}
+    print(f"[43-101] {project or url}: {len(dm)} resource rows, {len(collars)} collars, "
+          f"{len(assays)} assays | method={meth['estimation_method'] if meth else None}")
+    return {"resources": len(dm), "collars": len(collars), "assays": len(assays), "method": bool(meth)}
 
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -184,15 +370,16 @@ def _already(con, url):
     return con.execute("SELECT 1 FROM sources WHERE id=?", (_rid(url),)).fetchone() is not None
 
 
-def run_queue(path=QUEUE, limit=None, max_seconds=None):
+def run_queue(path=QUEUE, limit=None, max_seconds=None, refresh=False):
     """Ingest every report in the queue not already in the store. Idempotent and
-    resumable (skips ingested reports), time-budgeted for CI. Shards at the end."""
+    resumable (skips ingested reports), time-budgeted for CI. Shards at the end.
+    refresh=True re-ingests every report (e.g. after an extractor upgrade)."""
     import json
     import time
     from minemodelingpro import shards
     q = json.load(open(path))
     con = store.connect()
-    todo = [r for r in q if not _already(con, r["url"])]
+    todo = q if refresh else [r for r in q if not _already(con, r["url"])]
     con.close()
     print(f"[43-101] queue: {len(q)} reports, {len(todo)} new to ingest")
     t0 = time.time()
@@ -220,7 +407,7 @@ if __name__ == "__main__":
     if a and a[0] == "queue":
         limit = int(a[a.index("--limit") + 1]) if "--limit" in a else None
         secs = int(a[a.index("--max-seconds") + 1]) if "--max-seconds" in a else None
-        run_queue(limit=limit, max_seconds=secs)
+        run_queue(limit=limit, max_seconds=secs, refresh="--refresh" in a)
     elif a:
         ingest_report(a[0], project=a[1] if len(a) > 1 else None,
                       commodity=a[2] if len(a) > 2 else None,

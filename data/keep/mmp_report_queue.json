@@ -280,5 +280,143 @@
   "project": "Eagle s Nest",
   "commodity": "Ni-Cu-PGE",
   "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://minedocs.com/19/Asanko-FS-12312022.pdf",
+  "project": "Asanko",
+  "commodity": "Au",
+  "jurisdiction": "Ghana"
+ },
+ {
+  "url": "https://minedocs.com/20/Block14_FS_08312020.pdf",
+  "project": "Block14",
+  "commodity": "Au",
+  "jurisdiction": "Sudan"
+ },
+ {
+  "url": "https://minedocs.com/22/Asanko-TR-02282022.pdf",
+  "project": "Asanko",
+  "commodity": "Au",
+  "jurisdiction": "Ghana"
+ },
+ {
+  "url": "https://minedocs.com/30/Springpole-PFS-12012025.pdf",
+  "project": "Springpole",
+  "commodity": "Au",
+  "jurisdiction": "Ontario"
+ },
+ {
+  "url": "https://minedocs.com/22/Golden_Independence-PEA-01242022.pdf",
+  "project": "Golden Independence",
+  "commodity": "Au",
+  "jurisdiction": "Nevada"
+ },
+ {
+  "url": "https://minedocs.com/21/Marimaca-PEA-0842020.pdf",
+  "project": "Marimaca",
+  "commodity": "Cu",
+  "jurisdiction": "Chile"
+ },
+ {
+  "url": "https://www.minedocs.com/23/LA-Cumbre-PEA-12312021.pdf",
+  "project": "LA-Cumbre",
+  "commodity": "Au",
+  "jurisdiction": "Colombia"
+ },
+ {
+  "url": "https://minedocs.com/28/Copperstone-PEA-02062025.pdf",
+  "project": "Copperstone",
+  "commodity": "Au",
+  "jurisdiction": "Arizona"
+ },
+ {
+  "url": "https://minedocs.com/24/Copper_Creek_PEA_05032023.pdf",
+  "project": "Copper Creek",
+  "commodity": "Cu",
+  "jurisdiction": "Arizona"
+ },
+ {
+  "url": "https://minedocs.com/28/Carangas-PEA-09052024.pdf",
+  "project": "Carangas",
+  "commodity": "Ag-Au",
+  "jurisdiction": "Bolivia"
+ },
+ {
+  "url": "https://minedocs.com/29/ElCubo-TR-08012024.pdf",
+  "project": "ElCubo",
+  "commodity": "Ag-Au",
+  "jurisdiction": "Mexico"
+ },
+ {
+  "url": "https://minedocs.com/24/Pan-TR-12312022.pdf",
+  "project": "Pan",
+  "commodity": "Au",
+  "jurisdiction": "Nevada"
+ },
+ {
+  "url": "https://minedocs.com/30/Cerro-del-Gallo-PFS-12112025.pdf",
+  "project": "Cerro-del-Gallo",
+  "commodity": "Au-Ag",
+  "jurisdiction": "Mexico"
+ },
+ {
+  "url": "https://minedocs.com/22/Goldboro-FS-12162021.pdf",
+  "project": "Goldboro",
+  "commodity": "Au",
+  "jurisdiction": "Nova Scotia"
+ },
+ {
+  "url": "https://minedocs.com/21/Goldboro_PEA_06232021.pdf",
+  "project": "Goldboro",
+  "commodity": "Au",
+  "jurisdiction": "Nova Scotia"
+ },
+ {
+  "url": "https://minedocs.com/23/Marban-PFS-08242022.pdf",
+  "project": "Marban",
+  "commodity": "Au",
+  "jurisdiction": "Quebec"
+ },
+ {
+  "url": "https://minedocs.com/28/Bolivar-TR-01012024.pdf",
+  "project": "Bolivar",
+  "commodity": "Zn-Pb-Ag",
+  "jurisdiction": "Bolivia"
+ },
+ {
+  "url": "https://minedocs.com/21/Lagoa_Salgada_Project_TR-PEA_9212021.pdf",
+  "project": "Lagoa Salgada",
+  "commodity": "Zn-Cu",
+  "jurisdiction": "Portugal"
+ },
+ {
+  "url": "https://minedocs.com/25/QuebradaBlanca-TR-12312023.pdf",
+  "project": "QuebradaBlanca",
+  "commodity": "Cu",
+  "jurisdiction": "Chile"
+ },
+ {
+  "url": "https://minedocs.com/24/MineraFlorida_TR_08312022.pdf",
+  "project": "MineraFlorida",
+  "commodity": "Au-Ag-Zn",
+  "jurisdiction": "Chile"
+ },
+ {
+  "url": "https://minedocs.com/30/Golden-Summit-TR-07222025.pdf",
+  "project": "Golden-Summit",
+  "commodity": "Au",
+  "jurisdiction": "Alaska"
+ },
+ {
+  "url": "https://minedocs.com/21/Mustavaara-PEA-05042021.pdf",
+  "project": "Mustavaara",
+  "commodity": "V",
+  "jurisdiction": "Finland"
+ },
+ {
+  "url": "https://minedocs.com/23/MontSorcier__PEA_09082022.pdf",
+  "project": "MontSorcier",
+  "commodity": "Fe-V",
+  "jurisdiction": "Quebec"
  }
 ]

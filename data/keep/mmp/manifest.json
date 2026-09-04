@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-04T00:56:58Z",
+  "generated": "2026-09-04T01:13:04Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -44,6 +44,12 @@
         "source": "news:newsfilecorp",
         "rows": 45,
         "bytes": 15731
+      },
+      {
+        "file": "mmp/collars/ni43101__1f4fea7f67d5d49f.parquet",
+        "source": "ni43101:1f4fea7f67d5d49f",
+        "rows": 2,
+        "bytes": 12524
       }
     ],
     "assays": [
@@ -58,6 +64,12 @@
         "source": "news:newsfilecorp",
         "rows": 231,
         "bytes": 9550
+      },
+      {
+        "file": "mmp/assays/ni43101__1f4fea7f67d5d49f.parquet",
+        "source": "ni43101:1f4fea7f67d5d49f",
+        "rows": 47,
+        "bytes": 7195
       }
     ],
     "lithology": [
@@ -74,12 +86,6 @@
         "source": "ni43101:065c721c382ba0f2",
         "rows": 11,
         "bytes": 9594
-      },
-      {
-        "file": "mmp/deposit_model/ni43101__1f4fea7f67d5d49f.parquet",
-        "source": "ni43101:1f4fea7f67d5d49f",
-        "rows": 32,
-        "bytes": 11080
       },
       {
         "file": "mmp/deposit_model/ni43101__298fbb68bffa56a6.parquet",
@@ -170,6 +176,12 @@
         "source": "ni43101:f4fa78a39fb80963",
         "rows": 21,
         "bytes": 10236
+      },
+      {
+        "file": "mmp/deposit_model/ni43101__1f4fea7f67d5d49f.parquet",
+        "source": "ni43101:1f4fea7f67d5d49f",
+        "rows": 32,
+        "bytes": 11080
       }
     ],
     "model_method": [
@@ -278,12 +290,12 @@
     ]
   },
   "totals": {
-    "collars": 413833,
+    "collars": 413835,
     "survey": 0,
-    "assays": 1832,
+    "assays": 1879,
     "lithology": 759931,
     "deposit_model": 449,
     "model_method": 17
   },
-  "shard_count": 44
+  "shard_count": 46
 }
