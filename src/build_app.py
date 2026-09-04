@@ -208,6 +208,8 @@ function refresh(){{
 function clearOverlays(){{
   if(groundLayer){{map.removeLayer(groundLayer);groundLayer=null;}}
   if(claimLayer){{map.removeLayer(claimLayer);claimLayer=null;}}
+  if(companyClaimLayer){{map.removeLayer(companyClaimLayer);companyClaimLayer=null;}}
+  if(drillGround){{map.removeLayer(drillGround);drillGround=null;}}
 }}
 async function showGround(p){{
   clearOverlays();
@@ -303,7 +305,7 @@ function select(id){{
   showGround(p);
 }}
 function deselect(){{
-  selId=null;
+  selId=null; selRid=null;
   clearOverlays();
   document.getElementById('detail').style.display='none';
   document.getElementById('list').style.display='block';
@@ -321,6 +323,7 @@ legend.onAdd=()=>{{const d=L.DomUtil.create('div','legend');
   d.innerHTML='<b>Marker = lead</b> (size = score)<br>'+ms.map(m=>`<i style="background:${{col(m)}}"></i>${{m}}`).join('<br>')
     +'<br><i style="background:#ff2fbf;border:1px solid #7a0050;border-radius:2px"></i>Open ground (stakeable)'
     +'<br><i style="background:#c9a227;border:1px solid #8a6d3b;border-radius:2px"></i>Existing claims (staked)'
+    +'<br><i style="background:#e11d38;border:1px solid #a10f28;border-radius:2px"></i>Driller\'s own claims'
     +'<br><i style="background:#ff7a00"></i>Recent drill hole (⛏ toggle)';return d;}};
 legend.addTo(map);
 refresh();
@@ -329,6 +332,7 @@ refresh();
 // can see drill holes sitting against the open ground (magenta) and claims (gold)
 let drillLayer=L.layerGroup(), drillLoaded=false, drillOn=false;
 let drillGround=null, drillOpenData=null, drillByRid={{}};
+let drillProg={{}}, drillClaimsData=null, drillClaimByRid=null, companyClaimLayer=null, selRid=null;
 async function drillOpen(){{
   if(drillOpenData) return drillOpenData;
   try{{ const r=await fetch('drill_open.geojson'); drillOpenData = r.ok ? await r.json() : {{features:[]}}; }}
@@ -355,9 +359,15 @@ async function loadDrill(){{
     const r=await fetch('drill_holes.geojson'); if(!r.ok) return false; const d=await r.json();
     (d.features||[]).forEach(f=>{{
       const p=f.properties||{{}}, c=f.geometry.coordinates;
-      if(p.rid){{ (drillByRid[p.rid]=drillByRid[p.rid]||[]).push([c[1],c[0]]); }}
+      if(p.rid){{
+        (drillByRid[p.rid]=drillByRid[p.rid]||[]).push([c[1],c[0]]);
+        const pr=drillProg[p.rid]||(drillProg[p.rid]={{rid:p.rid,company:p.company,project:p.project,
+          region:p.region,date:p.date,url:p.url,holes:[]}});
+        pr.holes.push({{hole:p.hole,depth_m:p.depth_m,azimuth:p.azimuth,dip:p.dip,
+          intervals:p.intervals||[],lat:c[1],lon:c[0]}});
+      }}
       const m=L.circleMarker([c[1],c[0]],{{radius:5,color:'#111',weight:1,fillColor:'#ff7a00',fillOpacity:.95}});
-      m.on('click',()=>{{ if(p.rid) showProgramGround(p.rid); }});
+      m.on('click',()=>{{ if(p.rid) selectDrill(p.rid); }});
       const g=v=>(v==null?'?':(''+v));
       const ivs=(p.intervals||[]).map(x=>`<div style="font-size:11.5px${{x.s?';color:#777;padding-left:8px':''}}">`+
         `${{x.s?'incl. ':''}}${{x.f!=null?g(x.f)+'–'+g(x.t)+'m':(g(x.l)+' m')}} · <b>${{g(x.g)}} ${{esc(x.u)}} ${{esc(x.e)}}</b></div>`).join('');
@@ -375,6 +385,100 @@ async function loadDrill(){{
 async function showDrill(on){{ drillOn=on; await loadDrill();
   if(on) map.addLayer(drillLayer); else map.removeLayer(drillLayer);
   const b=document.getElementById('drillbtn'); if(b) b.classList.toggle('on',on);
+}}
+// ---- drilling company's claims (the staked ground the holes sit on) + the
+// drill program's full detail in the sidebar, opened when a drill hole is clicked
+async function drillClaimsLoad(){{
+  if(drillClaimByRid) return drillClaimByRid;
+  drillClaimByRid={{}};
+  try{{ const r=await fetch('drill_claims.geojson'); drillClaimsData = r.ok ? await r.json() : {{features:[]}}; }}
+  catch(e){{ drillClaimsData={{features:[]}}; }}
+  (drillClaimsData.features||[]).forEach(f=>{{
+    const rid=f.properties&&f.properties.rid; if(!rid) return;
+    (drillClaimByRid[rid]=drillClaimByRid[rid]||[]).push(f);
+  }});
+  return drillClaimByRid;
+}}
+async function showCompanyClaims(rid){{
+  if(companyClaimLayer){{map.removeLayer(companyClaimLayer);companyClaimLayer=null;}}
+  const by=await drillClaimsLoad(); const fs=by[rid]||[];
+  const outline=fs.find(f=>f.properties.matched==='outline');
+  const cells=fs.filter(f=>f.properties.matched!=='outline');
+  companyClaimLayer=L.layerGroup();
+  if(cells.length){{
+    L.geoJSON({{type:'FeatureCollection',features:cells}},{{
+      style:f=>({{color:'#c33',weight:.5,opacity:.7,fillColor:'#e11d38',
+        fillOpacity:(f.properties.matched==='owner'?.22:.16)}}),
+      onEachFeature:(f,lyr)=>{{
+        const pr=f.properties||{{}};
+        const tip=`${{pr.owner?'<b>'+esc(pr.owner)+'</b><br>':''}}`+
+          `${{pr.cname?esc(pr.cname)+' ':''}}${{pr.claim?'#'+esc(pr.claim):''}}`+
+          `${{pr.expiry?'<br><span style=\"color:#666\">good to '+esc(pr.expiry)+'</span>':''}}`;
+        if(tip.trim()) lyr.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
+      }}
+    }}).addTo(companyClaimLayer);
+  }}
+  if(outline){{   // the property BOUNDARY drawn bold on top — where the ground starts/ends
+    L.geoJSON(outline,{{interactive:false,style:{{color:'#7a0f22',weight:3,opacity:.98,fill:false,dashArray:'1'}}}}).addTo(companyClaimLayer);
+  }}
+  if(cells.length||outline) companyClaimLayer.addTo(map);
+  // frame the property so its full extent is visible
+  try{{ if(outline){{ const b=L.geoJSON(outline).getBounds(); if(b.isValid()) map.fitBounds(b.pad(0.4),{{maxZoom:13}}); }} }}catch(e){{}}
+  const box=document.getElementById('coclaims');
+  if(box){{
+    const op=outline?outline.properties:{{}};
+    const nc=outline?op.n_cells:cells.length;
+    if(!nc){{
+      box.innerHTML=`<div class=sechd>Company property</div><div class=pn>No mapped claim block found around these holes in our current claim fabric.</div>`;
+      return;
+    }}
+    const known=op.holder_known;
+    const size=`<div class=fact><span class=k>Claim cells</span>${{nc}}</div>`+
+      (op.area_ha!=null?`<div class=fact><span class=k>Area</span>≈ ${{op.area_ha.toLocaleString()}} ha</div>`:'');
+    if(known){{
+      box.innerHTML=`<div class=sechd>Company property — where their claims start &amp; end</div>`+
+        (op.holder?`<div class=fact><span class=k>Holder</span><span class=own>${{esc(op.holder)}}</span></div>`:'')+size+
+        `<div class=pn style="margin-top:6px">Bold red outline = this holder's property boundary (from the provincial tenure registry). Magenta cells (⛏ open ground) are what's still stakeable up against it. Hover any red cell for its tenure number and expiry.</div>`;
+    }} else {{
+      box.innerHTML=`<div class=sechd>Claim block around the holes${{op.bounded?' (local footprint)':''}}</div>`+size+
+        `<div class=pn style="margin-top:6px">Ontario doesn't publish claim holders in bulk, so this is the <b>contiguous staked block the drill holes sit in</b> — it traces the drilled ground but ${{op.bounded?'was clipped to the local footprint because it runs into a dense multi-operator camp':'may include an adjacent operator where properties abut'}}. Confirm the exact holder and boundaries in <a href="https://www.mlas.mndm.gov.on.ca/mlas/" target=_blank>Ontario MLAS</a>. Magenta cells (⛏ open ground) show what's open up against it.</div>`;
+    }}
+  }}
+}}
+function drillDetailHTML(rid){{
+  const pr=drillProg[rid]; if(!pr) return '';
+  const g=v=>(v==null?'?':(''+v));
+  const holesHTML=(pr.holes||[]).map(h=>{{
+    const main=(h.intervals||[]).filter(x=>!x.s).map(x=>`<div class=intercept>`+
+      `${{x.f!=null?g(x.f)+'–'+g(x.t)+' m':(g(x.l)+' m')}} · <b>${{g(x.g)}} ${{esc(x.u)}} ${{esc(x.e)}}</b></div>`).join('');
+    const subs=(h.intervals||[]).filter(x=>x.s).map(x=>`<div class=intercept style="opacity:.7;border-left-color:#8aa">`+
+      `incl. ${{x.f!=null?g(x.f)+'–'+g(x.t)+' m':(g(x.l)+' m')}} · <b>${{g(x.g)}} ${{esc(x.u)}} ${{esc(x.e)}}</b></div>`).join('');
+    const meta=[h.depth_m!=null?('depth '+g(h.depth_m)+' m'):'',h.azimuth!=null?('az '+g(h.azimuth)):'',h.dip!=null?('dip '+g(h.dip)):''].filter(Boolean).join(' · ');
+    return `<div style="margin:8px 0 10px"><div style="font-weight:600;font-size:13px">Hole ${{esc(h.hole)}}</div>`+
+      `${{meta?('<div class=pn style="font-size:11.5px">'+meta+'</div>'):''}}${{main}}${{subs}}`+
+      `${{(!main&&!subs)?'<div class=pn style="font-size:11.5px">No assays reported for this hole.</div>':''}}</div>`;
+  }}).join('');
+  const nh=(pr.holes||[]).length;
+  return `<div class="dback" onclick="deselect()">← All opportunities</div>
+    <div class=dhd><span class=dn>${{esc(pr.company||'Drill program')}}</span>
+      <span class="pill p-open">⛏ drill result</span>
+      <div class=dsub>${{esc(pr.region||'')}}${{pr.date?(' · '+esc(pr.date)):''}}${{pr.project?(' · '+esc(pr.project)):''}}</div></div>
+    <div class=sec id=coclaims><div class=sechd>Company ground</div><div class=pn>Loading the company's claims…</div></div>
+    <div class=sec><div class=sechd>⛏ Drill results — ${{nh}} hole(s)</div>${{holesHTML||'<div class=pn>No holes located.</div>'}}</div>
+    ${{pr.url?`<a class=dbtn href="${{esc(pr.url)}}" target=_blank>Full release ↗</a>`:''}}`;
+}}
+async function selectDrill(rid){{
+  if(!drillProg[rid]) await loadDrill();
+  if(!drillProg[rid]) return;
+  selRid=rid; selId=null;
+  clearOverlays();
+  document.querySelectorAll('.row.sel').forEach(r=>r.classList.remove('sel'));
+  document.getElementById('list').style.display='none';
+  document.getElementById('cnt').style.display='none';
+  const det=document.getElementById('detail'); det.style.display='block'; det.innerHTML=drillDetailHTML(rid); det.scrollTop=0;
+  if(!drillOn) showDrill(true);
+  await showProgramGround(rid);
+  await showCompanyClaims(rid);   // runs last so the property extent frames the view
 }}
 const drillCtl=L.control({{position:'topright'}});
 drillCtl.onAdd=()=>{{const d=L.DomUtil.create('div','drillctl');
@@ -403,10 +507,7 @@ drillCtl.addTo(map);
       let brid=null,bd=1e9;   // the program (release) whose holes are nearest
       Object.keys(drillByRid).forEach(rid=>drillByRid[rid].forEach(ll=>{{
         const dd=Math.hypot(ll[0]-lat,ll[1]-lon); if(dd<bd){{bd=dd;brid=rid;}}}}));
-      if(brid) await showProgramGround(brid);   // open ground around ALL its holes
-      let bm=null,bmd=1e9; drillLayer.eachLayer(m=>{{const ll=m.getLatLng();
-        const dd=Math.hypot(ll.lat-lat,ll.lng-lon); if(dd<bmd){{bmd=dd;bm=m;}}}});
-      if(bm) bm.openPopup();
+      if(brid) await selectDrill(brid);   // open its sidebar detail + claims + open ground
     }}); return; }}
   // nearest lead to the target (match a radar item to its lead card)
   let best=null, bd=1e9;

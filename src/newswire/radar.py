@@ -145,6 +145,159 @@ def _drill_open_ground(items, halo_m=1000):
     return {"type": "FeatureCollection", "features": feats}
 
 
+_SUFFIX = {"ltd", "ltée", "ltee", "limited", "inc", "incorporated", "corp", "corporation",
+           "co", "company", "ulc", "llc", "lp", "plc", "sa", "nl",
+           "resources", "resource", "minerals", "mineral", "metals", "metal", "mining",
+           "mines", "mine", "gold", "silver", "copper", "exploration", "explorations",
+           "royalties", "royalty", "ventures", "venture", "corporation minière", "minière",
+           "canada", "canadian", "usa", "holdings", "holding", "capital", "group", "and",
+           "the", "de", "of", "energy", "uranium", "lithium", "nickel", "zinc"}
+
+
+def _name_tokens(name):
+    """Distinctive uppercase tokens of a company/owner name, dropping corporate
+    boilerplate and ownership %/qualifiers so 'Brixton Metals Corp.' and
+    'BRIXTON METALS CORPORATION - 100%' both reduce to {BRIXTON}."""
+    s = re.sub(r"\([^)]*\)", " ", str(name or ""))           # (34%) etc.
+    s = re.sub(r"[:\-]?\s*\d+(?:\.\d+)?\s*%", " ", s)          # 80.000% / - 100%
+    s = re.sub(r"[^A-Za-zÀ-ÿ ]", " ", s).lower()
+    toks = [t for t in s.split() if t not in _SUFFIX and len(t) >= 3]
+    return set(toks)
+
+
+def _owner_parties(owner):
+    """Split a multi-holder owner string into individual parties' token sets."""
+    parts = re.split(r"[;/]", str(owner or ""))
+    return [_name_tokens(p) for p in parts if p.strip()]
+
+
+def _drill_company_claims(items, bbox_km=35, seed_m=1500, cap=1500):
+    """The drilling company's PROPERTY — the full contiguous claim block the holes
+    sit in, so you can see where their ground starts and ends and judge what's open
+    to stake around it. Claim cells are contiguous, so we dissolve the nearby claim
+    fabric and keep the connected block(s) the holes touch (works in every province,
+    including Ontario where no holder is published). Where OWNER_NAME exists and
+    matches the company, we tighten the block to that holder so it can't bleed into
+    a neighbour's abutting ground. Emits the individual cells (hover = tenure/expiry)
+    plus a dissolved outline feature per program (the property boundary + area)."""
+    import math
+    import geopandas as gpd
+    from shapely.geometry import mapping as _map
+    from shapely.ops import unary_union
+    from newswire import geolocate
+    feats, cache = [], {}
+    for it in items:
+        holes = [(h["lat"], h["lon"]) for h in it.get("holes", []) if h.get("lat") is not None]
+        if not holes:
+            continue
+        prov = geolocate.region_from_latlon(holes[0][0], holes[0][1])
+        slug = _NAME2SLUG.get(prov)
+        if not slug:
+            continue
+        if slug not in cache:
+            cp = os.path.join("data", slug, "claims.parquet")
+            try:
+                cache[slug] = gpd.read_parquet(cp) if os.path.exists(cp) else None
+            except Exception:
+                cache[slug] = None
+        claims = cache[slug]
+        if claims is None or not len(claims):
+            continue
+        clat = sum(h[0] for h in holes) / len(holes)
+        clon = sum(h[1] for h in holes) / len(holes)
+        dlat = bbox_km * 1000 / 111320.0
+        dlon = bbox_km * 1000 / (111320.0 * max(0.2, math.cos(math.radians(clat))))
+        try:
+            cand = claims.cx[clon - dlon:clon + dlon, clat - dlat:clat + dlat].to_crs("EPSG:4326").reset_index(drop=True)
+        except Exception:
+            continue
+        if not len(cand):
+            continue
+        try:
+            candm = cand.to_crs(3347)
+            hpm = gpd.GeoSeries(gpd.points_from_xy([h[1] for h in holes], [h[0] for h in holes]),
+                                crs="EPSG:4326").to_crs(3347)
+            seed = hpm.buffer(seed_m).union_all()
+            # dissolve the local claim fabric; keep the connected component(s) the
+            # drilled block touches — that contiguous block traces the property.
+            merged = unary_union(list(candm.geometry.values))
+            comps = list(getattr(merged, "geoms", [merged]))
+            block = unary_union([g for g in comps if g.intersects(seed)])
+            if block.is_empty:
+                continue
+            in_block = candm.geometry.intersects(block).values
+        except Exception:
+            continue
+        owncol = next((c for c in ["OWNER_NAME", "owner", "HOLDER", "CLIENT_NAME"] if c in cand.columns), None)
+        idcol = next((c for c in ["TENURE_NUMBER_ID", "claim", "tenure", "TENURE_ID"] if c in cand.columns), None)
+        namecol = next((c for c in ["CLAIM_NAME", "NAME", "claim_name"] if c in cand.columns), None)
+        expcol = next((c for c in ["GOOD_TO_DATE", "EXPIRY_DATE", "expiry"] if c in cand.columns), None)
+        ctoks = _name_tokens(it.get("company"))
+        idx_block = [i for i in range(len(cand)) if in_block[i]]
+        # Property definition. Where the province PUBLISHES the holder (BC/YK/SK/QC/
+        # NL/MB) and it matches the driller, the property is exactly that holder's
+        # cells — precise start/end. Where it doesn't (Ontario), we can only trace
+        # the contiguous staked block the holes sit in; if that block is really a
+        # multi-company camp (implausibly large) we clip it to the local footprint
+        # and flag it as unverified rather than drawing a giant wrong boundary.
+        owner_idx = []
+        if owncol and ctoks:
+            for i in range(len(cand)):
+                for party in _owner_parties(str(cand.iloc[i][owncol])):
+                    if ctoks & party:
+                        owner_idx.append(i)
+                        break
+        bounded, holder = False, None
+        if owner_idx:
+            sel, matched = owner_idx, "owner"
+            import collections
+            names = collections.Counter(
+                re.sub(r"\s*[-:]?\s*\d+(?:\.\d+)?%\s*$", "", str(cand.iloc[i][owncol])).strip()
+                for i in owner_idx if str(cand.iloc[i][owncol]).strip())
+            holder = names.most_common(1)[0][0] if names else None
+        else:
+            sel, matched = idx_block, "block"
+            if not sel:
+                continue
+            if unary_union(list(candm.iloc[sel].geometry.values)).area / 1e4 > 12000:
+                tight = hpm.buffer(4000).union_all()
+                sel = [i for i in idx_block if candm.iloc[i].geometry.intersects(tight)]
+                bounded = True
+        if not sel:
+            continue
+        selm = candm.iloc[sel]
+        prop_geom = unary_union(list(selm.geometry.values))
+        area_ha = round(prop_geom.area / 10000.0)
+        # dissolved outline (the property boundary + size) — drawn as a bold border
+        try:
+            outline = gpd.GeoSeries([prop_geom], crs=3347).to_crs(4326).iloc[0]
+            feats.append({"type": "Feature",
+                          "properties": {"rid": it["id"], "matched": "outline",
+                                         "area_ha": area_ha, "n_cells": len(sel),
+                                         "company": it.get("company"), "holder": holder,
+                                         "holder_known": bool(owner_idx), "bounded": bounded},
+                          "geometry": _map(outline)})
+        except Exception:
+            pass
+        added = 0
+        for i in sel:
+            r = cand.iloc[i]
+            owner = str(r[owncol]) if owncol else ""
+            props = {"rid": it["id"], "matched": matched,
+                     "owner": re.sub(r"\s*[-:]?\s*\d+(?:\.\d+)?%\s*$", "", owner).strip() or None,
+                     "claim": str(r[idcol]) if idcol and r[idcol] is not None else None,
+                     "cname": str(r[namecol]) if namecol and r[namecol] is not None else None,
+                     "expiry": str(r[expcol]) if expcol and r[expcol] is not None else None}
+            try:
+                feats.append({"type": "Feature", "properties": props, "geometry": _map(r.geometry)})
+                added += 1
+            except Exception:
+                pass
+            if added >= cap:
+                break
+    return {"type": "FeatureCollection", "features": feats}
+
+
 def _holes_geojson(items):
     feats = []
     for it in items:
@@ -207,6 +360,14 @@ def build(site_dir="site"):
         print(f"[drill_radar] open ground around drilling: {len(og['features'])} cells")
     except Exception as e:
         print("[drill_radar] open-ground calc skipped:", str(e)[:120])
+    try:
+        cc = _drill_company_claims(items)
+        json.dump(cc, open(os.path.join(site_dir, "drill_claims.geojson"), "w"))
+        n_own = sum(1 for f in cc["features"] if f["properties"].get("matched") == "owner")
+        print(f"[drill_radar] drilling-company claims: {len(cc['features'])} cells "
+              f"({n_own} owner-matched)")
+    except Exception as e:
+        print("[drill_radar] company-claims calc skipped:", str(e)[:120])
     _write(site_dir, items, st)
 
 
