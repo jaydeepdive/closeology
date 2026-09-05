@@ -317,6 +317,10 @@ def collect(max_pages=40, headful=False, cdp=None, ingest=False, throttle=8.0,
     ledger = _load_ledger()
     have = set()
     for r in ledger:
+        # only treat a report as owned if it was actually DOWNLOADED or ingested —
+        # NOT metadata-only rows from an old manifest scrape (those still need pulling)
+        if not (r.get("file") or r.get("ingested")):
+            continue
         for k in (r.get("key"), r.get("filing_ref")):
             if k:
                 have.add(str(k))

@@ -310,7 +310,8 @@
   "size_kb": 10715,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5333&drmKey=d656e51b89dfdd96&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:11:25Z"
+  "collected": "2026-09-04T20:11:25Z",
+  "ingested": true
  },
  {
   "node": "W5404",
@@ -323,7 +324,8 @@
   "size_kb": 11514,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5404&drmKey=cf0ab2257b2229b9&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:11:31Z"
+  "collected": "2026-09-04T20:11:31Z",
+  "ingested": true
  },
  {
   "node": "W5475",
@@ -336,7 +338,8 @@
   "size_kb": 11209,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5475&drmKey=b9946659b83a5be5&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:11:38Z"
+  "collected": "2026-09-04T20:11:38Z",
+  "ingested": true
  },
  {
   "node": "W5546",
@@ -349,7 +352,8 @@
   "size_kb": 6589,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5546&drmKey=5393934c084f54db&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:11:43Z"
+  "collected": "2026-09-04T20:11:43Z",
+  "ingested": true
  },
  {
   "node": "W5617",
@@ -362,7 +366,8 @@
   "size_kb": 13908,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5617&drmKey=571402d66a0e9690&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:11:52Z"
+  "collected": "2026-09-04T20:11:52Z",
+  "ingested": true
  },
  {
   "node": "W5688",
@@ -375,7 +380,8 @@
   "size_kb": 15939,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5688&drmKey=e51d9479e78c8a0b&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:11:59Z"
+  "collected": "2026-09-04T20:11:59Z",
+  "ingested": true
  },
  {
   "node": "W5759",
@@ -388,7 +394,8 @@
   "size_kb": 5942,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5759&drmKey=1407c6966b25f0c9&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:04Z"
+  "collected": "2026-09-04T20:12:04Z",
+  "ingested": true
  },
  {
   "node": "W5830",
@@ -401,7 +408,8 @@
   "size_kb": 5358,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5830&drmKey=b7ced48c765c4cb0&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:08Z"
+  "collected": "2026-09-04T20:12:08Z",
+  "ingested": true
  },
  {
   "node": "W5901",
@@ -414,7 +422,8 @@
   "size_kb": 7631,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5901&drmKey=d8ca4844183028e3&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:13Z"
+  "collected": "2026-09-04T20:12:13Z",
+  "ingested": true
  },
  {
   "node": "W5972",
@@ -427,7 +436,8 @@
   "size_kb": 14539,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5972&drmKey=266c59c531169b37&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:20Z"
+  "collected": "2026-09-04T20:12:20Z",
+  "ingested": true
  },
  {
   "node": "W6043",
@@ -440,7 +450,8 @@
   "size_kb": 22577,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6043&drmKey=153fb1d096638624&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:31Z"
+  "collected": "2026-09-04T20:12:31Z",
+  "ingested": true
  },
  {
   "node": "W6114",
@@ -453,7 +464,8 @@
   "size_kb": 5428,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6114&drmKey=c5cbb85542fa029f&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:37Z"
+  "collected": "2026-09-04T20:12:37Z",
+  "ingested": true
  },
  {
   "node": "W6185",
@@ -466,7 +478,8 @@
   "size_kb": 5502,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6185&drmKey=6418caa954d2b352&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:42Z"
+  "collected": "2026-09-04T20:12:42Z",
+  "ingested": true
  },
  {
   "node": "W6256",
@@ -479,7 +492,8 @@
   "size_kb": 5116,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6256&drmKey=7204b7011b3cb593&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:47Z"
+  "collected": "2026-09-04T20:12:47Z",
+  "ingested": true
  },
  {
   "node": "W6327",
@@ -492,7 +506,8 @@
   "size_kb": 11656,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6327&drmKey=64e074ba0f5dc854&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:12:55Z"
+  "collected": "2026-09-04T20:12:55Z",
+  "ingested": true
  },
  {
   "node": "W6398",
@@ -505,7 +520,8 @@
   "size_kb": 21648,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6398&drmKey=8bc6f44aeb67af37&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:13:06Z"
+  "collected": "2026-09-04T20:13:06Z",
+  "ingested": true
  },
  {
   "node": "W6469",
@@ -518,7 +534,8 @@
   "size_kb": 8477,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6469&drmKey=98b64c15ed0b230a&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:13:11Z"
+  "collected": "2026-09-04T20:13:11Z",
+  "ingested": true
  },
  {
   "node": "W6540",
@@ -531,7 +548,8 @@
   "size_kb": 17315,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6540&drmKey=ca03df7c950772df&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:13:19Z"
+  "collected": "2026-09-04T20:13:19Z",
+  "ingested": true
  },
  {
   "node": "W6611",
@@ -557,7 +575,8 @@
   "size_kb": 23421,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6682&drmKey=5f2be15adc2d9a71&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:15:16Z"
+  "collected": "2026-09-04T20:15:16Z",
+  "ingested": true
  },
  {
   "node": "W6753",
@@ -570,7 +589,8 @@
   "size_kb": 6388,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6753&drmKey=b2b8b4765500799c&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:15:22Z"
+  "collected": "2026-09-04T20:15:22Z",
+  "ingested": true
  },
  {
   "node": "W6824",
@@ -583,7 +603,8 @@
   "size_kb": 22613,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6824&drmKey=b8e82c50fd2ed58b&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:15:32Z"
+  "collected": "2026-09-04T20:15:32Z",
+  "ingested": true
  },
  {
   "node": "W6895",
@@ -596,7 +617,8 @@
   "size_kb": 18093,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6895&drmKey=69ea065c2ea458e5&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:15:41Z"
+  "collected": "2026-09-04T20:15:41Z",
+  "ingested": true
  },
  {
   "node": "W6966",
@@ -609,7 +631,8 @@
   "size_kb": 21422,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6966&drmKey=daa75df406f98c7b&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:15:52Z"
+  "collected": "2026-09-04T20:15:52Z",
+  "ingested": true
  },
  {
   "node": "W7037",
@@ -622,7 +645,8 @@
   "size_kb": 11159,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7037&drmKey=37f47d78ed3686c7&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:15:58Z"
+  "collected": "2026-09-04T20:15:58Z",
+  "ingested": true
  },
  {
   "node": "W7108",
@@ -635,7 +659,8 @@
   "size_kb": 4950,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7108&drmKey=551130e3626e2013&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:16:02Z"
+  "collected": "2026-09-04T20:16:02Z",
+  "ingested": true
  },
  {
   "node": "W7179",
@@ -648,7 +673,8 @@
   "size_kb": 47030,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7179&drmKey=3d6ff200675150f6&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:16:22Z"
+  "collected": "2026-09-04T20:16:22Z",
+  "ingested": true
  },
  {
   "node": "W7250",
@@ -661,7 +687,8 @@
   "size_kb": 33825,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7250&drmKey=4e249b39b45b7a41&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:16:37Z"
+  "collected": "2026-09-04T20:16:37Z",
+  "ingested": true
  },
  {
   "node": "W7321",
@@ -674,7 +701,8 @@
   "size_kb": 3940,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7321&drmKey=477fed9c2e7b32a8&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:16:42Z"
+  "collected": "2026-09-04T20:16:42Z",
+  "ingested": true
  },
  {
   "node": "W7392",
@@ -687,7 +715,8 @@
   "size_kb": 4440,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7392&drmKey=8098146fc70260ed&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d",
-  "collected": "2026-09-04T20:16:46Z"
+  "collected": "2026-09-04T20:16:46Z",
+  "ingested": true
  },
  {
   "key": "goldcoast-resource-corp-formerly-psyence-gro_20260730T1926",
@@ -702,7 +731,8 @@
   "size_kb": 13473,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W6409&drmKey=42d532e130a49ba0&drr=ss6b93db70f181d32e0d66b16a5710d23fcac626641c0670f4cb01117f466f399aa5061c4697b817eca5bf6d799da94f2aux&id=0c11f8b7998bcd96af6d9088ac7d03e219dd21bb7ae60ce1",
-  "collected": "2026-09-04T20:40:03Z"
+  "collected": "2026-09-04T20:40:03Z",
+  "ingested": true
  },
  {
   "key": "maackk-capital-corp_20260729T1559",
@@ -717,7 +747,8 @@
   "size_kb": 6486,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7048&drmKey=f156def7a0bfdbd1&drr=ss6b93db70f181d32e0d66b16a5710d23fcac626641c0670f4cb01117f466f399aa5061c4697b817eca5bf6d799da94f2aux&id=0c11f8b7998bcd96af6d9088ac7d03e219dd21bb7ae60ce1",
-  "collected": "2026-09-04T20:40:13Z"
+  "collected": "2026-09-04T20:40:13Z",
+  "ingested": true
  },
  {
   "key": "giyani-metals-corp_20260710T0802",
@@ -732,7 +763,8 @@
   "size_kb": 18297,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W9178&drmKey=25b9b075c0d10fdc&drr=ss6b93db70f181d32e0d66b16a5710d23fcac626641c0670f4cb01117f466f399aa5061c4697b817eca5bf6d799da94f2aux&id=0c11f8b7998bcd96af6d9088ac7d03e219dd21bb7ae60ce1",
-  "collected": "2026-09-04T20:40:43Z"
+  "collected": "2026-09-04T20:40:43Z",
+  "ingested": true
  },
  {
   "key": "terra-clean-energy-corp_20260615T0802",
@@ -747,6 +779,7 @@
   "size_kb": 7830,
   "doctype": "Technical report (NI 43-101)",
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W11308&drmKey=c71b1190081175ba&drr=ss6b93db70f181d32e0d66b16a5710d23fcac626641c0670f4cb01117f466f399aa5061c4697b817eca5bf6d799da94f2aux&id=0c11f8b7998bcd96af6d9088ac7d03e219dd21bb7ae60ce1",
-  "collected": "2026-09-04T20:41:01Z"
+  "collected": "2026-09-04T20:41:01Z",
+  "ingested": true
  }
 ]

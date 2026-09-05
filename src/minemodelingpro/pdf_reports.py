@@ -50,7 +50,7 @@ _METH_PAGE = re.compile(r"kriging|inverse distance|block model|specific gravity|
 
 # bump when the extractor changes so --refresh re-processes reports once (and
 # only once) under the new engine, staying resumable across CI runs.
-EXTRACTOR_VERSION = "6"          # v6 = metallurgy capture (recovery / process / refractory)
+EXTRACTOR_VERSION = "7"          # v7 = economics capture (NPV/IRR/payback/capex/AISC/LOM/production)
 
 
 def _rid(url):
@@ -407,6 +407,129 @@ def extract_metallurgy(pages_text):
     }
 
 
+# ---- economic-study capture (PEA / PFS / FS): NPV, IRR, payback, capital, unit
+# costs, mine life, production, throughput, price deck. Many technical reports are
+# resource-only and carry none of this — extract_economics returns None then.
+_ECON_HINT = re.compile(r"\b(NPV|IRR|payback|all[- ]in sustaining|AISC|initial capital|"
+                        r"pre[- ]?production capital|cash cost|life[- ]of[- ]mine|LOM|"
+                        r"pre[- ]?feasibility|feasibility study|preliminary economic assessment)\b", re.I)
+_MONEY = r"(?:US|C|CAD|USD|A)?\$\s?([\d,]+(?:\.\d+)?)\s*(billion|million|bn|mm|B|M)\b"
+_STUDY = re.compile(r"\b(preliminary economic assessment|pre[- ]?feasibility study|"
+                    r"feasibility study|PEA|PFS|DFS|BFS)\b", re.I)
+_NPV = re.compile(r"(after[- ]?tax|pre[- ]?tax|post[- ]?tax)?\s*NPV\s*\(?\s*(\d+(?:\.\d+)?)?\s*%?\s*\)?"
+                  r"[^.\n]{0,45}?" + _MONEY, re.I)
+_IRR = re.compile(r"(after[- ]?tax|pre[- ]?tax|post[- ]?tax)?\s*IRR[^.\n]{0,25}?(\d+(?:\.\d+)?)\s*%", re.I)
+_PAYBACK = re.compile(r"payback[^.\n]{0,45}?(\d+(?:\.\d+)?)\s*(years?|yrs?|months?)", re.I)
+_INITCAP = re.compile(r"(initial|pre[- ]?production|up[- ]?front|development|start[- ]?up|pre[- ]?prod)\s+"
+                      r"cap(?:ital|ex|ital costs?)[^.\n]{0,45}?" + _MONEY, re.I)
+_SUSCAP = re.compile(r"sustaining\s+cap(?:ital|ex|ital costs?)[^.\n]{0,45}?" + _MONEY, re.I)
+_AISC = re.compile(r"(all[- ]in sustaining cost[s]?|AISC)[^.\n]{0,45}?"
+                   r"((?:US|C|CAD|USD)?\$\s?[\d,]+(?:\.\d+)?\s*/?\s*(?:oz|ounce|t|tonne|lb|pound)[a-z ]{0,10})", re.I)
+_CASHCOST = re.compile(r"(C1 cash cost[s]?|cash cost[s]?|C1 cost[s]?)[^.\n]{0,45}?"
+                       r"((?:US|C|CAD|USD)?\$\s?[\d,]+(?:\.\d+)?\s*/?\s*(?:oz|ounce|t|tonne|lb|pound)[a-z ]{0,10})", re.I)
+_LOM = re.compile(r"(life[- ]of[- ]mine|mine life|LOM)[^.\n]{0,30}?(\d+(?:\.\d+)?)\s*(years?|yrs?)", re.I)
+_APROD = re.compile(r"(average annual|annual|LOM average|life[- ]of[- ]mine average)\s+production"
+                    r"[^.\n]{0,55}?([\d,]+(?:\.\d+)?\s*(?:koz|k oz|oz|ounces|Mlb|klb|lb|pounds|t|tonnes|Mt|kt)[a-z/ ]{0,12})", re.I)
+_ECON_TPUT = re.compile(r"([\d,]+(?:\.\d+)?)\s*(tpd|t/d|tonnes per day|Mtpa|Mt/a|ktpa|tonnes per annum|t/day|Mt/y)", re.I)
+_PRICE = re.compile(r"(gold|silver|copper|zinc|lead|nickel|uranium|lithium|cobalt|moly\w*)\s+price"
+                    r"[^.\n]{0,25}?((?:US|C|CAD|USD)?\$\s?[\d,]+(?:\.\d+)?\s*(?:/oz|/lb|/t|per ounce|per pound|per tonne)?)", re.I)
+
+
+def _musd(num, unit):
+    try:
+        v = float(str(num).replace(",", ""))
+    except (TypeError, ValueError):
+        return None
+    return round(v * 1000, 1) if str(unit).lower() in ("billion", "bn", "b") else round(v, 1)
+
+
+def _snip(m):
+    return re.sub(r"\s+", " ", m.group(0)).strip()[:160]
+
+
+def extract_economics(pages_text):
+    """Capture economic-study results (PEA/PFS/FS) when present. Returns None for
+    resource-only reports (the common case)."""
+    hint_pages = [t for t in pages_text if t and _ECON_HINT.search(t)]
+    if not hint_pages:
+        return None
+    blob = "\n".join(hint_pages)
+    econ = {"highlights": []}
+
+    def cap(regex, key, snip=True):
+        m = regex.search(blob)
+        if m and snip:
+            econ["highlights"].append(_snip(m))
+        return m
+
+    # NPV (prefer after-tax; capture pre-tax separately)
+    for m in _NPV.finditer(blob):
+        basis = (m.group(1) or "").lower().replace(" ", "").replace("-", "")
+        disc = m.group(2)
+        val = _musd(m.group(3), m.group(4))
+        if disc and not econ.get("npv_discount_pct"):
+            try:
+                econ["npv_discount_pct"] = float(disc)
+            except ValueError:
+                pass
+        if "pre" in basis:
+            econ.setdefault("npv_pretax_musd", val)
+        else:                               # after/post-tax or unspecified -> after-tax slot
+            econ.setdefault("npv_aftertax_musd", val)
+        econ["highlights"].append(_snip(m))
+    for m in _IRR.finditer(blob):
+        basis = (m.group(1) or "").lower()
+        try:
+            v = float(m.group(2))
+        except ValueError:
+            continue
+        if "pre" in basis:
+            econ.setdefault("irr_pretax_pct", v)
+        else:
+            econ.setdefault("irr_aftertax_pct", v)
+        econ["highlights"].append(_snip(m))
+    m = cap(_PAYBACK, "payback")
+    if m:
+        yrs = float(m.group(1))
+        econ["payback_years"] = round(yrs / 12, 2) if "month" in m.group(2).lower() else yrs
+    m = cap(_INITCAP, "initcap")
+    if m:
+        econ["initial_capital_musd"] = _musd(m.group(2), m.group(3))
+    m = cap(_SUSCAP, "suscap")
+    if m:
+        econ["sustaining_capital_musd"] = _musd(m.group(1), m.group(2))
+    m = cap(_AISC, "aisc")
+    if m:
+        econ["aisc"] = re.sub(r"\s+", " ", m.group(2)).strip()[:40]
+    m = cap(_CASHCOST, "cashcost")
+    if m:
+        econ["cash_cost"] = re.sub(r"\s+", " ", m.group(2)).strip()[:40]
+    m = cap(_LOM, "lom")
+    if m:
+        econ["mine_life_years"] = float(m.group(2))
+    m = cap(_APROD, "aprod")
+    if m:
+        econ["annual_production"] = re.sub(r"\s+", " ", m.group(2)).strip()[:50]
+    m = _ECON_TPUT.search(blob)
+    if m:
+        econ["throughput"] = re.sub(r"\s+", " ", m.group(0)).strip()[:40]; econ["highlights"].append(_snip(m))
+    prices = [re.sub(r"\s+", " ", pm.group(0)).strip() for pm in _PRICE.finditer(blob)]
+    if prices:
+        econ["metal_price_assumptions"] = " | ".join(dict.fromkeys(prices))[:240]
+    sm = _STUDY.search(blob)
+    if sm:
+        econ["study_type"] = re.sub(r"\s+", " ", sm.group(1)).strip()
+
+    signal = any(econ.get(k) is not None for k in
+                 ("npv_aftertax_musd", "npv_pretax_musd", "irr_aftertax_pct", "irr_pretax_pct",
+                  "payback_years", "initial_capital_musd", "aisc", "mine_life_years"))
+    if not signal:
+        return None
+    econ["highlights"] = " | ".join(dict.fromkeys(econ["highlights"]))[:1500] or None
+    econ["econ_text"] = re.sub(r"\s+", " ", blob)[:12000]
+    return econ
+
+
 def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_date=None,
                   drill_tables=True, source_id=None, pdf_path=None):
     """Extract + retain a technical report. `url` is the citable source (a web
@@ -421,6 +544,7 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
     res = extract_resources(pages_text)
     meth = extract_methodology(pages_text)
     met = extract_metallurgy(pages_text)
+    eco = extract_economics(pages_text)
     # retain the source PDF in the durable archive (idempotent; skipped without a token)
     archive_url = None
     try:
@@ -495,20 +619,52 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
             "grind_p80_um": met["grind_p80_um"], "reagent_notes": met["reagent_notes"],
             "throughput": met["throughput"], "met_text": met["met_text"],
             "report_url": url, "report_date": report_date})
+    # economics (NPV/IRR/payback/capex/AISC/LOM/production) when it's an economic study
+    con.execute("DELETE FROM economics WHERE source_id=?", (sid,))
+    if eco:
+        con.execute("""INSERT INTO economics
+            (id,source_id,project,jurisdiction,commodity,study_type,npv_aftertax_musd,npv_pretax_musd,
+             npv_discount_pct,irr_aftertax_pct,irr_pretax_pct,payback_years,initial_capital_musd,
+             sustaining_capital_musd,total_capital_musd,aisc,cash_cost,mine_life_years,annual_production,
+             throughput,avg_grade,recovery,metal_price_assumptions,highlights,econ_text,report_url,report_date)
+            VALUES (:id,:source_id,:project,:jurisdiction,:commodity,:study_type,:npv_aftertax_musd,:npv_pretax_musd,
+             :npv_discount_pct,:irr_aftertax_pct,:irr_pretax_pct,:payback_years,:initial_capital_musd,
+             :sustaining_capital_musd,:total_capital_musd,:aisc,:cash_cost,:mine_life_years,:annual_production,
+             :throughput,:avg_grade,:recovery,:metal_price_assumptions,:highlights,:econ_text,:report_url,:report_date)""", {
+            "id": f"{sid}:econ", "source_id": sid, "project": project, "jurisdiction": jurisdiction,
+            "commodity": commodity, "study_type": eco.get("study_type"),
+            "npv_aftertax_musd": eco.get("npv_aftertax_musd"), "npv_pretax_musd": eco.get("npv_pretax_musd"),
+            "npv_discount_pct": eco.get("npv_discount_pct"), "irr_aftertax_pct": eco.get("irr_aftertax_pct"),
+            "irr_pretax_pct": eco.get("irr_pretax_pct"), "payback_years": eco.get("payback_years"),
+            "initial_capital_musd": eco.get("initial_capital_musd"),
+            "sustaining_capital_musd": eco.get("sustaining_capital_musd"),
+            "total_capital_musd": eco.get("total_capital_musd"), "aisc": eco.get("aisc"),
+            "cash_cost": eco.get("cash_cost"), "mine_life_years": eco.get("mine_life_years"),
+            "annual_production": eco.get("annual_production"), "throughput": eco.get("throughput"),
+            "avg_grade": eco.get("avg_grade"), "recovery": eco.get("recovery"),
+            "metal_price_assumptions": eco.get("metal_price_assumptions"),
+            "highlights": eco.get("highlights"), "econ_text": eco.get("econ_text"),
+            "report_url": url, "report_date": report_date})
     store.record_source(con, {
         "id": sid, "kind": "ni43101", "name": project or url.rsplit("/", 1)[-1],
         "url": url, "jurisdiction": jurisdiction,
         "pulled_at": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
         "n_collars": len(collars), "n_assays": len(assays),
         "note": f"ev{EXTRACTOR_VERSION}; {len(dm)} resource rows; method={'y' if meth else 'n'}; "
+                f"met={'y' if met else 'n'}; econ={'y' if eco else 'n'}; "
                 f"{len(collars)} collars; {len(assays)} assays"
                 + (f"; archive={archive_url}" if archive_url else "")})
     con.commit(); con.close()
     print(f"[43-101] {project or url}: {len(dm)} resource rows, {len(collars)} collars, "
           f"{len(assays)} assays | method={meth['estimation_method'] if meth else None} | "
           f"met={ {k: v for k, v in (met or {}).items() if k not in ('met_text',) and v} if met else None}")
+    if eco:
+        print(f"[43-101]   economics: study={eco.get('study_type')} "
+              f"NPV(at)={eco.get('npv_aftertax_musd')}M IRR(at)={eco.get('irr_aftertax_pct')}% "
+              f"payback={eco.get('payback_years')}y initCap={eco.get('initial_capital_musd')}M "
+              f"AISC={eco.get('aisc')} LOM={eco.get('mine_life_years')}y")
     return {"resources": len(dm), "collars": len(collars), "assays": len(assays),
-            "method": bool(meth), "metallurgy": bool(met)}
+            "method": bool(meth), "metallurgy": bool(met), "economics": bool(eco)}
 
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

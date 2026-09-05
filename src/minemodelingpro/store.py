@@ -106,6 +106,27 @@ CREATE TABLE IF NOT EXISTS metallurgy (
     met_text TEXT,                -- metallurgy narrative excerpt (training/RAG)
     report_url TEXT, report_date TEXT
 );
+CREATE TABLE IF NOT EXISTS economics (
+    id TEXT PRIMARY KEY,          -- source_id + ':econ'
+    source_id TEXT, project TEXT, jurisdiction TEXT, commodity TEXT,
+    study_type TEXT,              -- PEA | Pre-Feasibility | Feasibility | (null)
+    npv_aftertax_musd REAL, npv_pretax_musd REAL, npv_discount_pct REAL,
+    irr_aftertax_pct REAL, irr_pretax_pct REAL,
+    payback_years REAL,
+    initial_capital_musd REAL, sustaining_capital_musd REAL, total_capital_musd REAL,
+    aisc TEXT,                    -- all-in sustaining cost (raw, e.g. 'US$950/oz')
+    cash_cost TEXT,               -- C1 / cash cost (raw)
+    mine_life_years REAL,
+    annual_production TEXT,       -- e.g. '150,000 oz/yr' (raw)
+    throughput TEXT,              -- e.g. '10,000 tpd' / '3.5 Mtpa' (raw)
+    avg_grade TEXT,               -- headline mill/head grade (raw) when stated
+    recovery TEXT,                -- headline recovery (raw) when stated in econ summary
+    metal_price_assumptions TEXT, -- price deck used (raw)
+    highlights TEXT,              -- the matched economic sentences (provenance)
+    econ_text TEXT,               -- economic-section narrative excerpt (training/RAG)
+    report_url TEXT, report_date TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_economics_src ON economics(source_id);
 CREATE INDEX IF NOT EXISTS ix_collars_src ON collars(source_id);
 CREATE INDEX IF NOT EXISTS ix_model_method_src ON model_method(source_id);
 CREATE INDEX IF NOT EXISTS ix_metallurgy_src ON metallurgy(source_id);
