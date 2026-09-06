@@ -50,7 +50,67 @@ _METH_PAGE = re.compile(r"kriging|inverse distance|block model|specific gravity|
 
 # bump when the extractor changes so --refresh re-processes reports once (and
 # only once) under the new engine, staying resumable across CI runs.
-EXTRACTOR_VERSION = "7"          # v7 = economics capture (NPV/IRR/payback/capex/AISC/LOM/production)
+EXTRACTOR_VERSION = "8"          # v8 = robust AISC/cash-cost (table layouts) + memory-safe large-PDF text (PyMuPDF)
+
+
+# Large reports (100+ MB, hundreds of pages) blow pdfplumber's memory (it retains
+# parsed objects for every page); PyMuPDF streams page text at a fraction of the
+# RAM. Use pdfplumber below the threshold (unchanged behaviour for the reports
+# already extracted) and PyMuPDF above it so the big economic studies come in too.
+_BIG_PDF_BYTES = 40 * 1024 * 1024
+
+
+def _pages_text_fitz(path):
+    """Page text via PyMuPDF, but reconstructed into visual ROWS from word
+    positions rather than raw get_text('text'). Raw mode emits borderless-table
+    cells one-per-line, which breaks resource-row detection (it needs a whole
+    'category  tonnes  grade  ...' row on one line). Grouping words by y-band and
+    ordering by x rebuilds those rows (as pdfplumber does), while still leaving
+    stacked label/unit/value cells on separate lines for the cost regexes."""
+    import pymupdf                      # PyMuPDF (memory-safe, page-streamed)
+    from collections import defaultdict
+    out = []
+    doc = pymupdf.open(path)
+    try:
+        for pg in doc:
+            words = pg.get_text("words")   # (x0, y0, x1, y1, word, block, line, wordno)
+            if not words:
+                out.append(pg.get_text("text") or "")
+                continue
+            rows = defaultdict(list)
+            for w in words:
+                rows[round(w[1] / 3.0)].append((w[0], w[4]))   # ~3pt y-band
+            lines = [" ".join(t for _, t in sorted(cells))
+                     for _, cells in sorted(rows.items())]
+            out.append("\n".join(lines))
+    finally:
+        doc.close()
+    return out
+
+
+def _pages_text_plumber(path):
+    import pdfplumber
+    with pdfplumber.open(path) as pdf:
+        return [pg.extract_text() or "" for pg in pdf.pages]
+
+
+def _pages_text(path):
+    """Page text as a list of strings. PyMuPDF is the primary engine: an order of
+    magnitude faster, low memory (a 118 MB report no longer OOMs), and — key — it
+    never HANGS on the vector-heavy reports that stall pdfplumber. pdfplumber is a
+    fallback ONLY when PyMuPDF raises: a PDF whose PyMuPDF text is empty is an
+    image/scanned PDF with no text layer, which pdfplumber can't read either (and
+    on which it can hang for minutes), so we return the empty result and let the
+    caller record it as image-only rather than fall through to a hang."""
+    try:
+        return _pages_text_fitz(path)
+    except Exception as e:
+        print(f"[43-101] PyMuPDF text failed ({str(e)[:60]}); trying pdfplumber")
+    try:
+        return _pages_text_plumber(path)
+    except Exception as e:
+        print(f"[43-101] pdfplumber text failed ({str(e)[:60]})")
+        return []
 
 
 def _rid(url):
@@ -424,9 +484,9 @@ _INITCAP = re.compile(r"(initial|pre[- ]?production|up[- ]?front|development|sta
                       r"cap(?:ital|ex|ital costs?)[^.\n]{0,45}?" + _MONEY, re.I)
 _SUSCAP = re.compile(r"sustaining\s+cap(?:ital|ex|ital costs?)[^.\n]{0,45}?" + _MONEY, re.I)
 _AISC = re.compile(r"(all[- ]in sustaining cost[s]?|AISC)[^.\n]{0,45}?"
-                   r"((?:US|C|CAD|USD)?\$\s?[\d,]+(?:\.\d+)?\s*/?\s*(?:oz|ounce|t|tonne|lb|pound)[a-z ]{0,10})", re.I)
+                   r"((?:US|C|CAD|USD)?\$\s?[\d,]+(?:\.\d+)?\s*/?\s*(?:oz|ounce|lb|pound)[a-z ]{0,10})", re.I)
 _CASHCOST = re.compile(r"(C1 cash cost[s]?|cash cost[s]?|C1 cost[s]?)[^.\n]{0,45}?"
-                       r"((?:US|C|CAD|USD)?\$\s?[\d,]+(?:\.\d+)?\s*/?\s*(?:oz|ounce|t|tonne|lb|pound)[a-z ]{0,10})", re.I)
+                       r"((?:US|C|CAD|USD)?\$\s?[\d,]+(?:\.\d+)?\s*/?\s*(?:oz|ounce|lb|pound)[a-z ]{0,10})", re.I)
 _LOM = re.compile(r"(life[- ]of[- ]mine|mine life|LOM)[^.\n]{0,30}?(\d+(?:\.\d+)?)\s*(years?|yrs?)", re.I)
 _APROD = re.compile(r"(average annual|annual|LOM average|life[- ]of[- ]mine average)\s+production"
                     r"[^.\n]{0,55}?([\d,]+(?:\.\d+)?\s*(?:koz|k oz|oz|ounces|Mlb|klb|lb|pounds|t|tonnes|Mt|kt)[a-z/ ]{0,12})", re.I)
@@ -445,6 +505,80 @@ def _musd(num, unit):
 
 def _snip(m):
     return re.sub(r"\s+", " ", m.group(0)).strip()[:160]
+
+
+# --- unit-cost capture (AISC / cash cost). These live in cost TABLES far more
+# often than in prose, so a single "$1,150/oz" pattern misses most of them: the
+# number and its "$/oz" unit are routinely split across table cells and can land
+# in either order ("AISC US$/oz 1,150", "All-in sustaining cost (US$/oz) 1,187",
+# "AISC 1,150 /oz", "AISC of US$1,150 per ounce"). _unit_cost_near scans a short
+# window after each label and tries every ordering, currency-bearing first.
+_LBL_AISC = re.compile(r"all[- ]in sustaining(?:\s+cost)?s?|\bAISC\b|all[- ]in cost[s]?|\bAIC\b", re.I)
+_LBL_CASH = re.compile(r"\bC1\b(?:\s+cash)?(?:\s+cost)?s?|total cash cost[s]?|cash operating cost[s]?|"
+                       r"site cash cost[s]?|cash cost[s]?|C1 cost[s]?", re.I)
+_UNIT_MAP = {"ounce": "oz", "oz": "oz", "tonne": "t", "t": "t", "lb": "lb", "pound": "lb"}
+_CURR_TOK = r"(?:US\$|C\$|CAD\$?|USD\$?|A\$|\$)"
+
+
+def _normunit(u):
+    return _UNIT_MAP.get(u.lower(), u.lower())
+
+
+def _num(s):
+    try:
+        return float(str(s).replace(",", ""))
+    except (TypeError, ValueError):
+        return None
+
+
+def _plausible_cost(val, unit):
+    """AISC / cash cost magnitude sanity by unit. Precious metals run ~US$8-20/oz
+    (silver) to ~US$2,500/oz (gold); base metals ~US$0.5-10/lb. This rejects a
+    by-product sub-figure like 'US$/oz Ag 0.11' or a stray count, so the scan can
+    fall through to the real headline AISC on the next label row."""
+    v = _num(val)
+    if v is None:
+        return False
+    if unit == "oz":
+        return 3 <= v <= 6000
+    if unit == "lb":
+        return 0.05 <= v <= 100
+    return True
+
+
+def _unit_cost_near(blob, label_rx, window=170):
+    """Return a normalized 'US$NNN/oz'-style cost for the label, or None. For each
+    label occurrence it reads the FIRST unit-cost after the label (trying the three
+    cell layouts and taking whichever appears earliest), and accepts it only if the
+    magnitude is a plausible AISC/cash cost. A glossary entry (no value) or an
+    implausible first value (a by-product $0.11/oz line) makes it fall through to
+    the next label occurrence — which is where the headline figure usually is.
+
+    Units are per-OUNCE / per-POUND only: AISC and C1/cash cost are quoted per unit
+    of METAL. A '$/t' next to an AISC label is per-tonne opex / cut-off cost, not
+    the headline unit cost, so it is deliberately never matched."""
+    NUM = r"(?<![\d.,])\d[\d,]*(?:\.\d+)?"     # 1,150 | 1.85 | 950 — never a fractional tail
+    UNIT = r"(oz|ounce|lb|pound)"
+    pats = [
+        ("A", re.compile(r"(" + _CURR_TOK + r")\s?(" + NUM + r")\s*(?:/\s?|per\s+)" + UNIT + r"\b", re.I)),
+        ("B", re.compile(r"(" + _CURR_TOK + r")?\s?/\s?" + UNIT + r"\)?[^\d]{0,16}(" + NUM + r")", re.I)),
+        ("C", re.compile(r"(" + NUM + r")\s*/\s?" + UNIT + r"\b", re.I)),
+    ]
+    for lm in label_rx.finditer(blob):
+        seg = blob[lm.end(): lm.end() + window]
+        cands = [(m.start(), tag, m) for tag, rx in pats for m in [rx.search(seg)] if m]
+        if not cands:
+            continue
+        _, tag, m = min(cands, key=lambda x: x[0])
+        if tag == "A":
+            cur, num, unit = m.group(1), m.group(2), _normunit(m.group(3))
+        elif tag == "B":
+            cur, unit, num = (m.group(1) or "US$"), _normunit(m.group(2)), m.group(3)
+        else:
+            cur, num, unit = "US$", m.group(1), _normunit(m.group(2))
+        if _plausible_cost(num, unit):
+            return f"{cur}{num}/{unit}"
+    return None
 
 
 def extract_economics(pages_text):
@@ -498,12 +632,28 @@ def extract_economics(pages_text):
     m = cap(_SUSCAP, "suscap")
     if m:
         econ["sustaining_capital_musd"] = _musd(m.group(1), m.group(2))
-    m = cap(_AISC, "aisc")
-    if m:
-        econ["aisc"] = re.sub(r"\s+", " ", m.group(2)).strip()[:40]
-    m = cap(_CASHCOST, "cashcost")
-    if m:
-        econ["cash_cost"] = re.sub(r"\s+", " ", m.group(2)).strip()[:40]
+    # AISC / cash cost — robust to cost-table layouts (number and $/unit split or
+    # reordered). Fall back to the old contiguous pattern only if the scan misses.
+    aisc = _unit_cost_near(blob, _LBL_AISC)
+    if not aisc:
+        m = _AISC.search(blob)
+        aisc = re.sub(r"\s+", " ", m.group(2)).strip()[:40] if m else None
+    if aisc:
+        econ["aisc"] = aisc[:40]
+        lm = _LBL_AISC.search(blob)
+        if lm:
+            econ["highlights"].append(re.sub(r"\s+", " ", blob[lm.start():lm.start() + 120]).strip()[:160])
+    cash = _unit_cost_near(blob, _LBL_CASH)
+    if not cash:
+        m = _CASHCOST.search(blob)
+        cash = re.sub(r"\s+", " ", m.group(2)).strip()[:40] if m else None
+    # A cash cost identical to AISC is a spurious grab of the AISC value from an
+    # adjacent cell (cash cost is always < AISC), so discard it.
+    if cash and cash != econ.get("aisc"):
+        econ["cash_cost"] = cash[:40]
+        lm = _LBL_CASH.search(blob)
+        if lm:
+            econ["highlights"].append(re.sub(r"\s+", " ", blob[lm.start():lm.start() + 120]).strip()[:160])
     m = cap(_LOM, "lom")
     if m:
         econ["mine_life_years"] = float(m.group(2))
@@ -516,6 +666,16 @@ def extract_economics(pages_text):
     prices = [re.sub(r"\s+", " ", pm.group(0)).strip() for pm in _PRICE.finditer(blob)]
     if prices:
         econ["metal_price_assumptions"] = " | ".join(dict.fromkeys(prices))[:240]
+    # An AISC/cash value equal to a metal-PRICE assumption is a price grabbed near
+    # the label (e.g. a US$1,800/oz gold price in a resource report that never
+    # states a real per-oz AISC), not a cost — drop it.
+    price_nums = {_num(pn) for pn in re.findall(r"\d[\d,]*(?:\.\d+)?",
+                                                econ.get("metal_price_assumptions") or "")}
+    for k in ("aisc", "cash_cost"):
+        if econ.get(k):
+            vn = _num(re.sub(r"[^\d.,]", "", econ[k].split("/")[0]))
+            if vn in price_nums:
+                econ[k] = None
     sm = _STUDY.search(blob)
     if sm:
         econ["study_type"] = re.sub(r"\s+", " ", sm.group(1)).strip()
@@ -536,11 +696,18 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
     URL, or a SEDAR filing reference). `pdf_path` ingests an already-downloaded
     file (e.g. a SEDAR PDF in Downloads) instead of fetching. `source_id` gives a
     stable id (e.g. sedar:<filing>) so re-ingesting the same filing is idempotent."""
-    import pdfplumber
     sid = source_id or _rid(url)
     path = pdf_path if (pdf_path and os.path.exists(pdf_path)) else fetch_pdf(url)
-    with pdfplumber.open(path) as pdf:
-        pages_text = [pg.extract_text() or "" for pg in pdf.pages]
+    pages_text = _pages_text(path)
+    _txt_chars = sum(len(t) for t in pages_text)
+    _image_only = _txt_chars < 200          # no text layer (scanned PDF) — needs OCR
+    if _image_only:
+        print(f"[43-101] {project or url}: image-only PDF (no text layer, "
+              f"{len(pages_text)} pages) — text extraction needs OCR; recording as image-only")
+    try:
+        _pdf_bytes = os.path.getsize(path)
+    except OSError:
+        _pdf_bytes = 0
     res = extract_resources(pages_text)
     meth = extract_methodology(pages_text)
     met = extract_metallurgy(pages_text)
@@ -553,11 +720,16 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
     except Exception as e:
         print(f"[43-101] archive skipped: {str(e)[:80]}")
     collars, assays = ([], [])
-    if drill_tables:
+    if drill_tables and _pdf_bytes <= _BIG_PDF_BYTES:
         try:
             collars, assays = extract_drill_tables(path, pages_text)
         except Exception as e:
             print(f"[43-101] drill-table extract skipped: {str(e)[:100]}")
+    elif drill_tables:
+        # Camelot on a 100+ MB PDF risks OOM in the 4 GB worker; text-derived
+        # data (resources/method/metallurgy/economics) is still captured above.
+        print(f"[43-101] drill-table extract skipped for large PDF "
+              f"({_pdf_bytes // (1024*1024)} MB > {_BIG_PDF_BYTES // (1024*1024)} MB)")
 
     con = store.connect()
     # collars + assays from appendix drill tables
@@ -653,6 +825,7 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
         "note": f"ev{EXTRACTOR_VERSION}; {len(dm)} resource rows; method={'y' if meth else 'n'}; "
                 f"met={'y' if met else 'n'}; econ={'y' if eco else 'n'}; "
                 f"{len(collars)} collars; {len(assays)} assays"
+                + ("; image-only(needs OCR)" if _image_only else "")
                 + (f"; archive={archive_url}" if archive_url else "")})
     con.commit(); con.close()
     print(f"[43-101] {project or url}: {len(dm)} resource rows, {len(collars)} collars, "
