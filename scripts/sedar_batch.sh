@@ -5,7 +5,9 @@
 # PDF in the GitHub report-archive release, and commits the dedup ledger. It stops
 # cleanly if SEDAR's per-session download limit kicks in; the next run resumes.
 set -u
-REPO="$HOME/Downloads/closeology"
+# Prefer the non-Downloads location (macOS blocks launchd from ~/Downloads);
+# fall back to the old path during/after the move.
+REPO="$HOME/closeology"; [ -d "$REPO" ] || REPO="$HOME/Downloads/closeology"
 cd "$REPO" || exit 1
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/Library/Python/3.9/bin:$PATH"
 LOG="$REPO/data/keep/sedar_batch.log"
