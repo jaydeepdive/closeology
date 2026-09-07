@@ -43,7 +43,10 @@ KEEP = os.path.join(ROOT, "data", "keep")
 PDFDIR = os.path.join(KEEP, "sedar_pdfs")
 LEDGER = os.path.join(KEEP, "sedar_manifest.json")
 INDEX = os.path.join(KEEP, "mmp_reports_index.json")
-TEMPDB = os.path.join(KEEP, "mmp_reextract.sqlite")
+# Scratch sqlite lives on LOCAL disk, not the bridged mount: sqlite's locking /
+# fsync is unreliable over the device bridge (disk I/O errors), whereas plain
+# parquet/JSON writes to the mount are fine. Shards + OCR cache stay on the mount.
+TEMPDB = os.environ.get("MMP_TEMPDB", "/tmp/mmp_reextract.sqlite")
 TEXT_TABLES = ["deposit_model", "model_method", "metallurgy", "economics"]
 
 
@@ -76,6 +79,37 @@ def _pdf_sources():
 def _done(con, sid):
     r = con.execute("SELECT note FROM sources WHERE id=?", (sid,)).fetchone()
     return bool(r) and f"ev{pdf_reports.EXTRACTOR_VERSION}" in (r[0] or "")
+
+
+def _is_image_only(path):
+    """True if the PDF has no extractable text layer (scanned) — needs OCR."""
+    try:
+        return sum(len(t) for t in pdf_reports._pages_text_fitz(path)) < 200
+    except Exception:
+        return False
+
+
+def ocr(max_seconds=150):
+    """Resumable OCR of every scanned (image-only) banked PDF into the OCR cache,
+    so the next `ingest` extracts them like any text PDF. Drops each finished
+    source from the temp db so ingest re-processes it with the OCR text."""
+    _redirect_store()
+    import time
+    t0 = time.time()
+    targets = [(p, sid) for p, sid, _ in _pdf_sources() if _is_image_only(p)]
+    print(f"[reextract] {len(targets)} image-only PDF(s) to OCR")
+    for p, sid in targets:
+        if pdf_reports._load_ocr_cache(sid) is not None:
+            print(f"[ocr] {sid}: already cached"); continue
+        if max_seconds and time.time() - t0 > max_seconds:
+            print("[ocr] time budget reached — run `ocr` again to continue"); break
+        remaining = max_seconds - (time.time() - t0) if max_seconds else None
+        done, cached, npages = pdf_reports.ocr_pages_cached(p, sid, max_seconds=remaining)
+        print(f"[ocr] {sid}: {cached}/{npages} pages cached{' (COMPLETE)' if done else ''}")
+        if done:
+            con = store.connect(TEMPDB)
+            con.execute("DELETE FROM sources WHERE id=?", (sid,)); con.commit(); con.close()
+            print(f"[ocr] {sid}: dropped from temp db — will re-extract on next ingest")
 
 
 def _redirect_store():
@@ -206,6 +240,9 @@ if __name__ == "__main__":
         lim = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else None
         secs = int(sys.argv[sys.argv.index("--max-seconds") + 1]) if "--max-seconds" in sys.argv else 150
         ingest(limit=lim, max_seconds=secs)
+    elif cmd == "ocr":
+        secs = int(sys.argv[sys.argv.index("--max-seconds") + 1]) if "--max-seconds" in sys.argv else 150
+        ocr(max_seconds=secs)
     elif cmd == "shard":
         shard()
     else:

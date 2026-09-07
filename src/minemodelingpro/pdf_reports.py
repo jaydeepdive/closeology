@@ -17,6 +17,8 @@ Run:  python -m minemodelingpro.pdf_reports <pdf_url_or_path> [project] [commodi
 import os
 import re
 import sys
+import json
+import glob
 import hashlib
 import datetime
 import urllib.request
@@ -94,14 +96,97 @@ def _pages_text_plumber(path):
         return [pg.extract_text() or "" for pg in pdf.pages]
 
 
-def _pages_text(path):
+# --------------------------------------------------------------- OCR (scanned PDFs)
+# Some technical reports are scanned images with NO text layer (PyMuPDF returns
+# empty). Tesseract turns them into text so they flow through the SAME extraction
+# as every other report. OCR is slow (~1s/page), so it is cached per page and
+# resumable: run ocr_pages_cached repeatedly (time-budgeted) until it reports done,
+# after which _pages_text transparently serves the cached text for that source.
+OCR_DIR = os.path.join(_ROOT, "data", "keep", "ocr_cache") if "_ROOT" in dir() else \
+    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                 "data", "keep", "ocr_cache")
+
+
+def _ocr_safe(sid):
+    return str(sid).replace(":", "__").replace("/", "_")
+
+
+def _ocr_page_text(png_bytes):
+    """OCR one rendered page image into reading-order line text (Tesseract groups
+    words into block/paragraph/line, which reconstructs table rows for us)."""
+    import io
+    import pytesseract
+    from PIL import Image
+    d = pytesseract.image_to_data(Image.open(io.BytesIO(png_bytes)),
+                                  output_type=pytesseract.Output.DICT)
+    lines = {}
+    for i, txt in enumerate(d["text"]):
+        if not txt or not txt.strip() or str(d["conf"][i]) in ("-1", "-1.0"):
+            continue
+        key = (d["block_num"][i], d["par_num"][i], d["line_num"][i])
+        lines.setdefault(key, (d["top"][i], []))[1].append((d["left"][i], txt))
+    rows = [(top, " ".join(t for _, t in sorted(cells)))
+            for _, (top, cells) in lines.items()]
+    return "\n".join(t for _, t in sorted(rows))
+
+
+def ocr_pages_cached(path, sid, dpi=200, max_seconds=None):
+    """Resumable OCR of `path` into per-page text cache. Returns
+    (done, pages_cached, n_pages). When done, also writes the assembled
+    <sid>.json so _pages_text can serve it."""
+    import time
+    import pymupdf
+    safe = _ocr_safe(sid)
+    cdir = os.path.join(OCR_DIR, safe)
+    os.makedirs(cdir, exist_ok=True)
+    doc = pymupdf.open(path)
+    n = doc.page_count
+    t0 = time.time()
+    try:
+        for i in range(n):
+            cf = os.path.join(cdir, f"p{i:04d}.txt")
+            if os.path.exists(cf):
+                continue
+            if max_seconds and time.time() - t0 > max_seconds:
+                break
+            pix = doc[i].get_pixmap(dpi=dpi)
+            txt = _ocr_page_text(pix.tobytes("png"))
+            with open(cf, "w") as fh:
+                fh.write(txt)
+    finally:
+        doc.close()
+    done_n = len(glob.glob(os.path.join(cdir, "p*.txt")))
+    finished = done_n >= n
+    if finished:
+        pages = [open(os.path.join(cdir, f"p{i:04d}.txt")).read() for i in range(n)]
+        json.dump(pages, open(os.path.join(OCR_DIR, safe + ".json"), "w"))
+    return finished, done_n, n
+
+
+def _load_ocr_cache(sid):
+    if not sid:
+        return None
+    f = os.path.join(OCR_DIR, _ocr_safe(sid) + ".json")
+    if os.path.exists(f):
+        try:
+            return json.load(open(f))
+        except Exception:
+            return None
+    return None
+
+
+def _pages_text(path, ocr_sid=None):
     """Page text as a list of strings. PyMuPDF is the primary engine: an order of
     magnitude faster, low memory (a 118 MB report no longer OOMs), and — key — it
     never HANGS on the vector-heavy reports that stall pdfplumber. pdfplumber is a
     fallback ONLY when PyMuPDF raises: a PDF whose PyMuPDF text is empty is an
     image/scanned PDF with no text layer, which pdfplumber can't read either (and
-    on which it can hang for minutes), so we return the empty result and let the
-    caller record it as image-only rather than fall through to a hang."""
+    on which it can hang for minutes). When a scanned PDF has a prebuilt OCR cache
+    (see ocr_pages_cached) we serve that instead, so scanned reports extract just
+    like every other one; otherwise the empty result is recorded as image-only."""
+    cached = _load_ocr_cache(ocr_sid)
+    if cached is not None:
+        return cached
     try:
         return _pages_text_fitz(path)
     except Exception as e:
@@ -698,7 +783,7 @@ def ingest_report(url, project=None, commodity=None, jurisdiction=None, report_d
     stable id (e.g. sedar:<filing>) so re-ingesting the same filing is idempotent."""
     sid = source_id or _rid(url)
     path = pdf_path if (pdf_path and os.path.exists(pdf_path)) else fetch_pdf(url)
-    pages_text = _pages_text(path)
+    pages_text = _pages_text(path, ocr_sid=sid)
     _txt_chars = sum(len(t) for t in pages_text)
     _image_only = _txt_chars < 200          # no text layer (scanned PDF) — needs OCR
     if _image_only:

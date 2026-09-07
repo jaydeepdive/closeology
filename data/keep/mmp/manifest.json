@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-06T13:46:14Z",
+  "generated": "2026-09-07T13:16:22Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -1030,6 +1030,12 @@
         "bytes": 12452
       },
       {
+        "file": "mmp/deposit_model/sedar__newcore-gold-ltd-000029680_20260807T1700.parquet",
+        "source": "sedar:newcore-gold-ltd-000029680_20260807T1700",
+        "rows": 22,
+        "bytes": 12147
+      },
+      {
         "file": "mmp/deposit_model/sedar__nexmetals-mining-corp_20260807T1705.parquet",
         "source": "sedar:nexmetals-mining-corp_20260807T1705",
         "rows": 6,
@@ -1602,6 +1608,12 @@
         "bytes": 18435
       },
       {
+        "file": "mmp/model_method/sedar__newcore-gold-ltd-000029680_20260807T1700.parquet",
+        "source": "sedar:newcore-gold-ltd-000029680_20260807T1700",
+        "rows": 1,
+        "bytes": 20344
+      },
+      {
         "file": "mmp/model_method/sedar__nexmetals-mining-corp_20260807T1705.parquet",
         "source": "sedar:nexmetals-mining-corp_20260807T1705",
         "rows": 1,
@@ -1730,6 +1742,12 @@
         "bytes": 18287
       },
       {
+        "file": "mmp/metallurgy/sedar__newcore-gold-ltd-000029680_20260807T1700.parquet",
+        "source": "sedar:newcore-gold-ltd-000029680_20260807T1700",
+        "rows": 1,
+        "bytes": 20523
+      },
+      {
         "file": "mmp/metallurgy/sedar__nexmetals-mining-corp_20260807T1705.parquet",
         "source": "sedar:nexmetals-mining-corp_20260807T1705",
         "rows": 1,
@@ -1804,6 +1822,12 @@
         "bytes": 24877
       },
       {
+        "file": "mmp/economics/sedar__newcore-gold-ltd-000029680_20260807T1700.parquet",
+        "source": "sedar:newcore-gold-ltd-000029680_20260807T1700",
+        "rows": 1,
+        "bytes": 28333
+      },
+      {
         "file": "mmp/economics/sedar__niocorp-developments-ltd_20260810T1718.parquet",
         "source": "sedar:niocorp-developments-ltd_20260810T1718",
         "rows": 1,
@@ -1828,10 +1852,10 @@
     "survey": 0,
     "assays": 14118333,
     "lithology": 759931,
-    "deposit_model": 2581,
-    "model_method": 95,
-    "metallurgy": 22,
-    "economics": 8
+    "deposit_model": 2603,
+    "model_method": 96,
+    "metallurgy": 23,
+    "economics": 9
   },
-  "shard_count": 301
+  "shard_count": 305
 }
