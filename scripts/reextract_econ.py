@@ -43,6 +43,7 @@ KEEP = os.path.join(ROOT, "data", "keep")
 PDFDIR = os.path.join(KEEP, "sedar_pdfs")
 LEDGER = os.path.join(KEEP, "sedar_manifest.json")
 INDEX = os.path.join(KEEP, "mmp_reports_index.json")
+EXTRACTED = os.path.join(KEEP, "mmp_extracted.json")   # {source_id: extractor_version} — durable, committed
 # Scratch sqlite lives on LOCAL disk, not the bridged mount: sqlite's locking /
 # fsync is unreliable over the device bridge (disk I/O errors), whereas plain
 # parquet/JSON writes to the mount are fine. Shards + OCR cache stay on the mount.
@@ -80,6 +81,17 @@ def _pdf_sources():
 def _done(con, sid):
     r = con.execute("SELECT note FROM sources WHERE id=?", (sid,)).fetchone()
     return bool(r) and f"ev{pdf_reports.EXTRACTOR_VERSION}" in (r[0] or "")
+
+
+def _load_extracted():
+    try:
+        return json.load(open(EXTRACTED))
+    except Exception:
+        return {}
+
+
+def _save_extracted(d):
+    json.dump(d, open(EXTRACTED, "w"), indent=0, sort_keys=True)
 
 
 def _is_image_only(path):
@@ -239,8 +251,75 @@ def _reindex(srcs):
     print(f"[reextract] report index -> {len(out)} reports ({archived} archived)")
 
 
+def auto(max_seconds=100):
+    """Fully-automatic incremental extraction for the daily pipeline. Extracts
+    every banked report not yet at the current extractor version: OCRs scanned
+    reports (bounded + resumable — a large scan finishes over several runs),
+    extracts text + drill data, shard-merges ONLY the newly-done sources, and
+    records them in the durable extracted-ledger (data/keep/mmp_extracted.json).
+    Idempotent and time-budgeted; run repeatedly to drain the backlog."""
+    import time
+    _redirect_store()
+    if os.path.exists(TEMPDB):
+        try:
+            os.remove(TEMPDB)
+        except OSError:
+            pass
+    extracted = _load_extracted()
+    ev = pdf_reports.EXTRACTOR_VERSION
+    pending = [(p, sid, m) for p, sid, m in _pdf_sources() if extracted.get(sid) != ev]
+    print(f"[auto] {len(pending)} report(s) pending at ev{ev}")
+    t0 = time.time()
+    did, deferred = [], []
+    # pass 1 — text-layer PDFs (fast, high yield); collect scanned ones for pass 2
+    for p, sid, m in pending:
+        if time.time() - t0 > max_seconds:
+            break
+        if _is_image_only(p):
+            deferred.append((p, sid, m)); continue
+        try:
+            pdf_reports.ingest_report(m["url"], project=m["project"], commodity=m["commodity"],
+                                      jurisdiction=m["jurisdiction"], report_date=m["submitted"],
+                                      source_id=sid, pdf_path=p, drill_tables=True)
+            did.append(sid); print(f"[auto] extracted {sid}")
+        except Exception as e:
+            print(f"[auto] FAILED {sid}: {str(e)[:140]}")
+    # pass 2 — scanned PDFs: OCR (bounded/resumable) then extract once complete
+    for p, sid, m in deferred:
+        if time.time() - t0 > max_seconds:
+            break
+        if pdf_reports._load_ocr_cache(sid) is None:
+            done, cached, npages = pdf_reports.ocr_pages_cached(
+                p, sid, max_seconds=max(15, max_seconds - (time.time() - t0)))
+            print(f"[auto] OCR {sid}: {cached}/{npages}{' complete' if done else ' — resumes next run'}")
+            if not done:
+                continue
+        try:
+            pdf_reports.ingest_report(m["url"], project=m["project"], commodity=m["commodity"],
+                                      jurisdiction=m["jurisdiction"], report_date=m["submitted"],
+                                      source_id=sid, pdf_path=p, drill_tables=True)
+            did.append(sid); print(f"[auto] extracted {sid} (OCR)")
+        except Exception as e:
+            print(f"[auto] FAILED {sid}: {str(e)[:140]}")
+    if did:
+        shard()                       # merges exactly the sources now in the temp db
+        for sid in did:
+            extracted[sid] = ev
+        _save_extracted(extracted)
+        print(f"[auto] done: extracted {len(did)} report(s); ledger now {len(extracted)} at ev{ev}")
+    else:
+        print("[auto] nothing new extracted this run "
+              f"({len(pending)} pending, {len(deferred)} scanned mid-OCR)")
+    return len(did)
+
+
 def status():
+    ev = pdf_reports.EXTRACTOR_VERSION
     n_pdf = len(list(_pdf_sources()))
+    extracted = _load_extracted()
+    at_ev = sum(1 for _, sid, _ in _pdf_sources() if extracted.get(sid) == ev)
+    print(f"[reextract] {at_ev}/{n_pdf} PDFs extracted at ev{ev} "
+          f"(ledger {len(extracted)} entries)")
     if not os.path.exists(TEMPDB):
         print(f"[reextract] {n_pdf} PDFs, temp db not started"); return
     con = store.connect(TEMPDB)
@@ -254,7 +333,10 @@ def status():
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
-    if cmd == "ingest":
+    if cmd == "auto":
+        secs = int(sys.argv[sys.argv.index("--max-seconds") + 1]) if "--max-seconds" in sys.argv else 100
+        auto(max_seconds=secs)
+    elif cmd == "ingest":
         lim = int(sys.argv[sys.argv.index("--limit") + 1]) if "--limit" in sys.argv else None
         secs = int(sys.argv[sys.argv.index("--max-seconds") + 1]) if "--max-seconds" in sys.argv else 150
         ingest(limit=lim, max_seconds=secs)

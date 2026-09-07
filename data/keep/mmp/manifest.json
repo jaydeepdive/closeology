@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-07T14:03:45Z",
+  "generated": "2026-09-07T15:34:56Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -188,6 +188,54 @@
         "source": "sedar:niocorp-developments-ltd_20260810T1718",
         "rows": 14,
         "bytes": 13689
+      },
+      {
+        "file": "mmp/collars/sedar__abasca-resources-inc_20260827T2014.parquet",
+        "source": "sedar:abasca-resources-inc_20260827T2014",
+        "rows": 215,
+        "bytes": 21252
+      },
+      {
+        "file": "mmp/collars/sedar__centauri-minerals-inc-000110017_20260824T1314.parquet",
+        "source": "sedar:centauri-minerals-inc-000110017_20260824T1314",
+        "rows": 33,
+        "bytes": 13396
+      },
+      {
+        "file": "mmp/collars/sedar__first-phosphate-corp_20260824T0756.parquet",
+        "source": "sedar:first-phosphate-corp_20260824T0756",
+        "rows": 170,
+        "bytes": 17434
+      },
+      {
+        "file": "mmp/collars/sedar__loyalist-exploration-limited_20260821T1726.parquet",
+        "source": "sedar:loyalist-exploration-limited_20260821T1726",
+        "rows": 182,
+        "bytes": 17118
+      },
+      {
+        "file": "mmp/collars/sedar__mako-mining-corp-000024156_20260821T1631.parquet",
+        "source": "sedar:mako-mining-corp-000024156_20260821T1631",
+        "rows": 130,
+        "bytes": 17631
+      },
+      {
+        "file": "mmp/collars/sedar__nevgold-corp_20260827T1656.parquet",
+        "source": "sedar:nevgold-corp_20260827T1656",
+        "rows": 96,
+        "bytes": 14912
+      },
+      {
+        "file": "mmp/collars/sedar__nextsource-materials-inc_20260828T1029.parquet",
+        "source": "sedar:nextsource-materials-inc_20260828T1029",
+        "rows": 57,
+        "bytes": 14246
+      },
+      {
+        "file": "mmp/collars/sedar__strategic-metals-ltd_20260820T0706.parquet",
+        "source": "sedar:strategic-metals-ltd_20260820T0706",
+        "rows": 3,
+        "bytes": 12453
       }
     ],
     "assays": [
@@ -478,6 +526,54 @@
         "source": "sedar:wesdome-gold-mines-ltd_20260806T2003",
         "rows": 46,
         "bytes": 7743
+      },
+      {
+        "file": "mmp/assays/sedar__centauri-minerals-inc-000110017_20260824T1314.parquet",
+        "source": "sedar:centauri-minerals-inc-000110017_20260824T1314",
+        "rows": 30,
+        "bytes": 7111
+      },
+      {
+        "file": "mmp/assays/sedar__galway-metals-inc_20260827T1733.parquet",
+        "source": "sedar:galway-metals-inc_20260827T1733",
+        "rows": 203,
+        "bytes": 11037
+      },
+      {
+        "file": "mmp/assays/sedar__goldgroup-mining-inc-000003703_20260831T1836.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1836",
+        "rows": 455,
+        "bytes": 12084
+      },
+      {
+        "file": "mmp/assays/sedar__goldgroup-mining-inc-000003703_20260831T1840.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1840",
+        "rows": 615,
+        "bytes": 12924
+      },
+      {
+        "file": "mmp/assays/sedar__mining-americas-inc-formerly-minera-alamos-i_20260902T2104.parquet",
+        "source": "sedar:mining-americas-inc-formerly-minera-alamos-i_20260902T2104",
+        "rows": 103,
+        "bytes": 9623
+      },
+      {
+        "file": "mmp/assays/sedar__nevgold-corp_20260827T1656.parquet",
+        "source": "sedar:nevgold-corp_20260827T1656",
+        "rows": 11,
+        "bytes": 6666
+      },
+      {
+        "file": "mmp/assays/sedar__patriot-resources-corp_20260901T1747.parquet",
+        "source": "sedar:patriot-resources-corp_20260901T1747",
+        "rows": 29,
+        "bytes": 7137
+      },
+      {
+        "file": "mmp/assays/sedar__silver-one-resources-inc_20260827T1529.parquet",
+        "source": "sedar:silver-one-resources-inc_20260827T1529",
+        "rows": 459,
+        "bytes": 13785
       }
     ],
     "lithology": [
@@ -1082,6 +1178,120 @@
         "source": "sedar:wesdome-gold-mines-ltd_20260806T2003",
         "rows": 16,
         "bytes": 11646
+      },
+      {
+        "file": "mmp/deposit_model/sedar__abasca-resources-inc_20260827T2014.parquet",
+        "source": "sedar:abasca-resources-inc_20260827T2014",
+        "rows": 4,
+        "bytes": 9486
+      },
+      {
+        "file": "mmp/deposit_model/sedar__centauri-minerals-inc-000110017_20260824T1314.parquet",
+        "source": "sedar:centauri-minerals-inc-000110017_20260824T1314",
+        "rows": 17,
+        "bytes": 10541
+      },
+      {
+        "file": "mmp/deposit_model/sedar__first-majestic-silver-corp_20260825T1650.parquet",
+        "source": "sedar:first-majestic-silver-corp_20260825T1650",
+        "rows": 1,
+        "bytes": 9487
+      },
+      {
+        "file": "mmp/deposit_model/sedar__first-phosphate-corp_20260824T0756.parquet",
+        "source": "sedar:first-phosphate-corp_20260824T0756",
+        "rows": 21,
+        "bytes": 10831
+      },
+      {
+        "file": "mmp/deposit_model/sedar__galway-metals-inc_20260827T1733.parquet",
+        "source": "sedar:galway-metals-inc_20260827T1733",
+        "rows": 53,
+        "bytes": 11566
+      },
+      {
+        "file": "mmp/deposit_model/sedar__goldgroup-mining-inc-000003703_20260831T1836.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1836",
+        "rows": 10,
+        "bytes": 10722
+      },
+      {
+        "file": "mmp/deposit_model/sedar__goldgroup-mining-inc-000003703_20260831T1840.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1840",
+        "rows": 19,
+        "bytes": 11084
+      },
+      {
+        "file": "mmp/deposit_model/sedar__laramide-resources-ltd_20260903T2149.parquet",
+        "source": "sedar:laramide-resources-ltd_20260903T2149",
+        "rows": 24,
+        "bytes": 11051
+      },
+      {
+        "file": "mmp/deposit_model/sedar__lightning-resource-corp-000028340_20260901T1719.parquet",
+        "source": "sedar:lightning-resource-corp-000028340_20260901T1719",
+        "rows": 1,
+        "bytes": 9831
+      },
+      {
+        "file": "mmp/deposit_model/sedar__loyalist-exploration-limited_20260821T1726.parquet",
+        "source": "sedar:loyalist-exploration-limited_20260821T1726",
+        "rows": 11,
+        "bytes": 10299
+      },
+      {
+        "file": "mmp/deposit_model/sedar__mako-mining-corp-000024156_20260821T1631.parquet",
+        "source": "sedar:mako-mining-corp-000024156_20260821T1631",
+        "rows": 23,
+        "bytes": 11051
+      },
+      {
+        "file": "mmp/deposit_model/sedar__mining-americas-inc-formerly-minera-alamos-i_20260902T2104.parquet",
+        "source": "sedar:mining-americas-inc-formerly-minera-alamos-i_20260902T2104",
+        "rows": 15,
+        "bytes": 11108
+      },
+      {
+        "file": "mmp/deposit_model/sedar__miravalles-gold-corp_20260903T0622.parquet",
+        "source": "sedar:miravalles-gold-corp_20260903T0622",
+        "rows": 1,
+        "bytes": 9711
+      },
+      {
+        "file": "mmp/deposit_model/sedar__nevgold-corp_20260827T1656.parquet",
+        "source": "sedar:nevgold-corp_20260827T1656",
+        "rows": 46,
+        "bytes": 11723
+      },
+      {
+        "file": "mmp/deposit_model/sedar__nextsource-materials-inc_20260828T1029.parquet",
+        "source": "sedar:nextsource-materials-inc_20260828T1029",
+        "rows": 22,
+        "bytes": 10776
+      },
+      {
+        "file": "mmp/deposit_model/sedar__sayona-inc_20260907T1006.parquet",
+        "source": "sedar:sayona-inc_20260907T1006",
+        "rows": 18,
+        "bytes": 11257
+      },
+      {
+        "file": "mmp/deposit_model/sedar__silver-one-resources-inc_20260827T1529.parquet",
+        "source": "sedar:silver-one-resources-inc_20260827T1529",
+        "rows": 45,
+        "bytes": 11155
+      },
+      {
+        "file": "mmp/deposit_model/sedar__strikepoint-gold-inc_20260818T1623.parquet",
+        "source": "sedar:strikepoint-gold-inc_20260818T1623",
+        "rows": 7,
+        "bytes": 9968
+      },
+      {
+        "file": "mmp/deposit_model/sedar__stroud-resources-ltd_20260828T1857.parquet",
+        "source": "sedar:stroud-resources-ltd_20260828T1857",
+        "rows": 35,
+        "bytes": 11808
       }
     ],
     "model_method": [
@@ -1660,6 +1870,114 @@
         "source": "sedar:wesdome-gold-mines-ltd_20260806T2003",
         "rows": 1,
         "bytes": 17933
+      },
+      {
+        "file": "mmp/model_method/sedar__abasca-resources-inc_20260827T2014.parquet",
+        "source": "sedar:abasca-resources-inc_20260827T2014",
+        "rows": 1,
+        "bytes": 18059
+      },
+      {
+        "file": "mmp/model_method/sedar__centauri-minerals-inc-000110017_20260824T1314.parquet",
+        "source": "sedar:centauri-minerals-inc-000110017_20260824T1314",
+        "rows": 1,
+        "bytes": 16941
+      },
+      {
+        "file": "mmp/model_method/sedar__first-majestic-silver-corp_20260825T1650.parquet",
+        "source": "sedar:first-majestic-silver-corp_20260825T1650",
+        "rows": 1,
+        "bytes": 17034
+      },
+      {
+        "file": "mmp/model_method/sedar__first-phosphate-corp_20260824T0756.parquet",
+        "source": "sedar:first-phosphate-corp_20260824T0756",
+        "rows": 1,
+        "bytes": 17160
+      },
+      {
+        "file": "mmp/model_method/sedar__galway-metals-inc_20260827T1733.parquet",
+        "source": "sedar:galway-metals-inc_20260827T1733",
+        "rows": 1,
+        "bytes": 17036
+      },
+      {
+        "file": "mmp/model_method/sedar__goldgroup-mining-inc-000003703_20260831T1836.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1836",
+        "rows": 1,
+        "bytes": 16575
+      },
+      {
+        "file": "mmp/model_method/sedar__goldgroup-mining-inc-000003703_20260831T1840.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1840",
+        "rows": 1,
+        "bytes": 16268
+      },
+      {
+        "file": "mmp/model_method/sedar__laramide-resources-ltd_20260903T2149.parquet",
+        "source": "sedar:laramide-resources-ltd_20260903T2149",
+        "rows": 1,
+        "bytes": 19268
+      },
+      {
+        "file": "mmp/model_method/sedar__loyalist-exploration-limited_20260821T1726.parquet",
+        "source": "sedar:loyalist-exploration-limited_20260821T1726",
+        "rows": 1,
+        "bytes": 17517
+      },
+      {
+        "file": "mmp/model_method/sedar__mako-mining-corp-000024156_20260821T1631.parquet",
+        "source": "sedar:mako-mining-corp-000024156_20260821T1631",
+        "rows": 1,
+        "bytes": 16379
+      },
+      {
+        "file": "mmp/model_method/sedar__mining-americas-inc-formerly-minera-alamos-i_20260902T2104.parquet",
+        "source": "sedar:mining-americas-inc-formerly-minera-alamos-i_20260902T2104",
+        "rows": 1,
+        "bytes": 17013
+      },
+      {
+        "file": "mmp/model_method/sedar__miravalles-gold-corp_20260903T0622.parquet",
+        "source": "sedar:miravalles-gold-corp_20260903T0622",
+        "rows": 1,
+        "bytes": 22888
+      },
+      {
+        "file": "mmp/model_method/sedar__nevgold-corp_20260827T1656.parquet",
+        "source": "sedar:nevgold-corp_20260827T1656",
+        "rows": 1,
+        "bytes": 15452
+      },
+      {
+        "file": "mmp/model_method/sedar__nextsource-materials-inc_20260828T1029.parquet",
+        "source": "sedar:nextsource-materials-inc_20260828T1029",
+        "rows": 1,
+        "bytes": 15874
+      },
+      {
+        "file": "mmp/model_method/sedar__sayona-inc_20260907T1006.parquet",
+        "source": "sedar:sayona-inc_20260907T1006",
+        "rows": 1,
+        "bytes": 20183
+      },
+      {
+        "file": "mmp/model_method/sedar__silver-one-resources-inc_20260827T1529.parquet",
+        "source": "sedar:silver-one-resources-inc_20260827T1529",
+        "rows": 1,
+        "bytes": 15750
+      },
+      {
+        "file": "mmp/model_method/sedar__strikepoint-gold-inc_20260818T1623.parquet",
+        "source": "sedar:strikepoint-gold-inc_20260818T1623",
+        "rows": 1,
+        "bytes": 17056
+      },
+      {
+        "file": "mmp/model_method/sedar__stroud-resources-ltd_20260828T1857.parquet",
+        "source": "sedar:stroud-resources-ltd_20260828T1857",
+        "rows": 1,
+        "bytes": 16630
       }
     ],
     "metallurgy": [
@@ -1800,6 +2118,120 @@
         "source": "sedar:wesdome-gold-mines-ltd_20260806T2003",
         "rows": 1,
         "bytes": 18435
+      },
+      {
+        "file": "mmp/metallurgy/sedar__abasca-resources-inc_20260827T2014.parquet",
+        "source": "sedar:abasca-resources-inc_20260827T2014",
+        "rows": 1,
+        "bytes": 13714
+      },
+      {
+        "file": "mmp/metallurgy/sedar__centauri-minerals-inc-000110017_20260824T1314.parquet",
+        "source": "sedar:centauri-minerals-inc-000110017_20260824T1314",
+        "rows": 1,
+        "bytes": 17402
+      },
+      {
+        "file": "mmp/metallurgy/sedar__first-majestic-silver-corp_20260825T1650.parquet",
+        "source": "sedar:first-majestic-silver-corp_20260825T1650",
+        "rows": 1,
+        "bytes": 13087
+      },
+      {
+        "file": "mmp/metallurgy/sedar__first-phosphate-corp_20260824T0756.parquet",
+        "source": "sedar:first-phosphate-corp_20260824T0756",
+        "rows": 1,
+        "bytes": 13471
+      },
+      {
+        "file": "mmp/metallurgy/sedar__galway-metals-inc_20260827T1733.parquet",
+        "source": "sedar:galway-metals-inc_20260827T1733",
+        "rows": 1,
+        "bytes": 14100
+      },
+      {
+        "file": "mmp/metallurgy/sedar__goldgroup-mining-inc-000003703_20260831T1836.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1836",
+        "rows": 1,
+        "bytes": 13401
+      },
+      {
+        "file": "mmp/metallurgy/sedar__goldgroup-mining-inc-000003703_20260831T1840.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1840",
+        "rows": 1,
+        "bytes": 16020
+      },
+      {
+        "file": "mmp/metallurgy/sedar__laramide-resources-ltd_20260903T2149.parquet",
+        "source": "sedar:laramide-resources-ltd_20260903T2149",
+        "rows": 1,
+        "bytes": 15583
+      },
+      {
+        "file": "mmp/metallurgy/sedar__loyalist-exploration-limited_20260821T1726.parquet",
+        "source": "sedar:loyalist-exploration-limited_20260821T1726",
+        "rows": 1,
+        "bytes": 16051
+      },
+      {
+        "file": "mmp/metallurgy/sedar__mako-mining-corp-000024156_20260821T1631.parquet",
+        "source": "sedar:mako-mining-corp-000024156_20260821T1631",
+        "rows": 1,
+        "bytes": 15591
+      },
+      {
+        "file": "mmp/metallurgy/sedar__mining-americas-inc-formerly-minera-alamos-i_20260902T2104.parquet",
+        "source": "sedar:mining-americas-inc-formerly-minera-alamos-i_20260902T2104",
+        "rows": 1,
+        "bytes": 16749
+      },
+      {
+        "file": "mmp/metallurgy/sedar__miravalles-gold-corp_20260903T0622.parquet",
+        "source": "sedar:miravalles-gold-corp_20260903T0622",
+        "rows": 1,
+        "bytes": 15623
+      },
+      {
+        "file": "mmp/metallurgy/sedar__nevgold-corp_20260827T1656.parquet",
+        "source": "sedar:nevgold-corp_20260827T1656",
+        "rows": 1,
+        "bytes": 14300
+      },
+      {
+        "file": "mmp/metallurgy/sedar__nextsource-materials-inc_20260828T1029.parquet",
+        "source": "sedar:nextsource-materials-inc_20260828T1029",
+        "rows": 1,
+        "bytes": 15084
+      },
+      {
+        "file": "mmp/metallurgy/sedar__patriot-resources-corp_20260901T1747.parquet",
+        "source": "sedar:patriot-resources-corp_20260901T1747",
+        "rows": 1,
+        "bytes": 14751
+      },
+      {
+        "file": "mmp/metallurgy/sedar__sayona-inc_20260907T1006.parquet",
+        "source": "sedar:sayona-inc_20260907T1006",
+        "rows": 1,
+        "bytes": 17558
+      },
+      {
+        "file": "mmp/metallurgy/sedar__silver-one-resources-inc_20260827T1529.parquet",
+        "source": "sedar:silver-one-resources-inc_20260827T1529",
+        "rows": 1,
+        "bytes": 16694
+      },
+      {
+        "file": "mmp/metallurgy/sedar__strikepoint-gold-inc_20260818T1623.parquet",
+        "source": "sedar:strikepoint-gold-inc_20260818T1623",
+        "rows": 1,
+        "bytes": 16722
+      },
+      {
+        "file": "mmp/metallurgy/sedar__stroud-resources-ltd_20260828T1857.parquet",
+        "source": "sedar:stroud-resources-ltd_20260828T1857",
+        "rows": 1,
+        "bytes": 16590
       }
     ],
     "economics": [
@@ -1856,18 +2288,79 @@
         "source": "sedar:salazar-resources-limited_20260813T1731",
         "rows": 1,
         "bytes": 19397
+      },
+      {
+        "file": "mmp/economics/sedar__first-phosphate-corp_20260824T0756.parquet",
+        "source": "sedar:first-phosphate-corp_20260824T0756",
+        "rows": 1,
+        "bytes": 22531
+      },
+      {
+        "file": "mmp/economics/sedar__goldgroup-mining-inc-000003703_20260831T1836.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1836",
+        "rows": 1,
+        "bytes": 18951
+      },
+      {
+        "file": "mmp/economics/sedar__goldgroup-mining-inc-000003703_20260831T1840.parquet",
+        "source": "sedar:goldgroup-mining-inc-000003703_20260831T1840",
+        "rows": 1,
+        "bytes": 20127
+      },
+      {
+        "file": "mmp/economics/sedar__laramide-resources-ltd_20260903T2149.parquet",
+        "source": "sedar:laramide-resources-ltd_20260903T2149",
+        "rows": 1,
+        "bytes": 23848
+      },
+      {
+        "file": "mmp/economics/sedar__mako-mining-corp-000024156_20260821T1631.parquet",
+        "source": "sedar:mako-mining-corp-000024156_20260821T1631",
+        "rows": 1,
+        "bytes": 20531
+      },
+      {
+        "file": "mmp/economics/sedar__mining-americas-inc-formerly-minera-alamos-i_20260902T2104.parquet",
+        "source": "sedar:mining-americas-inc-formerly-minera-alamos-i_20260902T2104",
+        "rows": 1,
+        "bytes": 23473
+      },
+      {
+        "file": "mmp/economics/sedar__nextsource-materials-inc_20260828T1029.parquet",
+        "source": "sedar:nextsource-materials-inc_20260828T1029",
+        "rows": 1,
+        "bytes": 22369
+      },
+      {
+        "file": "mmp/economics/sedar__sayona-inc_20260907T1006.parquet",
+        "source": "sedar:sayona-inc_20260907T1006",
+        "rows": 1,
+        "bytes": 23607
+      },
+      {
+        "file": "mmp/economics/sedar__strategic-metals-ltd_20260820T0706.parquet",
+        "source": "sedar:strategic-metals-ltd_20260820T0706",
+        "rows": 1,
+        "bytes": 19044
+      },
+      {
+        "file": "mmp/economics/sedar__stroud-resources-ltd_20260828T1857.parquet",
+        "source": "sedar:stroud-resources-ltd_20260828T1857",
+        "rows": 1,
+        "bytes": 21707
       }
-    ]
+    ],
+    "survey": []
   },
   "totals": {
-    "collars": 802349,
+    "collars": 803235,
     "survey": 0,
-    "assays": 14118476,
+    "assays": 14120381,
     "lithology": 759931,
-    "deposit_model": 2603,
-    "model_method": 96,
-    "metallurgy": 23,
-    "economics": 9
+    "deposit_model": 2976,
+    "model_method": 114,
+    "metallurgy": 42,
+    "economics": 19
   },
-  "shard_count": 307
+  "shard_count": 389
 }
