@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-07T13:20:32Z",
+  "generated": "2026-09-07T14:03:45Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -12,14 +12,14 @@
       {
         "file": "mmp/collars/gov__on.parquet",
         "source": "gov:on",
-        "rows": 172476,
-        "bytes": 6866626
+        "rows": 172481,
+        "bytes": 6845007
       },
       {
         "file": "mmp/collars/gov__qc.parquet",
         "source": "gov:qc",
-        "rows": 189555,
-        "bytes": 8887721
+        "rows": 189598,
+        "bytes": 8833273
       },
       {
         "file": "mmp/collars/gov__sk.parquet",
@@ -49,7 +49,7 @@
         "file": "mmp/collars/news__juniorminingnetwork.parquet",
         "source": "news:juniorminingnetwork",
         "rows": 170,
-        "bytes": 24915
+        "bytes": 24980
       },
       {
         "file": "mmp/collars/news__newsfilecorp.parquet",
@@ -139,55 +139,55 @@
         "file": "mmp/collars/sedar__apex-critical-metals-corp-000053956_20260806T1850.parquet",
         "source": "sedar:apex-critical-metals-corp-000053956_20260806T1850",
         "rows": 12,
-        "bytes": 14162
+        "bytes": 14090
       },
       {
         "file": "mmp/collars/sedar__asante-gold-corporation_20260805T0715.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0715",
         "rows": 273,
-        "bytes": 24064
+        "bytes": 23992
       },
       {
         "file": "mmp/collars/sedar__canadian-uranium-corp_20260814T1919.parquet",
         "source": "sedar:canadian-uranium-corp_20260814T1919",
         "rows": 30,
-        "bytes": 14305
+        "bytes": 14233
       },
       {
         "file": "mmp/collars/sedar__freeman-gold-corp_20260813T1659.parquet",
         "source": "sedar:freeman-gold-corp_20260813T1659",
         "rows": 151,
-        "bytes": 18688
+        "bytes": 18616
       },
       {
         "file": "mmp/collars/sedar__granada-gold-mine-inc_20260807T1703.parquet",
         "source": "sedar:granada-gold-mine-inc_20260807T1703",
         "rows": 80,
-        "bytes": 15424
+        "bytes": 15356
       },
       {
         "file": "mmp/collars/sedar__lake-victoria-gold-ltd_20260817T1420.parquet",
         "source": "sedar:lake-victoria-gold-ltd_20260817T1420",
         "rows": 431,
-        "bytes": 23868
+        "bytes": 23796
       },
       {
         "file": "mmp/collars/sedar__mithril-silver-and-gold-limited-000106212_20260817T1600.parquet",
         "source": "sedar:mithril-silver-and-gold-limited-000106212_20260817T1600",
         "rows": 14,
-        "bytes": 14218
+        "bytes": 14146
       },
       {
         "file": "mmp/collars/sedar__nexmetals-mining-corp_20260807T1705.parquet",
         "source": "sedar:nexmetals-mining-corp_20260807T1705",
         "rows": 12,
-        "bytes": 13983
+        "bytes": 13911
       },
       {
         "file": "mmp/collars/sedar__niocorp-developments-ltd_20260810T1718.parquet",
         "source": "sedar:niocorp-developments-ltd_20260810T1718",
         "rows": 14,
-        "bytes": 13757
+        "bytes": 13689
       }
     ],
     "assays": [
@@ -417,67 +417,67 @@
         "file": "mmp/assays/sedar__asante-gold-corporation_20260805T0715.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0715",
         "rows": 137,
-        "bytes": 9758
+        "bytes": 9706
       },
       {
         "file": "mmp/assays/sedar__canadian-uranium-corp_20260814T1919.parquet",
         "source": "sedar:canadian-uranium-corp_20260814T1919",
         "rows": 15,
-        "bytes": 6666
+        "bytes": 6614
       },
       {
         "file": "mmp/assays/sedar__fairchild-gold-corp_20260814T2326.parquet",
         "source": "sedar:fairchild-gold-corp_20260814T2326",
         "rows": 8,
-        "bytes": 6541
+        "bytes": 6489
       },
       {
         "file": "mmp/assays/sedar__freeman-gold-corp_20260813T1659.parquet",
         "source": "sedar:freeman-gold-corp_20260813T1659",
         "rows": 191,
-        "bytes": 10669
+        "bytes": 10617
       },
       {
         "file": "mmp/assays/sedar__granada-gold-mine-inc_20260807T1703.parquet",
         "source": "sedar:granada-gold-mine-inc_20260807T1703",
         "rows": 20,
-        "bytes": 6928
+        "bytes": 6876
       },
       {
         "file": "mmp/assays/sedar__mithril-silver-and-gold-limited-000106212_20260817T1600.parquet",
         "source": "sedar:mithril-silver-and-gold-limited-000106212_20260817T1600",
         "rows": 641,
-        "bytes": 17889
+        "bytes": 17837
       },
       {
         "file": "mmp/assays/sedar__new-pacific-metals-corp_20260814T1432.parquet",
         "source": "sedar:new-pacific-metals-corp_20260814T1432",
         "rows": 125,
-        "bytes": 7674
+        "bytes": 7622
       },
       {
         "file": "mmp/assays/sedar__nexmetals-mining-corp_20260807T1705.parquet",
         "source": "sedar:nexmetals-mining-corp_20260807T1705",
         "rows": 245,
-        "bytes": 8572
+        "bytes": 8520
       },
       {
         "file": "mmp/assays/sedar__panorama-capital-corp_20260805T1610.parquet",
         "source": "sedar:panorama-capital-corp_20260805T1610",
         "rows": 89,
-        "bytes": 6979
+        "bytes": 6927
       },
       {
         "file": "mmp/assays/sedar__pentagon-i-capital-corp_20260805T1631.parquet",
         "source": "sedar:pentagon-i-capital-corp_20260805T1631",
         "rows": 105,
-        "bytes": 8441
+        "bytes": 8389
       },
       {
         "file": "mmp/assays/sedar__wesdome-gold-mines-ltd_20260806T2003.parquet",
         "source": "sedar:wesdome-gold-mines-ltd_20260806T2003",
         "rows": 46,
-        "bytes": 7795
+        "bytes": 7743
       }
     ],
     "lithology": [
@@ -961,127 +961,127 @@
         "file": "mmp/deposit_model/sedar__alaros-exploration-inc-000106481_20260805T1216.parquet",
         "source": "sedar:alaros-exploration-inc-000106481_20260805T1216",
         "rows": 2,
-        "bytes": 11177
+        "bytes": 11105
       },
       {
         "file": "mmp/deposit_model/sedar__apex-critical-metals-corp-000053956_20260806T1850.parquet",
         "source": "sedar:apex-critical-metals-corp-000053956_20260806T1850",
         "rows": 1,
-        "bytes": 11133
+        "bytes": 11061
       },
       {
         "file": "mmp/deposit_model/sedar__asante-gold-corporation_20260805T0715.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0715",
         "rows": 88,
-        "bytes": 14769
+        "bytes": 14697
       },
       {
         "file": "mmp/deposit_model/sedar__asante-gold-corporation_20260805T0717.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0717",
         "rows": 114,
-        "bytes": 15111
+        "bytes": 15039
       },
       {
         "file": "mmp/deposit_model/sedar__canadian-uranium-corp_20260814T1919.parquet",
         "source": "sedar:canadian-uranium-corp_20260814T1919",
         "rows": 1,
-        "bytes": 10902
+        "bytes": 10830
       },
       {
         "file": "mmp/deposit_model/sedar__cygnus-metals-limited-000106960_20260813T1337.parquet",
         "source": "sedar:cygnus-metals-limited-000106960_20260813T1337",
         "rows": 3,
-        "bytes": 10899
+        "bytes": 10827
       },
       {
         "file": "mmp/deposit_model/sedar__fairchild-gold-corp_20260814T2326.parquet",
         "source": "sedar:fairchild-gold-corp_20260814T2326",
         "rows": 17,
-        "bytes": 11690
+        "bytes": 11618
       },
       {
         "file": "mmp/deposit_model/sedar__freeman-gold-corp_20260813T1659.parquet",
         "source": "sedar:freeman-gold-corp_20260813T1659",
         "rows": 27,
-        "bytes": 12785
+        "bytes": 12713
       },
       {
         "file": "mmp/deposit_model/sedar__giyani-metals-corp_20260710T0802.parquet",
         "source": "sedar:giyani-metals-corp_20260710T0802",
         "rows": 39,
-        "bytes": 12868
+        "bytes": 12796
       },
       {
         "file": "mmp/deposit_model/sedar__granada-gold-mine-inc_20260807T1703.parquet",
         "source": "sedar:granada-gold-mine-inc_20260807T1703",
         "rows": 22,
-        "bytes": 11940
+        "bytes": 11868
       },
       {
         "file": "mmp/deposit_model/sedar__lake-victoria-gold-ltd_20260817T1420.parquet",
         "source": "sedar:lake-victoria-gold-ltd_20260817T1420",
         "rows": 2,
-        "bytes": 10872
+        "bytes": 10800
       },
       {
         "file": "mmp/deposit_model/sedar__maackk-capital-corp_20260729T1559.parquet",
         "source": "sedar:maackk-capital-corp_20260729T1559",
         "rows": 2,
-        "bytes": 10890
+        "bytes": 10818
       },
       {
         "file": "mmp/deposit_model/sedar__mithril-silver-and-gold-limited-000106212_20260817T1600.parquet",
         "source": "sedar:mithril-silver-and-gold-limited-000106212_20260817T1600",
         "rows": 28,
-        "bytes": 12574
+        "bytes": 12502
       },
       {
         "file": "mmp/deposit_model/sedar__new-pacific-metals-corp_20260814T1432.parquet",
         "source": "sedar:new-pacific-metals-corp_20260814T1432",
         "rows": 18,
-        "bytes": 12452
+        "bytes": 12380
       },
       {
         "file": "mmp/deposit_model/sedar__newcore-gold-ltd-000029680_20260807T1700.parquet",
         "source": "sedar:newcore-gold-ltd-000029680_20260807T1700",
         "rows": 22,
-        "bytes": 12147
+        "bytes": 12075
       },
       {
         "file": "mmp/deposit_model/sedar__nexmetals-mining-corp_20260807T1705.parquet",
         "source": "sedar:nexmetals-mining-corp_20260807T1705",
         "rows": 6,
-        "bytes": 11243
+        "bytes": 11171
       },
       {
         "file": "mmp/deposit_model/sedar__niocorp-developments-ltd_20260810T1718.parquet",
         "source": "sedar:niocorp-developments-ltd_20260810T1718",
         "rows": 21,
-        "bytes": 12348
+        "bytes": 12276
       },
       {
         "file": "mmp/deposit_model/sedar__nordique-critical-metals-inc_20260814T1702.parquet",
         "source": "sedar:nordique-critical-metals-inc_20260814T1702",
         "rows": 6,
-        "bytes": 11001
+        "bytes": 10929
       },
       {
         "file": "mmp/deposit_model/sedar__salazar-resources-limited_20260813T1731.parquet",
         "source": "sedar:salazar-resources-limited_20260813T1731",
         "rows": 20,
-        "bytes": 12085
+        "bytes": 12013
       },
       {
         "file": "mmp/deposit_model/sedar__wesdome-gold-mines-ltd_20260806T1839.parquet",
         "source": "sedar:wesdome-gold-mines-ltd_20260806T1839",
         "rows": 34,
-        "bytes": 12158
+        "bytes": 12086
       },
       {
         "file": "mmp/deposit_model/sedar__wesdome-gold-mines-ltd_20260806T2003.parquet",
         "source": "sedar:wesdome-gold-mines-ltd_20260806T2003",
         "rows": 16,
-        "bytes": 11718
+        "bytes": 11646
       }
     ],
     "model_method": [
@@ -1551,115 +1551,115 @@
         "file": "mmp/model_method/sedar__alaros-exploration-inc-000106481_20260805T1216.parquet",
         "source": "sedar:alaros-exploration-inc-000106481_20260805T1216",
         "rows": 1,
-        "bytes": 29468
+        "bytes": 29388
       },
       {
         "file": "mmp/model_method/sedar__apex-critical-metals-corp-000053956_20260806T1850.parquet",
         "source": "sedar:apex-critical-metals-corp-000053956_20260806T1850",
         "rows": 1,
-        "bytes": 26604
+        "bytes": 26528
       },
       {
         "file": "mmp/model_method/sedar__asante-gold-corporation_20260805T0715.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0715",
         "rows": 1,
-        "bytes": 20556
+        "bytes": 20404
       },
       {
         "file": "mmp/model_method/sedar__asante-gold-corporation_20260805T0717.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0717",
         "rows": 1,
-        "bytes": 19856
+        "bytes": 19708
       },
       {
         "file": "mmp/model_method/sedar__cygnus-metals-limited-000106960_20260813T1337.parquet",
         "source": "sedar:cygnus-metals-limited-000106960_20260813T1337",
         "rows": 1,
-        "bytes": 19367
+        "bytes": 19219
       },
       {
         "file": "mmp/model_method/sedar__fairchild-gold-corp_20260814T2326.parquet",
         "source": "sedar:fairchild-gold-corp_20260814T2326",
         "rows": 1,
-        "bytes": 17511
+        "bytes": 17367
       },
       {
         "file": "mmp/model_method/sedar__freeman-gold-corp_20260813T1659.parquet",
         "source": "sedar:freeman-gold-corp_20260813T1659",
         "rows": 1,
-        "bytes": 17221
+        "bytes": 17077
       },
       {
         "file": "mmp/model_method/sedar__giyani-metals-corp_20260710T0802.parquet",
         "source": "sedar:giyani-metals-corp_20260710T0802",
         "rows": 1,
-        "bytes": 17652
+        "bytes": 17500
       },
       {
         "file": "mmp/model_method/sedar__granada-gold-mine-inc_20260807T1703.parquet",
         "source": "sedar:granada-gold-mine-inc_20260807T1703",
         "rows": 1,
-        "bytes": 18528
+        "bytes": 18380
       },
       {
         "file": "mmp/model_method/sedar__lake-victoria-gold-ltd_20260817T1420.parquet",
         "source": "sedar:lake-victoria-gold-ltd_20260817T1420",
         "rows": 1,
-        "bytes": 18613
+        "bytes": 18465
       },
       {
         "file": "mmp/model_method/sedar__mithril-silver-and-gold-limited-000106212_20260817T1600.parquet",
         "source": "sedar:mithril-silver-and-gold-limited-000106212_20260817T1600",
         "rows": 1,
-        "bytes": 21694
+        "bytes": 21546
       },
       {
         "file": "mmp/model_method/sedar__new-pacific-metals-corp_20260814T1432.parquet",
         "source": "sedar:new-pacific-metals-corp_20260814T1432",
         "rows": 1,
-        "bytes": 18435
+        "bytes": 18283
       },
       {
         "file": "mmp/model_method/sedar__newcore-gold-ltd-000029680_20260807T1700.parquet",
         "source": "sedar:newcore-gold-ltd-000029680_20260807T1700",
         "rows": 1,
-        "bytes": 20344
+        "bytes": 20192
       },
       {
         "file": "mmp/model_method/sedar__nexmetals-mining-corp_20260807T1705.parquet",
         "source": "sedar:nexmetals-mining-corp_20260807T1705",
         "rows": 1,
-        "bytes": 17769
+        "bytes": 17621
       },
       {
         "file": "mmp/model_method/sedar__niocorp-developments-ltd_20260810T1718.parquet",
         "source": "sedar:niocorp-developments-ltd_20260810T1718",
         "rows": 1,
-        "bytes": 17518
+        "bytes": 17370
       },
       {
         "file": "mmp/model_method/sedar__nordique-critical-metals-inc_20260814T1702.parquet",
         "source": "sedar:nordique-critical-metals-inc_20260814T1702",
         "rows": 1,
-        "bytes": 19151
+        "bytes": 19039
       },
       {
         "file": "mmp/model_method/sedar__salazar-resources-limited_20260813T1731.parquet",
         "source": "sedar:salazar-resources-limited_20260813T1731",
         "rows": 1,
-        "bytes": 18456
+        "bytes": 18304
       },
       {
         "file": "mmp/model_method/sedar__wesdome-gold-mines-ltd_20260806T1839.parquet",
         "source": "sedar:wesdome-gold-mines-ltd_20260806T1839",
         "rows": 1,
-        "bytes": 17170
+        "bytes": 17026
       },
       {
         "file": "mmp/model_method/sedar__wesdome-gold-mines-ltd_20260806T2003.parquet",
         "source": "sedar:wesdome-gold-mines-ltd_20260806T2003",
         "rows": 1,
-        "bytes": 18085
+        "bytes": 17933
       }
     ],
     "metallurgy": [
@@ -1679,127 +1679,127 @@
         "file": "mmp/metallurgy/sedar__alaros-exploration-inc-000106481_20260805T1216.parquet",
         "source": "sedar:alaros-exploration-inc-000106481_20260805T1216",
         "rows": 1,
-        "bytes": 14859
+        "bytes": 14787
       },
       {
         "file": "mmp/metallurgy/sedar__asante-gold-corporation_20260805T0715.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0715",
         "rows": 1,
-        "bytes": 21663
+        "bytes": 21547
       },
       {
         "file": "mmp/metallurgy/sedar__asante-gold-corporation_20260805T0717.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0717",
         "rows": 1,
-        "bytes": 21125
+        "bytes": 21009
       },
       {
         "file": "mmp/metallurgy/sedar__cygnus-metals-limited-000106960_20260813T1337.parquet",
         "source": "sedar:cygnus-metals-limited-000106960_20260813T1337",
         "rows": 1,
-        "bytes": 16959
+        "bytes": 16847
       },
       {
         "file": "mmp/metallurgy/sedar__fairchild-gold-corp_20260814T2326.parquet",
         "source": "sedar:fairchild-gold-corp_20260814T2326",
         "rows": 1,
-        "bytes": 16646
+        "bytes": 16550
       },
       {
         "file": "mmp/metallurgy/sedar__freeman-gold-corp_20260813T1659.parquet",
         "source": "sedar:freeman-gold-corp_20260813T1659",
         "rows": 1,
-        "bytes": 16962
+        "bytes": 16850
       },
       {
         "file": "mmp/metallurgy/sedar__giyani-metals-corp_20260710T0802.parquet",
         "source": "sedar:giyani-metals-corp_20260710T0802",
         "rows": 1,
-        "bytes": 12858
+        "bytes": 12782
       },
       {
         "file": "mmp/metallurgy/sedar__goldcoast-resource-corp-formerly-psyence-gro_20260730T1926.parquet",
         "source": "sedar:goldcoast-resource-corp-formerly-psyence-gro_20260730T1926",
         "rows": 1,
-        "bytes": 17453
+        "bytes": 17381
       },
       {
         "file": "mmp/metallurgy/sedar__granada-gold-mine-inc_20260807T1703.parquet",
         "source": "sedar:granada-gold-mine-inc_20260807T1703",
         "rows": 1,
-        "bytes": 17583
+        "bytes": 17471
       },
       {
         "file": "mmp/metallurgy/sedar__intrepid-metals-corp_20260806T1150.parquet",
         "source": "sedar:intrepid-metals-corp_20260806T1150",
         "rows": 1,
-        "bytes": 14706
+        "bytes": 14634
       },
       {
         "file": "mmp/metallurgy/sedar__lake-victoria-gold-ltd_20260817T1420.parquet",
         "source": "sedar:lake-victoria-gold-ltd_20260817T1420",
         "rows": 1,
-        "bytes": 17711
+        "bytes": 17619
       },
       {
         "file": "mmp/metallurgy/sedar__mithril-silver-and-gold-limited-000106212_20260817T1600.parquet",
         "source": "sedar:mithril-silver-and-gold-limited-000106212_20260817T1600",
         "rows": 1,
-        "bytes": 19923
+        "bytes": 19811
       },
       {
         "file": "mmp/metallurgy/sedar__new-pacific-metals-corp_20260814T1432.parquet",
         "source": "sedar:new-pacific-metals-corp_20260814T1432",
         "rows": 1,
-        "bytes": 18287
+        "bytes": 18179
       },
       {
         "file": "mmp/metallurgy/sedar__newcore-gold-ltd-000029680_20260807T1700.parquet",
         "source": "sedar:newcore-gold-ltd-000029680_20260807T1700",
         "rows": 1,
-        "bytes": 20523
+        "bytes": 20407
       },
       {
         "file": "mmp/metallurgy/sedar__nexmetals-mining-corp_20260807T1705.parquet",
         "source": "sedar:nexmetals-mining-corp_20260807T1705",
         "rows": 1,
-        "bytes": 14337
+        "bytes": 14241
       },
       {
         "file": "mmp/metallurgy/sedar__niocorp-developments-ltd_20260810T1718.parquet",
         "source": "sedar:niocorp-developments-ltd_20260810T1718",
         "rows": 1,
-        "bytes": 14846
+        "bytes": 14734
       },
       {
         "file": "mmp/metallurgy/sedar__nordique-critical-metals-inc_20260814T1702.parquet",
         "source": "sedar:nordique-critical-metals-inc_20260814T1702",
         "rows": 1,
-        "bytes": 15920
+        "bytes": 15832
       },
       {
         "file": "mmp/metallurgy/sedar__pentagon-i-capital-corp_20260805T1631.parquet",
         "source": "sedar:pentagon-i-capital-corp_20260805T1631",
         "rows": 1,
-        "bytes": 15832
+        "bytes": 15760
       },
       {
         "file": "mmp/metallurgy/sedar__salazar-resources-limited_20260813T1731.parquet",
         "source": "sedar:salazar-resources-limited_20260813T1731",
         "rows": 1,
-        "bytes": 17059
+        "bytes": 16943
       },
       {
         "file": "mmp/metallurgy/sedar__wesdome-gold-mines-ltd_20260806T1839.parquet",
         "source": "sedar:wesdome-gold-mines-ltd_20260806T1839",
         "rows": 1,
-        "bytes": 15313
+        "bytes": 15197
       },
       {
         "file": "mmp/metallurgy/sedar__wesdome-gold-mines-ltd_20260806T2003.parquet",
         "source": "sedar:wesdome-gold-mines-ltd_20260806T2003",
         "rows": 1,
-        "bytes": 18551
+        "bytes": 18435
       }
     ],
     "economics": [
@@ -1807,61 +1807,60 @@
         "file": "mmp/economics/sedar__asante-gold-corporation_20260805T0715.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0715",
         "rows": 1,
-        "bytes": 25057
+        "bytes": 24945
       },
       {
         "file": "mmp/economics/sedar__asante-gold-corporation_20260805T0717.parquet",
         "source": "sedar:asante-gold-corporation_20260805T0717",
         "rows": 1,
-        "bytes": 23753
+        "bytes": 23641
       },
       {
         "file": "mmp/economics/sedar__freeman-gold-corp_20260813T1659.parquet",
         "source": "sedar:freeman-gold-corp_20260813T1659",
         "rows": 1,
-        "bytes": 24732
+        "bytes": 24604
       },
       {
         "file": "mmp/economics/sedar__giyani-metals-corp_20260710T0802.parquet",
         "source": "sedar:giyani-metals-corp_20260710T0802",
         "rows": 1,
-        "bytes": 22068
+        "bytes": 21972
       },
       {
         "file": "mmp/economics/sedar__new-pacific-metals-corp_20260814T1432.parquet",
         "source": "sedar:new-pacific-metals-corp_20260814T1432",
         "rows": 1,
-        "bytes": 24877
+        "bytes": 24749
       },
       {
         "file": "mmp/economics/sedar__newcore-gold-ltd-000029680_20260807T1700.parquet",
         "source": "sedar:newcore-gold-ltd-000029680_20260807T1700",
         "rows": 1,
-        "bytes": 28333
+        "bytes": 28209
       },
       {
         "file": "mmp/economics/sedar__niocorp-developments-ltd_20260810T1718.parquet",
         "source": "sedar:niocorp-developments-ltd_20260810T1718",
         "rows": 1,
-        "bytes": 23629
+        "bytes": 23537
       },
       {
         "file": "mmp/economics/sedar__nordique-critical-metals-inc_20260814T1702.parquet",
         "source": "sedar:nordique-critical-metals-inc_20260814T1702",
         "rows": 1,
-        "bytes": 23745
+        "bytes": 23637
       },
       {
         "file": "mmp/economics/sedar__salazar-resources-limited_20260813T1731.parquet",
         "source": "sedar:salazar-resources-limited_20260813T1731",
         "rows": 1,
-        "bytes": 19489
+        "bytes": 19397
       }
-    ],
-    "survey": []
+    ]
   },
   "totals": {
-    "collars": 802301,
+    "collars": 802349,
     "survey": 0,
     "assays": 14118476,
     "lithology": 759931,
