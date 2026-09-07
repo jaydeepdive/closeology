@@ -48,6 +48,7 @@ INDEX = os.path.join(KEEP, "mmp_reports_index.json")
 # parquet/JSON writes to the mount are fine. Shards + OCR cache stay on the mount.
 TEMPDB = os.environ.get("MMP_TEMPDB", "/tmp/mmp_reextract.sqlite")
 TEXT_TABLES = ["deposit_model", "model_method", "metallurgy", "economics"]
+DRILL_TABLES = ["collars", "assays", "survey", "lithology"]   # merged with max-preserve
 
 
 def _pdf_sources():
@@ -138,7 +139,7 @@ def ingest(limit=None, max_seconds=150):
         try:
             pdf_reports.ingest_report(m["url"], project=m["project"], commodity=m["commodity"],
                                       jurisdiction=m["jurisdiction"], report_date=m["submitted"],
-                                      source_id=sid, pdf_path=p, drill_tables=False)
+                                      source_id=sid, pdf_path=p, drill_tables=True)
             ok += 1
         except Exception as e:
             print(f"[reextract] FAILED {sid}: {str(e)[:160]}")
@@ -146,10 +147,26 @@ def ingest(limit=None, max_seconds=150):
     return ok
 
 
+def _replace_source_shards(tables, t, sid, df):
+    """Delete a source's existing shard files+manifest entries for table t and
+    write df in their place."""
+    safe = shards._safe(sid)
+    tdir = os.path.join(shards.SHARD_DIR, t)
+    for f in (glob.glob(os.path.join(tdir, safe + ".parquet"))
+              + glob.glob(os.path.join(tdir, safe + ".[0-9]*.parquet"))):
+        os.remove(f)
+    tables[t] = [x for x in tables.get(t, []) if x["source"] != sid]
+    if not df.empty:
+        shards._write_shards(t, sid, df, tables)
+
+
 def shard():
-    """Merge ONLY the re-extracted sources' TEXT shards into the manifest; leave
-    every other shard (gov collars/assays, appendix drill tables, untouched
-    reports) exactly as-is."""
+    """Merge the re-extracted sources' shards into the manifest, leaving every
+    OTHER shard (gov collars/assays, orphan node-keyed reports, untouched
+    sources) exactly as-is. TEXT tables are always replaced (deterministic from
+    text). DRILL tables use max-preserve: only replace a source's collars/assays
+    if the fresh camelot pass yields at least as many rows as are already banked,
+    so a page-detection change can never silently drop drill data."""
     import pandas as pd
     if not os.path.exists(TEMPDB):
         print("[reextract] no temp db — run `ingest` first"); return
@@ -157,26 +174,27 @@ def shard():
     tables = meta["tables"]
     con = sqlite3.connect(TEMPDB)
     srcs = [r[0] for r in con.execute("SELECT id FROM sources").fetchall()]
-    touched = 0
+    kept = 0
     for sid in srcs:
-        safe = shards._safe(sid)
         for t in TEXT_TABLES:
-            tdir = os.path.join(shards.SHARD_DIR, t)
-            for f in (glob.glob(os.path.join(tdir, safe + ".parquet"))
-                      + glob.glob(os.path.join(tdir, safe + ".[0-9]*.parquet"))):
-                os.remove(f)
-            tables[t] = [x for x in tables.get(t, []) if x["source"] != sid]
             df = pd.read_sql_query(f"SELECT * FROM {t} WHERE source_id=?", con, params=[sid])
-            if not df.empty:
-                shards._write_shards(t, sid, df, tables)
-        touched += 1
+            _replace_source_shards(tables, t, sid, df)
+        for t in DRILL_TABLES:
+            df = pd.read_sql_query(f"SELECT * FROM {t} WHERE source_id=?", con, params=[sid])
+            existing = sum(x["rows"] for x in tables.get(t, []) if x["source"] == sid)
+            if len(df) >= existing:                      # >= keeps parity, gains new data
+                _replace_source_shards(tables, t, sid, df)
+            else:
+                print(f"[reextract] keep existing {t} for {sid} "
+                      f"({existing} banked > {len(df)} re-extracted)")
+        kept += 1
     con.close()
     meta["tables"] = tables
     meta["generated"] = datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z"
     meta["totals"] = {t: sum(x["rows"] for x in tables.get(t, [])) for t in shards.TABLES}
     meta["shard_count"] = sum(len(v) for v in tables.values())
     json.dump(meta, open(shards.MANIFEST, "w"), indent=2)
-    print(f"[reextract] merged text shards for {touched} sources; totals now {meta['totals']}")
+    print(f"[reextract] merged shards for {kept} sources; totals now {meta['totals']}")
     _reindex(srcs)
 
 
