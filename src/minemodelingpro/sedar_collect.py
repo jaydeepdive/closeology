@@ -184,23 +184,89 @@ def _set_select(page, want_regex, label=""):
     return got
 
 
+def _nav_to(page, label, log):
+    """Move to a nav destination robustly. SEDAR+ is an Angular SPA: a plain
+    get_by_text().click() on 'Search SEDAR+' / 'Documents' frequently no-ops
+    (the click lands on a text node, not the routed anchor), leaving us on /home/.
+    So we FIRST read the matching anchor's real href and navigate to it directly
+    (routerLink anchors carry the resolved route in href), and only fall back to a
+    role-based click if there is no anchor. Returns True if the URL changed."""
+    before = page.url
+    try:
+        href = page.evaluate("""(label) => {
+          const norm = s => (s||'').replace(/\\s+/g,' ').trim().toLowerCase();
+          const want = norm(label);
+          const as = Array.from(document.querySelectorAll('a[href]'));
+          const hit = as.find(e => norm(e.textContent) === want)
+                   || as.find(e => norm(e.textContent).includes(want));
+          return hit ? hit.href : null;
+        }""", label)
+    except Exception as e:
+        href = None; log(f"  href '{label}': {str(e)[:60]}")
+    if href and "javascript:" not in href and not href.rstrip("/").endswith("/home"):
+        try:
+            page.goto(href, wait_until="domcontentloaded", timeout=60000)
+            try:
+                page.wait_for_load_state("networkidle", timeout=25000)
+            except Exception:
+                pass
+            log(f"  → {label}: {page.url[:90]}")
+            return page.url != before
+        except Exception as e:
+            log(f"  goto '{label}': {str(e)[:60]}")
+    for getter in (lambda: page.get_by_role("link", name=re.compile(re.escape(label), re.I)),
+                   lambda: page.get_by_role("button", name=re.compile(re.escape(label), re.I)),
+                   lambda: page.get_by_text(re.compile(r"^\s*" + re.escape(label) + r"\s*$", re.I))):
+        try:
+            el = getter()
+            if el.count():
+                el.first.click(timeout=6000)
+                try:
+                    page.wait_for_load_state("networkidle", timeout=20000)
+                except Exception:
+                    pass
+                if page.url != before:
+                    log(f"  → {label} (click): {page.url[:90]}")
+                    return True
+        except Exception:
+            pass
+    log(f"  ✗ '{label}' did not navigate (still {page.url[:70]})")
+    return False
+
+
 def _open_search(page, log):
     """From the SEDAR+ home, walk to the Documents search and filter to NI 43-101
-    technical reports. The results view is a fresh per-session URL, so we click
-    through rather than navigate to a static page. Best-effort throughout: if the
-    filter cascade doesn't fully take, collect() still keeps only 43-101 rows and
-    the human can finish the search in the open window."""
+    technical reports. The results view is a fresh per-session URL, so we follow
+    the nav routes rather than a static page. Best-effort filtering: collect()
+    keeps only 43-101 rows client-side even if the cascade doesn't fully take."""
     log("opening SEDAR+ home …")
     try:
         page.goto("https://www.sedarplus.ca/home/", wait_until="domcontentloaded", timeout=90000)
+        try:
+            page.wait_for_load_state("networkidle", timeout=45000)
+        except Exception:
+            pass
     except Exception as e:
         log(f"  home nav: {str(e)[:80]}")
-    page.wait_for_timeout(3500)
-    if _click_text(page, "Search SEDAR+", log):
-        page.wait_for_timeout(1500)
-    if _click_text(page, "Documents", log):
-        page.wait_for_timeout(3500)
-    log(f"  on: {page.url[:80]}")
+    page.wait_for_timeout(2500)
+    _nav_to(page, "Search SEDAR+", log)
+    page.wait_for_timeout(2000)
+    _nav_to(page, "Documents", log)
+    page.wait_for_timeout(2500)
+    log(f"  on: {page.url[:90]}")
+    # wait for the document-search filter form (native <select>s) to render before
+    # driving the cascade; if it never appears, log the controls we CAN see so a
+    # follow-up can retarget.
+    try:
+        page.wait_for_selector("select", timeout=30000)
+    except Exception:
+        try:
+            n = page.evaluate("() => document.querySelectorAll('select').length")
+            btns = page.evaluate("""() => Array.from(document.querySelectorAll('button,a'))
+                .map(e => (e.textContent||'').replace(/\\s+/g,' ').trim()).filter(t => t && t.length<30).slice(0,25)""")
+            log(f"  no <select> after nav ({n} selects); visible controls: {btns}")
+        except Exception:
+            log("  no <select> after nav")
     # filter cascade: Continuous disclosure -> Technical Report -> NI 43-101 subtype
     for regex, lbl, wait in [
             (r"^Continuous disclosure$", "category", 2000),
@@ -208,20 +274,21 @@ def _open_search(page, log):
             (r"Technical report \(NI 43-101\)", "subtype", 1200)]:
         try:
             got = _set_select(page, regex, lbl)
-            if got:
-                log(f"  filter {lbl}: {got}")
+            log(f"  filter {lbl}: {got or 'NOT FOUND'}")
             page.wait_for_timeout(wait)
         except Exception as e:
             log(f"  filter {lbl}: {str(e)[:60]}")
     # submit the search (the form's button, not the nav item)
+    submitted = False
     for how in (lambda: page.get_by_role("button", name=re.compile(r"^\s*Search\s*$", re.I)),
                 lambda: page.locator("button:has-text('Search')")):
         try:
             b = how()
             if b.count():
-                b.last.click(timeout=6000); break
+                b.last.click(timeout=6000); submitted = True; break
         except Exception:
             pass
+    log(f"  submit Search: {'clicked' if submitted else 'no button found'}")
     page.wait_for_timeout(3000)
 
 
