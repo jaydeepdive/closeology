@@ -46,6 +46,20 @@ def _company(title):
     return t.strip(" -:|")[:120] or None
 
 
+_TICK = re.compile(r"\(?\s*(TSX[\.\- ]?V|TSXV|TSX|CSE|NYSE\s*American|NYSE|NASDAQ|OTCQB|OTCQX|OTCMKTS|OTC|FSE|FRA|ASX|LSE|AIM)\s*[:\.]\s*([A-Z]{1,6})(?:\.[A-Z])?\s*\)?", re.I)
+_ISSUER = re.compile(r"([A-Z][A-Za-z0-9&\.\'\-/ ]{2,55}?(?:Ltd|Inc|Corp|Corporation|Limited|Resources|Mining|Metals|Minerals|Gold|Silver|Copper|Exploration|Energy|plc)\.?)\s*\(\s*(?:TSX|CSE|NYSE|NASDAQ|OTC|FSE|FRA|ASX|LSE|AIM)", re.I)
+
+
+def _ticker_issuer(text):
+    """Primary stock listing + clean issuer name from a release body — a stable
+    key for grouping a company's releases (headlines vary; a ticker does not)."""
+    tk = _TICK.search(text or "")
+    ticker = (re.sub(r"[^A-Za-z]", "", tk.group(1)).upper() + ":" + tk.group(2).upper()) if tk else None
+    iss = _ISSUER.search(text or "")
+    company = re.sub(r"\s+", " ", iss.group(1)).strip() if iss else None
+    return ticker, company
+
+
 def _country(text):
     ms = _COUNTRY.findall(text or "")
     if not ms:
@@ -75,6 +89,15 @@ def _process(session, con, desc):
     title = _title(html) or desc.get("title")
     base["title"] = title
     base["company"] = desc.get("company") or _company(title)
+    try:
+        _cl = extract._clean(html)
+        _tk, _iss = _ticker_issuer(_cl[:20000])
+        if _tk:
+            base["ticker"] = _tk
+        if _iss:
+            base["company"] = _iss
+    except Exception:
+        pass
     base["published"] = desc.get("published") or _pub(html)
     try:
         holes, intervals, meta = extract.extract(html)
@@ -109,6 +132,36 @@ def _process(session, con, desc):
     base["reason"] = "no tables/prose parsed" + ("" if meta["has_tables"] else "; no tables in page")
     store.record_release(con, base)
     return "empty"
+
+
+def rename_repair(con=None, limit=None, max_seconds=None):
+    """Re-derive clean issuer name + ticker for banked releases by re-fetching each
+    body. Resumable-ish; time-budgeted. Lets models group by a stable ticker."""
+    own = con is None
+    if own:
+        con = store.connect()
+    session = sources.new_session()
+    if max_seconds:
+        sources.set_deadline(max_seconds)
+    rows = con.execute("SELECT id, url FROM releases WHERE ticker IS NULL OR ticker='' ").fetchall()
+    n = 0
+    for rid, url in rows:
+        html = sources.fetch_release(session, url)
+        if not html:
+            continue
+        tk, iss = _ticker_issuer(extract._clean(html)[:20000])
+        if tk or iss:
+            con.execute("UPDATE releases SET ticker=COALESCE(?,ticker), company=COALESCE(?,company) WHERE id=?",
+                        (tk, iss, rid))
+            n += 1
+        con.commit()
+        time.sleep(1.0)
+        if (limit and n >= limit) or (max_seconds and sources._expired()):
+            break
+    print(f"[rename] updated {n} releases with ticker/issuer")
+    if own:
+        con.close()
+    return {"renamed": n}
 
 
 def run(mode="incremental", limit=400, only=None, max_seconds=None):
@@ -207,6 +260,10 @@ def repair(con=None):
 if __name__ == "__main__":
     args = sys.argv[1:]
     mode = args[0] if args and not args[0].startswith("-") else "incremental"
+    if mode == "rename":
+        lim = int(args[args.index("--limit") + 1]) if "--limit" in args else None
+        rename_repair(limit=lim, max_seconds=int(__import__('os').environ.get("NEWSWIRE_MAX_SECONDS", "100")) if False else None)
+        raise SystemExit
     if mode == "repair":
         repair()
         sys.exit(0)

@@ -24,6 +24,7 @@ Usage:
 import os
 import re
 import json
+import glob
 import math
 import sqlite3
 import datetime
@@ -324,62 +325,99 @@ def _norm_company(name):
     return s or str(name or "").strip()
 
 
-def _drillbank_groups(min_located=2, min_assays=6):
-    """{project_key: (collars_df, assays_df, region, updated)} for news-bank
-    companies with enough located holes + assays to model. Frames use the same
-    column schema _build expects."""
+def _cluster_latlon(lats, lons, max_km=8.0):
+    """Single-linkage clustering of points within max_km (union-find). Groups
+    drill holes into DEPOSITS by location, so a company's separate projects become
+    separate models and releases about the same ground merge across companies."""
+    n = len(lats)
+    parent = list(range(n))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]; a = parent[a]
+        return a
+    la = np.radians(np.asarray(lats, float)); lo = np.radians(np.asarray(lons, float))
+    for i in range(n):
+        if i + 1 >= n:
+            break
+        dlat = la[i + 1:] - la[i]; dlon = lo[i + 1:] - lo[i]
+        h = np.sin(dlat / 2) ** 2 + np.cos(la[i]) * np.cos(la[i + 1:]) * np.sin(dlon / 2) ** 2
+        d = 2 * 6371.0 * np.arcsin(np.sqrt(np.clip(h, 0, 1)))
+        for off in np.where(d <= max_km)[0]:
+            ra, rb = find(i), find(i + 1 + int(off))
+            if ra != rb:
+                parent[ra] = rb
+    return [find(i) for i in range(n)]
+
+
+def _drillbank_groups(min_located=2, min_assays=5, cluster_km=8.0):
+    """{key: {col, asy, region, updated, sources, label, ...}} — one entry per
+    DEPOSIT (spatial cluster of holes), not per company. Coordinates are projected
+    from lat/lon into a local metre grid centred on the cluster, so holes from
+    different releases (and UTM zones) share one consistent frame."""
     if not os.path.exists(DRILLBANK):
         return {}
     conn = sqlite3.connect(DRILLBANK)
     try:
         holes = pd.read_sql_query(
-            "SELECT h.*, r.company AS r_company, r.country AS r_country, r.published AS r_pub, "
+            "SELECT h.release_id, h.hole_id, h.project, h.lat, h.lon, h.elev_m, h.azimuth, h.dip, "
+            "h.depth_m, r.company AS r_company, r.country AS r_country, r.published AS r_pub, "
             "r.url AS r_url, r.title AS r_title FROM holes h JOIN releases r ON h.release_id=r.id", conn)
-        ivs = pd.read_sql_query(
-            "SELECT i.*, r.company AS r_company FROM intervals i JOIN releases r ON i.release_id=r.id", conn)
+        ivs = pd.read_sql_query("SELECT * FROM intervals", conn)
     finally:
         conn.close()
-    if holes.empty:
+    loc = holes.dropna(subset=["lat", "lon"]).reset_index(drop=True)
+    if len(loc) < min_located:
         return {}
-    holes["pkey"] = holes["r_company"].map(_norm_company)
-    ivs["pkey"] = ivs["r_company"].map(_norm_company)
+    loc["cl"] = _cluster_latlon(loc["lat"].tolist(), loc["lon"].tolist(), cluster_km)
+    loc["hk"] = loc["release_id"].astype(str) + ":" + loc["hole_id"].astype(str)
+    ivs["hk"] = ivs["release_id"].astype(str) + ":" + ivs["hole_id"].astype(str)
     out = {}
-    for pkey, hg in holes.groupby("pkey"):
-        if not pkey:
+    for cl, cg in loc.groupby("cl"):
+        ig = ivs[ivs["hk"].isin(set(cg["hk"]))]
+        if len(cg) < min_located or len(ig) < min_assays:
             continue
-        located = hg[(hg["easting"].notna()) | (hg["lat"].notna())]
-        ig = ivs[ivs["pkey"] == pkey]
-        if len(located) < min_located or len(ig) < min_assays:
-            continue
+        lat0, lon0 = float(cg["lat"].mean()), float(cg["lon"].mean())
+        mE = 111320.0 * math.cos(math.radians(lat0)); mN = 110540.0
         col = pd.DataFrame({
-            "native_id": hg["hole_id"].astype(str), "hole_uid": hg["id"].astype(str),
-            "easting": hg["easting"], "northing": hg["northing"], "elev_m": hg["elev_m"],
-            "azimuth": hg["azimuth"], "dip": hg["dip"], "depth_m": hg["depth_m"],
-            "project": pkey, "jurisdiction": hg["r_country"], "url": hg["r_url"]})
+            "native_id": cg["hk"], "hole_uid": cg["hk"],
+            "easting": (cg["lon"] - lon0) * mE, "northing": (cg["lat"] - lat0) * mN,
+            "elev_m": cg["elev_m"], "azimuth": cg["azimuth"], "dip": cg["dip"], "depth_m": cg["depth_m"],
+            "project": None, "jurisdiction": cg["r_country"], "url": cg["r_url"]})
         asy = pd.DataFrame({
-            "native_id": ig["hole_id"].astype(str), "hole_uid": None,
-            "from_m": ig["from_m"], "to_m": ig["to_m"], "length_m": ig["length_m"],
-            "element": ig["element"], "grade": ig["grade"], "unit": ig["unit"],
-            "is_subinterval": ig["is_subinterval"]})
-        region = hg["r_country"].dropna().iloc[0] if hg["r_country"].notna().any() else None
-        updated = hg["r_pub"].dropna().max() if hg["r_pub"].notna().any() else None
-        rels = (hg[["r_url", "r_title", "r_pub"]].dropna(subset=["r_url"])
+            "native_id": ig["hk"], "hole_uid": None, "from_m": ig["from_m"], "to_m": ig["to_m"],
+            "length_m": ig["length_m"], "element": ig["element"], "grade": ig["grade"],
+            "unit": ig["unit"], "is_subinterval": ig["is_subinterval"]})
+        projname = cg["project"].dropna().mode().iloc[0] if cg["project"].notna().any() else None
+        comp = _norm_company(cg["r_company"].dropna().mode().iloc[0]) if cg["r_company"].notna().any() else None
+        region = cg["r_country"].dropna().iloc[0] if cg["r_country"].notna().any() else None
+        label = projname or comp or "Unnamed project"
+        if not projname and comp and region:
+            label = f"{comp} — {region}"
+        rels = (cg[["r_url", "r_title", "r_pub"]].dropna(subset=["r_url"])
                 .drop_duplicates("r_url").sort_values("r_pub", ascending=False))
         sources = [{"kind": "news release", "title": (t or u).strip()[:120], "url": u, "date": d}
                    for u, t, d in zip(rels["r_url"], rels["r_title"].fillna(""), rels["r_pub"])]
-        out[pkey] = (col, asy, region, updated, sources)
+        key = (re.sub(r"[^a-z0-9]+", "-", (comp or projname or "project").lower()).strip("-")[:40]
+               + f"-{lat0:.1f}_{lon0:.1f}".replace("-", "s"))
+        out[key] = {"col": col, "asy": asy, "region": region,
+                    "updated": (cg["r_pub"].dropna().max() if cg["r_pub"].notna().any() else None),
+                    "sources": sources, "label": label, "area": f"{lat0:.2f}, {lon0:.2f}"}
     return out
 
 
-def build_drillbank_model(pkey, col, asy, region, updated, sources=None, **kw):
-    sid = "news:" + re.sub(r"[^a-z0-9]+", "-", pkey.lower()).strip("-")[:50]
-    rpt = sources[0]["url"] if sources else None
+def build_drillbank_model(key, g, **kw):
+    col, asy = g["col"], g["asy"]
+    sid = "news:" + key
+    rpt = g["sources"][0]["url"] if g["sources"] else None
     order = list(asy["element"].value_counts().index) or ["Au"]
     last = None
     for el in order[:4]:                       # fall back if dominant element has no located holes
         try:
-            return _build(col, asy, None, sid, pkey, el, jurisdiction=region, report_url=rpt,
-                          source="news", region=region, updated=updated, sources=sources, **kw)
+            m = _build(col, asy, None, sid, g["label"], el, jurisdiction=g["region"], report_url=rpt,
+                       source="news", region=g["region"], updated=g["updated"], sources=g["sources"], **kw)
+            m["area"] = g.get("area")
+            return m
         except ValueError as e:
             last = e
     raise last or ValueError(f"{sid}: no modelable element")
@@ -415,7 +453,8 @@ def _slug(source_id):
 def _card(m, slug):
     return {"slug": slug, "project": m["project"], "element": m["element"], "unit": m["unit"],
             "counts": m["counts"], "grade": m["grade_stats"], "source": m.get("source", "report"),
-            "region": m.get("region"), "updated": m.get("updated"), "maturity": m.get("maturity")}
+            "region": m.get("region"), "updated": m.get("updated"), "maturity": m.get("maturity"),
+            "area": m.get("area")}
 
 
 def build_all(site_dir="site"):
@@ -425,6 +464,8 @@ def build_all(site_dir="site"):
     pipeline. Gallery = top-level site/models.html; viewers live in site/models/."""
     out_dir = os.path.join(site_dir, "models")
     os.makedirs(out_dir, exist_ok=True)
+    for f in glob.glob(os.path.join(out_dir, "*.html")):   # prune stale model pages
+        os.remove(f)
     cards, seen = [], set()
 
     # (1) NI 43-101 deposits from the MMP shard store
@@ -440,15 +481,15 @@ def build_all(site_dir="site"):
               f"{m['counts']['samples']}s {m['counts']['blocks']}blk")
 
     # (2) news drill bank — every actively-drilled project, densifying over time
-    for pkey, (col, asy, region, updated, dbsources) in _drillbank_groups().items():
+    for key, g in _drillbank_groups().items():
         try:
-            m = build_drillbank_model(pkey, col, asy, region, updated, sources=dbsources)
+            m = build_drillbank_model(key, g)
             slug = _slug(m["source_id"])
             if slug in seen:
                 continue
             write_viewer(m, os.path.join(out_dir, slug + ".html"))
         except Exception as e:
-            print(f"[model3d] skip news:{pkey}: {str(e)[:90]}"); continue
+            print(f"[model3d] skip news:{key}: {str(e)[:90]}"); continue
         cards.append(_card(m, slug)); seen.add(slug)
         print(f"[model3d] news {m['project']}: {m['counts']['holes']}h "
               f"{m['counts']['samples']}s {m['counts']['blocks']}blk ({m['maturity']})")
@@ -470,7 +511,7 @@ def _write_gallery(cards, out_html):
         g = c["grade"]
         mat = c.get("maturity") or ""
         matcls = "mm-detail" if "Detailed" in mat else "mm-dev" if ("Developing" in mat or "Emerging" in mat) else "mm-early"
-        meta = " · ".join(x for x in (c.get("region"),
+        meta = " · ".join(x for x in (c.get("region"), c.get("area"),
                           (f"updated {c['updated']}" if c.get("updated") else None)) if x)
         return f"""<a class="mcard" href="models/{c['slug']}.html">
       <div class="mtop"><div class="mchips"><span class="mel">{c['element']}</span><span class="mmat {matcls}">{mat}</span></div><h3>{c['project']}</h3>
