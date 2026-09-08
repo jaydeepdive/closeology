@@ -22,8 +22,10 @@ Usage:
   model3d.write_viewer(model, "site/models/freeman.html")
 """
 import os
+import re
 import json
 import math
+import sqlite3
 import datetime
 
 import numpy as np
@@ -33,6 +35,7 @@ from minemodelingpro import shards
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _ROOT = os.path.dirname(os.path.dirname(_HERE))
+DRILLBANK = os.path.join(_ROOT, "data", "keep", "drillbank.sqlite")
 
 
 # ----------------------------------------------------------------- data loading
@@ -77,11 +80,21 @@ def _hole_survey(sur, hole_uid):
     return s if len(s) >= 2 else None
 
 
+def _num_or(v, default):
+    """v as float, or default when None/NaN (note: `NaN or default` returns NaN
+    in Python because NaN is truthy — hence this helper)."""
+    try:
+        f = float(v)
+        return default if math.isnan(f) else f
+    except (TypeError, ValueError):
+        return default
+
+
 def _desurvey_point(depth, collar, survey):
     """3D position at `depth` down a hole. Uses survey stations (minimum-curvature-
     lite: nearest-station az/dip, straight between) when available, else the
     collar's single az/dip (straight hole)."""
-    e0, n0, z0 = collar["easting"], collar["northing"], collar.get("elev_m") or 0.0
+    e0, n0, z0 = collar["easting"], collar["northing"], _num_or(collar.get("elev_m"), 0.0)
     if survey is not None:
         # integrate straight segments between survey stations
         x, y, z = e0, n0, z0
@@ -106,10 +119,8 @@ def _desurvey_point(depth, collar, survey):
         return (x + seg * math.cos(dip_r) * math.sin(az_r),
                 y + seg * math.cos(dip_r) * math.cos(az_r),
                 z + seg * math.sin(dip_r))
-    az = collar.get("azimuth")
-    dip = collar.get("dip")
-    az_r = math.radians(az if (az is not None and not np.isnan(az)) else 0.0)
-    dip_r = math.radians(dip if (dip is not None and not np.isnan(dip)) else -90.0)
+    az_r = math.radians(_num_or(collar.get("azimuth"), 0.0))
+    dip_r = math.radians(_num_or(collar.get("dip"), -90.0))
     return (e0 + depth * math.cos(dip_r) * math.sin(az_r),
             n0 + depth * math.cos(dip_r) * math.cos(az_r),
             z0 + depth * math.sin(dip_r))
@@ -136,9 +147,12 @@ def desurvey(col, asy, sur, element):
         surv = _hole_survey(sur, c["hole_uid"])
         mid = (float(a["from_m"]) + float(a["to_m"])) / 2.0
         x, y, z = _desurvey_point(mid, c, surv)
+        if not all(math.isfinite(v) for v in (x, y, z)):
+            continue
         samples.append({"hole": a["native_id"], "from": float(a["from_m"]),
                         "to": float(a["to_m"]), "grade": float(a["grade"]),
                         "xyz": [x, y, z]})
+    holes = [h for h in holes if all(math.isfinite(v) for v in h["collar"] + h["toe"])]
     return holes, samples
 
 
@@ -151,6 +165,11 @@ def idw_block_model(samples, block=15.0, power=2.0, radius=60.0,
         return [], {}
     pts = np.array([s["xyz"] for s in samples], dtype=float)
     g = np.array([s["grade"] for s in samples], dtype=float)
+    ok = np.isfinite(pts).all(1)
+    pts, g = pts[ok], g[ok]
+    if len(pts) == 0 or not np.isfinite(pts).all():
+        return [], {"block_m": block, "power": power, "radius_m": radius,
+                    "min_samples": min_samples, "top_cut": top_cut, "n_blocks": 0}
     if top_cut:
         g = np.minimum(g, top_cut)
     lo = pts.min(0) - block
@@ -180,9 +199,25 @@ def idw_block_model(samples, block=15.0, power=2.0, radius=60.0,
 
 
 # ------------------------------------------------------------------------ build
-def build_model(source_id, project=None, element="Au", block=15.0,
-                radius=60.0, min_samples=3, top_cut=None):
-    col, asy, sur = _load(source_id)
+_MATURITY = [(0, "Early"), (6, "Emerging"), (20, "Developing"), (60, "Detailed")]
+
+
+def _maturity(n_holes, n_blocks):
+    label = "Early"
+    for thr, lab in _MATURITY:
+        if n_holes >= thr:
+            label = lab
+    if n_blocks == 0:
+        label += " · traces only"
+    return label
+
+
+def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
+           report_url=None, source="report", region=None, updated=None,
+           block=15.0, radius=60.0, min_samples=3, top_cut=None):
+    """Core model builder shared by the 43-101 shard store and the news drill
+    bank. Degrades gracefully: a sparse project yields desurveyed traces + assay
+    points with few/no interpolated blocks; a dense one grows a full grade shell."""
     if col.empty or asy.empty:
         raise ValueError(f"{source_id}: need both collars and assays to model")
     holes, samples = desurvey(col, asy, sur, element)
@@ -190,10 +225,11 @@ def build_model(source_id, project=None, element="Au", block=15.0,
         raise ValueError(f"{source_id}: no {element} samples with locations")
     grades = np.array([s["grade"] for s in samples])
     if top_cut is None:
-        top_cut = float(round(np.percentile(grades, 98), 1))
+        top_cut = float(round(np.percentile(grades, 98), 1)) or float(grades.max())
+    # sparse projects: relax the per-block sample requirement so a shell still forms
+    ms = min_samples if len(samples) >= 40 else 2
     blocks, stats = idw_block_model(samples, block=block, radius=radius,
-                                    min_samples=min_samples, top_cut=top_cut)
-    # recentre to a local origin for the viewer
+                                    min_samples=ms, top_cut=top_cut)
     allpts = ([h["collar"] for h in holes] + [h["toe"] for h in holes]
               + [s["xyz"] for s in samples] + [b["xyz"] for b in blocks])
     arr = np.array(allpts, dtype=float)
@@ -207,12 +243,12 @@ def build_model(source_id, project=None, element="Au", block=15.0,
         s["xyz"] = sh(s["xyz"])
     for b in blocks:
         b["xyz"] = sh(b["xyz"])
-    juris = (col["jurisdiction"].dropna().iloc[0] if col["jurisdiction"].notna().any() else None)
-    rpt = (col["url"].dropna().iloc[0] if "url" in col and col["url"].notna().any() else None)
     return {
         "source_id": source_id,
-        "project": project or (col["project"].dropna().iloc[0] if col["project"].notna().any() else source_id),
-        "jurisdiction": juris, "report_url": rpt,
+        "project": project or source_id,
+        "jurisdiction": jurisdiction, "report_url": report_url,
+        "source": source, "region": region, "updated": updated,
+        "maturity": _maturity(len(holes), len(blocks)),
         "element": element, "unit": (asy["unit"].dropna().iloc[0] if asy["unit"].notna().any() else "g/t"),
         "generated": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
         "origin": [round(float(v), 2) for v in origin],
@@ -225,6 +261,16 @@ def build_model(source_id, project=None, element="Au", block=15.0,
         "block_stats": stats,
         "holes": holes, "samples": samples, "blocks": blocks,
     }
+
+
+def build_model(source_id, project=None, element="Au", **kw):
+    """Model one 43-101 deposit from the MMP shard store."""
+    col, asy, sur = _load(source_id)
+    juris = (col["jurisdiction"].dropna().iloc[0] if not col.empty and col["jurisdiction"].notna().any() else None)
+    rpt = (col["url"].dropna().iloc[0] if "url" in col and col["url"].notna().any() else None)
+    proj = project or (col["project"].dropna().iloc[0] if not col.empty and col["project"].notna().any() else source_id)
+    return _build(col, asy, sur, source_id, proj, element, jurisdiction=juris,
+                  report_url=rpt, source="report", region=juris, **kw)
 
 
 _VIEWER_TMPL = os.path.join(_HERE, "model3d_viewer.html")
@@ -251,6 +297,85 @@ def build_and_render(source_id, out_html, project=None, element="Au", **kw):
     m = build_model(source_id, project=project, element=element, **kw)
     write_viewer(m, out_html)
     return m
+
+
+# ------------------------------------------------- news drill bank (grows daily)
+# The news bank accumulates fresh drill releases per company, so a project's model
+# densifies release by release — the whole point: watch a deposit take shape
+# before the company publishes an official estimate. Company names are normalised
+# (headline verbs + corporate suffixes stripped) so a company's later releases
+# merge into the same growing model.
+_VERBS = re.compile(
+    r"\b(Intersect|Confirm|Release|Report|Announce|Identif|Increase|Discover|Drill|Hit|"
+    r"Extend|Provide|Expand|Return|Complete|File|Deliver|Encounter|Cut|Advance|Commence|"
+    r"Continue|Update|Define|Assay|Highlight|Step|Close|Grant|Acquire|Option|Stake|Mobiliz|"
+    r"Present|Show|Reveal|Outline|Intercept)\w*", re.I)
+
+
+def _norm_company(name):
+    s = str(name or "").strip()
+    m = _VERBS.search(s)
+    if m:
+        s = s[:m.start()].strip()
+    s = re.sub(r"[\s,]+(Ltd|Inc|Corp|Limited|Corporation|Co)\.?$", "", s, flags=re.I).strip()
+    return s or str(name or "").strip()
+
+
+def _drillbank_groups(min_located=2, min_assays=6):
+    """{project_key: (collars_df, assays_df, region, updated)} for news-bank
+    companies with enough located holes + assays to model. Frames use the same
+    column schema _build expects."""
+    if not os.path.exists(DRILLBANK):
+        return {}
+    conn = sqlite3.connect(DRILLBANK)
+    try:
+        holes = pd.read_sql_query(
+            "SELECT h.*, r.company AS r_company, r.country AS r_country, r.published AS r_pub, "
+            "r.url AS r_url FROM holes h JOIN releases r ON h.release_id=r.id", conn)
+        ivs = pd.read_sql_query(
+            "SELECT i.*, r.company AS r_company FROM intervals i JOIN releases r ON i.release_id=r.id", conn)
+    finally:
+        conn.close()
+    if holes.empty:
+        return {}
+    holes["pkey"] = holes["r_company"].map(_norm_company)
+    ivs["pkey"] = ivs["r_company"].map(_norm_company)
+    out = {}
+    for pkey, hg in holes.groupby("pkey"):
+        if not pkey:
+            continue
+        located = hg[(hg["easting"].notna()) | (hg["lat"].notna())]
+        ig = ivs[ivs["pkey"] == pkey]
+        if len(located) < min_located or len(ig) < min_assays:
+            continue
+        col = pd.DataFrame({
+            "native_id": hg["hole_id"].astype(str), "hole_uid": hg["id"].astype(str),
+            "easting": hg["easting"], "northing": hg["northing"], "elev_m": hg["elev_m"],
+            "azimuth": hg["azimuth"], "dip": hg["dip"], "depth_m": hg["depth_m"],
+            "project": pkey, "jurisdiction": hg["r_country"], "url": hg["r_url"]})
+        asy = pd.DataFrame({
+            "native_id": ig["hole_id"].astype(str), "hole_uid": None,
+            "from_m": ig["from_m"], "to_m": ig["to_m"], "length_m": ig["length_m"],
+            "element": ig["element"], "grade": ig["grade"], "unit": ig["unit"],
+            "is_subinterval": ig["is_subinterval"]})
+        region = hg["r_country"].dropna().iloc[0] if hg["r_country"].notna().any() else None
+        updated = hg["r_pub"].dropna().max() if hg["r_pub"].notna().any() else None
+        out[pkey] = (col, asy, region, updated)
+    return out
+
+
+def build_drillbank_model(pkey, col, asy, region, updated, **kw):
+    sid = "news:" + re.sub(r"[^a-z0-9]+", "-", pkey.lower()).strip("-")[:50]
+    rpt = col["url"].dropna().iloc[0] if "url" in col and col["url"].notna().any() else None
+    order = list(asy["element"].value_counts().index) or ["Au"]
+    last = None
+    for el in order[:4]:                       # fall back if dominant element has no located holes
+        try:
+            return _build(col, asy, None, sid, pkey, el, jurisdiction=region, report_url=rpt,
+                          source="news", region=region, updated=updated, **kw)
+        except ValueError as e:
+            last = e
+    raise last or ValueError(f"{sid}: no modelable element")
 
 
 # ---------------------------------------------------------- discover + gallery
@@ -280,28 +405,49 @@ def _slug(source_id):
     return source_id.replace("sedar:", "").replace(":", "_")[:60]
 
 
+def _card(m, slug):
+    return {"slug": slug, "project": m["project"], "element": m["element"], "unit": m["unit"],
+            "counts": m["counts"], "grade": m["grade_stats"], "source": m.get("source", "report"),
+            "region": m.get("region"), "updated": m.get("updated"), "maturity": m.get("maturity")}
+
+
 def build_all(site_dir="site"):
-    """Build a 3D model page for every viable deposit + a gallery. Idempotent;
-    safe to run in the daily pipeline. Gallery is the top-level site/models.html
-    (so the shared nav's relative links resolve); viewers live in site/models/."""
+    """Build a 3D model page for EVERY project we hold drill-hole assays on —
+    the NI 43-101 deposits from the shard store AND the news drill bank (which
+    grows release by release) — plus a gallery. Idempotent; safe for the daily
+    pipeline. Gallery = top-level site/models.html; viewers live in site/models/."""
     out_dir = os.path.join(site_dir, "models")
     os.makedirs(out_dir, exist_ok=True)
-    cards = []
+    cards, seen = [], set()
+
+    # (1) NI 43-101 deposits from the MMP shard store
     for sid, nc, na in discover_candidates():
         el = _dominant_element(sid) or "Au"
         slug = _slug(sid)
         try:
             m = build_and_render(sid, os.path.join(out_dir, slug + ".html"), element=el)
         except Exception as e:
-            print(f"[model3d] skip {sid}: {str(e)[:90]}")
-            continue
-        cards.append({"slug": slug, "project": m["project"], "element": m["element"],
-                      "unit": m["unit"], "counts": m["counts"], "grade": m["grade_stats"],
-                      "extent": m["extent"]})
-        print(f"[model3d] {m['project']}: {m['counts']['holes']}h {m['counts']['samples']}s "
-              f"{m['counts']['blocks']}blk")
+            print(f"[model3d] skip {sid}: {str(e)[:90]}"); continue
+        cards.append(_card(m, slug)); seen.add(slug)
+        print(f"[model3d] report {m['project']}: {m['counts']['holes']}h "
+              f"{m['counts']['samples']}s {m['counts']['blocks']}blk")
+
+    # (2) news drill bank — every actively-drilled project, densifying over time
+    for pkey, (col, asy, region, updated) in _drillbank_groups().items():
+        try:
+            m = build_drillbank_model(pkey, col, asy, region, updated)
+            slug = _slug(m["source_id"])
+            if slug in seen:
+                continue
+            write_viewer(m, os.path.join(out_dir, slug + ".html"))
+        except Exception as e:
+            print(f"[model3d] skip news:{pkey}: {str(e)[:90]}"); continue
+        cards.append(_card(m, slug)); seen.add(slug)
+        print(f"[model3d] news {m['project']}: {m['counts']['holes']}h "
+              f"{m['counts']['samples']}s {m['counts']['blocks']}blk ({m['maturity']})")
+
     _write_gallery(cards, os.path.join(site_dir, "models.html"))
-    print(f"[model3d] built {len(cards)} deposit model(s) -> {site_dir}/models.html")
+    print(f"[model3d] built {len(cards)} project model(s) -> {site_dir}/models.html")
     return cards
 
 
@@ -313,12 +459,15 @@ def _write_gallery(cards, out_html):
         head, foot, css, fonts = (T.header("models.html"), T.footer(), T.THEME_CSS, T.FONTS)
     except Exception:
         head = foot = ""; fonts = ""; css = ":root{--red:#D71920;--ink:#111418;--mut:#636363;--line:#e6e8eb;--panel:#f5f7fa;--bg:#fff;}body{font-family:Roboto,sans-serif;margin:0;background:#fff;color:#111418}h1,h3{font-family:Bitter,Georgia,serif}.wrap{max-width:1180px;margin:0 auto;padding:26px 22px 60px}a{color:#D71920;text-decoration:none}"
-    cards = sorted(cards, key=lambda c: -c["counts"]["samples"])
-    rows = []
-    for c in cards:
+    def card_html(c):
         g = c["grade"]
-        rows.append(f"""<a class="mcard" href="models/{c['slug']}.html">
-      <div class="mtop"><span class="mel">{c['element']}</span><h3>{c['project']}</h3></div>
+        mat = c.get("maturity") or ""
+        matcls = "mm-detail" if "Detailed" in mat else "mm-dev" if ("Developing" in mat or "Emerging" in mat) else "mm-early"
+        meta = " · ".join(x for x in (c.get("region"),
+                          (f"updated {c['updated']}" if c.get("updated") else None)) if x)
+        return f"""<a class="mcard" href="models/{c['slug']}.html">
+      <div class="mtop"><div class="mchips"><span class="mel">{c['element']}</span><span class="mmat {matcls}">{mat}</span></div><h3>{c['project']}</h3>
+        <div class="mmeta">{meta}</div></div>
       <div class="mstats">
         <div><b>{c['counts']['holes']}</b><span>holes</span></div>
         <div><b>{c['counts']['samples']}</b><span>assays</span></div>
@@ -326,30 +475,47 @@ def _write_gallery(cards, out_html):
       </div>
       <div class="mgrade">mean&nbsp;<b>{g['mean']}</b>&nbsp;· max&nbsp;<b>{g['max']}</b>&nbsp;{c['unit']}</div>
       <div class="mopen">Open 3D model →</div>
-    </a>""")
-    grid = ("".join(rows) if rows else
-            '<p style="color:var(--mut)">No deposits with enough located drilling yet — '
-            'models appear here as technical reports with drill appendices are collected.</p>')
+    </a>"""
+
+    news = sorted([c for c in cards if c["source"] == "news"],
+                  key=lambda c: (c.get("updated") or "", c["counts"]["samples"]), reverse=True)
+    reports = sorted([c for c in cards if c["source"] != "news"],
+                     key=lambda c: -c["counts"]["samples"])
+
+    def section(title, blurb, items):
+        if not items:
+            return ""
+        return (f'<h2 class="msec">{title}</h2><p class="msecp">{blurb}</p>'
+                f'<div class="mgrid">{"".join(card_html(c) for c in items)}</div>')
+
+    body = (section("Actively drilling", "Live models from the news drill bank — these densify release by release as companies report new holes, so you can watch a deposit take shape before an official estimate exists.", news)
+            + section("From technical reports", "Models built from the collars and assays in collected NI 43-101 technical reports.", reports))
+    if not (news or reports):
+        body = ('<p style="color:var(--mut)">No projects with enough located drilling yet — '
+                'models appear here as drill results are collected.</p>')
     extra = """
     .mhero h1{font-size:30px;letter-spacing:-.3px;}
-    .mhero p{color:var(--mut);max-width:780px;}
-    .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:16px;margin-top:26px;}
-    .mcard{display:flex;flex-direction:column;gap:14px;background:#fff;border:1px solid var(--line);
+    .mhero p{color:var(--mut);max-width:820px;}
+    .msec{font-size:19px;margin:38px 0 2px;} .msecp{color:var(--mut);font-size:13px;max-width:760px;margin:0 0 4px;}
+    .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:16px;margin-top:16px;}
+    .mcard{display:flex;flex-direction:column;gap:13px;background:#fff;border:1px solid var(--line);
       border-radius:12px;padding:18px 18px 16px;color:var(--ink);text-decoration:none;
       transition:border-color .15s,box-shadow .15s,transform .15s;}
     .mcard:hover{border-color:var(--red);box-shadow:0 8px 22px rgba(0,0,0,.07);transform:translateY(-2px);text-decoration:none;}
-    .mtop .mel{display:inline-block;font-family:'Roboto';font-size:11px;font-weight:700;letter-spacing:.08em;
+    .mchips{display:flex;gap:6px;align-items:center;}
+    .mel{display:inline-block;font-family:'Roboto';font-size:11px;font-weight:700;letter-spacing:.08em;
       color:var(--red);background:#fdecec;padding:2px 8px;border-radius:5px;}
-    .mtop h3{font-size:19px;margin:10px 0 0;}
-    .mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .mmat{font-family:'Roboto';font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:5px;}
+    .mm-early{background:#eef1f6;color:#636363;} .mm-dev{background:#fff4e0;color:#8a5a00;} .mm-detail{background:#e7f4ec;color:#1c6b3f;}
+    .mtop h3{font-size:19px;margin:10px 0 0;} .mmeta{font-size:11.5px;color:var(--mut);margin-top:3px;}
+    .mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto;}
     .mstats div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 9px;}
-    .mstats b{display:block;font-size:18px;font-weight:700;font-family:'Bitter',serif;
-      font-variant-numeric:tabular-nums;line-height:1.1;}
+    .mstats b{display:block;font-size:18px;font-weight:700;font-family:'Bitter',serif;font-variant-numeric:tabular-nums;line-height:1.1;}
     .mstats span{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);}
     .mgrade{font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums;}
     .mgrade b{color:var(--ink);font-weight:700;}
-    .mopen{font-size:13px;font-weight:500;color:var(--red);margin-top:2px;}
-    .mnote{margin-top:40px;color:var(--mut);font-size:12.5px;line-height:1.6;border-top:1px solid var(--line);padding-top:18px;}
+    .mopen{font-size:13px;font-weight:500;color:var(--red);}
+    .mnote{margin-top:44px;color:var(--mut);font-size:12.5px;line-height:1.6;border-top:1px solid var(--line);padding-top:18px;}
     """
     html = f"""<title>3D deposit models</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -360,10 +526,10 @@ def _write_gallery(cards, out_html):
   <div class="mhero">
     <h1>3D deposit models</h1>
     <div class="rule"></div>
-    <p style="margin-top:14px">Interactive block models built automatically from the NI 43-101 drill data Closeology collects. Each report's collars and assays are desurveyed into 3D and interpolated (inverse-distance) into a grade shell you can orbit, slice by cut-off grade, and inspect hole by hole.</p>
+    <p style="margin-top:14px">Every project Closeology collects drill-hole assays on, built into an interactive 3D grade model — collars and assays desurveyed into 3D and interpolated (inverse-distance) into a grade shell you can orbit, slice by cut-off grade, and inspect hole by hole. The news-bank models grow with each new release, so a deposit's shape emerges here before the company publishes an official estimate.</p>
   </div>
-  <div class="mgrid">{grid}</div>
-  <p class="mnote">Grades are estimated by inverse-distance weighting for <b>visualization</b> — this is not a mineral resource estimate. Verify every figure against the source technical report before relying on it. Coordinates are each report's own local/UTM grid.</p>
+  {body}
+  <p class="mnote">Grades are estimated by inverse-distance weighting for <b>visualization</b> — this is not a mineral resource estimate, and early-stage models are sparse by nature. Verify every figure against the source before relying on it. Coordinates are each source's own local/UTM grid; a company drilling more than one project may show separate clusters.</p>
 </div>
 {foot}"""
     open(out_html, "w").write(html)

@@ -32,24 +32,27 @@ footer.site{border-top:1px solid var(--line);color:var(--mut);font-size:12px;lin
 footer.site b{color:var(--ink);}
 
     .mhero h1{font-size:30px;letter-spacing:-.3px;}
-    .mhero p{color:var(--mut);max-width:780px;}
-    .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:16px;margin-top:26px;}
-    .mcard{display:flex;flex-direction:column;gap:14px;background:#fff;border:1px solid var(--line);
+    .mhero p{color:var(--mut);max-width:820px;}
+    .msec{font-size:19px;margin:38px 0 2px;} .msecp{color:var(--mut);font-size:13px;max-width:760px;margin:0 0 4px;}
+    .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:16px;margin-top:16px;}
+    .mcard{display:flex;flex-direction:column;gap:13px;background:#fff;border:1px solid var(--line);
       border-radius:12px;padding:18px 18px 16px;color:var(--ink);text-decoration:none;
       transition:border-color .15s,box-shadow .15s,transform .15s;}
     .mcard:hover{border-color:var(--red);box-shadow:0 8px 22px rgba(0,0,0,.07);transform:translateY(-2px);text-decoration:none;}
-    .mtop .mel{display:inline-block;font-family:'Roboto';font-size:11px;font-weight:700;letter-spacing:.08em;
+    .mchips{display:flex;gap:6px;align-items:center;}
+    .mel{display:inline-block;font-family:'Roboto';font-size:11px;font-weight:700;letter-spacing:.08em;
       color:var(--red);background:#fdecec;padding:2px 8px;border-radius:5px;}
-    .mtop h3{font-size:19px;margin:10px 0 0;}
-    .mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .mmat{font-family:'Roboto';font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:5px;}
+    .mm-early{background:#eef1f6;color:#636363;} .mm-dev{background:#fff4e0;color:#8a5a00;} .mm-detail{background:#e7f4ec;color:#1c6b3f;}
+    .mtop h3{font-size:19px;margin:10px 0 0;} .mmeta{font-size:11.5px;color:var(--mut);margin-top:3px;}
+    .mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto;}
     .mstats div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 9px;}
-    .mstats b{display:block;font-size:18px;font-weight:700;font-family:'Bitter',serif;
-      font-variant-numeric:tabular-nums;line-height:1.1;}
+    .mstats b{display:block;font-size:18px;font-weight:700;font-family:'Bitter',serif;font-variant-numeric:tabular-nums;line-height:1.1;}
     .mstats span{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);}
     .mgrade{font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums;}
     .mgrade b{color:var(--ink);font-weight:700;}
-    .mopen{font-size:13px;font-weight:500;color:var(--red);margin-top:2px;}
-    .mnote{margin-top:40px;color:var(--mut);font-size:12.5px;line-height:1.6;border-top:1px solid var(--line);padding-top:18px;}
+    .mopen{font-size:13px;font-weight:500;color:var(--red);}
+    .mnote{margin-top:44px;color:var(--mut);font-size:12.5px;line-height:1.6;border-top:1px solid var(--line);padding-top:18px;}
     </style>
 <div class="topbar"><div class="topwrap">
   <a class="brand" href="index.html"><img src="data:image/png;base64,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" alt="the deep dive"><span class="sub">Project Closeology</span></a>
@@ -59,10 +62,201 @@ footer.site b{color:var(--ink);}
   <div class="mhero">
     <h1>3D deposit models</h1>
     <div class="rule"></div>
-    <p style="margin-top:14px">Interactive block models built automatically from the NI 43-101 drill data Closeology collects. Each report's collars and assays are desurveyed into 3D and interpolated (inverse-distance) into a grade shell you can orbit, slice by cut-off grade, and inspect hole by hole.</p>
+    <p style="margin-top:14px">Every project Closeology collects drill-hole assays on, built into an interactive 3D grade model — collars and assays desurveyed into 3D and interpolated (inverse-distance) into a grade shell you can orbit, slice by cut-off grade, and inspect hole by hole. The news-bank models grow with each new release, so a deposit's shape emerges here before the company publishes an official estimate.</p>
   </div>
-  <div class="mgrid"><a class="mcard" href="models/freeman-gold-corp_20260813T1659.html">
-      <div class="mtop"><span class="mel">Au</span><h3>Freeman Gold Corp.</h3></div>
+  <h2 class="msec">Actively drilling</h2><p class="msecp">Live models from the news drill bank — these densify release by release as companies report new holes, so you can watch a deposit take shape before an official estimate exists.</p><div class="mgrid"><a class="mcard" href="models/news_kenorland-minerals.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-dev">Emerging</span></div><h3>Kenorland Minerals</h3>
+        <div class="mmeta">Ontario · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>18</b><span>holes</span></div>
+        <div><b>28</b><span>assays</span></div>
+        <div><b>3,044</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>15.45</b>&nbsp;· max&nbsp;<b>204.34</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_brixton-metals.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Ag</span><span class="mmat mm-dev">Developing</span></div><h3>Brixton Metals</h3>
+        <div class="mmeta">Ontario · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>33</b><span>holes</span></div>
+        <div><b>21</b><span>assays</span></div>
+        <div><b>983</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>467.03</b>&nbsp;· max&nbsp;<b>6198.9</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_sterling-metals.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-early">Early</span></div><h3>Sterling Metals</h3>
+        <div class="mmeta">Ontario · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>4</b><span>holes</span></div>
+        <div><b>19</b><span>assays</span></div>
+        <div><b>1,302</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>0.06</b>&nbsp;· max&nbsp;<b>0.26</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_outcrop-silver.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Ag</span><span class="mmat mm-dev">Emerging</span></div><h3>Outcrop Silver</h3>
+        <div class="mmeta">International · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>12</b><span>holes</span></div>
+        <div><b>17</b><span>assays</span></div>
+        <div><b>1,095</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>818.0</b>&nbsp;· max&nbsp;<b>5196.0</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_faraday-copper.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Cu</span><span class="mmat mm-dev">Developing</span></div><h3>Faraday Copper</h3>
+        <div class="mmeta">USA · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>23</b><span>holes</span></div>
+        <div><b>14</b><span>assays</span></div>
+        <div><b>585</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>0.25</b>&nbsp;· max&nbsp;<b>0.56</b>&nbsp;%</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_great-pacific-gold.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-dev">Emerging</span></div><h3>Great Pacific Gold</h3>
+        <div class="mmeta">International · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>12</b><span>holes</span></div>
+        <div><b>8</b><span>assays</span></div>
+        <div><b>389</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>1.39</b>&nbsp;· max&nbsp;<b>2.43</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_opus-one-gold.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-early">Early · traces only</span></div><h3>Opus One Gold</h3>
+        <div class="mmeta">Québec · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>5</b><span>holes</span></div>
+        <div><b>6</b><span>assays</span></div>
+        <div><b>0</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>136.17</b>&nbsp;· max&nbsp;<b>348.0</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_aztec-minerals.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-early">Early</span></div><h3>Aztec Minerals</h3>
+        <div class="mmeta">USA · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>5</b><span>holes</span></div>
+        <div><b>5</b><span>assays</span></div>
+        <div><b>220</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>0.28</b>&nbsp;· max&nbsp;<b>0.79</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_getty-copper.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Cu</span><span class="mmat mm-early">Early</span></div><h3>Getty Copper</h3>
+        <div class="mmeta">British Columbia · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>2</b><span>holes</span></div>
+        <div><b>5</b><span>assays</span></div>
+        <div><b>241</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>1.15</b>&nbsp;· max&nbsp;<b>1.9</b>&nbsp;%</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_earthwise-minerals-and-eagle-plains-resources.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Ag</span><span class="mmat mm-early">Early</span></div><h3>Earthwise Minerals and Eagle Plains Resources</h3>
+        <div class="mmeta">British Columbia · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>3</b><span>holes</span></div>
+        <div><b>3</b><span>assays</span></div>
+        <div><b>86</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>32.11</b>&nbsp;· max&nbsp;<b>79.9</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_pirate-gold.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Cu</span><span class="mmat mm-dev">Emerging · traces only</span></div><h3>Pirate Gold</h3>
+        <div class="mmeta">Ontario · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>17</b><span>holes</span></div>
+        <div><b>3</b><span>assays</span></div>
+        <div><b>0</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>0.09</b>&nbsp;· max&nbsp;<b>0.13</b>&nbsp;%</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_vizsla-copper.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Cu</span><span class="mmat mm-early">Early</span></div><h3>Vizsla Copper</h3>
+        <div class="mmeta">Canada · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>0</b><span>holes</span></div>
+        <div><b>2</b><span>assays</span></div>
+        <div><b>62</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>2.59</b>&nbsp;· max&nbsp;<b>3.05</b>&nbsp;%</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_volta-metals.html">
+      <div class="mtop"><div class="mchips"><span class="mel">TREO</span><span class="mmat mm-early">Early · traces only</span></div><h3>Volta Metals</h3>
+        <div class="mmeta">Ontario · updated 2026-09-03</div></div>
+      <div class="mstats">
+        <div><b>2</b><span>holes</span></div>
+        <div><b>2</b><span>assays</span></div>
+        <div><b>0</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>0.41</b>&nbsp;· max&nbsp;<b>0.417</b>&nbsp;%</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_eagle-plains-resources-and-earthwise-minerals.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Ag</span><span class="mmat mm-early">Early</span></div><h3>Eagle Plains Resources and Earthwise Minerals</h3>
+        <div class="mmeta">British Columbia · updated 2026-09-02</div></div>
+      <div class="mstats">
+        <div><b>3</b><span>holes</span></div>
+        <div><b>3</b><span>assays</span></div>
+        <div><b>86</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>32.11</b>&nbsp;· max&nbsp;<b>79.9</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_kirkland-lake.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-early">Early</span></div><h3>Kirkland Lake</h3>
+        <div class="mmeta">Ontario · updated 2026-09-02</div></div>
+      <div class="mstats">
+        <div><b>2</b><span>holes</span></div>
+        <div><b>2</b><span>assays</span></div>
+        <div><b>60</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>0.78</b>&nbsp;· max&nbsp;<b>1.22</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_canstar-resources.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Cu</span><span class="mmat mm-early">Early</span></div><h3>Canstar Resources</h3>
+        <div class="mmeta">Newfoundland & Labrador · updated 2026-08-14</div></div>
+      <div class="mstats">
+        <div><b>4</b><span>holes</span></div>
+        <div><b>14</b><span>assays</span></div>
+        <div><b>64</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>0.74</b>&nbsp;· max&nbsp;<b>2.74</b>&nbsp;%</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_awale-resources.html">
+      <div class="mtop"><div class="mchips"><span class="mel">AuEq</span><span class="mmat mm-early">Early</span></div><h3>Awale Resources</h3>
+        <div class="mmeta">Cote d'Ivoire · updated 2026-07-20</div></div>
+      <div class="mstats">
+        <div><b>2</b><span>holes</span></div>
+        <div><b>7</b><span>assays</span></div>
+        <div><b>457</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>2.35</b>&nbsp;· max&nbsp;<b>7.21</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_metalsource-mining.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-dev">Emerging · traces only</span></div><h3>Metalsource Mining</h3>
+        <div class="mmeta">British Columbia · updated 2026-04-16</div></div>
+      <div class="mstats">
+        <div><b>17</b><span>holes</span></div>
+        <div><b>1</b><span>assays</span></div>
+        <div><b>0</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>1.3</b>&nbsp;· max&nbsp;<b>1.3</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a><a class="mcard" href="models/news_kenorland-and-auranova.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-dev">Emerging · traces only</span></div><h3>Kenorland and Auranova</h3>
+        <div class="mmeta">Ontario · updated 2026-01-28</div></div>
+      <div class="mstats">
+        <div><b>13</b><span>holes</span></div>
+        <div><b>7</b><span>assays</span></div>
+        <div><b>0</b><span>blocks</span></div>
+      </div>
+      <div class="mgrade">mean&nbsp;<b>1.61</b>&nbsp;· max&nbsp;<b>5.42</b>&nbsp;g/t</div>
+      <div class="mopen">Open 3D model →</div>
+    </a></div><h2 class="msec">From technical reports</h2><p class="msecp">Models built from the collars and assays in collected NI 43-101 technical reports.</p><div class="mgrid"><a class="mcard" href="models/freeman-gold-corp_20260813T1659.html">
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-detail">Detailed</span></div><h3>Freeman Gold Corp.</h3>
+        <div class="mmeta">British Columbia</div></div>
       <div class="mstats">
         <div><b>150</b><span>holes</span></div>
         <div><b>144</b><span>assays</span></div>
@@ -71,7 +265,8 @@ footer.site b{color:var(--ink);}
       <div class="mgrade">mean&nbsp;<b>2.84</b>&nbsp;· max&nbsp;<b>32.4</b>&nbsp;g/t</div>
       <div class="mopen">Open 3D model →</div>
     </a><a class="mcard" href="models/asante-gold-corporation_20260805T0715.html">
-      <div class="mtop"><span class="mel">Au</span><h3>Asante Gold Corporation</h3></div>
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-detail">Detailed</span></div><h3>Asante Gold Corporation</h3>
+        <div class="mmeta">British Columbia</div></div>
       <div class="mstats">
         <div><b>271</b><span>holes</span></div>
         <div><b>129</b><span>assays</span></div>
@@ -80,42 +275,46 @@ footer.site b{color:var(--ink);}
       <div class="mgrade">mean&nbsp;<b>1.18</b>&nbsp;· max&nbsp;<b>18.7</b>&nbsp;g/t</div>
       <div class="mopen">Open 3D model →</div>
     </a><a class="mcard" href="models/W2541.html">
-      <div class="mtop"><span class="mel">Au</span><h3>Fondaway Canyon</h3></div>
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-dev">Emerging</span></div><h3>Fondaway Canyon</h3>
+        <div class="mmeta">Nevada</div></div>
       <div class="mstats">
-        <div><b>30</b><span>holes</span></div>
+        <div><b>6</b><span>holes</span></div>
         <div><b>45</b><span>assays</span></div>
         <div><b>1,355</b><span>blocks</span></div>
       </div>
       <div class="mgrade">mean&nbsp;<b>2.3</b>&nbsp;· max&nbsp;<b>9.3</b>&nbsp;g/t</div>
       <div class="mopen">Open 3D model →</div>
     </a><a class="mcard" href="models/mithril-silver-and-gold-limited-000106212_20260817T1600.html">
-      <div class="mtop"><span class="mel">Au</span><h3>Mithril Silver and Gold Limited (000106212)</h3></div>
+      <div class="mtop"><div class="mchips"><span class="mel">Au</span><span class="mmat mm-dev">Emerging</span></div><h3>Mithril Silver and Gold Limited (000106212)</h3>
+        <div class="mmeta">British Columbia</div></div>
       <div class="mstats">
         <div><b>14</b><span>holes</span></div>
         <div><b>17</b><span>assays</span></div>
-        <div><b>505</b><span>blocks</span></div>
+        <div><b>1,255</b><span>blocks</span></div>
       </div>
       <div class="mgrade">mean&nbsp;<b>13.67</b>&nbsp;· max&nbsp;<b>109.5</b>&nbsp;g/t</div>
       <div class="mopen">Open 3D model →</div>
     </a><a class="mcard" href="models/nexmetals-mining-corp_20260807T1705.html">
-      <div class="mtop"><span class="mel">Cu</span><h3>NexMetals Mining Corp</h3></div>
+      <div class="mtop"><div class="mchips"><span class="mel">Cu</span><span class="mmat mm-dev">Emerging</span></div><h3>NexMetals Mining Corp</h3>
+        <div class="mmeta">British Columbia</div></div>
       <div class="mstats">
         <div><b>12</b><span>holes</span></div>
         <div><b>16</b><span>assays</span></div>
-        <div><b>118</b><span>blocks</span></div>
+        <div><b>664</b><span>blocks</span></div>
       </div>
       <div class="mgrade">mean&nbsp;<b>0.31</b>&nbsp;· max&nbsp;<b>0.45</b>&nbsp;%</div>
       <div class="mopen">Open 3D model →</div>
     </a><a class="mcard" href="models/W2683.html">
-      <div class="mtop"><span class="mel">U</span><h3>Russell Lake</h3></div>
+      <div class="mtop"><div class="mchips"><span class="mel">U</span><span class="mmat mm-dev">Developing</span></div><h3>Russell Lake</h3>
+        <div class="mmeta">Saskatchewan</div></div>
       <div class="mstats">
         <div><b>47</b><span>holes</span></div>
         <div><b>7</b><span>assays</span></div>
-        <div><b>232</b><span>blocks</span></div>
+        <div><b>513</b><span>blocks</span></div>
       </div>
       <div class="mgrade">mean&nbsp;<b>4715.0</b>&nbsp;· max&nbsp;<b>24900.0</b>&nbsp;%</div>
       <div class="mopen">Open 3D model →</div>
     </a></div>
-  <p class="mnote">Grades are estimated by inverse-distance weighting for <b>visualization</b> — this is not a mineral resource estimate. Verify every figure against the source technical report before relying on it. Coordinates are each report's own local/UTM grid.</p>
+  <p class="mnote">Grades are estimated by inverse-distance weighting for <b>visualization</b> — this is not a mineral resource estimate, and early-stage models are sparse by nature. Verify every figure against the source before relying on it. Coordinates are each source's own local/UTM grid; a company drilling more than one project may show separate clusters.</p>
 </div>
 <footer class="site"><b>Project Closeology</b> — a sister project to <a href="https://thedeepdive.ca" target="_blank">The Deep Dive</a>. Screening signals over official data (BC MTO/MINFILE, Ontario LIO/MDI); metal values are approximate and refreshed daily. Always confirm every claim and boundary in the official title system before staking — this is decision support, not staking advice.</footer>
