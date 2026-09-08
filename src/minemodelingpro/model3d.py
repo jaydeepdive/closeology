@@ -258,7 +258,7 @@ def _maturity(n_holes, n_blocks):
 
 def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
            report_url=None, source="report", region=None, updated=None,
-           sources=None, density=2.7,
+           sources=None, density=2.7, company=None,
            block=15.0, radius=None, min_samples=3, top_cut=None):
     """Core model builder shared by the 43-101 shard store and the news drill
     bank. Degrades gracefully: a sparse project yields desurveyed traces + assay
@@ -291,6 +291,7 @@ def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
     return {
         "source_id": source_id,
         "project": project or source_id,
+        "company": company,
         "jurisdiction": jurisdiction, "report_url": report_url,
         "source": source, "region": region, "updated": updated,
         "sources": sources or [], "density": density,
@@ -315,8 +316,15 @@ def build_model(source_id, project=None, element="Au", **kw):
     juris = (col["jurisdiction"].dropna().iloc[0] if not col.empty and col["jurisdiction"].notna().any() else None)
     rpt = (col["url"].dropna().iloc[0] if "url" in col and col["url"].notna().any() else None)
     proj = project or (col["project"].dropna().iloc[0] if not col.empty and col["project"].notna().any() else source_id)
+    # company from the SEDAR issuer slug (…/sedar:<issuer-slug>_<timestamp>)
+    comp = None
+    slug = re.sub(r"^sedar:", "", source_id)
+    slug = re.split(r"[_:]", slug)[0].replace("-", " ").strip()
+    slug = re.sub(r"\b\d{6,}\b", "", slug).strip()
+    if slug:
+        comp = _norm_company(slug.title())
     srcs = [{"kind": "NI 43-101 technical report", "title": proj, "url": rpt, "date": None}] if rpt else []
-    return _build(col, asy, sur, source_id, proj, element, jurisdiction=juris,
+    return _build(col, asy, sur, source_id, proj, element, jurisdiction=juris, company=comp,
                   report_url=rpt, source="report", region=juris, sources=srcs, **kw)
 
 
@@ -393,6 +401,46 @@ def _cluster_latlon(lats, lons, max_km=8.0):
     return [find(i) for i in range(n)]
 
 
+_PROJ_KW = (r"(?:Project|Property|Deposit|Prospect|Target|Discovery|Zone|Mine|"
+            r"Claims?|System|Trend|Camp|Occurrence)")
+_PROJ_STOP = {"the", "its", "their", "our", "a", "new", "first", "phase", "maiden",
+              "depth", "surface", "high", "grade", "near", "step", "further"}
+_COMMODITY_TAIL = {"gold", "silver", "copper", "lithium", "nickel", "zinc", "lead",
+                   "uranium", "cobalt", "gallium", "rare", "earth", "moly",
+                   "molybdenum", "polymetallic", "vms", "au", "ag", "cu"}
+
+
+def _project_from_titles(titles):
+    """Pull the deposit/project NAME out of the drill-release headlines (which is
+    how a result is tied to a project in the first place). Prefers '... at <Name>
+    Project/Property/Zone/...'; falls back to '... at/on <Name>'. Returns the most
+    common name across the cluster's releases, or None."""
+    from collections import Counter
+    cnt = Counter()
+    strong = re.compile(r"\b(?:at|on|of)\s+(?:the\s+|its\s+|their\s+)?"
+                        r"([A-Z][\w'’.\-]*(?:\s+[A-Z0-9][\w'’.\-]*){0,3}?)\s+" + _PROJ_KW)
+    loose = re.compile(r"\b(?:at|on)\s+(?:the\s+|its\s+|their\s+)?"
+                       r"([A-Z][\w'’.\-]*(?:\s+[A-Z0-9][\w'’.\-]*){0,2})(?=[\s,;:\-–—(]|$)")
+    for t in titles:
+        if not t:
+            continue
+        t = re.sub(r"\s*-\s*Junior Mining Network.*$", "", str(t)).strip()
+        m = strong.search(t) or loose.search(t)
+        if not m:
+            continue
+        name = m.group(1).strip(" '’.-")
+        words = name.split()
+        if words and words[0].lower() in _PROJ_STOP:
+            words = words[1:]
+        while len(words) > 1 and words[-1].lower() in _COMMODITY_TAIL:
+            words = words[:-1]
+        name = " ".join(words)
+        if len(name) < 3 or name.lower() in _PROJ_STOP:
+            continue
+        cnt[name] += 1
+    return cnt.most_common(1)[0][0] if cnt else None
+
+
 def _drillbank_groups(min_located=3, min_assays=6, cluster_km=8.0):
     """{key: {col, asy, region, updated, sources, label, ...}} — one entry per
     DEPOSIT (spatial cluster of holes), not per company. Coordinates are projected
@@ -431,12 +479,15 @@ def _drillbank_groups(min_located=3, min_assays=6, cluster_km=8.0):
             "native_id": ig["hk"], "hole_uid": None, "from_m": ig["from_m"], "to_m": ig["to_m"],
             "length_m": ig["length_m"], "element": ig["element"], "grade": ig["grade"],
             "unit": ig["unit"], "is_subinterval": ig["is_subinterval"]})
-        projname = cg["project"].dropna().mode().iloc[0] if cg["project"].notna().any() else None
+        # the project name is carried in the release headlines (that's how the
+        # results are tied to a deposit) — parse it; fall back to any stored
+        # project field, then to the company name.
+        projname = _project_from_titles(cg["r_title"].tolist())
+        if not projname and cg["project"].notna().any():
+            projname = cg["project"].dropna().mode().iloc[0]
         comp = _norm_company(cg["r_company"].dropna().mode().iloc[0]) if cg["r_company"].notna().any() else None
         region = cg["r_country"].dropna().iloc[0] if cg["r_country"].notna().any() else None
         label = projname or comp or "Unnamed project"
-        if not projname and comp and region:
-            label = f"{comp} — {region}"
         rels = (cg[["r_url", "r_title", "r_pub"]].dropna(subset=["r_url"])
                 .drop_duplicates("r_url").sort_values("r_pub", ascending=False))
         sources = [{"kind": "news release", "title": (t or u).strip()[:120], "url": u, "date": d}
@@ -445,7 +496,8 @@ def _drillbank_groups(min_located=3, min_assays=6, cluster_km=8.0):
                + f"-{lat0:.1f}_{lon0:.1f}".replace("-", "s"))
         out[key] = {"col": col, "asy": asy, "region": region,
                     "updated": (cg["r_pub"].dropna().max() if cg["r_pub"].notna().any() else None),
-                    "sources": sources, "label": label, "area": f"{lat0:.2f}, {lon0:.2f}"}
+                    "sources": sources, "label": label, "project": projname or label,
+                    "company": comp, "area": f"{lat0:.2f}, {lon0:.2f}"}
     return out
 
 
@@ -457,7 +509,8 @@ def build_drillbank_model(key, g, **kw):
     last = None
     for el in order[:4]:                       # fall back if dominant element has no located holes
         try:
-            m = _build(col, asy, None, sid, g["label"], el, jurisdiction=g["region"], report_url=rpt,
+            m = _build(col, asy, None, sid, g.get("project") or g["label"], el,
+                       jurisdiction=g["region"], report_url=rpt, company=g.get("company"),
                        source="news", region=g["region"], updated=g["updated"], sources=g["sources"], **kw)
             m["area"] = g.get("area")
             return m
@@ -494,7 +547,8 @@ def _slug(source_id):
 
 
 def _card(m, slug):
-    return {"slug": slug, "project": m["project"], "element": m["element"], "unit": m["unit"],
+    return {"slug": slug, "project": m["project"], "company": m.get("company"),
+            "element": m["element"], "unit": m["unit"],
             "counts": m["counts"], "grade": m["grade_stats"], "source": m.get("source", "report"),
             "region": m.get("region"), "updated": m.get("updated"), "maturity": m.get("maturity"),
             "area": m.get("area")}
@@ -548,14 +602,25 @@ def _write_gallery(cards, out_html):
         head, foot, css, fonts = (T.header("models.html"), T.footer(), T.THEME_CSS, T.FONTS)
     except Exception:
         head = foot = ""; fonts = ""; css = ":root{--red:#D71920;--ink:#111418;--mut:#636363;--line:#e6e8eb;--panel:#f5f7fa;--bg:#fff;}body{font-family:Roboto,sans-serif;margin:0;background:#fff;color:#111418}h1,h3{font-family:Bitter,Georgia,serif}.wrap{max-width:1180px;margin:0 auto;padding:26px 22px 60px}a{color:#D71920;text-decoration:none}"
+    def esc(s):
+        return str(s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
     def card_html(c):
         g = c["grade"]
         mat = c.get("maturity") or ""
         matcls = "mm-detail" if "Detailed" in mat else "mm-dev" if ("Developing" in mat or "Emerging" in mat) else "mm-early"
-        meta = " · ".join(x for x in (c.get("region"), c.get("area"),
+        region = (c.get("region") or "").strip()
+        jchip = f'<span class="mjur">{esc(region)}</span>' if region else ""
+        project = re.sub(r"\s*\(\d{5,}\)\s*$", "", str(c.get("project") or "")).strip()
+        company = (c.get("company") or "").strip()
+        if company and (company.lower() == project.lower() or re.fullmatch(r"[A-Za-z]\d{2,}", company)):
+            company = ""
+        sub = f'<div class="mcompany">{esc(company)}</div>' if company else ""
+        meta = " · ".join(x for x in (c.get("area"),
                           (f"updated {c['updated']}" if c.get("updated") else None)) if x)
         return f"""<a class="mcard" href="models/{c['slug']}.html">
-      <div class="mtop"><div class="mchips"><span class="mel">{c['element']}</span><span class="mmat {matcls}">{mat}</span></div><h3>{c['project']}</h3>
+      <div class="mtop"><div class="mchips"><span class="mel">{esc(c['element'])}</span>{jchip}<span class="mmat {matcls}">{esc(mat)}</span></div>
+        <h3>{esc(project)}</h3>{sub}
         <div class="mmeta">{meta}</div></div>
       <div class="mstats">
         <div><b>{c['counts']['holes']}</b><span>holes</span></div>
@@ -596,7 +661,11 @@ def _write_gallery(cards, out_html):
       color:var(--red);background:#fdecec;padding:2px 8px;border-radius:5px;}
     .mmat{font-family:'Roboto';font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:5px;}
     .mm-early{background:#eef1f6;color:#636363;} .mm-dev{background:#fff4e0;color:#8a5a00;} .mm-detail{background:#e7f4ec;color:#1c6b3f;}
-    .mtop h3{font-size:19px;margin:10px 0 0;} .mmeta{font-size:11.5px;color:var(--mut);margin-top:3px;}
+    .mjur{display:inline-flex;align-items:center;font-family:'Roboto';font-size:10.5px;font-weight:700;
+      letter-spacing:.04em;color:#274b8f;background:#eaf0fb;border:1px solid #d5e0f5;padding:2px 8px;border-radius:5px;}
+    .mtop h3{font-size:19px;margin:10px 0 0;line-height:1.2;}
+    .mcompany{font-size:12px;color:var(--mut);margin-top:2px;font-weight:500;}
+    .mmeta{font-size:11.5px;color:var(--mut);margin-top:4px;}
     .mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto;}
     .mstats div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 9px;}
     .mstats b{display:block;font-size:18px;font-weight:700;font-family:'Bitter',serif;font-variant-numeric:tabular-nums;line-height:1.1;}
