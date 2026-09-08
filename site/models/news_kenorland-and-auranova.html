@@ -79,6 +79,12 @@
   .btn:focus-visible,.toggle input:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--red);outline-offset:2px}
   a.src{color:var(--mut);font-size:11px;text-decoration:none}
   a.src:hover{color:var(--red);text-decoration:underline}
+  #srclist{max-height:132px;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+  #srclist a{display:block;font-size:12px;line-height:1.35;color:var(--ink);text-decoration:none;
+    padding-left:12px;position:relative}
+  #srclist a::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:var(--red)}
+  #srclist a:hover{color:var(--red)}
+  #srclist a .sd{color:var(--mut);font-size:10.5px}
   @media (max-width:640px){#readout{display:none}#hud{width:calc(100vw - 32px)}}
 </style>
 
@@ -112,6 +118,10 @@
     </div>
     <button class="btn" id="reset">Reset view</button>
   </div>
+  <div class="group" id="srcgroup">
+    <p class="glabel">Data sources <span id="src-n" style="color:var(--mut);font-weight:400"></span></p>
+    <div id="srclist"></div>
+  </div>
 </div>
 
 <div id="legend" class="panel">
@@ -121,7 +131,11 @@
 </div>
 
 <div id="readout" class="panel">
-  <p class="glabel">Grade &amp; method</p>
+  <p class="glabel">Above cut-off <span id="rc-cut" style="color:var(--red)"></span></p>
+  <div class="kv"><span>Tonnage</span><b id="rc-tonnes">–</b></div>
+  <div class="kv"><span>Avg grade</span><b id="rc-grade">–</b></div>
+  <div class="kv"><span>Blocks</span><b id="rc-blocks">–</b></div>
+  <p class="glabel" style="margin-top:11px">Sample grade &amp; method</p>
   <div class="kv"><span>Mean</span><b id="r-mean">–</b></div>
   <div class="kv"><span>Median</span><b id="r-p50">–</b></div>
   <div class="kv"><span>90th pct</span><b id="r-p90">–</b></div>
@@ -135,8 +149,8 @@
 <div id="tip"></div>
 <div id="hint">drag to orbit · scroll to zoom · right-drag to pan</div>
 
-<script id="model" type="application/json">{"source_id":"news:kenorland-and-auranova","project":"Kenorland and Auranova","jurisdiction":"Ontario","report_url":"https://www.newsfilecorp.com/release/281877/Kenorland-and-Auranova","source":"news","region":"Ontario","updated":"2026-01-28","maturity":"Emerging \u00b7 traces only","element":"Au","unit":"g/t","generated":"2026-09-08T13:07:42Z","origin":[554668.0,5640377.38,-208.78],"extent":[2536.0,1838.6,633.8],"counts":{"holes":13,"samples":7,"blocks":0},"grade_stats":{"min":0.15,"max":5.42,"mean":1.61,"p50":0.97,"p90":3.85,"top_cut":5.1},"block_stats":{"block_m":15.0,"power":2.0,"radius_m":60.0,"min_samples":2,"top_cut":5.1,"n_blocks":0},"holes":[{"id":"25PADD028","collar":[311.0,413.62,609.78],"toe":[367.55,202.57,391.28],"depth":309.0},{"id":"25PADD029","collar":[1554.0,1838.62,622.78],"toe":[1522.75,1481.48,264.28],"depth":507.0},{"id":"25PADD030","collar":[607.0,458.62,610.78],"toe":[663.55,247.57,392.28],"depth":309.0},{"id":"25PADD031","collar":[1512.0,1480.62,620.78],"toe":[1476.87,1079.13,140.47],"depth":627.0},{"id":"25PADD032","collar":[607.0,459.62,610.78],"toe":[640.37,335.08,189.05],"depth":441.0},{"id":"25PADD033","collar":[427.0,525.62,613.78],"toe":[491.78,283.84,197.2],"depth":486.0},{"id":"25PADD034","collar":[1463.0,1078.62,618.78],"toe":[1403.36,654.28,190.27],"depth":606.0},{"id":"25PADD035","collar":[410.0,806.62,618.78],"toe":[473.29,447.7,184.43],"depth":567.0},{"id":"25PADD036","collar":[1134.0,693.62,618.78],"toe":[1168.99,293.67,172.89],"depth":600.0},{"id":"25PADD037","collar":[0.0,412.62,616.78],"toe":[84.35,97.83,228.4],"depth":507.0},{"id":"25PADD038","collar":[1646.0,552.62,619.78],"toe":[1723.67,0.0,0.0],"depth":834.0},{"id":"25PADD039","collar":[2168.0,490.62,633.78],"toe":[2205.32,64.01,158.17],"depth":640.0},{"id":"25PADD040","collar":[2500.0,549.62,618.78],"toe":[2535.97,138.52,126.98],"depth":642.0}],"samples":[{"hole":"25PADD030","from":155.15,"to":156.95,"grade":5.42,"xyz":[635.56,352.04,500.44]},{"hole":"25PADD031","from":234.0,"to":247.5,"grade":0.47,"xyz":[1498.51,1326.46,436.35]},{"hole":"25PADD032","from":229.5,"to":233.2,"grade":0.97,"xyz":[624.51,394.28,389.54]},{"hole":"25PADD034","from":67.8,"to":84.4,"grade":0.15,"xyz":[1455.51,1025.33,564.97]},{"hole":"25PADD038","from":298.55,"to":299.3,"grade":1.23,"xyz":[1673.84,354.55,397.64]},{"hole":"25PADD039","from":19.5,"to":20.0,"grade":2.81,"xyz":[2169.15,477.45,619.1]},{"hole":"25PADD040","from":507.0,"to":509.5,"grade":0.2,"xyz":[2528.47,224.17,229.44]}],"blocks":[]}</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+<script id="model" type="application/json">{"source_id":"news:kenorland-and-auranova","project":"Kenorland and Auranova","jurisdiction":"Ontario","report_url":"https://www.newsfilecorp.com/release/281877/Kenorland-and-Auranova","source":"news","region":"Ontario","updated":"2026-01-28","sources":[{"kind":"news release","title":"Kenorland and Auranova Identify New Gold-Bearing Structural Corridor at the South Uchi Project, Ontario","url":"https://www.newsfilecorp.com/release/281877/Kenorland-and-Auranova","date":"2026-01-28"}],"density":2.7,"maturity":"Emerging \u00b7 traces only","element":"Au","unit":"g/t","generated":"2026-09-08T15:18:09Z","origin":[554668.0,5640377.38,-208.78],"extent":[2536.0,1838.6,633.8],"counts":{"holes":13,"samples":7,"blocks":0},"grade_stats":{"min":0.15,"max":5.42,"mean":1.61,"p50":0.97,"p90":3.85,"top_cut":5.1},"block_stats":{"block_m":15.0,"power":2.0,"radius_m":60.0,"min_samples":2,"top_cut":5.1,"n_blocks":0},"holes":[{"id":"25PADD028","collar":[311.0,413.62,609.78],"toe":[367.55,202.57,391.28],"depth":309.0},{"id":"25PADD029","collar":[1554.0,1838.62,622.78],"toe":[1522.75,1481.48,264.28],"depth":507.0},{"id":"25PADD030","collar":[607.0,458.62,610.78],"toe":[663.55,247.57,392.28],"depth":309.0},{"id":"25PADD031","collar":[1512.0,1480.62,620.78],"toe":[1476.87,1079.13,140.47],"depth":627.0},{"id":"25PADD032","collar":[607.0,459.62,610.78],"toe":[640.37,335.08,189.05],"depth":441.0},{"id":"25PADD033","collar":[427.0,525.62,613.78],"toe":[491.78,283.84,197.2],"depth":486.0},{"id":"25PADD034","collar":[1463.0,1078.62,618.78],"toe":[1403.36,654.28,190.27],"depth":606.0},{"id":"25PADD035","collar":[410.0,806.62,618.78],"toe":[473.29,447.7,184.43],"depth":567.0},{"id":"25PADD036","collar":[1134.0,693.62,618.78],"toe":[1168.99,293.67,172.89],"depth":600.0},{"id":"25PADD037","collar":[0.0,412.62,616.78],"toe":[84.35,97.83,228.4],"depth":507.0},{"id":"25PADD038","collar":[1646.0,552.62,619.78],"toe":[1723.67,0.0,0.0],"depth":834.0},{"id":"25PADD039","collar":[2168.0,490.62,633.78],"toe":[2205.32,64.01,158.17],"depth":640.0},{"id":"25PADD040","collar":[2500.0,549.62,618.78],"toe":[2535.97,138.52,126.98],"depth":642.0}],"samples":[{"hole":"25PADD030","from":155.15,"to":156.95,"grade":5.42,"xyz":[635.56,352.04,500.44]},{"hole":"25PADD031","from":234.0,"to":247.5,"grade":0.47,"xyz":[1498.51,1326.46,436.35]},{"hole":"25PADD032","from":229.5,"to":233.2,"grade":0.97,"xyz":[624.51,394.28,389.54]},{"hole":"25PADD034","from":67.8,"to":84.4,"grade":0.15,"xyz":[1455.51,1025.33,564.97]},{"hole":"25PADD038","from":298.55,"to":299.3,"grade":1.23,"xyz":[1673.84,354.55,397.64]},{"hole":"25PADD039","from":19.5,"to":20.0,"grade":2.81,"xyz":[2169.15,477.45,619.1]},{"hole":"25PADD040","from":507.0,"to":509.5,"grade":0.2,"xyz":[2528.47,224.17,229.44]}],"blocks":[]}</script>
+<script src="three.min.js"></script>
 <script>
 "use strict";
 const M = JSON.parse(document.getElementById("model").textContent);
@@ -240,8 +254,26 @@ function hover(e){mouse.x=(e.clientX/innerWidth)*2-1;mouse.y=-((e.clientY-49)/vh
 $("t-blocks").onchange=e=>blocks.visible=e.target.checked;
 $("t-samples").onchange=e=>samples.visible=e.target.checked;
 $("t-traces").onchange=e=>traces.visible=e.target.checked;
+// data-sources list
+(function(){const list=$("srclist"),srcs=M.sources||[];
+  if(!srcs.length){$("srcgroup").style.display="none";return;}
+  $("src-n").textContent="· "+srcs.length;
+  srcs.slice(0,40).forEach(s=>{const a=document.createElement("a");
+    a.href=(s.url&&s.url.startsWith("http"))?s.url:("https://"+(s.url||""));a.target="_blank";a.rel="noopener";
+    a.innerHTML=`${(s.title||s.kind||"source").replace(/</g,"&lt;")}<span class="sd"> — ${s.kind}${s.date?" · "+s.date:""}</span>`;
+    list.appendChild(a);});})();
+
+// grade × tonnage above cut-off (block volume × density). Indicative only.
+const BV=Math.pow(M.block_stats.block_m,3)*(M.density||2.7);   // tonnes per block
 const cutEl=$("cutoff");
-function updateCut(){const gc=+(cutEl.value/100*CAP).toFixed(2);$("cut").textContent=gc.toFixed(2);applyCutoff(gc);}
+function fmtT(t){return t>=1e6?(t/1e6).toFixed(2)+" Mt":t>=1e3?(t/1e3).toFixed(0)+" kt":Math.round(t)+" t";}
+function updateCut(){const gc=+(cutEl.value/100*CAP).toFixed(2);$("cut").textContent=gc.toFixed(2);
+  applyCutoff(gc);
+  let n=0,sum=0;for(const b of M.blocks){if(b.grade>=gc){n++;sum+=Math.min(b.grade,CAP);}}
+  $("rc-cut").textContent="≥ "+gc.toFixed(2)+" "+M.unit;
+  $("rc-tonnes").textContent=n?fmtT(n*BV):"—";
+  $("rc-grade").textContent=n?(sum/n).toFixed(2)+" "+M.unit:"—";
+  $("rc-blocks").textContent=n.toLocaleString();}
 cutEl.oninput=updateCut;updateCut();
 
 let auto=!matchMedia("(prefers-reduced-motion: reduce)").matches;

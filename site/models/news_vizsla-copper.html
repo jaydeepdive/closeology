@@ -79,6 +79,12 @@
   .btn:focus-visible,.toggle input:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--red);outline-offset:2px}
   a.src{color:var(--mut);font-size:11px;text-decoration:none}
   a.src:hover{color:var(--red);text-decoration:underline}
+  #srclist{max-height:132px;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+  #srclist a{display:block;font-size:12px;line-height:1.35;color:var(--ink);text-decoration:none;
+    padding-left:12px;position:relative}
+  #srclist a::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:var(--red)}
+  #srclist a:hover{color:var(--red)}
+  #srclist a .sd{color:var(--mut);font-size:10.5px}
   @media (max-width:640px){#readout{display:none}#hud{width:calc(100vw - 32px)}}
 </style>
 
@@ -112,6 +118,10 @@
     </div>
     <button class="btn" id="reset">Reset view</button>
   </div>
+  <div class="group" id="srcgroup">
+    <p class="glabel">Data sources <span id="src-n" style="color:var(--mut);font-weight:400"></span></p>
+    <div id="srclist"></div>
+  </div>
 </div>
 
 <div id="legend" class="panel">
@@ -121,7 +131,11 @@
 </div>
 
 <div id="readout" class="panel">
-  <p class="glabel">Grade &amp; method</p>
+  <p class="glabel">Above cut-off <span id="rc-cut" style="color:var(--red)"></span></p>
+  <div class="kv"><span>Tonnage</span><b id="rc-tonnes">–</b></div>
+  <div class="kv"><span>Avg grade</span><b id="rc-grade">–</b></div>
+  <div class="kv"><span>Blocks</span><b id="rc-blocks">–</b></div>
+  <p class="glabel" style="margin-top:11px">Sample grade &amp; method</p>
   <div class="kv"><span>Mean</span><b id="r-mean">–</b></div>
   <div class="kv"><span>Median</span><b id="r-p50">–</b></div>
   <div class="kv"><span>90th pct</span><b id="r-p90">–</b></div>
@@ -135,8 +149,8 @@
 <div id="tip"></div>
 <div id="hint">drag to orbit · scroll to zoom · right-drag to pan</div>
 
-<script id="model" type="application/json">{"source_id":"news:vizsla-copper","project":"Vizsla Copper","jurisdiction":"Canada","report_url":"https://www.juniorminingnetwork.com/junior-miner-news/press-releases/3039-tsx-venture/vcu/210339-vizsla-copper-intersects-49-2-meters-grading-4-7-copper-equivalent-at-its-palmer-project-in-southeast-alaska.html","source":"news","region":"Canada","updated":"2026-09-03","maturity":"Early","element":"Cu","unit":"%","generated":"2026-09-08T13:07:56Z","origin":[421001.1,6585002.7,1827.99],"extent":[45.0,45.0,60.0],"counts":{"holes":0,"samples":2,"blocks":62},"grade_stats":{"min":2.14,"max":3.05,"mean":2.59,"p50":2.59,"p90":2.96,"top_cut":3.0},"block_stats":{"block_m":15.0,"power":2.0,"radius_m":60.0,"min_samples":2,"top_cut":3.0,"n_blocks":62},"holes":[],"samples":[{"hole":"CMR26-199","from":305.0,"to":354.2,"grade":3.05,"xyz":[15.01,15.0,0.0]},{"hole":"CMR26-201","from":349.3,"to":389.7,"grade":2.14,"xyz":[16.81,22.62,48.11]}],"blocks":[{"xyz":[0.0,0.0,0.01],"grade":2.891,"n":2},{"xyz":[0.0,0.0,15.01],"grade":2.774,"n":2},{"xyz":[0.0,0.0,30.01],"grade":2.53,"n":2},{"xyz":[0.0,0.0,45.01],"grade":2.351,"n":2},{"xyz":[0.0,15.0,0.01],"grade":2.933,"n":2},{"xyz":[0.0,15.0,15.01],"grade":2.795,"n":2},{"xyz":[0.0,15.0,30.01],"grade":2.46,"n":2},{"xyz":[0.0,15.0,45.01],"grade":2.256,"n":2},{"xyz":[0.0,30.0,0.01],"grade":2.875,"n":2},{"xyz":[0.0,30.0,15.01],"grade":2.725,"n":2},{"xyz":[0.0,30.0,30.01],"grade":2.424,"n":2},{"xyz":[0.0,30.0,45.01],"grade":2.246,"n":2},{"xyz":[0.0,45.0,0.01],"grade":2.771,"n":2},{"xyz":[0.0,45.0,15.01],"grade":2.641,"n":2},{"xyz":[0.0,45.0,30.01],"grade":2.445,"n":2},{"xyz":[0.0,45.0,45.01],"grade":2.313,"n":2},{"xyz":[15.0,0.0,0.01],"grade":2.937,"n":2},{"xyz":[15.0,0.0,15.01],"grade":2.812,"n":2},{"xyz":[15.0,0.0,30.01],"grade":2.508,"n":2},{"xyz":[15.0,0.0,45.01],"grade":2.303,"n":2},{"xyz":[15.0,15.0,0.01],"grade":3.0,"n":2},{"xyz":[15.0,15.0,15.01],"grade":2.86,"n":2},{"xyz":[15.0,15.0,30.01],"grade":2.4,"n":2},{"xyz":[15.0,15.0,45.01],"grade":2.169,"n":2},{"xyz":[15.0,15.0,60.01],"grade":2.186,"n":2},{"xyz":[15.0,30.0,0.01],"grade":2.926,"n":2},{"xyz":[15.0,30.0,15.01],"grade":2.759,"n":2},{"xyz":[15.0,30.0,30.01],"grade":2.36,"n":2},{"xyz":[15.0,30.0,45.01],"grade":2.165,"n":2},{"xyz":[15.0,45.0,0.01],"grade":2.792,"n":2},{"xyz":[15.0,45.0,15.01],"grade":2.645,"n":2},{"xyz":[15.0,45.0,30.01],"grade":2.412,"n":2},{"xyz":[15.0,45.0,45.01],"grade":2.269,"n":2},{"xyz":[30.0,0.0,0.01],"grade":2.888,"n":2},{"xyz":[30.0,0.0,15.01],"grade":2.764,"n":2},{"xyz":[30.0,0.0,30.01],"grade":2.509,"n":2},{"xyz":[30.0,0.0,45.01],"grade":2.329,"n":2},{"xyz":[30.0,15.0,0.01],"grade":2.93,"n":2},{"xyz":[30.0,15.0,15.01],"grade":2.782,"n":2},{"xyz":[30.0,15.0,30.01],"grade":2.426,"n":2},{"xyz":[30.0,15.0,45.01],"grade":2.223,"n":2},{"xyz":[30.0,30.0,0.01],"grade":2.871,"n":2},{"xyz":[30.0,30.0,15.01],"grade":2.71,"n":2},{"xyz":[30.0,30.0,30.01],"grade":2.391,"n":2},{"xyz":[30.0,30.0,45.01],"grade":2.216,"n":2},{"xyz":[30.0,45.0,0.01],"grade":2.765,"n":2},{"xyz":[30.0,45.0,15.01],"grade":2.628,"n":2},{"xyz":[30.0,45.0,30.01],"grade":2.425,"n":2},{"xyz":[30.0,45.0,45.01],"grade":2.294,"n":2},{"xyz":[45.0,0.0,15.01],"grade":2.691,"n":2},{"xyz":[45.0,0.0,30.01],"grade":2.524,"n":2},{"xyz":[45.0,0.0,45.01],"grade":2.393,"n":2},{"xyz":[45.0,15.0,0.01],"grade":2.81,"n":2},{"xyz":[45.0,15.0,15.01],"grade":2.685,"n":2},{"xyz":[45.0,15.0,30.01],"grade":2.481,"n":2},{"xyz":[45.0,15.0,45.01],"grade":2.336,"n":2},{"xyz":[45.0,30.0,0.01],"grade":2.774,"n":2},{"xyz":[45.0,30.0,15.01],"grade":2.648,"n":2},{"xyz":[45.0,30.0,30.01],"grade":2.456,"n":2},{"xyz":[45.0,30.0,45.01],"grade":2.324,"n":2},{"xyz":[45.0,45.0,15.01],"grade":2.606,"n":2},{"xyz":[45.0,45.0,30.01],"grade":2.463,"n":2}]}</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+<script id="model" type="application/json">{"source_id":"news:vizsla-copper","project":"Vizsla Copper","jurisdiction":"Canada","report_url":"https://www.juniorminingnetwork.com/junior-miner-news/press-releases/3039-tsx-venture/vcu/210339-vizsla-copper-intersects-49-2-meters-grading-4-7-copper-equivalent-at-its-palmer-project-in-southeast-alaska.html","source":"news","region":"Canada","updated":"2026-09-03","sources":[{"kind":"news release","title":"Vizsla Copper Intersects 49.2 Meters Grading 4.7% Copper Equivalent at its Palmer Project in Southeast Alaska - Junior M","url":"https://www.juniorminingnetwork.com/junior-miner-news/press-releases/3039-tsx-venture/vcu/210339-vizsla-copper-intersects-49-2-meters-grading-4-7-copper-equivalent-at-its-palmer-project-in-southeast-alaska.html","date":"2026-09-03"}],"density":2.7,"maturity":"Early","element":"Cu","unit":"%","generated":"2026-09-08T15:18:22Z","origin":[421001.1,6585002.7,1827.99],"extent":[45.0,45.0,60.0],"counts":{"holes":0,"samples":2,"blocks":62},"grade_stats":{"min":2.14,"max":3.05,"mean":2.59,"p50":2.59,"p90":2.96,"top_cut":3.0},"block_stats":{"block_m":15.0,"power":2.0,"radius_m":60.0,"min_samples":2,"top_cut":3.0,"n_blocks":62},"holes":[],"samples":[{"hole":"CMR26-199","from":305.0,"to":354.2,"grade":3.05,"xyz":[15.01,15.0,0.0]},{"hole":"CMR26-201","from":349.3,"to":389.7,"grade":2.14,"xyz":[16.81,22.62,48.11]}],"blocks":[{"xyz":[0.0,0.0,0.01],"grade":2.891,"n":2},{"xyz":[0.0,0.0,15.01],"grade":2.774,"n":2},{"xyz":[0.0,0.0,30.01],"grade":2.53,"n":2},{"xyz":[0.0,0.0,45.01],"grade":2.351,"n":2},{"xyz":[0.0,15.0,0.01],"grade":2.933,"n":2},{"xyz":[0.0,15.0,15.01],"grade":2.795,"n":2},{"xyz":[0.0,15.0,30.01],"grade":2.46,"n":2},{"xyz":[0.0,15.0,45.01],"grade":2.256,"n":2},{"xyz":[0.0,30.0,0.01],"grade":2.875,"n":2},{"xyz":[0.0,30.0,15.01],"grade":2.725,"n":2},{"xyz":[0.0,30.0,30.01],"grade":2.424,"n":2},{"xyz":[0.0,30.0,45.01],"grade":2.246,"n":2},{"xyz":[0.0,45.0,0.01],"grade":2.771,"n":2},{"xyz":[0.0,45.0,15.01],"grade":2.641,"n":2},{"xyz":[0.0,45.0,30.01],"grade":2.445,"n":2},{"xyz":[0.0,45.0,45.01],"grade":2.313,"n":2},{"xyz":[15.0,0.0,0.01],"grade":2.937,"n":2},{"xyz":[15.0,0.0,15.01],"grade":2.812,"n":2},{"xyz":[15.0,0.0,30.01],"grade":2.508,"n":2},{"xyz":[15.0,0.0,45.01],"grade":2.303,"n":2},{"xyz":[15.0,15.0,0.01],"grade":3.0,"n":2},{"xyz":[15.0,15.0,15.01],"grade":2.86,"n":2},{"xyz":[15.0,15.0,30.01],"grade":2.4,"n":2},{"xyz":[15.0,15.0,45.01],"grade":2.169,"n":2},{"xyz":[15.0,15.0,60.01],"grade":2.186,"n":2},{"xyz":[15.0,30.0,0.01],"grade":2.926,"n":2},{"xyz":[15.0,30.0,15.01],"grade":2.759,"n":2},{"xyz":[15.0,30.0,30.01],"grade":2.36,"n":2},{"xyz":[15.0,30.0,45.01],"grade":2.165,"n":2},{"xyz":[15.0,45.0,0.01],"grade":2.792,"n":2},{"xyz":[15.0,45.0,15.01],"grade":2.645,"n":2},{"xyz":[15.0,45.0,30.01],"grade":2.412,"n":2},{"xyz":[15.0,45.0,45.01],"grade":2.269,"n":2},{"xyz":[30.0,0.0,0.01],"grade":2.888,"n":2},{"xyz":[30.0,0.0,15.01],"grade":2.764,"n":2},{"xyz":[30.0,0.0,30.01],"grade":2.509,"n":2},{"xyz":[30.0,0.0,45.01],"grade":2.329,"n":2},{"xyz":[30.0,15.0,0.01],"grade":2.93,"n":2},{"xyz":[30.0,15.0,15.01],"grade":2.782,"n":2},{"xyz":[30.0,15.0,30.01],"grade":2.426,"n":2},{"xyz":[30.0,15.0,45.01],"grade":2.223,"n":2},{"xyz":[30.0,30.0,0.01],"grade":2.871,"n":2},{"xyz":[30.0,30.0,15.01],"grade":2.71,"n":2},{"xyz":[30.0,30.0,30.01],"grade":2.391,"n":2},{"xyz":[30.0,30.0,45.01],"grade":2.216,"n":2},{"xyz":[30.0,45.0,0.01],"grade":2.765,"n":2},{"xyz":[30.0,45.0,15.01],"grade":2.628,"n":2},{"xyz":[30.0,45.0,30.01],"grade":2.425,"n":2},{"xyz":[30.0,45.0,45.01],"grade":2.294,"n":2},{"xyz":[45.0,0.0,15.01],"grade":2.691,"n":2},{"xyz":[45.0,0.0,30.01],"grade":2.524,"n":2},{"xyz":[45.0,0.0,45.01],"grade":2.393,"n":2},{"xyz":[45.0,15.0,0.01],"grade":2.81,"n":2},{"xyz":[45.0,15.0,15.01],"grade":2.685,"n":2},{"xyz":[45.0,15.0,30.01],"grade":2.481,"n":2},{"xyz":[45.0,15.0,45.01],"grade":2.336,"n":2},{"xyz":[45.0,30.0,0.01],"grade":2.774,"n":2},{"xyz":[45.0,30.0,15.01],"grade":2.648,"n":2},{"xyz":[45.0,30.0,30.01],"grade":2.456,"n":2},{"xyz":[45.0,30.0,45.01],"grade":2.324,"n":2},{"xyz":[45.0,45.0,15.01],"grade":2.606,"n":2},{"xyz":[45.0,45.0,30.01],"grade":2.463,"n":2}]}</script>
+<script src="three.min.js"></script>
 <script>
 "use strict";
 const M = JSON.parse(document.getElementById("model").textContent);
@@ -240,8 +254,26 @@ function hover(e){mouse.x=(e.clientX/innerWidth)*2-1;mouse.y=-((e.clientY-49)/vh
 $("t-blocks").onchange=e=>blocks.visible=e.target.checked;
 $("t-samples").onchange=e=>samples.visible=e.target.checked;
 $("t-traces").onchange=e=>traces.visible=e.target.checked;
+// data-sources list
+(function(){const list=$("srclist"),srcs=M.sources||[];
+  if(!srcs.length){$("srcgroup").style.display="none";return;}
+  $("src-n").textContent="· "+srcs.length;
+  srcs.slice(0,40).forEach(s=>{const a=document.createElement("a");
+    a.href=(s.url&&s.url.startsWith("http"))?s.url:("https://"+(s.url||""));a.target="_blank";a.rel="noopener";
+    a.innerHTML=`${(s.title||s.kind||"source").replace(/</g,"&lt;")}<span class="sd"> — ${s.kind}${s.date?" · "+s.date:""}</span>`;
+    list.appendChild(a);});})();
+
+// grade × tonnage above cut-off (block volume × density). Indicative only.
+const BV=Math.pow(M.block_stats.block_m,3)*(M.density||2.7);   // tonnes per block
 const cutEl=$("cutoff");
-function updateCut(){const gc=+(cutEl.value/100*CAP).toFixed(2);$("cut").textContent=gc.toFixed(2);applyCutoff(gc);}
+function fmtT(t){return t>=1e6?(t/1e6).toFixed(2)+" Mt":t>=1e3?(t/1e3).toFixed(0)+" kt":Math.round(t)+" t";}
+function updateCut(){const gc=+(cutEl.value/100*CAP).toFixed(2);$("cut").textContent=gc.toFixed(2);
+  applyCutoff(gc);
+  let n=0,sum=0;for(const b of M.blocks){if(b.grade>=gc){n++;sum+=Math.min(b.grade,CAP);}}
+  $("rc-cut").textContent="≥ "+gc.toFixed(2)+" "+M.unit;
+  $("rc-tonnes").textContent=n?fmtT(n*BV):"—";
+  $("rc-grade").textContent=n?(sum/n).toFixed(2)+" "+M.unit:"—";
+  $("rc-blocks").textContent=n.toLocaleString();}
 cutEl.oninput=updateCut;updateCut();
 
 let auto=!matchMedia("(prefers-reduced-motion: reduce)").matches;

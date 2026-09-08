@@ -79,6 +79,12 @@
   .btn:focus-visible,.toggle input:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--red);outline-offset:2px}
   a.src{color:var(--mut);font-size:11px;text-decoration:none}
   a.src:hover{color:var(--red);text-decoration:underline}
+  #srclist{max-height:132px;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+  #srclist a{display:block;font-size:12px;line-height:1.35;color:var(--ink);text-decoration:none;
+    padding-left:12px;position:relative}
+  #srclist a::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:var(--red)}
+  #srclist a:hover{color:var(--red)}
+  #srclist a .sd{color:var(--mut);font-size:10.5px}
   @media (max-width:640px){#readout{display:none}#hud{width:calc(100vw - 32px)}}
 </style>
 
@@ -112,6 +118,10 @@
     </div>
     <button class="btn" id="reset">Reset view</button>
   </div>
+  <div class="group" id="srcgroup">
+    <p class="glabel">Data sources <span id="src-n" style="color:var(--mut);font-weight:400"></span></p>
+    <div id="srclist"></div>
+  </div>
 </div>
 
 <div id="legend" class="panel">
@@ -121,7 +131,11 @@
 </div>
 
 <div id="readout" class="panel">
-  <p class="glabel">Grade &amp; method</p>
+  <p class="glabel">Above cut-off <span id="rc-cut" style="color:var(--red)"></span></p>
+  <div class="kv"><span>Tonnage</span><b id="rc-tonnes">–</b></div>
+  <div class="kv"><span>Avg grade</span><b id="rc-grade">–</b></div>
+  <div class="kv"><span>Blocks</span><b id="rc-blocks">–</b></div>
+  <p class="glabel" style="margin-top:11px">Sample grade &amp; method</p>
   <div class="kv"><span>Mean</span><b id="r-mean">–</b></div>
   <div class="kv"><span>Median</span><b id="r-p50">–</b></div>
   <div class="kv"><span>90th pct</span><b id="r-p90">–</b></div>
@@ -135,8 +149,8 @@
 <div id="tip"></div>
 <div id="hint">drag to orbit · scroll to zoom · right-drag to pan</div>
 
-<script id="model" type="application/json">{"source_id":"news:opus-one-gold","project":"Opus One Gold","jurisdiction":"Qu\u00e9bec","report_url":"https://www.juniorminingnetwork.com/junior-miner-news/press-releases/529-tsx-venture/oor/210264-opus-one-gold-corp-releases-all-drilling-results-on-zone-west-noyell-gold-property-matagami-quebec.html","source":"news","region":"Qu\u00e9bec","updated":"2026-09-03","maturity":"Early \u00b7 traces only","element":"Au","unit":"g/t","generated":"2026-09-08T13:07:56Z","origin":[30839627.66,548835000.0,-30985.12],"extent":[75372.3,26627.1,30985.1],"counts":{"holes":5,"samples":6,"blocks":0},"grade_stats":{"min":50.0,"max":348.0,"mean":136.17,"p50":107.0,"p90":241.0,"top_cut":326.6},"block_stats":{"block_m":15.0,"power":2.0,"radius_m":60.0,"min_samples":2,"top_cut":326.6,"n_blocks":0},"holes":[{"id":"NO-26-09","collar":[75372.34,0.0,30985.12],"toe":[75366.45,168.78,30653.67],"depth":372.0},{"id":"NO-26-16","collar":[55372.34,15000.0,30985.12],"toe":[55370.84,15086.02,30862.25],"depth":150.0},{"id":"NO-26-17","collar":[40372.34,23000.0,30985.12],"toe":[40370.64,23097.17,30802.35],"depth":207.0},{"id":"NO-26-20","collar":[35372.34,5000.0,30985.12],"toe":[35368.03,5123.54,30679.15],"depth":330.0},{"id":"NO-26-22","collar":[372.34,10000.0,30985.12],"toe":[367.7,10132.75,30599.35],"depth":408.0}],"samples":[{"hole":"NO-26-09","from":24042.0,"to":24932.0,"grade":103.0,"xyz":[74984.37,11110.09,9167.04]},{"hole":"NO-26-09","from":26806.0,"to":26925.0,"grade":348.0,"xyz":[74946.69,12189.25,7047.78]},{"hole":"NO-26-16","from":11017.0,"to":12058.0,"grade":50.0,"xyz":[55256.85,21616.63,21534.15]},{"hole":"NO-26-17","from":7529.0,"to":7925.0,"grade":111.0,"xyz":[40309.03,26627.05,24162.58]},{"hole":"NO-26-20","from":27118.0,"to":27947.0,"grade":134.0,"xyz":[35012.4,15307.57,5457.43]},{"hole":"NO-26-22","from":32514.0,"to":33027.0,"grade":71.0,"xyz":[0.0,20662.53,0.0]}],"blocks":[]}</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+<script id="model" type="application/json">{"source_id":"news:opus-one-gold","project":"Opus One Gold","jurisdiction":"Qu\u00e9bec","report_url":"https://www.juniorminingnetwork.com/junior-miner-news/press-releases/529-tsx-venture/oor/210264-opus-one-gold-corp-releases-all-drilling-results-on-zone-west-noyell-gold-property-matagami-quebec.html","source":"news","region":"Qu\u00e9bec","updated":"2026-09-03","sources":[{"kind":"news release","title":"Opus One Gold Releases All Drilling Results on Zone West Noyell Gold Property, Matagami, Qu\u00e9bec - Junior Mining Network","url":"https://www.juniorminingnetwork.com/junior-miner-news/press-releases/529-tsx-venture/oor/210264-opus-one-gold-corp-releases-all-drilling-results-on-zone-west-noyell-gold-property-matagami-quebec.html","date":"2026-09-03"}],"density":2.7,"maturity":"Early \u00b7 traces only","element":"Au","unit":"g/t","generated":"2026-09-08T15:18:22Z","origin":[30839627.66,548835000.0,-30985.12],"extent":[75372.3,26627.1,30985.1],"counts":{"holes":5,"samples":6,"blocks":0},"grade_stats":{"min":50.0,"max":348.0,"mean":136.17,"p50":107.0,"p90":241.0,"top_cut":326.6},"block_stats":{"block_m":15.0,"power":2.0,"radius_m":60.0,"min_samples":2,"top_cut":326.6,"n_blocks":0},"holes":[{"id":"NO-26-09","collar":[75372.34,0.0,30985.12],"toe":[75366.45,168.78,30653.67],"depth":372.0},{"id":"NO-26-16","collar":[55372.34,15000.0,30985.12],"toe":[55370.84,15086.02,30862.25],"depth":150.0},{"id":"NO-26-17","collar":[40372.34,23000.0,30985.12],"toe":[40370.64,23097.17,30802.35],"depth":207.0},{"id":"NO-26-20","collar":[35372.34,5000.0,30985.12],"toe":[35368.03,5123.54,30679.15],"depth":330.0},{"id":"NO-26-22","collar":[372.34,10000.0,30985.12],"toe":[367.7,10132.75,30599.35],"depth":408.0}],"samples":[{"hole":"NO-26-09","from":24042.0,"to":24932.0,"grade":103.0,"xyz":[74984.37,11110.09,9167.04]},{"hole":"NO-26-09","from":26806.0,"to":26925.0,"grade":348.0,"xyz":[74946.69,12189.25,7047.78]},{"hole":"NO-26-16","from":11017.0,"to":12058.0,"grade":50.0,"xyz":[55256.85,21616.63,21534.15]},{"hole":"NO-26-17","from":7529.0,"to":7925.0,"grade":111.0,"xyz":[40309.03,26627.05,24162.58]},{"hole":"NO-26-20","from":27118.0,"to":27947.0,"grade":134.0,"xyz":[35012.4,15307.57,5457.43]},{"hole":"NO-26-22","from":32514.0,"to":33027.0,"grade":71.0,"xyz":[0.0,20662.53,0.0]}],"blocks":[]}</script>
+<script src="three.min.js"></script>
 <script>
 "use strict";
 const M = JSON.parse(document.getElementById("model").textContent);
@@ -240,8 +254,26 @@ function hover(e){mouse.x=(e.clientX/innerWidth)*2-1;mouse.y=-((e.clientY-49)/vh
 $("t-blocks").onchange=e=>blocks.visible=e.target.checked;
 $("t-samples").onchange=e=>samples.visible=e.target.checked;
 $("t-traces").onchange=e=>traces.visible=e.target.checked;
+// data-sources list
+(function(){const list=$("srclist"),srcs=M.sources||[];
+  if(!srcs.length){$("srcgroup").style.display="none";return;}
+  $("src-n").textContent="· "+srcs.length;
+  srcs.slice(0,40).forEach(s=>{const a=document.createElement("a");
+    a.href=(s.url&&s.url.startsWith("http"))?s.url:("https://"+(s.url||""));a.target="_blank";a.rel="noopener";
+    a.innerHTML=`${(s.title||s.kind||"source").replace(/</g,"&lt;")}<span class="sd"> — ${s.kind}${s.date?" · "+s.date:""}</span>`;
+    list.appendChild(a);});})();
+
+// grade × tonnage above cut-off (block volume × density). Indicative only.
+const BV=Math.pow(M.block_stats.block_m,3)*(M.density||2.7);   // tonnes per block
 const cutEl=$("cutoff");
-function updateCut(){const gc=+(cutEl.value/100*CAP).toFixed(2);$("cut").textContent=gc.toFixed(2);applyCutoff(gc);}
+function fmtT(t){return t>=1e6?(t/1e6).toFixed(2)+" Mt":t>=1e3?(t/1e3).toFixed(0)+" kt":Math.round(t)+" t";}
+function updateCut(){const gc=+(cutEl.value/100*CAP).toFixed(2);$("cut").textContent=gc.toFixed(2);
+  applyCutoff(gc);
+  let n=0,sum=0;for(const b of M.blocks){if(b.grade>=gc){n++;sum+=Math.min(b.grade,CAP);}}
+  $("rc-cut").textContent="≥ "+gc.toFixed(2)+" "+M.unit;
+  $("rc-tonnes").textContent=n?fmtT(n*BV):"—";
+  $("rc-grade").textContent=n?(sum/n).toFixed(2)+" "+M.unit:"—";
+  $("rc-blocks").textContent=n.toLocaleString();}
 cutEl.oninput=updateCut;updateCut();
 
 let auto=!matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -214,6 +214,7 @@ def _maturity(n_holes, n_blocks):
 
 def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
            report_url=None, source="report", region=None, updated=None,
+           sources=None, density=2.7,
            block=15.0, radius=60.0, min_samples=3, top_cut=None):
     """Core model builder shared by the 43-101 shard store and the news drill
     bank. Degrades gracefully: a sparse project yields desurveyed traces + assay
@@ -248,6 +249,7 @@ def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
         "project": project or source_id,
         "jurisdiction": jurisdiction, "report_url": report_url,
         "source": source, "region": region, "updated": updated,
+        "sources": sources or [], "density": density,
         "maturity": _maturity(len(holes), len(blocks)),
         "element": element, "unit": (asy["unit"].dropna().iloc[0] if asy["unit"].notna().any() else "g/t"),
         "generated": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
@@ -269,8 +271,9 @@ def build_model(source_id, project=None, element="Au", **kw):
     juris = (col["jurisdiction"].dropna().iloc[0] if not col.empty and col["jurisdiction"].notna().any() else None)
     rpt = (col["url"].dropna().iloc[0] if "url" in col and col["url"].notna().any() else None)
     proj = project or (col["project"].dropna().iloc[0] if not col.empty and col["project"].notna().any() else source_id)
+    srcs = [{"kind": "NI 43-101 technical report", "title": proj, "url": rpt, "date": None}] if rpt else []
     return _build(col, asy, sur, source_id, proj, element, jurisdiction=juris,
-                  report_url=rpt, source="report", region=juris, **kw)
+                  report_url=rpt, source="report", region=juris, sources=srcs, **kw)
 
 
 _VIEWER_TMPL = os.path.join(_HERE, "model3d_viewer.html")
@@ -331,7 +334,7 @@ def _drillbank_groups(min_located=2, min_assays=6):
     try:
         holes = pd.read_sql_query(
             "SELECT h.*, r.company AS r_company, r.country AS r_country, r.published AS r_pub, "
-            "r.url AS r_url FROM holes h JOIN releases r ON h.release_id=r.id", conn)
+            "r.url AS r_url, r.title AS r_title FROM holes h JOIN releases r ON h.release_id=r.id", conn)
         ivs = pd.read_sql_query(
             "SELECT i.*, r.company AS r_company FROM intervals i JOIN releases r ON i.release_id=r.id", conn)
     finally:
@@ -360,19 +363,23 @@ def _drillbank_groups(min_located=2, min_assays=6):
             "is_subinterval": ig["is_subinterval"]})
         region = hg["r_country"].dropna().iloc[0] if hg["r_country"].notna().any() else None
         updated = hg["r_pub"].dropna().max() if hg["r_pub"].notna().any() else None
-        out[pkey] = (col, asy, region, updated)
+        rels = (hg[["r_url", "r_title", "r_pub"]].dropna(subset=["r_url"])
+                .drop_duplicates("r_url").sort_values("r_pub", ascending=False))
+        sources = [{"kind": "news release", "title": (t or u).strip()[:120], "url": u, "date": d}
+                   for u, t, d in zip(rels["r_url"], rels["r_title"].fillna(""), rels["r_pub"])]
+        out[pkey] = (col, asy, region, updated, sources)
     return out
 
 
-def build_drillbank_model(pkey, col, asy, region, updated, **kw):
+def build_drillbank_model(pkey, col, asy, region, updated, sources=None, **kw):
     sid = "news:" + re.sub(r"[^a-z0-9]+", "-", pkey.lower()).strip("-")[:50]
-    rpt = col["url"].dropna().iloc[0] if "url" in col and col["url"].notna().any() else None
+    rpt = sources[0]["url"] if sources else None
     order = list(asy["element"].value_counts().index) or ["Au"]
     last = None
     for el in order[:4]:                       # fall back if dominant element has no located holes
         try:
             return _build(col, asy, None, sid, pkey, el, jurisdiction=region, report_url=rpt,
-                          source="news", region=region, updated=updated, **kw)
+                          source="news", region=region, updated=updated, sources=sources, **kw)
         except ValueError as e:
             last = e
     raise last or ValueError(f"{sid}: no modelable element")
@@ -433,9 +440,9 @@ def build_all(site_dir="site"):
               f"{m['counts']['samples']}s {m['counts']['blocks']}blk")
 
     # (2) news drill bank — every actively-drilled project, densifying over time
-    for pkey, (col, asy, region, updated) in _drillbank_groups().items():
+    for pkey, (col, asy, region, updated, dbsources) in _drillbank_groups().items():
         try:
-            m = build_drillbank_model(pkey, col, asy, region, updated)
+            m = build_drillbank_model(pkey, col, asy, region, updated, sources=dbsources)
             slug = _slug(m["source_id"])
             if slug in seen:
                 continue
