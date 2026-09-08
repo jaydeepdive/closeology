@@ -11,3 +11,4 @@ tabulate
 pdfplumber
 camelot-py
 opencv-python-headless
+curl_cffi
