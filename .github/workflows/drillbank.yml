@@ -1,10 +1,14 @@
 name: closeology-drillbank
 
 # Best-effort requests-based crawl of the mining newswires into the drill bank.
-# NOTE: the wires rate-limit datacenter IPs (GitHub runners included), so this
-# yields little on its own — the reliable collector is the scheduled WebFetch
-# task (unthrottled). Kept as a manual/backfill supplement only (no cron).
+# Collects via newsfile's per-industry RSS feeds + sequential release-id walk.
+# The RSS feeds (feeds.newsfilecorp.com) and bare /release/<id> pages ARE
+# datacenter-reachable, so this runs reliably on GitHub runners with no
+# dependence on Jordan's Mac. Scheduled a few times daily (incremental) plus
+# on-demand backfill.
 on:
+  schedule:
+    - cron: "35 5,11,17,23 * * *"   # 4x/day incremental catch-up (UTC)
   workflow_dispatch:
     inputs:
       mode:

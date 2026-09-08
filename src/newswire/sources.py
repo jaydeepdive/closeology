@@ -86,11 +86,16 @@ def _nfc_from_html(html):
 
 
 def nfc_incremental(session):
+    # RSS first — the datacenter-reachable feed with real dates — then the
+    # category HTML pages as a supplement (they add nothing the feeds miss when
+    # the feeds are up, but cost little and cover a stale feed).
     rel = {}
+    for r in nfc_rss(session):
+        rel[r["id"]] = r
     for cat in NFC_CATS:
         html = _get(session, f"{NFC}/news/{cat}")
         for r in _nfc_from_html(html):
-            rel[r["id"]] = r
+            rel.setdefault(r["id"], r)
         time.sleep(0.4)
     return list(rel.values())
 
@@ -101,6 +106,82 @@ def nfc_sitemap(session):
     rows = _nfc_from_html(html)
     # keep only plausibly-mining slugs to avoid fetching every industry
     return [r for r in rows if DRILL_KW.search(r["url"])]
+
+
+# ------------------------------------------------------- newsfile RSS feeds
+# The per-industry RSS feeds are lightweight XML and — unlike the JS listing
+# pages and Cloudflare-fronted JMN — ARE reachable from datacenter IPs (GitHub
+# runners included). So this is the reliable, Mac-independent path to fresh
+# releases and the one that fixes the daily intake. Each feed is a rolling
+# ~10-item window carrying real <pubDate>s; run often it never misses a release.
+# Release ids are sequential integers (…/release/<id>/<slug>) and a bare
+# /release/<id> URL resolves to the full release, so the id space also gives a
+# deterministic backfill walk (nfc_idwalk) with no listing to scrape.
+NFC_FEED = "https://feeds.newsfilecorp.com/industry"
+NFC_FEEDS = ["mining-metals", "precious-metals", "non-ferrous-metals",
+             "energy-metals", "rare-earths", "diamonds", "energy"]
+_RSS_ITEM = re.compile(r"<item\b[^>]*>(.*?)</item>", re.S | re.I)
+_RSS_MONTH = {m: i + 1 for i, m in enumerate(
+    ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])}
+_RSS_DATE = re.compile(r"(\d{1,2})\s+([A-Z][a-z]{2})[a-z]*\s+(20\d\d)")
+
+
+def _rss_field(block, name):
+    m = re.search(r"<%s\b[^>]*>(.*?)</%s>" % (name, name), block, re.S | re.I)
+    if not m:
+        return None
+    v = re.sub(r"^\s*<!\[CDATA\[(.*?)\]\]>\s*$", r"\1", m.group(1).strip(), flags=re.S).strip()
+    return _html.unescape(v)
+
+
+def _rss_date(s):
+    m = _RSS_DATE.search(s or "")
+    if m:
+        return f"{m.group(3)}-{_RSS_MONTH[m.group(2)]:02d}-{int(m.group(1)):02d}"
+    return None
+
+
+def _nfc_from_rss(xml):
+    out = []
+    for block in _RSS_ITEM.findall(xml or ""):
+        link = _rss_field(block, "link") or ""
+        m = re.search(r"/release/(\d+)/([A-Za-z0-9\-\.]+)", link)
+        if not m:
+            continue
+        out.append({"source": "newsfilecorp", "id": m.group(1),
+                    "url": f"{NFC}/release/{m.group(1)}/{m.group(2)}",
+                    "title": _rss_field(block, "title"),
+                    "published": _rss_date(_rss_field(block, "pubDate")), "company": None})
+    return out
+
+
+def nfc_rss(session):
+    rel = {}
+    for slug in NFC_FEEDS:
+        xml = _get(session, f"{NFC_FEED}/{slug}")
+        for r in _nfc_from_rss(xml):
+            rel[r["id"]] = r
+        time.sleep(0.3)
+    return list(rel.values())
+
+
+def nfc_idwalk(session, span=1500):
+    """Deterministic backfill: walk the sequential release-id space downward from
+    the newest id seen across the RSS feeds. The orchestrator skips ids already
+    banked, so successive runs march steadily back through history. `span` caps
+    one run; the global crawl deadline still applies during fetching."""
+    newest = None
+    for r in nfc_rss(session):
+        try:
+            newest = max(newest or 0, int(r["id"]))
+        except Exception:
+            pass
+    if not newest:
+        return []
+    return [{"source": "newsfilecorp", "id": str(rid),
+             "url": f"{NFC}/release/{rid}", "title": None,
+             "published": None, "company": None}
+            for rid in range(newest, max(1, newest - span), -1)]
 
 
 # ------------------------------------------------------------------ thenewswire
@@ -178,13 +259,24 @@ def _empty(_session):
     return []
 
 
+def _nfc_backfill(session):
+    """Sitemap pool (recent ~5000 mining slugs) first, then the sequential id
+    walk to reach back beyond what any listing exposes."""
+    rel = {}
+    for r in nfc_sitemap(session):
+        rel[r["id"]] = r
+    for r in nfc_idwalk(session):
+        rel.setdefault(r["id"], r)
+    return list(rel.values())
+
+
 # Registered adapters. incremental runs daily; backfill seeds history where
 # available. Others are wired so they activate the moment a working listing/feed
 # (or the planned LLM-assisted fetch) is dropped in — no orchestrator change.
 ADAPTERS = {
     # JMN first: un-throttled on a residential IP and covers all wires at once.
     "juniorminingnetwork": {"incremental": jmn_incremental, "backfill": _empty},
-    "newsfilecorp": {"incremental": nfc_incremental, "backfill": nfc_sitemap},
+    "newsfilecorp": {"incremental": nfc_incremental, "backfill": _nfc_backfill},
     "thenewswire": {"incremental": tnw_incremental, "backfill": _empty},
     "cision": {"incremental": _empty, "backfill": _empty},        # newswire.ca
     "globenewswire": {"incremental": _empty, "backfill": _empty},
