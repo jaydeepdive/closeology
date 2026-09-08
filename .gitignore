@@ -15,6 +15,7 @@ data/keep/mmp.sqlite
 # large generated site assets — rebuilt in CI + published via the Pages artifact.
 # Keep only the lightweight core pages (priority + hub) tracked for reference.
 site/*.html
+!site/models.html
 !site/index.html
 !site/priorities.html
 !site/regions.html

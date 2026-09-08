@@ -1,0 +1,253 @@
+<title>Mithril Silver and Gold Limited (000106212)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700;800&family=Roboto:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --red:#D71920; --ink:#111418; --mut:#636363; --line:#e6e8eb; --panel:#f5f7fa;
+    --bg:#eef1f6; --card:#ffffff; --chip:#fdecec;
+    --serif:'Bitter',Georgia,serif; --sans:'Roboto',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden}
+  canvas{display:block;position:fixed;inset:0;top:49px}
+  #scene{position:fixed;inset:0;top:49px;z-index:0}
+  /* top brand strip — matches the Closeology site nav */
+  #bar{position:fixed;top:0;left:0;right:0;height:49px;z-index:20;background:#fff;
+    border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;
+    padding:0 18px;gap:16px}
+  #bar .brand{display:flex;flex-direction:column;line-height:1.1;text-decoration:none}
+  #bar .brand .b1{font-family:var(--serif);font-weight:800;font-size:15px;color:var(--ink)}
+  #bar .brand .b1 em{color:var(--red);font-style:normal}
+  #bar .brand .b2{font-family:var(--serif);font-weight:700;font-size:9.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--mut)}
+  #bar a.back{font-size:13px;font-weight:500;color:var(--red);text-decoration:none}
+  #bar a.back:hover{text-decoration:underline}
+  .panel{position:fixed;z-index:10;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;box-shadow:0 6px 22px rgba(17,20,24,.10)}
+  #hud{top:65px;left:16px;width:300px;max-width:calc(100vw - 32px);padding:16px 16px 14px}
+  h1{font-family:var(--serif);font-size:20px;line-height:1.15;margin:0 0 3px;font-weight:700;text-wrap:balance}
+  .rule{height:3px;width:44px;background:var(--red);border-radius:2px;margin:0 0 10px}
+  .sub{font-size:12.5px;color:var(--mut);margin:0 0 14px}
+  .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 15px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 9px}
+  .stat b{display:block;font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink);
+    font-variant-numeric:tabular-nums;line-height:1.1}
+  .stat span{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--mut)}
+  .group{border-top:1px solid var(--line);padding-top:12px;margin-top:2px}
+  .glabel{font-family:var(--serif);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--mut);margin:0 0 9px}
+  .toggle{display:flex;align-items:center;gap:9px;padding:5px 0;cursor:pointer;user-select:none;font-size:13.5px}
+  .toggle input{appearance:none;-webkit-appearance:none;width:34px;height:18px;border-radius:10px;background:#cfd6e0;
+    position:relative;cursor:pointer;transition:background .15s;flex:none;outline:none}
+  .toggle input:checked{background:var(--red)}
+  .toggle input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .toggle input:checked::after{transform:translateX(16px)}
+  .toggle .sw{width:11px;height:11px;border-radius:3px;flex:none;border:1px solid rgba(0,0,0,.08)}
+  .slider{margin-top:12px}
+  .slider .row{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;margin-bottom:6px}
+  .slider .val{font-weight:700;color:var(--red);font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:5px;border-radius:3px;
+    background:linear-gradient(90deg,#23408f,#1f9e89,#4e9a3d,#e8a020,#e0620d,#c1121f);outline:none;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;
+    background:#fff;border:2px solid var(--red);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+  input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:#fff;
+    border:2px solid var(--red);cursor:pointer}
+  #legend{bottom:16px;left:16px;padding:12px 14px;width:228px}
+  .lgttl{font-family:var(--serif);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--mut);margin:0 0 8px;display:flex;justify-content:space-between}
+  .ramp{height:12px;border-radius:6px;background:linear-gradient(90deg,#23408f,#1f9e89,#4e9a3d,#e8a020,#e0620d,#c1121f)}
+  .ticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--mut);margin-top:5px;
+    font-variant-numeric:tabular-nums}
+  #readout{bottom:16px;right:16px;padding:12px 14px;width:206px;font-size:12.5px}
+  #readout .glabel{margin-bottom:8px}
+  .kv{display:flex;justify-content:space-between;padding:3px 0;color:var(--mut)}
+  .kv b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+  #tip{position:fixed;z-index:30;pointer-events:none;background:#fff;border:1px solid var(--line);
+    border-radius:8px;padding:8px 10px;font-size:12px;color:var(--ink);display:none;
+    box-shadow:0 8px 24px rgba(17,20,24,.16);line-height:1.5;font-variant-numeric:tabular-nums}
+  #tip .g{color:var(--red);font-weight:700}
+  #hint{position:fixed;z-index:10;bottom:14px;left:50%;transform:translateX(-50%);font-size:11.5px;
+    color:var(--mut);background:rgba(255,255,255,.82);padding:5px 13px;border-radius:20px;
+    border:1px solid var(--line);transition:opacity .6s}
+  .btn{margin-top:12px;width:100%;padding:8px;border:1px solid var(--line);background:var(--panel);
+    color:var(--ink);font-size:12px;font-weight:500;letter-spacing:.02em;border-radius:8px;cursor:pointer;transition:.15s}
+  .btn:hover{background:var(--chip);border-color:var(--red);color:var(--red)}
+  .btn:focus-visible,.toggle input:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+  a.src{color:var(--mut);font-size:11px;text-decoration:none}
+  a.src:hover{color:var(--red);text-decoration:underline}
+  @media (max-width:640px){#readout{display:none}#hud{width:calc(100vw - 32px)}}
+</style>
+
+<div id="bar">
+  <a class="brand" href="../models.html">
+    <span class="b1">thedeepdive<em>.ca</em></span>
+    <span class="b2">Project Closeology · MineModelingPro</span>
+  </a>
+  <a class="back" href="../models.html">← All 3D models</a>
+</div>
+
+<div id="scene"></div>
+
+<div id="hud" class="panel">
+  <h1 id="title">Mithril Silver and Gold Limited (000106212)</h1>
+  <div class="rule"></div>
+  <p class="sub" id="subtitle">Au grade shell · IDW block model</p>
+  <div class="meta">
+    <div class="stat"><b id="m-holes">–</b><span>Holes</span></div>
+    <div class="stat"><b id="m-samples">–</b><span>Assays</span></div>
+    <div class="stat"><b id="m-blocks">–</b><span>Blocks</span></div>
+  </div>
+  <div class="group">
+    <p class="glabel">Layers</p>
+    <label class="toggle"><input type="checkbox" id="t-blocks" checked><span class="sw" style="background:#e8a020"></span>Grade block model</label>
+    <label class="toggle"><input type="checkbox" id="t-samples" checked><span class="sw" style="background:#c1121f"></span>Assay samples</label>
+    <label class="toggle"><input type="checkbox" id="t-traces" checked><span class="sw" style="background:#6b7280"></span>Drill traces</label>
+    <div class="slider">
+      <div class="row"><span>Grade cut-off</span><span class="val"><span id="cut">0.30</span> <span id="cutunit">g/t</span></span></div>
+      <input type="range" id="cutoff" min="0" max="100" value="6" step="1">
+    </div>
+    <button class="btn" id="reset">Reset view</button>
+  </div>
+</div>
+
+<div id="legend" class="panel">
+  <p class="lgttl"><span id="leg-el">Au</span> grade<span id="leg-unit">g/t</span></p>
+  <div class="ramp"></div>
+  <div class="ticks" id="ticks"></div>
+</div>
+
+<div id="readout" class="panel">
+  <p class="glabel">Grade &amp; method</p>
+  <div class="kv"><span>Mean</span><b id="r-mean">–</b></div>
+  <div class="kv"><span>Median</span><b id="r-p50">–</b></div>
+  <div class="kv"><span>90th pct</span><b id="r-p90">–</b></div>
+  <div class="kv"><span>Max</span><b id="r-max">–</b></div>
+  <div class="kv"><span>Top-cut</span><b id="r-cut">–</b></div>
+  <div class="kv" style="border-top:1px solid var(--line);margin-top:6px;padding-top:8px"><span>Estimator</span><b id="r-method">IDW²</b></div>
+  <div class="kv"><span>Block</span><b id="r-block">–</b></div>
+  <a class="src" id="src" href="#" target="_blank" rel="noopener">source report ↗</a>
+</div>
+
+<div id="tip"></div>
+<div id="hint">drag to orbit · scroll to zoom · right-drag to pan</div>
+
+<script id="model" type="application/json">{"source_id":"sedar:mithril-silver-and-gold-limited-000106212_20260817T1600","project":"Mithril Silver and Gold Limited (000106212)","jurisdiction":"British Columbia","report_url":"https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W5333&drmKey=d656e51b89dfdd96&drr=ss40e9ed37977c95ea03402694291d29a9d67c0307639ec45c4e22e0ad04ed6ebaf2e0ad5e228201bf9ade013c66adaa6fux&id=0c11f8b7998bcd966bb1a3c009a3babe51424ddfabeb873d","element":"Au","unit":"g/t","generated":"2026-09-08T12:55:23Z","origin":[287897.9,2822507.1,93.53],"extent":[6708.0,2301.9,1702.1],"counts":{"holes":14,"samples":17,"blocks":505},"grade_stats":{"min":0.22,"max":109.5,"mean":13.67,"p50":3.21,"p90":34.74,"top_cut":90.1},"block_stats":{"block_m":15.0,"power":2.0,"radius_m":60.0,"min_samples":3,"top_cut":90.1,"n_blocks":505},"holes":[{"id":"AP25-003","collar":[41.7,97.77,577.21],"toe":[41.7,97.77,577.21],"depth":0.0},{"id":"MTH-RE25-24","collar":[1314.23,1439.91,589.5],"toe":[1314.23,1439.91,589.5],"depth":0.0},{"id":"MTH-LR25-33","collar":[2926.42,1404.53,819.63],"toe":[2926.42,1404.53,819.63],"depth":0.0},{"id":"MTH-LS25-36","collar":[1885.58,1562.96,852.53],"toe":[1885.58,1562.96,852.53],"depth":0.0},{"id":"CDH-150","collar":[1294.33,1261.91,896.48],"toe":[1294.33,1261.91,896.48],"depth":0.0},{"id":"MTH-RE25-44","collar":[722.09,1295.5,827.58],"toe":[722.09,1295.5,827.58],"depth":0.0},{"id":"T2DH25-006","collar":[4724.51,15.04,1604.99],"toe":[4724.51,15.04,1604.99],"depth":0.0},{"id":"AP25-004","collar":[15.04,98.33,629.53],"toe":[15.04,98.33,629.53],"depth":0.0},{"id":"CDH-152","collar":[2324.29,667.73,767.79],"toe":[2324.29,667.73,767.79],"depth":0.0},{"id":"Santa Cruz vein","collar":[6708.03,2201.59,1702.08],"toe":[6708.03,2201.59,1702.08],"depth":0.0},{"id":"Jabali vein","collar":[4612.05,2301.93,1358.69],"toe":[4612.05,2301.93,1358.69],"depth":0.0},{"id":"Guadalupe","collar":[5172.3,1836.76,1468.41],"toe":[5172.3,1836.76,1468.41],"depth":0.0},{"id":"Constancia","collar":[4821.49,1786.85,1344.71],"toe":[4821.49,1786.85,1344.71],"depth":0.0},{"id":"Maizon vein","collar":[4724.54,1288.23,1117.53],"toe":[4724.54,1288.23,1117.53],"depth":0.0}],"samples":[{"hole":"CDH-150","from":328.1,"to":330.0,"grade":1.1,"xyz":[1294.33,1261.91,567.43]},{"hole":"CDH-150","from":332.0,"to":333.0,"grade":0.92,"xyz":[1294.33,1261.91,563.98]},{"hole":"MTH-LS25-36","from":103.3,"to":103.8,"grade":3.21,"xyz":[1885.58,1562.96,748.99]},{"hole":"MTH-LS25-36","from":169.7,"to":173.0,"grade":8.63,"xyz":[1885.58,1562.96,681.19]},{"hole":"MTH-LS25-36","from":169.7,"to":170.2,"grade":48.85,"xyz":[1885.58,1562.96,682.59]},{"hole":"MTH-RE25-24","from":589.0,"to":590.0,"grade":0.22,"xyz":[1314.23,1439.91,0.0]},{"hole":"MTH-RE25-44","from":260.9,"to":268.1,"grade":2.78,"xyz":[722.09,1295.5,563.08]},{"hole":"MTH-RE25-44","from":266.05,"to":268.1,"grade":7.41,"xyz":[722.09,1295.5,560.5]},{"hole":"MTH-RE25-44","from":272.35,"to":275.15,"grade":3.97,"xyz":[722.09,1295.5,553.83]},{"hole":"T2DH25-006","from":44.5,"to":56.0,"grade":8.61,"xyz":[4724.51,15.04,1554.75]},{"hole":"T2DH25-006","from":46.65,"to":50.5,"grade":25.33,"xyz":[4724.51,15.04,1556.42]},{"hole":"T2DH25-006","from":46.65,"to":47.5,"grade":109.5,"xyz":[4724.51,15.04,1557.92]},{"hole":"AP25-003","from":34.5,"to":35.0,"grade":0.39,"xyz":[41.7,97.77,542.46]},{"hole":"AP25-003","from":93.6,"to":96.35,"grade":2.28,"xyz":[41.7,97.77,482.24]},{"hole":"AP25-003","from":94.7,"to":95.7,"grade":5.8,"xyz":[41.7,97.77,482.01]},{"hole":"AP25-003","from":214.0,"to":215.3,"grade":2.89,"xyz":[41.7,97.77,362.56]},{"hole":"AP25-004","from":89.2,"to":90.65,"grade":0.57,"xyz":[15.04,98.33,539.61]}],"blocks":[{"xyz":[0.0,75.0,494.97],"grade":2.981,"n":3},{"xyz":[0.0,75.0,509.97],"grade":1.992,"n":4},{"xyz":[0.0,90.0,494.97],"grade":2.996,"n":3},{"xyz":[0.0,90.0,509.97],"grade":1.897,"n":4},{"xyz":[0.0,105.0,494.97],"grade":2.991,"n":3},{"xyz":[0.0,105.0,509.97],"grade":1.887,"n":4},{"xyz":[0.0,120.0,494.97],"grade":2.968,"n":3},{"xyz":[0.0,120.0,509.97],"grade":1.972,"n":4},{"xyz":[0.0,135.0,494.97],"grade":2.943,"n":3},{"xyz":[15.0,60.0,494.97],"grade":3.172,"n":3},{"xyz":[15.0,60.0,509.97],"grade":2.199,"n":4},{"xyz":[15.0,75.0,494.97],"grade":2.895,"n":4},{"xyz":[15.0,75.0,509.97],"grade":2.148,"n":4},{"xyz":[15.0,75.0,524.97],"grade":1.385,"n":4},{"xyz":[15.0,90.0,494.97],"grade":3.056,"n":4},{"xyz":[15.0,90.0,509.97],"grade":2.08,"n":4},{"xyz":[15.0,90.0,524.97],"grade":1.045,"n":4},{"xyz":[15.0,105.0,479.97],"grade":3.706,"n":3},{"xyz":[15.0,105.0,494.97],"grade":3.056,"n":4},{"xyz":[15.0,105.0,509.97],"grade":2.069,"n":4},{"xyz":[15.0,105.0,524.97],"grade":1.018,"n":4},{"xyz":[15.0,120.0,494.97],"grade":2.892,"n":4},{"xyz":[15.0,120.0,509.97],"grade":2.127,"n":4},{"xyz":[15.0,120.0,524.97],"grade":1.346,"n":4},{"xyz":[15.0,135.0,494.97],"grade":3.159,"n":3},{"xyz":[15.0,135.0,509.97],"grade":2.179,"n":4},{"xyz":[30.0,60.0,509.97],"grade":2.35,"n":4},{"xyz":[30.0,60.0,524.97],"grade":1.748,"n":4},{"xyz":[30.0,75.0,494.97],"grade":3.237,"n":4},{"xyz":[30.0,75.0,509.97],"grade":2.397,"n":4},{"xyz":[30.0,75.0,524.97],"grade":1.474,"n":4},{"xyz":[30.0,90.0,494.97],"grade":3.556,"n":4},{"xyz":[30.0,90.0,509.97],"grade":2.448,"n":4},{"xyz":[30.0,90.0,524.97],"grade":1.185,"n":4},{"xyz":[30.0,90.0,539.97],"grade":0.689,"n":4},{"xyz":[30.0,105.0,494.97],"grade":3.561,"n":4},{"xyz":[30.0,105.0,509.97],"grade":2.443,"n":4},{"xyz":[30.0,105.0,524.97],"grade":1.171,"n":4},{"xyz":[30.0,105.0,539.97],"grade":0.68,"n":4},{"xyz":[30.0,120.0,494.97],"grade":3.242,"n":4},{"xyz":[30.0,120.0,509.97],"grade":2.385,"n":4},{"xyz":[30.0,120.0,524.97],"grade":1.448,"n":4},{"xyz":[30.0,135.0,494.97],"grade":3.372,"n":3},{"xyz":[30.0,135.0,509.97],"grade":2.336,"n":4},{"xyz":[30.0,135.0,524.97],"grade":1.724,"n":4},{"xyz":[45.0,60.0,509.97],"grade":2.466,"n":4},{"xyz":[45.0,60.0,524.97],"grade":1.85,"n":4},{"xyz":[45.0,75.0,494.97],"grade":3.377,"n":4},{"xyz":[45.0,75.0,509.97],"grade":2.57,"n":4},{"xyz":[45.0,75.0,524.97],"grade":1.593,"n":4},{"xyz":[45.0,90.0,494.97],"grade":3.723,"n":4},{"xyz":[45.0,90.0,509.97],"grade":2.68,"n":4},{"xyz":[45.0,90.0,524.97],"grade":1.261,"n":4},{"xyz":[45.0,90.0,539.97],"grade":0.548,"n":4},{"xyz":[45.0,105.0,494.97],"grade":3.729,"n":4},{"xyz":[45.0,105.0,509.97],"grade":2.679,"n":4},{"xyz":[45.0,105.0,524.97],"grade":1.252,"n":4},{"xyz":[45.0,105.0,539.97],"grade":0.536,"n":4},{"xyz":[45.0,120.0,494.97],"grade":3.385,"n":4},{"xyz":[45.0,120.0,509.97],"grade":2.566,"n":4},{"xyz":[45.0,120.0,524.97],"grade":1.576,"n":4},{"xyz":[45.0,135.0,509.97],"grade":2.459,"n":4},{"xyz":[45.0,135.0,524.97],"grade":1.833,"n":4},{"xyz":[60.0,60.0,509.97],"grade":2.903,"n":3},{"xyz":[60.0,75.0,494.97],"grade":3.522,"n":3},{"xyz":[60.0,75.0,509.97],"grade":2.605,"n":4},{"xyz":[60.0,75.0,524.97],"grade":1.8,"n":4},{"xyz":[60.0,90.0,494.97],"grade":3.682,"n":3},{"xyz":[60.0,90.0,509.97],"grade":2.685,"n":4},{"xyz":[60.0,90.0,524.97],"grade":1.602,"n":4},{"xyz":[60.0,105.0,494.97],"grade":3.685,"n":3},{"xyz":[60.0,105.0,509.97],"grade":2.685,"n":4},{"xyz":[60.0,105.0,524.97],"grade":1.596,"n":4},{"xyz":[60.0,120.0,494.97],"grade":3.527,"n":3},{"xyz":[60.0,120.0,509.97],"grade":2.604,"n":4},{"xyz":[60.0,120.0,524.97],"grade":1.79,"n":4},{"xyz":[60.0,135.0,509.97],"grade":2.904,"n":3},{"xyz":[60.0,135.0,524.97],"grade":1.963,"n":4},{"xyz":[75.0,60.0,509.97],"grade":2.885,"n":3},{"xyz":[75.0,75.0,509.97],"grade":2.907,"n":3},{"xyz":[75.0,75.0,524.97],"grade":2.312,"n":3},{"xyz":[75.0,90.0,494.97],"grade":3.441,"n":3},{"xyz":[75.0,90.0,509.97],"grade":2.925,"n":3},{"xyz":[75.0,90.0,524.97],"grade":2.195,"n":3},{"xyz":[75.0,105.0,494.97],"grade":3.442,"n":3},{"xyz":[75.0,105.0,509.97],"grade":2.925,"n":3},{"xyz":[75.0,105.0,524.97],"grade":2.193,"n":3},{"xyz":[75.0,120.0,509.97],"grade":2.908,"n":3},{"xyz":[75.0,120.0,524.97],"grade":2.308,"n":3},{"xyz":[75.0,135.0,509.97],"grade":2.886,"n":3},{"xyz":[90.0,90.0,509.97],"grade":2.888,"n":3},{"xyz":[90.0,105.0,509.97],"grade":2.888,"n":3},{"xyz":[675.0,1260.0,554.97],"grade":4.724,"n":3},{"xyz":[675.0,1275.0,539.97],"grade":4.723,"n":3},{"xyz":[675.0,1275.0,554.97],"grade":4.726,"n":3},{"xyz":[675.0,1275.0,569.97],"grade":4.725,"n":3},{"xyz":[675.0,1290.0,539.97],"grade":4.723,"n":3},{"xyz":[675.0,1290.0,554.97],"grade":4.727,"n":3},{"xyz":[675.0,1290.0,569.97],"grade":4.725,"n":3},{"xyz":[675.0,1290.0,584.97],"grade":4.721,"n":3},{"xyz":[675.0,1305.0,539.97],"grade":4.723,"n":3},{"xyz":[675.0,1305.0,554.97],"grade":4.726,"n":3},{"xyz":[675.0,1305.0,569.97],"grade":4.725,"n":3},{"xyz":[675.0,1305.0,584.97],"grade":4.721,"n":3},{"xyz":[675.0,1320.0,539.97],"grade":4.723,"n":3},{"xyz":[675.0,1320.0,554.97],"grade":4.725,"n":3},{"xyz":[675.0,1320.0,569.97],"grade":4.724,"n":3},{"xyz":[690.0,1260.0,539.97],"grade":4.723,"n":3},{"xyz":[690.0,1260.0,554.97],"grade":4.726,"n":3},{"xyz":[690.0,1260.0,569.97],"grade":4.725,"n":3},{"xyz":[690.0,1260.0,584.97],"grade":4.721,"n":3},{"xyz":[690.0,1275.0,524.97],"grade":4.715,"n":3},{"xyz":[690.0,1275.0,539.97],"grade":4.722,"n":3},{"xyz":[690.0,1275.0,554.97],"grade":4.73,"n":3},{"xyz":[690.0,1275.0,569.97],"grade":4.727,"n":3},{"xyz":[690.0,1275.0,584.97],"grade":4.718,"n":3},{"xyz":[690.0,1275.0,599.97],"grade":4.714,"n":3},{"xyz":[690.0,1290.0,524.97],"grade":4.712,"n":3},{"xyz":[690.0,1290.0,539.97],"grade":4.72,"n":3},{"xyz":[690.0,1290.0,554.97],"grade":4.733,"n":3},{"xyz":[690.0,1290.0,569.97],"grade":4.728,"n":3},{"xyz":[690.0,1290.0,584.97],"grade":4.715,"n":3},{"xyz":[690.0,1290.0,599.97],"grade":4.712,"n":3},{"xyz":[690.0,1305.0,524.97],"grade":4.713,"n":3},{"xyz":[690.0,1305.0,539.97],"grade":4.72,"n":3},{"xyz":[690.0,1305.0,554.97],"grade":4.733,"n":3},{"xyz":[690.0,1305.0,569.97],"grade":4.728,"n":3},{"xyz":[690.0,1305.0,584.97],"grade":4.716,"n":3},{"xyz":[690.0,1305.0,599.97],"grade":4.712,"n":3},{"xyz":[690.0,1320.0,524.97],"grade":4.716,"n":3},{"xyz":[690.0,1320.0,539.97],"grade":4.722,"n":3},{"xyz":[690.0,1320.0,554.97],"grade":4.729,"n":3},{"xyz":[690.0,1320.0,569.97],"grade":4.726,"n":3},{"xyz":[690.0,1320.0,584.97],"grade":4.719,"n":3},{"xyz":[690.0,1335.0,539.97],"grade":4.723,"n":3},{"xyz":[690.0,1335.0,554.97],"grade":4.726,"n":3},{"xyz":[690.0,1335.0,569.97],"grade":4.725,"n":3},{"xyz":[690.0,1335.0,584.97],"grade":4.721,"n":3},{"xyz":[705.0,1245.0,539.97],"grade":4.723,"n":3},{"xyz":[705.0,1245.0,554.97],"grade":4.725,"n":3},{"xyz":[705.0,1245.0,569.97],"grade":4.724,"n":3},{"xyz":[705.0,1260.0,524.97],"grade":4.716,"n":3},{"xyz":[705.0,1260.0,539.97],"grade":4.722,"n":3},{"xyz":[705.0,1260.0,554.97],"grade":4.729,"n":3},{"xyz":[705.0,1260.0,569.97],"grade":4.727,"n":3},{"xyz":[705.0,1260.0,584.97],"grade":4.719,"n":3},{"xyz":[705.0,1275.0,509.97],"grade":4.71,"n":3},{"xyz":[705.0,1275.0,524.97],"grade":4.708,"n":3},{"xyz":[705.0,1275.0,539.97],"grade":4.715,"n":3},{"xyz":[705.0,1275.0,554.97],"grade":4.739,"n":3},{"xyz":[705.0,1275.0,569.97],"grade":4.728,"n":3},{"xyz":[705.0,1275.0,584.97],"grade":4.71,"n":3},{"xyz":[705.0,1275.0,599.97],"grade":4.709,"n":3},{"xyz":[705.0,1290.0,509.97],"grade":4.706,"n":3},{"xyz":[705.0,1290.0,524.97],"grade":4.698,"n":3},{"xyz":[705.0,1290.0,539.97],"grade":4.696,"n":3},{"xyz":[705.0,1290.0,554.97],"grade":4.756,"n":3},{"xyz":[705.0,1290.0,569.97],"grade":4.719,"n":3},{"xyz":[705.0,1290.0,584.97],"grade":4.694,"n":3},{"xyz":[705.0,1290.0,599.97],"grade":4.702,"n":3},{"xyz":[705.0,1305.0,509.97],"grade":4.706,"n":3},{"xyz":[705.0,1305.0,524.97],"grade":4.7,"n":3},{"xyz":[705.0,1305.0,539.97],"grade":4.701,"n":3},{"xyz":[705.0,1305.0,554.97],"grade":4.752,"n":3},{"xyz":[705.0,1305.0,569.97],"grade":4.723,"n":3},{"xyz":[705.0,1305.0,584.97],"grade":4.698,"n":3},{"xyz":[705.0,1305.0,599.97],"grade":4.703,"n":3},{"xyz":[705.0,1320.0,524.97],"grade":4.711,"n":3},{"xyz":[705.0,1320.0,539.97],"grade":4.718,"n":3},{"xyz":[705.0,1320.0,554.97],"grade":4.736,"n":3},{"xyz":[705.0,1320.0,569.97],"grade":4.728,"n":3},{"xyz":[705.0,1320.0,584.97],"grade":4.713,"n":3},{"xyz":[705.0,1320.0,599.97],"grade":4.711,"n":3},{"xyz":[705.0,1335.0,524.97],"grade":4.717,"n":3},{"xyz":[705.0,1335.0,539.97],"grade":4.722,"n":3},{"xyz":[705.0,1335.0,554.97],"grade":4.728,"n":3},{"xyz":[705.0,1335.0,569.97],"grade":4.726,"n":3},{"xyz":[705.0,1335.0,584.97],"grade":4.72,"n":3},{"xyz":[705.0,1350.0,554.97],"grade":4.725,"n":3},{"xyz":[705.0,1350.0,569.97],"grade":4.724,"n":3},{"xyz":[720.0,1245.0,539.97],"grade":4.723,"n":3},{"xyz":[720.0,1245.0,554.97],"grade":4.726,"n":3},{"xyz":[720.0,1245.0,569.97],"grade":4.725,"n":3},{"xyz":[720.0,1245.0,584.97],"grade":4.721,"n":3},{"xyz":[720.0,1260.0,524.97],"grade":4.714,"n":3},{"xyz":[720.0,1260.0,539.97],"grade":4.721,"n":3},{"xyz":[720.0,1260.0,554.97],"grade":4.731,"n":3},{"xyz":[720.0,1260.0,569.97],"grade":4.727,"n":3},{"xyz":[720.0,1260.0,584.97],"grade":4.717,"n":3},{"xyz":[720.0,1260.0,599.97],"grade":4.713,"n":3},{"xyz":[720.0,1275.0,509.97],"grade":4.707,"n":3},{"xyz":[720.0,1275.0,524.97],"grade":4.701,"n":3},{"xyz":[720.0,1275.0,539.97],"grade":4.704,"n":3},{"xyz":[720.0,1275.0,554.97],"grade":4.749,"n":3},{"xyz":[720.0,1275.0,569.97],"grade":4.725,"n":3},{"xyz":[720.0,1275.0,584.97],"grade":4.7,"n":3},{"xyz":[720.0,1275.0,599.97],"grade":4.704,"n":3},{"xyz":[720.0,1290.0,509.97],"grade":4.701,"n":3},{"xyz":[720.0,1290.0,524.97],"grade":4.683,"n":3},{"xyz":[720.0,1290.0,539.97],"grade":4.621,"n":3},{"xyz":[720.0,1290.0,554.97],"grade":4.74,"n":3},{"xyz":[720.0,1290.0,569.97],"grade":4.527,"n":3},{"xyz":[720.0,1290.0,584.97],"grade":4.659,"n":3},{"xyz":[720.0,1290.0,599.97],"grade":4.694,"n":3},{"xyz":[720.0,1305.0,509.97],"grade":4.702,"n":3},{"xyz":[720.0,1305.0,524.97],"grade":4.687,"n":3},{"xyz":[720.0,1305.0,539.97],"grade":4.65,"n":3},{"xyz":[720.0,1305.0,554.97],"grade":4.784,"n":3},{"xyz":[720.0,1305.0,569.97],"grade":4.644,"n":3},{"xyz":[720.0,1305.0,584.97],"grade":4.671,"n":3},{"xyz":[720.0,1305.0,599.97],"grade":4.696,"n":3},{"xyz":[720.0,1320.0,509.97],"grade":4.709,"n":3},{"xyz":[720.0,1320.0,524.97],"grade":4.706,"n":3},{"xyz":[720.0,1320.0,539.97],"grade":4.712,"n":3},{"xyz":[720.0,1320.0,554.97],"grade":4.742,"n":3},{"xyz":[720.0,1320.0,569.97],"grade":4.728,"n":3},{"xyz":[720.0,1320.0,584.97],"grade":4.707,"n":3},{"xyz":[720.0,1320.0,599.97],"grade":4.707,"n":3},{"xyz":[720.0,1335.0,524.97],"grade":4.716,"n":3},{"xyz":[720.0,1335.0,539.97],"grade":4.722,"n":3},{"xyz":[720.0,1335.0,554.97],"grade":4.729,"n":3},{"xyz":[720.0,1335.0,569.97],"grade":4.727,"n":3},{"xyz":[720.0,1335.0,584.97],"grade":4.719,"n":3},{"xyz":[720.0,1350.0,539.97],"grade":4.723,"n":3},{"xyz":[720.0,1350.0,554.97],"grade":4.725,"n":3},{"xyz":[720.0,1350.0,569.97],"grade":4.724,"n":3},{"xyz":[735.0,1245.0,539.97],"grade":4.723,"n":3},{"xyz":[735.0,1245.0,554.97],"grade":4.725,"n":3},{"xyz":[735.0,1245.0,569.97],"grade":4.725,"n":3},{"xyz":[735.0,1260.0,524.97],"grade":4.715,"n":3},{"xyz":[735.0,1260.0,539.97],"grade":4.722,"n":3},{"xyz":[735.0,1260.0,554.97],"grade":4.73,"n":3},{"xyz":[735.0,1260.0,569.97],"grade":4.727,"n":3},{"xyz":[735.0,1260.0,584.97],"grade":4.718,"n":3},{"xyz":[735.0,1260.0,599.97],"grade":4.714,"n":3},{"xyz":[735.0,1275.0,509.97],"grade":4.709,"n":3},{"xyz":[735.0,1275.0,524.97],"grade":4.705,"n":3},{"xyz":[735.0,1275.0,539.97],"grade":4.712,"n":3},{"xyz":[735.0,1275.0,554.97],"grade":4.742,"n":3},{"xyz":[735.0,1275.0,569.97],"grade":4.728,"n":3},{"xyz":[735.0,1275.0,584.97],"grade":4.707,"n":3},{"xyz":[735.0,1275.0,599.97],"grade":4.707,"n":3},{"xyz":[735.0,1290.0,509.97],"grade":4.704,"n":3},{"xyz":[735.0,1290.0,524.97],"grade":4.693,"n":3},{"xyz":[735.0,1290.0,539.97],"grade":4.678,"n":3},{"xyz":[735.0,1290.0,554.97],"grade":4.77,"n":3},{"xyz":[735.0,1290.0,569.97],"grade":4.701,"n":3},{"xyz":[735.0,1290.0,584.97],"grade":4.684,"n":3},{"xyz":[735.0,1290.0,599.97],"grade":4.699,"n":3},{"xyz":[735.0,1305.0,509.97],"grade":4.705,"n":3},{"xyz":[735.0,1305.0,524.97],"grade":4.696,"n":3},{"xyz":[735.0,1305.0,539.97],"grade":4.688,"n":3},{"xyz":[735.0,1305.0,554.97],"grade":4.762,"n":3},{"xyz":[735.0,1305.0,569.97],"grade":4.713,"n":3},{"xyz":[735.0,1305.0,584.97],"grade":4.69,"n":3},{"xyz":[735.0,1305.0,599.97],"grade":4.701,"n":3},{"xyz":[735.0,1320.0,509.97],"grade":4.71,"n":3},{"xyz":[735.0,1320.0,524.97],"grade":4.709,"n":3},{"xyz":[735.0,1320.0,539.97],"grade":4.716,"n":3},{"xyz":[735.0,1320.0,554.97],"grade":4.738,"n":3},{"xyz":[735.0,1320.0,569.97],"grade":4.728,"n":3},{"xyz":[735.0,1320.0,584.97],"grade":4.711,"n":3},{"xyz":[735.0,1320.0,599.97],"grade":4.709,"n":3},{"xyz":[735.0,1335.0,524.97],"grade":4.717,"n":3},{"xyz":[735.0,1335.0,539.97],"grade":4.722,"n":3},{"xyz":[735.0,1335.0,554.97],"grade":4.728,"n":3},{"xyz":[735.0,1335.0,569.97],"grade":4.726,"n":3},{"xyz":[735.0,1335.0,584.97],"grade":4.719,"n":3},{"xyz":[735.0,1350.0,554.97],"grade":4.725,"n":3},{"xyz":[735.0,1350.0,569.97],"grade":4.724,"n":3},{"xyz":[750.0,1245.0,554.97],"grade":4.724,"n":3},{"xyz":[750.0,1245.0,569.97],"grade":4.724,"n":3},{"xyz":[750.0,1260.0,524.97],"grade":4.718,"n":3},{"xyz":[750.0,1260.0,539.97],"grade":4.722,"n":3},{"xyz":[750.0,1260.0,554.97],"grade":4.727,"n":3},{"xyz":[750.0,1260.0,569.97],"grade":4.726,"n":3},{"xyz":[750.0,1260.0,584.97],"grade":4.72,"n":3},{"xyz":[750.0,1275.0,524.97],"grade":4.714,"n":3},{"xyz":[750.0,1275.0,539.97],"grade":4.721,"n":3},{"xyz":[750.0,1275.0,554.97],"grade":4.732,"n":3},{"xyz":[750.0,1275.0,569.97],"grade":4.728,"n":3},{"xyz":[750.0,1275.0,584.97],"grade":4.717,"n":3},{"xyz":[750.0,1275.0,599.97],"grade":4.713,"n":3},{"xyz":[750.0,1290.0,524.97],"grade":4.709,"n":3},{"xyz":[750.0,1290.0,539.97],"grade":4.717,"n":3},{"xyz":[750.0,1290.0,554.97],"grade":4.737,"n":3},{"xyz":[750.0,1290.0,569.97],"grade":4.728,"n":3},{"xyz":[750.0,1290.0,584.97],"grade":4.712,"n":3},{"xyz":[750.0,1290.0,599.97],"grade":4.71,"n":3},{"xyz":[750.0,1305.0,524.97],"grade":4.71,"n":3},{"xyz":[750.0,1305.0,539.97],"grade":4.718,"n":3},{"xyz":[750.0,1305.0,554.97],"grade":4.736,"n":3},{"xyz":[750.0,1305.0,569.97],"grade":4.728,"n":3},{"xyz":[750.0,1305.0,584.97],"grade":4.713,"n":3},{"xyz":[750.0,1305.0,599.97],"grade":4.71,"n":3},{"xyz":[750.0,1320.0,524.97],"grade":4.715,"n":3},{"xyz":[750.0,1320.0,539.97],"grade":4.721,"n":3},{"xyz":[750.0,1320.0,554.97],"grade":4.73,"n":3},{"xyz":[750.0,1320.0,569.97],"grade":4.727,"n":3},{"xyz":[750.0,1320.0,584.97],"grade":4.718,"n":3},{"xyz":[750.0,1320.0,599.97],"grade":4.714,"n":3},{"xyz":[750.0,1335.0,539.97],"grade":4.723,"n":3},{"xyz":[750.0,1335.0,554.97],"grade":4.726,"n":3},{"xyz":[750.0,1335.0,569.97],"grade":4.725,"n":3},{"xyz":[750.0,1335.0,584.97],"grade":4.721,"n":3},{"xyz":[765.0,1260.0,554.97],"grade":4.725,"n":3},{"xyz":[765.0,1260.0,569.97],"grade":4.724,"n":3},{"xyz":[765.0,1275.0,539.97],"grade":4.723,"n":3},{"xyz":[765.0,1275.0,554.97],"grade":4.727,"n":3},{"xyz":[765.0,1275.0,569.97],"grade":4.725,"n":3},{"xyz":[765.0,1275.0,584.97],"grade":4.721,"n":3},{"xyz":[765.0,1290.0,524.97],"grade":4.717,"n":3},{"xyz":[765.0,1290.0,539.97],"grade":4.722,"n":3},{"xyz":[765.0,1290.0,554.97],"grade":4.728,"n":3},{"xyz":[765.0,1290.0,569.97],"grade":4.726,"n":3},{"xyz":[765.0,1290.0,584.97],"grade":4.72,"n":3},{"xyz":[765.0,1305.0,524.97],"grade":4.717,"n":3},{"xyz":[765.0,1305.0,539.97],"grade":4.722,"n":3},{"xyz":[765.0,1305.0,554.97],"grade":4.728,"n":3},{"xyz":[765.0,1305.0,569.97],"grade":4.726,"n":3},{"xyz":[765.0,1305.0,584.97],"grade":4.72,"n":3},{"xyz":[765.0,1320.0,539.97],"grade":4.723,"n":3},{"xyz":[765.0,1320.0,554.97],"grade":4.726,"n":3},{"xyz":[765.0,1320.0,569.97],"grade":4.725,"n":3},{"xyz":[765.0,1320.0,584.97],"grade":4.721,"n":3},{"xyz":[765.0,1335.0,554.97],"grade":4.724,"n":3},{"xyz":[780.0,1290.0,554.97],"grade":4.724,"n":3},{"xyz":[780.0,1305.0,554.97],"grade":4.724,"n":3},{"xyz":[1845.0,1545.0,719.97],"grade":19.271,"n":3},{"xyz":[1845.0,1560.0,704.97],"grade":23.005,"n":3},{"xyz":[1845.0,1560.0,719.97],"grade":19.156,"n":3},{"xyz":[1845.0,1575.0,719.97],"grade":19.21,"n":3},{"xyz":[1860.0,1530.0,719.97],"grade":19.189,"n":3},{"xyz":[1860.0,1545.0,704.97],"grade":23.828,"n":3},{"xyz":[1860.0,1545.0,719.97],"grade":18.775,"n":3},{"xyz":[1860.0,1560.0,704.97],"grade":24.407,"n":3},{"xyz":[1860.0,1560.0,719.97],"grade":18.493,"n":3},{"xyz":[1860.0,1560.0,734.97],"grade":11.772,"n":3},{"xyz":[1860.0,1575.0,704.97],"grade":24.13,"n":3},{"xyz":[1860.0,1575.0,719.97],"grade":18.63,"n":3},{"xyz":[1860.0,1590.0,704.97],"grade":23.278,"n":3},{"xyz":[1860.0,1590.0,719.97],"grade":19.033,"n":3},{"xyz":[1875.0,1530.0,704.97],"grade":23.51,"n":3},{"xyz":[1875.0,1530.0,719.97],"grade":18.926,"n":3},{"xyz":[1875.0,1545.0,704.97],"grade":24.974,"n":3},{"xyz":[1875.0,1545.0,719.97],"grade":18.208,"n":3},{"xyz":[1875.0,1545.0,734.97],"grade":10.449,"n":3},{"xyz":[1875.0,1560.0,689.97],"grade":29.297,"n":3},{"xyz":[1875.0,1560.0,704.97],"grade":26.099,"n":3},{"xyz":[1875.0,1560.0,719.97],"grade":17.626,"n":3},{"xyz":[1875.0,1560.0,734.97],"grade":7.809,"n":3},{"xyz":[1875.0,1575.0,704.97],"grade":25.536,"n":3},{"xyz":[1875.0,1575.0,719.97],"grade":17.918,"n":3},{"xyz":[1875.0,1575.0,734.97],"grade":9.126,"n":3},{"xyz":[1875.0,1590.0,704.97],"grade":24.045,"n":3},{"xyz":[1875.0,1590.0,719.97],"grade":18.671,"n":3},{"xyz":[1890.0,1530.0,704.97],"grade":23.634,"n":3},{"xyz":[1890.0,1530.0,719.97],"grade":18.867,"n":3},{"xyz":[1890.0,1545.0,704.97],"grade":25.249,"n":3},{"xyz":[1890.0,1545.0,719.97],"grade":18.066,"n":3},{"xyz":[1890.0,1545.0,734.97],"grade":9.801,"n":3},{"xyz":[1890.0,1560.0,689.97],"grade":30.785,"n":3},{"xyz":[1890.0,1560.0,704.97],"grade":26.559,"n":3},{"xyz":[1890.0,1560.0,719.97],"grade":17.389,"n":3},{"xyz":[1890.0,1560.0,734.97],"grade":6.752,"n":3},{"xyz":[1890.0,1575.0,704.97],"grade":25.895,"n":3},{"xyz":[1890.0,1575.0,719.97],"grade":17.732,"n":3},{"xyz":[1890.0,1575.0,734.97],"grade":8.285,"n":3},{"xyz":[1890.0,1590.0,704.97],"grade":24.216,"n":3},{"xyz":[1890.0,1590.0,719.97],"grade":18.588,"n":3},{"xyz":[1905.0,1530.0,704.97],"grade":23.194,"n":3},{"xyz":[1905.0,1530.0,719.97],"grade":19.071,"n":3},{"xyz":[1905.0,1545.0,704.97],"grade":24.324,"n":3},{"xyz":[1905.0,1545.0,719.97],"grade":18.534,"n":3},{"xyz":[1905.0,1545.0,734.97],"grade":11.962,"n":3},{"xyz":[1905.0,1560.0,704.97],"grade":25.105,"n":3},{"xyz":[1905.0,1560.0,719.97],"grade":18.141,"n":3},{"xyz":[1905.0,1560.0,734.97],"grade":10.14,"n":3},{"xyz":[1905.0,1575.0,704.97],"grade":24.725,"n":3},{"xyz":[1905.0,1575.0,719.97],"grade":18.334,"n":3},{"xyz":[1905.0,1575.0,734.97],"grade":11.031,"n":3},{"xyz":[1905.0,1590.0,704.97],"grade":23.621,"n":3},{"xyz":[1905.0,1590.0,719.97],"grade":18.873,"n":3},{"xyz":[1920.0,1545.0,704.97],"grade":23.146,"n":3},{"xyz":[1920.0,1545.0,719.97],"grade":19.093,"n":3},{"xyz":[1920.0,1560.0,704.97],"grade":23.508,"n":3},{"xyz":[1920.0,1560.0,719.97],"grade":18.926,"n":3},{"xyz":[1920.0,1575.0,704.97],"grade":23.338,"n":3},{"xyz":[1920.0,1575.0,719.97],"grade":19.005,"n":3},{"xyz":[1920.0,1590.0,719.97],"grade":19.257,"n":3},{"xyz":[4665.0,15.0,1559.97],"grade":41.431,"n":3},{"xyz":[4680.0,0.0,1529.97],"grade":40.571,"n":3},{"xyz":[4680.0,0.0,1544.97],"grade":40.928,"n":3},{"xyz":[4680.0,0.0,1559.97],"grade":41.482,"n":3},{"xyz":[4680.0,0.0,1574.97],"grade":41.967,"n":3},{"xyz":[4680.0,15.0,1529.97],"grade":40.506,"n":3},{"xyz":[4680.0,15.0,1544.97],"grade":40.883,"n":3},{"xyz":[4680.0,15.0,1559.97],"grade":41.497,"n":3},{"xyz":[4680.0,15.0,1574.97],"grade":42.028,"n":3},{"xyz":[4680.0,30.0,1529.97],"grade":40.571,"n":3},{"xyz":[4680.0,30.0,1544.97],"grade":40.928,"n":3},{"xyz":[4680.0,30.0,1559.97],"grade":41.482,"n":3},{"xyz":[4680.0,30.0,1574.97],"grade":41.967,"n":3},{"xyz":[4680.0,45.0,1544.97],"grade":41.022,"n":3},{"xyz":[4680.0,45.0,1559.97],"grade":41.45,"n":3},{"xyz":[4680.0,45.0,1574.97],"grade":41.837,"n":3},{"xyz":[4695.0,0.0,1514.97],"grade":40.095,"n":3},{"xyz":[4695.0,0.0,1529.97],"grade":40.094,"n":3},{"xyz":[4695.0,0.0,1544.97],"grade":40.551,"n":3},{"xyz":[4695.0,0.0,1559.97],"grade":41.617,"n":3},{"xyz":[4695.0,0.0,1574.97],"grade":42.448,"n":3},{"xyz":[4695.0,15.0,1514.97],"grade":39.986,"n":3},{"xyz":[4695.0,15.0,1529.97],"grade":39.916,"n":3},{"xyz":[4695.0,15.0,1544.97],"grade":40.373,"n":3},{"xyz":[4695.0,15.0,1559.97],"grade":41.685,"n":3},{"xyz":[4695.0,15.0,1574.97],"grade":42.653,"n":3},{"xyz":[4695.0,30.0,1514.97],"grade":40.095,"n":3},{"xyz":[4695.0,30.0,1529.97],"grade":40.094,"n":3},{"xyz":[4695.0,30.0,1544.97],"grade":40.551,"n":3},{"xyz":[4695.0,30.0,1559.97],"grade":41.617,"n":3},{"xyz":[4695.0,30.0,1574.97],"grade":42.448,"n":3},{"xyz":[4695.0,45.0,1529.97],"grade":40.435,"n":3},{"xyz":[4695.0,45.0,1544.97],"grade":40.833,"n":3},{"xyz":[4695.0,45.0,1559.97],"grade":41.515,"n":3},{"xyz":[4695.0,45.0,1574.97],"grade":42.095,"n":3},{"xyz":[4695.0,60.0,1544.97],"grade":41.023,"n":3},{"xyz":[4695.0,60.0,1559.97],"grade":41.45,"n":3},{"xyz":[4695.0,60.0,1574.97],"grade":41.835,"n":3},{"xyz":[4710.0,0.0,1514.97],"grade":39.714,"n":3},{"xyz":[4710.0,0.0,1529.97],"grade":39.372,"n":3},{"xyz":[4710.0,0.0,1544.97],"grade":39.633,"n":3},{"xyz":[4710.0,0.0,1559.97],"grade":42.013,"n":3},{"xyz":[4710.0,0.0,1574.97],"grade":43.386,"n":3},{"xyz":[4710.0,15.0,1499.97],"grade":39.936,"n":3},{"xyz":[4710.0,15.0,1514.97],"grade":39.524,"n":3},{"xyz":[4710.0,15.0,1529.97],"grade":38.888,"n":3},{"xyz":[4710.0,15.0,1544.97],"grade":38.519,"n":3},{"xyz":[4710.0,15.0,1559.97],"grade":42.682,"n":3},{"xyz":[4710.0,15.0,1574.97],"grade":44.224,"n":3},{"xyz":[4710.0,30.0,1514.97],"grade":39.714,"n":3},{"xyz":[4710.0,30.0,1529.97],"grade":39.372,"n":3},{"xyz":[4710.0,30.0,1544.97],"grade":39.633,"n":3},{"xyz":[4710.0,30.0,1559.97],"grade":42.013,"n":3},{"xyz":[4710.0,30.0,1574.97],"grade":43.386,"n":3},{"xyz":[4710.0,45.0,1514.97],"grade":40.102,"n":3},{"xyz":[4710.0,45.0,1529.97],"grade":40.105,"n":3},{"xyz":[4710.0,45.0,1544.97],"grade":40.561,"n":3},{"xyz":[4710.0,45.0,1559.97],"grade":41.613,"n":3},{"xyz":[4710.0,45.0,1574.97],"grade":42.436,"n":3},{"xyz":[4710.0,60.0,1529.97],"grade":40.579,"n":3},{"xyz":[4710.0,60.0,1544.97],"grade":40.934,"n":3},{"xyz":[4710.0,60.0,1559.97],"grade":41.48,"n":3},{"xyz":[4710.0,60.0,1574.97],"grade":41.96,"n":3},{"xyz":[4725.0,0.0,1499.97],"grade":39.942,"n":3},{"xyz":[4725.0,0.0,1514.97],"grade":39.539,"n":3},{"xyz":[4725.0,0.0,1529.97],"grade":38.929,"n":3},{"xyz":[4725.0,0.0,1544.97],"grade":38.642,"n":3},{"xyz":[4725.0,0.0,1559.97],"grade":42.595,"n":3},{"xyz":[4725.0,0.0,1574.97],"grade":44.144,"n":3},{"xyz":[4725.0,15.0,1499.97],"grade":39.844,"n":3},{"xyz":[4725.0,15.0,1514.97],"grade":39.304,"n":3},{"xyz":[4725.0,15.0,1529.97],"grade":38.159,"n":3},{"xyz":[4725.0,15.0,1544.97],"grade":34.108,"n":3},{"xyz":[4725.0,15.0,1559.97],"grade":66.235,"n":3},{"xyz":[4725.0,15.0,1574.97],"grade":46.014,"n":3},{"xyz":[4725.0,30.0,1499.97],"grade":39.942,"n":3},{"xyz":[4725.0,30.0,1514.97],"grade":39.539,"n":3},{"xyz":[4725.0,30.0,1529.97],"grade":38.929,"n":3},{"xyz":[4725.0,30.0,1544.97],"grade":38.642,"n":3},{"xyz":[4725.0,30.0,1559.97],"grade":42.595,"n":3},{"xyz":[4725.0,30.0,1574.97],"grade":44.144,"n":3},{"xyz":[4725.0,45.0,1514.97],"grade":40.003,"n":3},{"xyz":[4725.0,45.0,1529.97],"grade":39.944,"n":3},{"xyz":[4725.0,45.0,1544.97],"grade":40.402,"n":3},{"xyz":[4725.0,45.0,1559.97],"grade":41.674,"n":3},{"xyz":[4725.0,45.0,1574.97],"grade":42.62,"n":3},{"xyz":[4725.0,60.0,1529.97],"grade":40.521,"n":3},{"xyz":[4725.0,60.0,1544.97],"grade":40.894,"n":3},{"xyz":[4725.0,60.0,1559.97],"grade":41.493,"n":3},{"xyz":[4725.0,60.0,1574.97],"grade":42.014,"n":3},{"xyz":[4740.0,0.0,1514.97],"grade":39.737,"n":3},{"xyz":[4740.0,0.0,1529.97],"grade":39.425,"n":3},{"xyz":[4740.0,0.0,1544.97],"grade":39.722,"n":3},{"xyz":[4740.0,0.0,1559.97],"grade":41.97,"n":3},{"xyz":[4740.0,0.0,1574.97],"grade":43.306,"n":3},{"xyz":[4740.0,15.0,1499.97],"grade":39.949,"n":3},{"xyz":[4740.0,15.0,1514.97],"grade":39.553,"n":3},{"xyz":[4740.0,15.0,1529.97],"grade":38.969,"n":3},{"xyz":[4740.0,15.0,1544.97],"grade":38.754,"n":3},{"xyz":[4740.0,15.0,1559.97],"grade":42.518,"n":3},{"xyz":[4740.0,15.0,1574.97],"grade":44.068,"n":3},{"xyz":[4740.0,30.0,1514.97],"grade":39.737,"n":3},{"xyz":[4740.0,30.0,1529.97],"grade":39.425,"n":3},{"xyz":[4740.0,30.0,1544.97],"grade":39.722,"n":3},{"xyz":[4740.0,30.0,1559.97],"grade":41.97,"n":3},{"xyz":[4740.0,30.0,1574.97],"grade":43.306,"n":3},{"xyz":[4740.0,45.0,1514.97],"grade":40.115,"n":3},{"xyz":[4740.0,45.0,1529.97],"grade":40.126,"n":3},{"xyz":[4740.0,45.0,1544.97],"grade":40.58,"n":3},{"xyz":[4740.0,45.0,1559.97],"grade":41.606,"n":3},{"xyz":[4740.0,45.0,1574.97],"grade":42.413,"n":3},{"xyz":[4740.0,60.0,1529.97],"grade":40.588,"n":3},{"xyz":[4740.0,60.0,1544.97],"grade":40.939,"n":3},{"xyz":[4740.0,60.0,1559.97],"grade":41.478,"n":3},{"xyz":[4740.0,60.0,1574.97],"grade":41.952,"n":3}]}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
+<script>
+"use strict";
+const M = JSON.parse(document.getElementById("model").textContent);
+const RAMP = [[0.00,[35,64,143]],[0.22,[31,158,137]],[0.45,[78,154,61]],
+              [0.68,[232,160,32]],[0.85,[224,98,13]],[1.00,[193,18,31]]];
+function ramp(t){t=Math.max(0,Math.min(1,t));for(let i=1;i<RAMP.length;i++){if(t<=RAMP[i][0]){
+  const a=RAMP[i-1],b=RAMP[i],f=(t-a[0])/(b[0]-a[0]);
+  return[a[1][0]+(b[1][0]-a[1][0])*f,a[1][1]+(b[1][1]-a[1][1])*f,a[1][2]+(b[1][2]-a[1][2])*f];}}
+  return RAMP[RAMP.length-1][1];}
+const CAP = M.grade_stats.top_cut || M.grade_stats.max || 1;
+const $=id=>document.getElementById(id);
+$("m-holes").textContent=M.counts.holes;$("m-samples").textContent=M.counts.samples;$("m-blocks").textContent=M.counts.blocks.toLocaleString();
+$("title").textContent=M.project;
+$("subtitle").textContent=`${M.element} grade shell · IDW block model · ${M.counts.holes} holes`;
+$("leg-el").textContent=M.element;$("leg-unit").textContent=" "+M.unit;$("cutunit").textContent=M.unit;
+$("r-mean").textContent=M.grade_stats.mean+" "+M.unit;$("r-p50").textContent=M.grade_stats.p50+" "+M.unit;
+$("r-p90").textContent=M.grade_stats.p90+" "+M.unit;$("r-max").textContent=M.grade_stats.max+" "+M.unit;
+$("r-cut").textContent=M.grade_stats.top_cut+" "+M.unit;
+$("r-block").textContent=(M.block_stats.block_m)+" m · r"+M.block_stats.radius_m+" m";
+if(M.report_url){const a=$("src");a.href=(M.report_url.startsWith("http")?M.report_url:"https://"+M.report_url);}else{$("src").style.display="none";}
+(function(){const t=$("ticks");for(let i=0;i<=4;i++){const s=document.createElement("span");
+  s.textContent=(CAP*i/4).toFixed(i?1:0);t.appendChild(s);}})();
+
+const host=$("scene");
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+function vh(){return innerHeight-49;}
+renderer.setSize(innerWidth,vh());host.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xeef1f6);
+scene.fog=new THREE.FogExp2(0xeef1f6,0.00035);
+const camera=new THREE.PerspectiveCamera(50,innerWidth/vh(),1,20000);
+scene.add(new THREE.AmbientLight(0xffffff,0.82));
+const dl=new THREE.DirectionalLight(0xffffff,0.7);dl.position.set(0.5,1,0.4);scene.add(dl);
+const dl2=new THREE.DirectionalLight(0xdfe6f2,0.35);dl2.position.set(-0.5,0.3,-0.6);scene.add(dl2);
+
+const ext=M.extent;const cx=ext[0]/2, cy=ext[1]/2, cz=ext[2]/2;
+function P(p){return new THREE.Vector3(p[0]-cx, p[2]-cz, p[1]-cy);}
+const R=Math.max(ext[0],ext[1],ext[2]);
+
+const grid=new THREE.GridHelper(Math.max(ext[0],ext[1])*1.15, 26, 0xc3ccd8, 0xd9dfe8);
+grid.position.y=-cz;grid.material.opacity=0.7;grid.material.transparent=true;scene.add(grid);
+
+const traceG=new THREE.BufferGeometry();const tv=[];
+M.holes.forEach(h=>{const a=P(h.collar),b=P(h.toe);tv.push(a.x,a.y,a.z,b.x,b.y,b.z);});
+traceG.setAttribute("position",new THREE.Float32BufferAttribute(tv,3));
+const traces=new THREE.LineSegments(traceG,new THREE.LineBasicMaterial({color:0x6b7280,transparent:true,opacity:0.55}));
+scene.add(traces);
+const colG=new THREE.BufferGeometry();const cv=[];M.holes.forEach(h=>{const a=P(h.collar);cv.push(a.x,a.y,a.z);});
+colG.setAttribute("position",new THREE.Float32BufferAttribute(cv,3));
+const collars=new THREE.Points(colG,new THREE.PointsMaterial({color:0x374151,size:3.4,sizeAttenuation:false}));
+traces.add(collars);
+
+const samples=new THREE.InstancedMesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshLambertMaterial(),M.samples.length);
+const dummy=new THREE.Object3D();const col3=new THREE.Color();
+M.samples.forEach((s,i)=>{const p=P(s.xyz);const g=Math.min(s.grade,CAP)/CAP;
+  const r=2.5+g*6.5;dummy.position.copy(p);dummy.scale.setScalar(r);dummy.updateMatrix();
+  samples.setMatrixAt(i,dummy.matrix);const c=ramp(s.grade/CAP);col3.setRGB(c[0]/255,c[1]/255,c[2]/255);samples.setColorAt(i,col3);});
+samples.instanceMatrix.needsUpdate=true;scene.add(samples);
+
+const bs=M.block_stats.block_m;
+const blocks=new THREE.InstancedMesh(new THREE.BoxGeometry(bs,bs,bs),
+  new THREE.MeshLambertMaterial({transparent:true,opacity:0.72}),M.blocks.length);
+const bpos=M.blocks.map(b=>P(b.xyz));
+M.blocks.forEach((b,i)=>{dummy.position.copy(bpos[i]);dummy.scale.setScalar(1);dummy.updateMatrix();
+  blocks.setMatrixAt(i,dummy.matrix);const c=ramp(Math.min(b.grade,CAP)/CAP);
+  col3.setRGB(c[0]/255,c[1]/255,c[2]/255);blocks.setColorAt(i,col3);});
+blocks.instanceMatrix.needsUpdate=true;scene.add(blocks);
+
+function applyCutoff(gc){for(let i=0;i<M.blocks.length;i++){dummy.position.copy(bpos[i]);
+    dummy.scale.setScalar(M.blocks[i].grade>=gc?1:0.0001);dummy.updateMatrix();blocks.setMatrixAt(i,dummy.matrix);}
+  blocks.instanceMatrix.needsUpdate=true;}
+
+const target=new THREE.Vector3(0,0,0);
+let dist=R*1.7, yaw=0.7, pitch=0.6;
+function place(){camera.position.set(
+  target.x+dist*Math.cos(pitch)*Math.sin(yaw),
+  target.y+dist*Math.sin(pitch),
+  target.z+dist*Math.cos(pitch)*Math.cos(yaw));camera.lookAt(target);}
+place();
+let drag=null,px=0,py=0;const el=renderer.domElement;
+el.addEventListener("mousedown",e=>{drag=e.button===2||e.shiftKey?"pan":"orbit";px=e.clientX;py=e.clientY;e.preventDefault();});
+addEventListener("mouseup",()=>drag=null);
+addEventListener("mousemove",e=>{if(!drag){hover(e);return;}
+  const dx=e.clientX-px,dy=e.clientY-py;px=e.clientX;py=e.clientY;
+  if(drag==="orbit"){yaw-=dx*0.006;pitch=Math.max(-1.45,Math.min(1.45,pitch+dy*0.006));}
+  else{const s=dist*0.0016;const right=new THREE.Vector3().crossVectors(camera.up,camera.getWorldDirection(new THREE.Vector3())).normalize();
+    target.addScaledVector(right,dx*s);target.addScaledVector(new THREE.Vector3(0,1,0),dy*s);}
+  place();auto=false;});
+el.addEventListener("wheel",e=>{dist=Math.max(R*0.25,Math.min(R*6,dist*(1+Math.sign(e.deltaY)*0.09)));place();e.preventDefault();},{passive:false});
+el.addEventListener("contextmenu",e=>e.preventDefault());
+$("reset").onclick=()=>{target.set(0,0,0);dist=R*1.7;yaw=0.7;pitch=0.6;place();};
+
+const ray=new THREE.Raycaster();const mouse=new THREE.Vector2();const tip=$("tip");
+function hover(e){mouse.x=(e.clientX/innerWidth)*2-1;mouse.y=-((e.clientY-49)/vh())*2+1;
+  ray.setFromCamera(mouse,camera);const hit=samples.visible?ray.intersectObject(samples):[];
+  if(hit.length){const s=M.samples[hit[0].instanceId];
+    tip.innerHTML=`<b>${s.hole}</b><br>${s.from.toFixed(1)}–${s.to.toFixed(1)} m<br><span class="g">${s.grade.toFixed(2)} ${M.unit} ${M.element}</span>`;
+    tip.style.display="block";tip.style.left=Math.min(e.clientX+14,innerWidth-160)+"px";tip.style.top=(e.clientY+14)+"px";}
+  else tip.style.display="none";}
+
+$("t-blocks").onchange=e=>blocks.visible=e.target.checked;
+$("t-samples").onchange=e=>samples.visible=e.target.checked;
+$("t-traces").onchange=e=>traces.visible=e.target.checked;
+const cutEl=$("cutoff");
+function updateCut(){const gc=+(cutEl.value/100*CAP).toFixed(2);$("cut").textContent=gc.toFixed(2);applyCutoff(gc);}
+cutEl.oninput=updateCut;updateCut();
+
+let auto=!matchMedia("(prefers-reduced-motion: reduce)").matches;
+const hintEl=$("hint");setTimeout(()=>{hintEl.style.opacity=0;},5000);
+function loop(){if(auto){yaw+=0.0016;place();}renderer.render(scene,camera);requestAnimationFrame(loop);}
+loop();
+addEventListener("resize",()=>{camera.aspect=innerWidth/vh();camera.updateProjectionMatrix();renderer.setSize(innerWidth,vh());});
+addEventListener("mousedown",()=>{auto=false;},{once:true});
+</script>
