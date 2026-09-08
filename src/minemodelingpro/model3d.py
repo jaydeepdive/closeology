@@ -330,12 +330,32 @@ def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
     }
 
 
+_REPORT_PROJECTS = None
+
+
+def _report_project(source_id):
+    """Deposit/project name parsed from the NI 43-101 report cover (built by the
+    SEDAR collector into data/keep/report_projects.json). Authoritative over the
+    stored project field, which often holds the issuer name."""
+    global _REPORT_PROJECTS
+    if _REPORT_PROJECTS is None:
+        p = os.path.join("data", "keep", "report_projects.json")
+        try:
+            _REPORT_PROJECTS = json.load(open(p)) if os.path.exists(p) else {}
+        except Exception:
+            _REPORT_PROJECTS = {}
+    return _REPORT_PROJECTS.get(source_id)
+
+
 def build_model(source_id, project=None, element="Au", **kw):
     """Model one 43-101 deposit from the MMP shard store."""
     col, asy, sur = _load(source_id)
     juris = (col["jurisdiction"].dropna().iloc[0] if not col.empty and col["jurisdiction"].notna().any() else None)
     rpt = (col["url"].dropna().iloc[0] if "url" in col and col["url"].notna().any() else None)
-    proj = project or (col["project"].dropna().iloc[0] if not col.empty and col["project"].notna().any() else source_id)
+    stored = (col["project"].dropna().iloc[0] if not col.empty and col["project"].notna().any() else None)
+    # prefer an explicit arg, then the cover-parsed name, then the stored project
+    # (only if it isn't just the issuer/company name), then the id as a last resort
+    proj = project or _report_project(source_id) or stored or source_id
     # company from the SEDAR issuer slug (…/sedar:<issuer-slug>_<timestamp>)
     comp = None
     slug = re.sub(r"^sedar:", "", source_id)
