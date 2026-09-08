@@ -48,6 +48,19 @@ jobs:
           git config user.name "closeology-bot"
           git config user.email "actions@github.com"
           git pull --no-edit -X ours origin main || true
+          # commit ONLY the drill bank + SEDAR data; the jurisdiction claim
+          # fabric (*_claims_snapshot / *_boundary / *_minfile_facts) is owned by
+          # the full build — never let a fast drill-bank push clobber it back.
           git add -A data/keep 2>/dev/null || true
-          git commit -m "Drill bank refresh $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]" || echo "no new drill data"
-          git push || echo "nothing to push"
+          git reset -q -- 'data/keep/*_claims_snapshot.parquet' 'data/keep/*_boundary.parquet' 'data/keep/*_minfile_facts.parquet' 2>/dev/null || true
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main || true
+            git stash -q 2>/dev/null || true
+            git reset -q --hard origin/main
+            git stash pop -q 2>/dev/null || true
+            git add -A data/keep 2>/dev/null || true
+            git reset -q -- 'data/keep/*_claims_snapshot.parquet' 'data/keep/*_boundary.parquet' 'data/keep/*_minfile_facts.parquet' 2>/dev/null || true
+            git diff --cached --quiet && { echo "no new drill data"; break; }
+            git commit -q -m "Drill bank refresh $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
+            git push origin HEAD:main && break || { echo "retry $i"; sleep 5; }
+          done
