@@ -24,7 +24,6 @@ Usage:
 import os
 import re
 import json
-import glob
 import math
 import sqlite3
 import datetime
@@ -158,21 +157,60 @@ def desurvey(col, asy, sur, element):
 
 
 # ------------------------------------------------------------------ block model
-def idw_block_model(samples, block=15.0, power=2.0, radius=60.0,
-                    min_samples=3, top_cut=None):
-    """IDW grade estimate on a regular grid. Only blocks with >= min_samples
-    within `radius` are kept, so we never paint grade where there's no data."""
+def _drill_spacing(pts, holes):
+    """Median nearest-neighbour distance between holes, measured in plan (XY).
+    This is the true drill pattern and the natural scale for interpolation:
+    a block that sits within one spacing of drilling is *between* holes
+    (legitimate interpolation), beyond it is open ground (extrapolation)."""
+    uniq = {}
+    for (x, y, z), h in zip(pts, holes):
+        uniq.setdefault(h, []).append((x, y))
+    cent = np.array([np.mean(v, axis=0) for v in uniq.values()], dtype=float)
+    if len(cent) < 2:
+        return 50.0
+    nn = []
+    for i in range(len(cent)):
+        d = np.hypot(cent[:, 0] - cent[i, 0], cent[:, 1] - cent[i, 1])
+        d[i] = np.inf
+        nn.append(float(d.min()))
+    return float(np.median(nn))
+
+
+def idw_block_model(samples, block=15.0, power=2.0, radius=None,
+                    min_samples=3, top_cut=None, min_holes=2, max_gap=None):
+    """IDW grade estimate on a regular grid, constrained to the drilled volume so
+    grade is interpolated *between* holes but never extrapolated into open ground.
+
+    The controlling scale is the actual drill spacing (median nearest-neighbour
+    distance between holes), computed per deposit. When `radius`/`max_gap` are
+    not given they adapt to it, so a tightly-drilled deposit (Freeman: ~40-60 m
+    centres) fills into one continuous orebody, while a lone or widely-spaced
+    hole spawns no blob:
+      * a block is kept only if >= min_samples samples from >= min_holes DISTINCT
+        holes lie within `radius` (~1.6x spacing), and
+      * its nearest sample is within `max_gap` (~1x spacing) — inside the drill
+        pattern, not a radius past its edge."""
     if not samples:
         return [], {}
     pts = np.array([s["xyz"] for s in samples], dtype=float)
     g = np.array([s["grade"] for s in samples], dtype=float)
+    holes = np.array([s.get("hole", i) for i, s in enumerate(samples)])
     ok = np.isfinite(pts).all(1)
-    pts, g = pts[ok], g[ok]
-    if len(pts) == 0 or not np.isfinite(pts).all():
-        return [], {"block_m": block, "power": power, "radius_m": radius,
+    pts, g, holes = pts[ok], g[ok], holes[ok]
+    if len(pts) == 0:
+        return [], {"block_m": block, "power": power, "radius_m": radius or 0,
                     "min_samples": min_samples, "top_cut": top_cut, "n_blocks": 0}
     if top_cut:
         g = np.minimum(g, top_cut)
+    spacing = _drill_spacing(pts, holes)
+    if radius is None:
+        radius = float(np.clip(spacing * 1.6, 45.0, 110.0))
+    if max_gap is None:
+        # up to ~one drill-spacing from the nearest sample: interpolation between
+        # holes, not extrapolation. Floored at ~1.4 block so a dense grid still
+        # connects, capped at the search radius.
+        max_gap = float(np.clip(spacing * 1.05, block * 1.4, radius))
+    gap2 = max_gap * max_gap
     lo = pts.min(0) - block
     hi = pts.max(0) + block
     xs = np.arange(lo[0], hi[0] + block, block)
@@ -182,7 +220,6 @@ def idw_block_model(samples, block=15.0, power=2.0, radius=60.0,
     r2 = radius * radius
     for x in xs:
         for y in ys:
-            # quick horizontal reject: skip columns with no sample within radius
             if np.min((pts[:, 0] - x) ** 2 + (pts[:, 1] - y) ** 2) > r2:
                 continue
             for z in zs:
@@ -190,12 +227,18 @@ def idw_block_model(samples, block=15.0, power=2.0, radius=60.0,
                 near = d2 <= r2
                 if int(near.sum()) < min_samples:
                     continue
+                if d2[near].min() > gap2:                     # too far from any drilling
+                    continue
+                if len(set(holes[near].tolist())) < min_holes:  # needs >=2 distinct holes
+                    continue
                 w = 1.0 / np.power(np.maximum(d2[near], 1.0), power / 2.0)
                 est = float((w * g[near]).sum() / w.sum())
                 blocks.append({"xyz": [round(x, 1), round(y, 1), round(z, 1)],
                                "grade": round(est, 3), "n": int(near.sum())})
-    stats = {"block_m": block, "power": power, "radius_m": radius,
-             "min_samples": min_samples, "top_cut": top_cut, "n_blocks": len(blocks)}
+    stats = {"block_m": block, "power": power, "radius_m": round(radius, 1),
+             "spacing_m": round(spacing, 1), "max_gap_m": round(max_gap, 1),
+             "min_samples": min_samples, "min_holes": min_holes,
+             "top_cut": top_cut, "n_blocks": len(blocks)}
     return blocks, stats
 
 
@@ -216,7 +259,7 @@ def _maturity(n_holes, n_blocks):
 def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
            report_url=None, source="report", region=None, updated=None,
            sources=None, density=2.7,
-           block=15.0, radius=60.0, min_samples=3, top_cut=None):
+           block=15.0, radius=None, min_samples=3, top_cut=None):
     """Core model builder shared by the 43-101 shard store and the news drill
     bank. Degrades gracefully: a sparse project yields desurveyed traces + assay
     points with few/no interpolated blocks; a dense one grows a full grade shell."""
@@ -350,7 +393,7 @@ def _cluster_latlon(lats, lons, max_km=8.0):
     return [find(i) for i in range(n)]
 
 
-def _drillbank_groups(min_located=2, min_assays=5, cluster_km=8.0):
+def _drillbank_groups(min_located=3, min_assays=6, cluster_km=8.0):
     """{key: {col, asy, region, updated, sources, label, ...}} — one entry per
     DEPOSIT (spatial cluster of holes), not per company. Coordinates are projected
     from lat/lon into a local metre grid centred on the cluster, so holes from
@@ -464,8 +507,6 @@ def build_all(site_dir="site"):
     pipeline. Gallery = top-level site/models.html; viewers live in site/models/."""
     out_dir = os.path.join(site_dir, "models")
     os.makedirs(out_dir, exist_ok=True)
-    for f in glob.glob(os.path.join(out_dir, "*.html")):   # prune stale model pages
-        os.remove(f)
     cards, seen = [], set()
 
     # (1) NI 43-101 deposits from the MMP shard store

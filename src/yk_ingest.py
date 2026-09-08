@@ -100,9 +100,16 @@ def _polys(feats, props):
 
 
 def fetch_claims():
+    # NOTE: maxAllowableOffset (generalize) is in the OUTPUT SR's units. Output is
+    # WGS84 (outSR 4326, degrees), so this must be a *degree* tolerance. The old
+    # value of 25 was read as 25 DEGREES (~2,750 km) and collapsed every one of
+    # Yukon's ~169k quartz claims to a single point snapped to whole-degree
+    # resolution -- leaving the fabric with ~3k degenerate points and nearly all
+    # Yukon ground (incl. actively-drilled, fully-staked deposits like Carmacks)
+    # reading as "open". 0.0002 deg ~= 15-20 m: trims vertices, keeps claim shape.
     fs = _fetch(f"{GYM}/{CLAIM_L}",
                 "CLAIM_NUMBER,CLAIM_NAME,OWNER_NAME,STAKING_DATE,EXPIRY_DATE,TENURE_STATUS",
-                geom=True, generalize=25)
+                geom=True, generalize=0.0002)
     g = _polys(fs, {"TENURE_NUMBER_ID": "CLAIM_NUMBER", "CLAIM_NAME": "CLAIM_NAME",
                     "OWNER_NAME": "OWNER_NAME", "_iss": "STAKING_DATE", "_exp": "EXPIRY_DATE"})
     g["ISSUE_DATE"] = g["_iss"].map(_epoch)
@@ -113,14 +120,14 @@ def fetch_claims():
 
 
 def fetch_leases():
-    fs = _fetch(f"{GYM}/{LEASE_L}", "LEASE_NUMBER,CLAIM_NAME", geom=True, generalize=25)
+    fs = _fetch(f"{GYM}/{LEASE_L}", "LEASE_NUMBER,CLAIM_NAME", geom=True, generalize=0.0002)
     g = _polys(fs, {"claim": "LEASE_NUMBER"})
     g.to_parquet("data/yk/leases.parquet")
     print(f"[yk] leases {len(g)}")
 
 
 def fetch_withdrawn():
-    fs = _fetch(f"{GYM}/{WITHDRAWN_L}", "*", geom=True, generalize=40)
+    fs = _fetch(f"{GYM}/{WITHDRAWN_L}", "*", geom=True, generalize=0.001)  # degrees (~80 m); coarse no-stake mask
     g = _polys(fs, {"SITE_NAME": "OBJECTID"})
     g.to_parquet("data/yk/reserves.parquet")     # treated as no-stake
     print(f"[yk] withdrawn-from-staking {len(g)}")
