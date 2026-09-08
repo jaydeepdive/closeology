@@ -41,7 +41,16 @@ jobs:
           git config user.email "actions@github.com"
           git add -A site data/keep 2>/dev/null || true
           git commit -m "Daily rebuild $(date -u +%Y-%m-%d) [skip ci]" || echo "no changes"
-          git push || echo "nothing to push"
+          # the build regenerates site/ + data/keep from scratch, so on any race
+          # with a concurrent push the freshly-built files must win — otherwise a
+          # stale committed copy (e.g. an old claim fabric) silently survives and
+          # the next fast-deploy republishes it. Rebase-merge keeping OURS (=this
+          # build's output) before pushing, and retry once.
+          for i in 1 2 3; do
+            git pull --no-edit -X ours origin main || true
+            git push && break || echo "push retry $i"
+            sleep 5
+          done
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
