@@ -73,6 +73,13 @@
   #hint{position:fixed;z-index:10;bottom:14px;left:50%;transform:translateX(-50%);font-size:11.5px;
     color:var(--mut);background:rgba(255,255,255,.82);padding:5px 13px;border-radius:20px;
     border:1px solid var(--line);transition:opacity .6s}
+  #scalebar{position:fixed;z-index:10;bottom:44px;left:50%;transform:translateX(-50%);display:flex;
+    align-items:center;gap:8px;font-size:11px;color:var(--ink);font-variant-numeric:tabular-nums;
+    background:rgba(255,255,255,.85);border:1px solid var(--line);border-radius:8px;padding:4px 10px;}
+  #scalebar .sbar{height:9px;border-left:2px solid var(--ink);border-right:2px solid var(--ink);
+    display:flex;align-items:center;width:100px;}
+  #scalebar .sbar span{display:block;height:2px;width:100%;background:var(--ink);}
+  #scalebar #sbar-label{font-weight:700;}
   .btn{margin-top:12px;width:100%;padding:8px;border:1px solid var(--line);background:var(--panel);
     color:var(--ink);font-size:12px;font-weight:500;letter-spacing:.02em;border-radius:8px;cursor:pointer;transition:.15s}
   .btn:hover{background:var(--chip);border-color:var(--red);color:var(--red)}
@@ -112,6 +119,7 @@
     <label class="toggle"><input type="checkbox" id="t-blocks" checked><span class="sw" style="background:#e8a020"></span>Grade block model</label>
     <label class="toggle"><input type="checkbox" id="t-samples" checked><span class="sw" style="background:#c1121f"></span>Assay samples</label>
     <label class="toggle"><input type="checkbox" id="t-traces" checked><span class="sw" style="background:#6b7280"></span>Drill traces</label>
+    <label class="toggle" id="topo-row" hidden><input type="checkbox" id="t-topo"><span class="sw" style="background:#ccd3de"></span>Terrain (topography)</label>
     <div class="slider">
       <div class="row"><span>Grade cut-off</span><span class="val"><span id="cut">0.30</span> <span id="cutunit">g/t</span></span></div>
       <input type="range" id="cutoff" min="0" max="100" value="6" step="1">
@@ -147,9 +155,10 @@
 </div>
 
 <div id="tip"></div>
+<div id="scalebar"><div class="sbar"><span id="sbar-line"></span></div><span id="sbar-label"></span></div>
 <div id="hint">drag to orbit · scroll to zoom · right-drag to pan</div>
 
-<script id="model" type="application/json">{"source_id":"news:canstar-resourcess48.8_s56.5","project":"Canstar Resources","company":"Canstar Resources","jurisdiction":"Newfoundland & Labrador","report_url":"https://www.newsfilecorp.com/release/311773/Canstar-Resources-Intersects-Mary-March","source":"news","region":"Newfoundland & Labrador","updated":"2026-08-14","sources":[{"kind":"news release","title":"https://www.newsfilecorp.com/release/311773/Canstar-Resources-Intersects-Mary-March","url":"https://www.newsfilecorp.com/release/311773/Canstar-Resources-Intersects-Mary-March","date":"2026-08-14"}],"density":2.7,"maturity":"Early \u00b7 traces only","element":"Cu","unit":"%","generated":"2026-09-08T19:46:58Z","origin":[-55.76,-345.48,-437.07],"extent":[423.9,418.4,630.1],"counts":{"holes":4,"samples":14,"blocks":0},"grade_stats":{"min":0.02,"max":2.74,"mean":0.74,"p50":0.36,"p90":1.92,"top_cut":2.6},"block_stats":{"block_m":15.0,"power":2.0,"radius_m":80.0,"spacing_m":50.0,"max_gap_m":52.5,"min_samples":2,"min_holes":2,"top_cut":2.6,"n_blocks":0},"holes":[{"id":"ec91e8d409b2a1fd:MM-26-41","collar":[136.58,418.35,625.07],"toe":[423.9,0.0,63.39],"depth":757.0},{"id":"ec91e8d409b2a1fd:MM-26-42","collar":[43.23,337.33,628.07],"toe":[178.64,173.06,92.85],"depth":576.0},{"id":"ec91e8d409b2a1fd:MM-26-43","collar":[0.0,288.91,630.07],"toe":[273.24,0.16,0.0],"depth":745.0},{"id":"ec91e8d409b2a1fd:MM-26-44","collar":[43.23,337.33,628.07],"toe":[298.6,98.86,47.03],"depth":678.0}],"samples":[{"hole":"ec91e8d409b2a1fd:MM-26-42","from":467.4,"to":469.0,"grade":0.07,"xyz":[153.3,203.81,193.02]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":469.0,"to":470.0,"grade":0.1,"xyz":[153.6,203.44,191.81]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":470.0,"to":471.0,"grade":0.07,"xyz":[153.84,203.15,190.88]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":471.0,"to":472.0,"grade":0.02,"xyz":[154.07,202.87,189.95]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":472.0,"to":473.25,"grade":0.03,"xyz":[154.34,202.54,188.91]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":473.25,"to":474.0,"grade":0.39,"xyz":[154.57,202.26,187.98]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":474.0,"to":475.0,"grade":0.98,"xyz":[154.78,202.01,187.17]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":475.0,"to":476.0,"grade":0.66,"xyz":[155.01,201.72,186.24]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":476.0,"to":477.0,"grade":1.66,"xyz":[155.25,201.44,185.31]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":477.0,"to":478.0,"grade":2.03,"xyz":[155.48,201.15,184.38]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":478.0,"to":479.0,"grade":2.74,"xyz":[155.72,200.87,183.45]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":479.0,"to":481.0,"grade":1.05,"xyz":[156.07,200.44,182.06]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":481.0,"to":482.0,"grade":0.33,"xyz":[156.42,200.01,180.66]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":482.0,"to":483.0,"grade":0.18,"xyz":[156.66,199.73,179.73]}],"blocks":[],"area":"48.83, -56.53"}</script>
+<script id="model" type="application/json">{"source_id":"news:canstar-resourcess48.8_s56.5","project":"Canstar Resources","company":"Canstar Resources","jurisdiction":"Newfoundland & Labrador","report_url":"https://www.newsfilecorp.com/release/311773/Canstar-Resources-Intersects-Mary-March","source":"news","region":"Newfoundland & Labrador","updated":"2026-08-14","sources":[{"kind":"news release","title":"https://www.newsfilecorp.com/release/311773/Canstar-Resources-Intersects-Mary-March","url":"https://www.newsfilecorp.com/release/311773/Canstar-Resources-Intersects-Mary-March","date":"2026-08-14"}],"density":2.7,"maturity":"Early \u00b7 traces only","element":"Cu","unit":"%","generated":"2026-09-08T20:01:15Z","origin":[-55.76,-345.48,-437.07],"extent":[423.9,418.4,630.1],"counts":{"holes":4,"samples":14,"blocks":0},"grade_stats":{"min":0.02,"max":2.74,"mean":0.74,"p50":0.36,"p90":1.92,"top_cut":2.6},"block_stats":{"block_m":15.0,"radius_m":0,"spacing_m":0,"max_gap_m":0,"min_samples":3,"top_cut":2.6,"n_blocks":0,"reason":"only 1 drill hole(s) \u2014 too few to model"},"holes":[{"id":"ec91e8d409b2a1fd:MM-26-41","collar":[136.58,418.35,625.07],"toe":[423.9,0.0,63.39],"depth":757.0},{"id":"ec91e8d409b2a1fd:MM-26-42","collar":[43.23,337.33,628.07],"toe":[178.64,173.06,92.85],"depth":576.0},{"id":"ec91e8d409b2a1fd:MM-26-43","collar":[0.0,288.91,630.07],"toe":[273.24,0.16,0.0],"depth":745.0},{"id":"ec91e8d409b2a1fd:MM-26-44","collar":[43.23,337.33,628.07],"toe":[298.6,98.86,47.03],"depth":678.0}],"samples":[{"hole":"ec91e8d409b2a1fd:MM-26-42","from":467.4,"to":469.0,"grade":0.07,"xyz":[153.3,203.81,193.02]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":469.0,"to":470.0,"grade":0.1,"xyz":[153.6,203.44,191.81]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":470.0,"to":471.0,"grade":0.07,"xyz":[153.84,203.15,190.88]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":471.0,"to":472.0,"grade":0.02,"xyz":[154.07,202.87,189.95]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":472.0,"to":473.25,"grade":0.03,"xyz":[154.34,202.54,188.91]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":473.25,"to":474.0,"grade":0.39,"xyz":[154.57,202.26,187.98]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":474.0,"to":475.0,"grade":0.98,"xyz":[154.78,202.01,187.17]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":475.0,"to":476.0,"grade":0.66,"xyz":[155.01,201.72,186.24]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":476.0,"to":477.0,"grade":1.66,"xyz":[155.25,201.44,185.31]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":477.0,"to":478.0,"grade":2.03,"xyz":[155.48,201.15,184.38]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":478.0,"to":479.0,"grade":2.74,"xyz":[155.72,200.87,183.45]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":479.0,"to":481.0,"grade":1.05,"xyz":[156.07,200.44,182.06]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":481.0,"to":482.0,"grade":0.33,"xyz":[156.42,200.01,180.66]},{"hole":"ec91e8d409b2a1fd:MM-26-42","from":482.0,"to":483.0,"grade":0.18,"xyz":[156.66,199.73,179.73]}],"blocks":[],"area":"48.83, -56.53"}</script>
 <script src="three.min.js"></script>
 <script>
 "use strict";
@@ -193,31 +202,48 @@ const R=Math.max(ext[0],ext[1],ext[2]);
 const grid=new THREE.GridHelper(Math.max(ext[0],ext[1])*1.15, 26, 0xc3ccd8, 0xd9dfe8);
 grid.position.y=-cz;grid.material.opacity=0.7;grid.material.transparent=true;scene.add(grid);
 
-// drill traces: a faint grey backbone (collar->toe; also carries the whole-hole
-// hover) with grade-coloured ticks laid over each assayed interval, so every
-// hole's log reads by grade down its length.
-const traceG=new THREE.BufferGeometry();const tv=[];const DIRS=[];
+// hole display name — strip the internal "<release-hash>:" prefix
+const holeName=id=>String(id).replace(/^[0-9a-f]{6,}:/i,"");
+// drill traces: faint grey backbone (collar->toe; carries whole-hole hover) plus a
+// grade-coloured log painted along each assayed interval's TRUE downhole extent
+// (from->to along the hole axis) so the colour actually reads down the hole.
+const traceG=new THREE.BufferGeometry();const tv=[];const COLLAR={};
 M.holes.forEach(h=>{const a=P(h.collar),b=P(h.toe);tv.push(a.x,a.y,a.z,b.x,b.y,b.z);
-  const d=new THREE.Vector3().subVectors(b,a);const L=d.length()||1;DIRS.push(d.multiplyScalar(1/L));});
+  const d=new THREE.Vector3().subVectors(b,a);const L=d.length()||1;
+  COLLAR[h.id]={p:a,d:d.multiplyScalar(1/L)};});
 traceG.setAttribute("position",new THREE.Float32BufferAttribute(tv,3));
-const traces=new THREE.LineSegments(traceG,new THREE.LineBasicMaterial({color:0x9aa3af,transparent:true,opacity:0.38}));
+const traces=new THREE.LineSegments(traceG,new THREE.LineBasicMaterial({color:0x9aa3af,transparent:true,opacity:0.30}));
 scene.add(traces);
-// grade-coloured interval segments along each hole (vertex colours from the ramp)
-const HDIR={};M.holes.forEach((h,i)=>{HDIR[h.id]=DIRS[i];});
 const gsG=new THREE.BufferGeometry();const gpos=[],gcol=[];
-M.samples.forEach(s=>{const d=HDIR[s.hole];if(!d)return;const p=P(s.xyz);
-  const half=Math.max((((s.to-s.from)||2)/2),1.4);
-  const a=p.clone().addScaledVector(d,-half),b=p.clone().addScaledVector(d,half);
+M.samples.forEach(s=>{const h=COLLAR[s.hole];if(!h)return;
+  const a=h.p.clone().addScaledVector(h.d,s.from),b=h.p.clone().addScaledVector(h.d,s.to);
   const c=ramp(Math.min(s.grade,CAP)/CAP);const cr=c[0]/255,cg=c[1]/255,cb=c[2]/255;
   gpos.push(a.x,a.y,a.z,b.x,b.y,b.z);gcol.push(cr,cg,cb,cr,cg,cb);});
 gsG.setAttribute("position",new THREE.Float32BufferAttribute(gpos,3));
 gsG.setAttribute("color",new THREE.Float32BufferAttribute(gcol,3));
-const gradeSegs=new THREE.LineSegments(gsG,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:0.95}));
+const gradeSegs=new THREE.LineSegments(gsG,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:0.98}));
 scene.add(gradeSegs);
 const colG=new THREE.BufferGeometry();const cv=[];M.holes.forEach(h=>{const a=P(h.collar);cv.push(a.x,a.y,a.z);});
 colG.setAttribute("position",new THREE.Float32BufferAttribute(cv,3));
 const collars=new THREE.Points(colG,new THREE.PointsMaterial({color:0x374151,size:3.4,sizeAttenuation:false}));
 traces.add(collars);
+// topography surface — IDW-interpolated from collar elevations (the holes sit on
+// the ground, so their elevations sample the terrain). Off by default; togg.
+let terrain=null;
+(function(){const cs=M.holes.map(h=>({e:h.collar[0],n:h.collar[1],z:h.collar[2]})).filter(c=>isFinite(c.z));
+  if(cs.length<4)return;const zr=Math.max.apply(0,cs.map(c=>c.z))-Math.min.apply(0,cs.map(c=>c.z));
+  if(zr<1)return;                     // no real relief in the collar elevations
+  const N=36,verts=[],idx=[];
+  for(let j=0;j<=N;j++)for(let i=0;i<=N;i++){const E=ext[0]*i/N,Nn=ext[1]*j/N;let sw=0,swz=0;
+    for(const c of cs){const dx=c.e-E,dn=c.n-Nn;const w=1/(dx*dx+dn*dn+25);sw+=w;swz+=w*c.z;}
+    verts.push(E-cx,(swz/sw)-cz,Nn-cy);}
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){const a=j*(N+1)+i,b=a+1,c2=a+N+1,d2=c2+1;idx.push(a,c2,b,b,c2,d2);}
+  const geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.Float32BufferAttribute(verts,3));
+  geo.setIndex(idx);geo.computeVertexNormals();
+  terrain=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:0xccd3de,transparent:true,opacity:0.5,side:THREE.DoubleSide}));
+  terrain.visible=false;scene.add(terrain);
+  terrain.add(new THREE.LineSegments(new THREE.WireframeGeometry(geo),
+    new THREE.LineBasicMaterial({color:0xaab3c2,transparent:true,opacity:0.3})));})();
 
 const samples=new THREE.InstancedMesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshLambertMaterial(),M.samples.length);
 const dummy=new THREE.Object3D();const col3=new THREE.Color();
@@ -272,17 +298,30 @@ function hover(e){mouse.x=(e.clientX/innerWidth)*2-1;mouse.y=-((e.clientY-49)/vh
   // 1) precise: an individual assay sample
   const sh=samples.visible?ray.intersectObject(samples):[];
   if(sh.length){const s=M.samples[sh[0].instanceId];
-    showTip(`<b>${s.hole}</b> · ${s.from.toFixed(1)}–${s.to.toFixed(1)} m<br><span class="g">${s.grade.toFixed(2)} ${M.unit} ${M.element}</span>`,e);return;}
+    showTip(`<b>${holeName(s.hole)}</b> · ${s.from.toFixed(1)}–${s.to.toFixed(1)} m<br><span class="g">${s.grade.toFixed(2)} ${M.unit} ${M.element}</span>`,e);return;}
   // 2) the drill hole itself (its whole assay string)
   const th=traces.visible?ray.intersectObject(traces):[];
   if(th.length){const hi=Math.floor((th[0].index||0)/2);const id=HOLES[hi];const iv=HINT[id]||[];
     const rows=iv.slice(0,9).map(s=>`${s.from.toFixed(1)}–${s.to.toFixed(1)}m <span class="g">${s.grade.toFixed(2)}</span>`).join("<br>");
-    showTip(`<b>${id}</b> · ${iv.length} assay${iv.length===1?"":"s"} ${M.element}<br>${rows||"<span style='color:var(--mut)'>no assays parsed</span>"}${iv.length>9?"<br>+"+(iv.length-9)+" more":""}`,e);return;}
+    showTip(`<b>${holeName(id)}</b> · ${iv.length} assay${iv.length===1?"":"s"} ${M.element}<br>${rows||"<span style='color:var(--mut)'>no assays parsed</span>"}${iv.length>9?"<br>+"+(iv.length-9)+" more":""}`,e);return;}
   tip.style.display="none";}
 
 $("t-blocks").onchange=e=>blocks.visible=e.target.checked;
 $("t-samples").onchange=e=>samples.visible=e.target.checked;
 $("t-traces").onchange=e=>{traces.visible=e.target.checked;gradeSegs.visible=e.target.checked;};
+$("t-topo").onchange=e=>{if(terrain)terrain.visible=e.target.checked;};
+if(terrain)$("topo-row").hidden=false;
+// too few holes to model -> no block layer to toggle
+if(!M.counts.blocks){const tb=$("t-blocks");if(tb){tb.checked=false;tb.disabled=true;
+  const lab=tb.closest(".toggle");if(lab){lab.style.opacity=".5";lab.title="Block model needs ≥5 drill holes";}}}
+// live scale bar — a round distance sized to the current zoom
+const sbarTrack=document.querySelector('#scalebar .sbar'),sbarLabel=$("sbar-label");
+function niceNum(x){const p=Math.pow(10,Math.floor(Math.log10(x)));const f=x/p;return (f<1.5?1:f<3.5?2:f<7.5?5:10)*p;}
+function fmtM(m){return m>=1000?(+(m/1000).toFixed(m%1000?1:0))+" km":Math.round(m)+" m";}
+function updateScale(){const wh=2*dist*Math.tan(camera.fov*Math.PI/360);const mpp=wh/vh();
+  if(!isFinite(mpp)||mpp<=0)return;const nice=niceNum(110*mpp);
+  if(sbarTrack)sbarTrack.style.width=Math.max(20,Math.min(240,nice/mpp))+"px";
+  if(sbarLabel)sbarLabel.textContent=fmtM(nice);}
 // data-sources list
 (function(){const list=$("srclist"),srcs=M.sources||[];
   if(!srcs.length){$("srcgroup").style.display="none";return;}
@@ -307,8 +346,8 @@ cutEl.oninput=updateCut;updateCut();
 
 let auto=!matchMedia("(prefers-reduced-motion: reduce)").matches;
 const hintEl=$("hint");setTimeout(()=>{hintEl.style.opacity=0;},5000);
-function loop(){if(auto){yaw+=0.0016;place();}renderer.render(scene,camera);requestAnimationFrame(loop);}
-loop();
+function loop(){if(auto){yaw+=0.0016;place();}updateScale();renderer.render(scene,camera);requestAnimationFrame(loop);}
+updateScale();loop();
 addEventListener("resize",()=>{camera.aspect=innerWidth/vh();camera.updateProjectionMatrix();renderer.setSize(innerWidth,vh());});
 addEventListener("mousedown",()=>{auto=false;},{once:true});
 </script>

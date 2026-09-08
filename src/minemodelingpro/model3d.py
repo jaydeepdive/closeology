@@ -271,10 +271,30 @@ def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
     grades = np.array([s["grade"] for s in samples])
     if top_cut is None:
         top_cut = float(round(np.percentile(grades, 98), 1)) or float(grades.max())
-    # sparse projects: relax the per-block sample requirement so a shell still forms
-    ms = min_samples if len(samples) >= 40 else 2
-    blocks, stats = idw_block_model(samples, block=block, radius=radius,
-                                    min_samples=ms, top_cut=top_cut)
+    # Exclude grab/surface/channel samples from interpolation — a grab is a lone
+    # shallow (0-~2 m) surface sample on a hole with no real downhole extent. It is
+    # still shown as an assay point but never used to conjure a grade shell.
+    hole_depth = {h["id"]: (h.get("depth") or 0.0) for h in holes}
+    by_hole = {}
+    for s in samples:
+        by_hole.setdefault(s["hole"], []).append(s)
+
+    def _is_grab(hid):
+        ss = by_hole[hid]
+        return (len(ss) == 1 and float(ss[0].get("from", 0) or 0) == 0.0
+                and float(ss[0].get("to", 0) or 0) <= 2.0 and (hole_depth.get(hid, 0.0) or 0.0) < 10.0)
+    block_samples = [s for s in samples if not _is_grab(s["hole"])]
+    n_block_holes = len({s["hole"] for s in block_samples})
+    # A block model needs enough holes to be meaningful — below 5 distinct drill
+    # holes it is a guess, not a model, so we show only holes + assays (no shell).
+    if n_block_holes >= 5 and len(block_samples) >= 12:
+        ms = min_samples if len(block_samples) >= 40 else 2
+        blocks, stats = idw_block_model(block_samples, block=block, radius=radius,
+                                        min_samples=ms, top_cut=top_cut)
+    else:
+        blocks, stats = [], {"block_m": block, "radius_m": 0, "spacing_m": 0, "max_gap_m": 0,
+                             "min_samples": min_samples, "top_cut": top_cut, "n_blocks": 0,
+                             "reason": f"only {n_block_holes} drill hole(s) — too few to model"}
     allpts = ([h["collar"] for h in holes] + [h["toe"] for h in holes]
               + [s["xyz"] for s in samples] + [b["xyz"] for b in blocks])
     arr = np.array(allpts, dtype=float)
@@ -613,6 +633,7 @@ def _write_gallery(cards, out_html):
         jchip = f'<span class="mjur">{esc(region)}</span>' if region else ""
         project = re.sub(r"\s*\(\d{5,}\)\s*$", "", str(c.get("project") or "")).strip()
         company = (c.get("company") or "").strip()
+        # drop the company line when it's redundant with the project or a placeholder code
         if company and (company.lower() == project.lower() or re.fullmatch(r"[A-Za-z]\d{2,}", company)):
             company = ""
         sub = f'<div class="mcompany">{esc(company)}</div>' if company else ""
