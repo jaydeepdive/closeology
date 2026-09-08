@@ -30,6 +30,10 @@ jobs:
         run: pip install -r requirements.txt
       - name: Rebuild all Canadian jurisdictions
         run: PYTHONPATH=src python src/build_all.py
+      - name: Build 3D deposit models
+        run: |
+          pip install -q numpy pandas pyarrow 2>/dev/null || true
+          PYTHONPATH=src python -c "from minemodelingpro import model3d; model3d.build_all('site')" || echo "model build skipped"
       - name: Commit refreshed site
         run: |
           git config user.name "closeology-bot"
