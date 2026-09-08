@@ -4,10 +4,11 @@ name: closeology-daily
 # from public data every morning and publishes the site to GitHub Pages automatically.
 on:
   schedule:
-    - cron: "17 12 * * *"      # daily 12:17 UTC (~05:17 PT)
-  push:
-    branches: [main]
+    - cron: "17 12 * * *"      # daily 12:17 UTC (~05:17 PT) — the ONE full data rebuild
   workflow_dispatch: {}
+# NOTE: no `push` trigger — code/model/site pushes publish via deploy.yml (fast,
+# ~1 min, no rebuild). The heavy all-jurisdiction rebuild runs only on the daily
+# schedule, when the public source data actually changes.
 
 concurrency:
   group: closeology
