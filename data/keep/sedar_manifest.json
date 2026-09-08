@@ -1133,5 +1133,53 @@
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W4629&drmKey=992f3411acfeaaac&drr=ssc8fbdbeb9fced444fe92e82d8d1164186de3e4db859633533e7a62361a74c4f035feb4916188da5621f3f35d077d224dux&id=0c11f8b7998bcd96b99702bb267701e8247f67cfdc5332c1",
   "collected": "2026-09-07T15:27:41Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_strikepoint-gold-inc_20260818T1623.pdf"
+ },
+ {
+  "key": "canada-nickel-company-inc_20260908T1914",
+  "node": "W2479",
+  "drm": "9323708de77e36e7",
+  "file": "sedar_canada-nickel-company-inc_20260908T1914.pdf",
+  "filing_ref": "canada-nickel-company-inc_20260908T1914",
+  "company": "Canada Nickel Company Inc.",
+  "profile": "000048733",
+  "submitted": "08 Sep 2026 19:14 EDT",
+  "jurisdiction": "Ontario",
+  "size_kb": 7365,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2479&drmKey=9323708de77e36e7&drr=ssbd1fa73054df62d79362f3b4846e44d359b68afdd811fec66e7aaf09457baf5748f4aa44bb979d3a84ed052266d8d6f8ux&id=0c11f8b7998bcd967e3912ad7a9fa27d000376b65245917d",
+  "collected": "2026-09-08T23:30:39Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_canada-nickel-company-inc_20260908T1914.pdf"
+ },
+ {
+  "key": "canada-nickel-company-inc_20260908T1907",
+  "node": "W2550",
+  "drm": "ee298d1e6d9363b8",
+  "file": "sedar_canada-nickel-company-inc_20260908T1907.pdf",
+  "filing_ref": "canada-nickel-company-inc_20260908T1907",
+  "company": "Canada Nickel Company Inc.",
+  "profile": "000048733",
+  "submitted": "08 Sep 2026 19:07 EDT",
+  "jurisdiction": "Ontario",
+  "size_kb": 5711,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2550&drmKey=ee298d1e6d9363b8&drr=ssbd1fa73054df62d79362f3b4846e44d359b68afdd811fec66e7aaf09457baf5748f4aa44bb979d3a84ed052266d8d6f8ux&id=0c11f8b7998bcd967e3912ad7a9fa27d000376b65245917d",
+  "collected": "2026-09-08T23:30:54Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_canada-nickel-company-inc_20260908T1907.pdf"
+ },
+ {
+  "key": "canadian-goldcamps-corp-formerly-supreme-met_20260908T1602",
+  "node": "W2621",
+  "drm": "1105e7dbc84a388e",
+  "file": "sedar_canadian-goldcamps-corp-formerly-supreme-met_20260908T1602.pdf",
+  "filing_ref": "canadian-goldcamps-corp-formerly-supreme-met_20260908T1602",
+  "company": "Canadian Goldcamps Corp. - formerly Supreme Metals Corp.",
+  "profile": "000035725",
+  "submitted": "08 Sep 2026 16:02 EDT",
+  "jurisdiction": "British Columbia",
+  "size_kb": 5440,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2621&drmKey=1105e7dbc84a388e&drr=ssbd1fa73054df62d79362f3b4846e44d359b68afdd811fec66e7aaf09457baf5748f4aa44bb979d3a84ed052266d8d6f8ux&id=0c11f8b7998bcd967e3912ad7a9fa27d000376b65245917d",
+  "collected": "2026-09-08T23:31:09Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_canadian-goldcamps-corp-formerly-supreme-met_20260908T1602.pdf"
  }
 ]
