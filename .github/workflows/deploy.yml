@@ -1,0 +1,28 @@
+name: deploy-pages-fast
+# Deploys the already-committed site/ to GitHub Pages in ~1 min, without the
+# heavy multi-jurisdiction rebuild in build.yml. Keeps model/site changes from
+# waiting 30-60 min behind a full data rebuild. build.yml still rebuilds data
+# and deploys its own [skip ci] commits; this handles ordinary pushes.
+on:
+  push:
+    branches: [main]
+permissions:
+  pages: write
+  id-token: write
+  contents: read
+concurrency:
+  group: pages-fast
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.dep.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: dep
+        uses: actions/deploy-pages@v4
