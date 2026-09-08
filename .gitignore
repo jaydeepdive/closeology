@@ -14,11 +14,10 @@ data/minfile_db/
 data/keep/mmp.sqlite
 # large generated site assets — rebuilt in CI + published via the Pages artifact.
 # Keep only the lightweight core pages (priority + hub) tracked for reference.
-site/*.html
-!site/models.html
-!site/index.html
-!site/priorities.html
-!site/regions.html
+# generated site pages ARE committed so the fast deploy.yml (which uploads only
+# the committed site/) serves a COMPLETE site — app.html / yk.html / province
+# maps / radar were being 404'd because they were ignored and thus never in the
+# fast-deploy artifact. Only the private artifact variant stays ignored.
 site/app_artifact.html
 site/*.geojson
 site/*.png
