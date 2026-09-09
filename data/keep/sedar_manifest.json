@@ -1213,5 +1213,21 @@
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2259&drmKey=eafedac5450a23d1&drr=ssf1b2f27151d1687ee013b9d6899cfd7ea46781b6f827ae3172be1462645d0d1c41687463d98f9661a0044615db34a133ux&id=0c11f8b7998bcd9635b825ac250ad9bf95c9379c5ead7b9f",
   "collected": "2026-09-09T13:00:54Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_troilus-mining-corp_20260909T0701.pdf"
+ },
+ {
+  "key": "blade-resources-inc-000109640_20260909T1306",
+  "node": "W3198",
+  "drm": "9a423026094f95a8",
+  "file": "sedar_blade-resources-inc-000109640_20260909T1306.pdf",
+  "filing_ref": "blade-resources-inc-000109640_20260909T1306",
+  "company": "Blade Resources Inc. (000109640)",
+  "profile": "000109640",
+  "submitted": "09 Sep 2026 13:06 EDT",
+  "jurisdiction": "British Columbia",
+  "size_kb": 6719,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W3198&drmKey=9a423026094f95a8&drr=ss4883ff8b101d249c590cb519193522044e480b42870b9918f4e4b6a70226282a34ac7724b662c8cf21b179b79d417aadux&id=0c11f8b7998bcd96fe4b11ef88691aac16c4f1485ae5e660",
+  "collected": "2026-09-09T17:08:18Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_blade-resources-inc-000109640_20260909T1306.pdf"
  }
 ]
