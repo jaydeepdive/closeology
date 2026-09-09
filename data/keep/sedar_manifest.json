@@ -1181,5 +1181,21 @@
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2621&drmKey=1105e7dbc84a388e&drr=ssbd1fa73054df62d79362f3b4846e44d359b68afdd811fec66e7aaf09457baf5748f4aa44bb979d3a84ed052266d8d6f8ux&id=0c11f8b7998bcd967e3912ad7a9fa27d000376b65245917d",
   "collected": "2026-09-08T23:31:09Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_canadian-goldcamps-corp-formerly-supreme-met_20260908T1602.pdf"
+ },
+ {
+  "key": "sanu-gold-corp_20260908T2015",
+  "node": "W3251",
+  "drm": "57a9d5405116b0a8",
+  "file": "sedar_sanu-gold-corp_20260908T2015.pdf",
+  "filing_ref": "sanu-gold-corp_20260908T2015",
+  "company": "Sanu Gold Corp.",
+  "profile": "000053940",
+  "submitted": "08 Sep 2026 20:15 EDT",
+  "jurisdiction": "British Columbia",
+  "size_kb": 6658,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W3251&drmKey=57a9d5405116b0a8&drr=ss1572dd9dd5db2bf34f5d4f8255d2c108248554f4f31e6b2933f7f39ab28f159e4c09f5dd0df39a82960dcf8a79eb515fux&id=0c11f8b7998bcd96106d6f05435b84271287255c5616d314",
+  "collected": "2026-09-09T03:00:39Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_sanu-gold-corp_20260908T2015.pdf"
  }
 ]
