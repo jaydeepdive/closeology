@@ -31,6 +31,81 @@ import datetime
 import numpy as np
 import pandas as pd
 
+
+# ------------------------------------------------------------------ terrain DEM
+# Real topography from AWS Terrain Tiles (Mapzen/Terrarium) — public, keyless,
+# global. Elevation is encoded in the PNG: elev = R*256 + G + B/256 - 32768.
+_DEM_TILES = {}
+_DEM_URL = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"
+
+
+def _dem_tile(z, x, y):
+    key = (z, x, y)
+    if key in _DEM_TILES:
+        return _DEM_TILES[key]
+    im = None
+    try:
+        import io
+        import urllib.request
+        from PIL import Image
+        b = urllib.request.urlopen(urllib.request.Request(
+            _DEM_URL.format(z=z, x=x, y=y), headers={"User-Agent": "closeology/1.0"}), timeout=20).read()
+        im = Image.open(io.BytesIO(b)).convert("RGB").load(), Image.open(io.BytesIO(b)).size
+    except Exception:
+        im = None
+    _DEM_TILES[key] = im
+    return im
+
+
+def _elev_at(lat, lon, z):
+    n = 2 ** z
+    fx = (lon + 180.0) / 360.0 * n
+    fy = (1 - math.log(math.tan(math.radians(lat)) + 1 / math.cos(math.radians(lat))) / math.pi) / 2 * n
+    tx, ty = int(fx), int(fy)
+    t = _dem_tile(z, tx, ty)
+    if not t:
+        return None
+    px, size = t
+    w, h = size
+    ix = min(w - 1, max(0, int((fx - tx) * w)))
+    iy = min(h - 1, max(0, int((fy - ty) * h)))
+    r, g, b = px[ix, iy]
+    return (r * 256 + g + b / 256.0) - 32768.0
+
+
+def _terrain_dem(lat0, lon0, mE, mN, origin, ext, collar_ref, n=44, zoom=13):
+    """Sample a real DEM over the model's XY extent, returned as a grid in the
+    model's shifted metre frame. Relief is anchored to the collar level so it
+    lines up vertically even when the holes carry no absolute elevation."""
+    if ext[0] <= 0 or ext[1] <= 0:
+        return None
+    de = ext[0] / (n - 1)
+    dn = ext[1] / (n - 1)
+    zc = _elev_at(lat0, lon0, zoom)
+    if zc is None:
+        return None
+    zs, ok = [], 0
+    lo, hi = 1e18, -1e18
+    for j in range(n):
+        for i in range(n):
+            e_pre = i * de + origin[0]        # un-shift back to local metres
+            n_pre = j * dn + origin[1]
+            lat = lat0 + n_pre / mN
+            lon = lon0 + e_pre / mE
+            el = _elev_at(lat, lon, zoom)
+            if el is None:
+                zs.append(None)
+                continue
+            v = (el - zc) + collar_ref        # relief anchored to collar level
+            zs.append(round(v, 1)); ok += 1
+            lo, hi = min(lo, v), max(hi, v)
+    if ok < 0.5 * n * n or (hi - lo) < 1.0:
+        return None
+    mid = (lo + hi) / 2.0
+    zs = [mid if v is None else v for v in zs]
+    return {"nx": n, "ny": n, "de": round(de, 2), "dn": round(dn, 2),
+            "z": zs, "relief_m": round(hi - lo, 0), "source": "AWS Terrain Tiles"}
+
 from minemodelingpro import shards
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -258,7 +333,7 @@ def _maturity(n_holes, n_blocks):
 
 def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
            report_url=None, source="report", region=None, updated=None,
-           sources=None, density=2.7, company=None,
+           sources=None, density=2.7, company=None, center=None, mE=None, mN=None,
            block=15.0, radius=None, min_samples=3, top_cut=None):
     """Core model builder shared by the 43-101 shard store and the news drill
     bank. Degrades gracefully: a sparse project yields desurveyed traces + assay
@@ -308,18 +383,27 @@ def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
         s["xyz"] = sh(s["xyz"])
     for b in blocks:
         b["xyz"] = sh(b["xyz"])
+    extent = [round(float(v), 1) for v in (arr.max(0) - origin)]
+    # real topography over the deposit footprint (only when we have its lat/lon)
+    terrain = None
+    if center and mE and mN:
+        try:
+            collar_ref = float(np.mean([h["collar"][2] for h in holes])) if holes else 0.0
+            terrain = _terrain_dem(center[0], center[1], mE, mN, origin, extent, collar_ref)
+        except Exception:
+            terrain = None
     return {
         "source_id": source_id,
         "project": project or source_id,
         "company": company,
         "jurisdiction": jurisdiction, "report_url": report_url,
         "source": source, "region": region, "updated": updated,
-        "sources": sources or [], "density": density,
+        "sources": sources or [], "density": density, "terrain": terrain,
         "maturity": _maturity(len(holes), len(blocks)),
         "element": element, "unit": (asy["unit"].dropna().iloc[0] if asy["unit"].notna().any() else "g/t"),
         "generated": datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z",
         "origin": [round(float(v), 2) for v in origin],
-        "extent": [round(float(v), 1) for v in (arr.max(0) - origin)],
+        "extent": extent,
         "counts": {"holes": len(holes), "samples": len(samples), "blocks": len(blocks)},
         "grade_stats": {"min": float(grades.min()), "max": float(grades.max()),
                         "mean": round(float(grades.mean()), 2),
@@ -537,7 +621,8 @@ def _drillbank_groups(min_located=3, min_assays=6, cluster_km=8.0):
         out[key] = {"col": col, "asy": asy, "region": region,
                     "updated": (cg["r_pub"].dropna().max() if cg["r_pub"].notna().any() else None),
                     "sources": sources, "label": label, "project": projname or label,
-                    "company": comp, "area": f"{lat0:.2f}, {lon0:.2f}"}
+                    "company": comp, "area": f"{lat0:.2f}, {lon0:.2f}",
+                    "center": (lat0, lon0), "mE": mE, "mN": mN}
     return out
 
 
@@ -551,6 +636,7 @@ def build_drillbank_model(key, g, **kw):
         try:
             m = _build(col, asy, None, sid, g.get("project") or g["label"], el,
                        jurisdiction=g["region"], report_url=rpt, company=g.get("company"),
+                       center=g.get("center"), mE=g.get("mE"), mN=g.get("mN"),
                        source="news", region=g["region"], updated=g["updated"], sources=g["sources"], **kw)
             m["area"] = g.get("area")
             return m

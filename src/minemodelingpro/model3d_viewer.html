@@ -227,23 +227,19 @@ const colG=new THREE.BufferGeometry();const cv=[];M.holes.forEach(h=>{const a=P(
 colG.setAttribute("position",new THREE.Float32BufferAttribute(cv,3));
 const collars=new THREE.Points(colG,new THREE.PointsMaterial({color:0x374151,size:3.4,sizeAttenuation:false}));
 traces.add(collars);
-// topography surface — IDW-interpolated from collar elevations (the holes sit on
-// the ground, so their elevations sample the terrain). Off by default; togg.
+// topography surface — REAL DEM (AWS Terrain Tiles) sampled over the deposit
+// footprint at build time and carried in M.terrain, in the model's metre frame.
+// Off by default; toggled in Layers.
 let terrain=null;
-(function(){const cs=M.holes.map(h=>({e:h.collar[0],n:h.collar[1],z:h.collar[2]})).filter(c=>isFinite(c.z));
-  if(cs.length<4)return;const zr=Math.max.apply(0,cs.map(c=>c.z))-Math.min.apply(0,cs.map(c=>c.z));
-  if(zr<1)return;                     // no real relief in the collar elevations
-  const N=36,verts=[],idx=[];
-  for(let j=0;j<=N;j++)for(let i=0;i<=N;i++){const E=ext[0]*i/N,Nn=ext[1]*j/N;let sw=0,swz=0;
-    for(const c of cs){const dx=c.e-E,dn=c.n-Nn;const w=1/(dx*dx+dn*dn+25);sw+=w;swz+=w*c.z;}
-    verts.push(E-cx,(swz/sw)-cz,Nn-cy);}
-  for(let j=0;j<N;j++)for(let i=0;i<N;i++){const a=j*(N+1)+i,b=a+1,c2=a+N+1,d2=c2+1;idx.push(a,c2,b,b,c2,d2);}
+(function(){const T=M.terrain;if(!T||!T.z)return;const nx=T.nx,ny=T.ny,verts=[],idx=[];
+  for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){const p=P([i*T.de,j*T.dn,T.z[j*nx+i]]);verts.push(p.x,p.y,p.z);}
+  for(let j=0;j<ny-1;j++)for(let i=0;i<nx-1;i++){const a=j*nx+i,b=a+1,c2=a+nx,d2=c2+1;idx.push(a,c2,b,b,c2,d2);}
   const geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.Float32BufferAttribute(verts,3));
   geo.setIndex(idx);geo.computeVertexNormals();
-  terrain=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:0xccd3de,transparent:true,opacity:0.5,side:THREE.DoubleSide}));
+  terrain=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:0xd7dde6,transparent:true,opacity:0.55,side:THREE.DoubleSide}));
   terrain.visible=false;scene.add(terrain);
   terrain.add(new THREE.LineSegments(new THREE.WireframeGeometry(geo),
-    new THREE.LineBasicMaterial({color:0xaab3c2,transparent:true,opacity:0.3})));})();
+    new THREE.LineBasicMaterial({color:0xa7b0c0,transparent:true,opacity:0.32})));})();
 
 const samples=new THREE.InstancedMesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshLambertMaterial(),M.samples.length);
 const dummy=new THREE.Object3D();const col3=new THREE.Color();
