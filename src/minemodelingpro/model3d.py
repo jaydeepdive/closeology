@@ -370,6 +370,11 @@ def _build(col, asy, sur, source_id, project, element, jurisdiction=None,
         blocks, stats = [], {"block_m": block, "radius_m": 0, "spacing_m": 0, "max_gap_m": 0,
                              "min_samples": min_samples, "top_cut": top_cut, "n_blocks": 0,
                              "reason": f"only {n_block_holes} drill hole(s) — too few to model"}
+    # grabs are excluded from the RENDER as well — the user does not want lone
+    # surface/grab samples appearing on the 3D model at all (only real drilling).
+    if block_samples:
+        samples = block_samples
+        grades = np.array([s["grade"] for s in samples])
     allpts = ([h["collar"] for h in holes] + [h["toe"] for h in holes]
               + [s["xyz"] for s in samples] + [b["xyz"] for b in blocks])
     arr = np.array(allpts, dtype=float)

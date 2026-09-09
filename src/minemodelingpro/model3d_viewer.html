@@ -214,14 +214,19 @@ M.holes.forEach(h=>{const a=P(h.collar),b=P(h.toe);tv.push(a.x,a.y,a.z,b.x,b.y,b
 traceG.setAttribute("position",new THREE.Float32BufferAttribute(tv,3));
 const traces=new THREE.LineSegments(traceG,new THREE.LineBasicMaterial({color:0x9aa3af,transparent:true,opacity:0.30}));
 scene.add(traces);
-const gsG=new THREE.BufferGeometry();const gpos=[],gcol=[];
+// grade-coloured downhole log as VISIBLE cylinders — WebGL caps LineBasicMaterial
+// at 1px, so a coloured *line* is invisible; a thin cylinder per assayed interval
+// (oriented along the hole, radius scaled to the deposit) makes the grade read.
+const _c3=new THREE.Color();const _logR=Math.max(R*0.006,1.6);
+const gradeSegs=new THREE.InstancedMesh(new THREE.CylinderGeometry(_logR,_logR,1,8),new THREE.MeshLambertMaterial({transparent:true,opacity:0.96}),M.samples.length);
+{const _up=new THREE.Vector3(0,1,0),_q=new THREE.Quaternion(),_o=new THREE.Object3D();let _gi=0;
 M.samples.forEach(s=>{const h=COLLAR[s.hole];if(!h)return;
   const a=h.p.clone().addScaledVector(h.d,s.from),b=h.p.clone().addScaledVector(h.d,s.to);
-  const c=ramp(Math.min(s.grade,CAP)/CAP);const cr=c[0]/255,cg=c[1]/255,cb=c[2]/255;
-  gpos.push(a.x,a.y,a.z,b.x,b.y,b.z);gcol.push(cr,cg,cb,cr,cg,cb);});
-gsG.setAttribute("position",new THREE.Float32BufferAttribute(gpos,3));
-gsG.setAttribute("color",new THREE.Float32BufferAttribute(gcol,3));
-const gradeSegs=new THREE.LineSegments(gsG,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:0.98}));
+  const dir=new THREE.Vector3().subVectors(b,a);const len=Math.max(dir.length(),_logR*1.5);
+  _o.position.copy(a).add(b).multiplyScalar(0.5);_q.setFromUnitVectors(_up,dir.clone().normalize());
+  _o.quaternion.copy(_q);_o.scale.set(1,len,1);_o.updateMatrix();gradeSegs.setMatrixAt(_gi,_o.matrix);
+  const c=ramp(Math.min(s.grade,CAP)/CAP);_c3.setRGB(c[0]/255,c[1]/255,c[2]/255);gradeSegs.setColorAt(_gi,_c3);_gi++;});
+gradeSegs.count=_gi;gradeSegs.instanceMatrix.needsUpdate=true;if(gradeSegs.instanceColor)gradeSegs.instanceColor.needsUpdate=true;}
 scene.add(gradeSegs);
 const colG=new THREE.BufferGeometry();const cv=[];M.holes.forEach(h=>{const a=P(h.collar);cv.push(a.x,a.y,a.z);});
 colG.setAttribute("position",new THREE.Float32BufferAttribute(cv,3));
