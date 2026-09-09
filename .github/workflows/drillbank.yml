@@ -16,7 +16,7 @@ on:
         default: "incremental"
       limit:
         description: "max releases this run"
-        default: "300"
+        default: "8000"
 
 concurrency:
   group: closeology-drillbank
@@ -25,12 +25,13 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 350
     permissions:
       contents: write
     env:
-      NEWSWIRE_MAX_SECONDS: "1500"   # gentle 25-min budget
-      NEWSWIRE_DELAY: "6"            # ~6s between releases -> under the throttle
+      NEWSWIRE_MAX_SECONDS: "20400"  # ~5.7h — run until the crawl is exhausted, not a fixed budget
+      NEWSWIRE_DELAY: "3"            # 3s pacing; curl_cffi handles any 429 with backoff
+      NEWSWIRE_PER_SOURCE: "100000" # no per-source cap — take everything each wire has
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,7 +41,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Collect drill results
         run: |
-          PYTHONPATH=src python -m newswire.run "${{ github.event.inputs.mode || 'incremental' }}" --limit "${{ github.event.inputs.limit || 300 }}"
+          PYTHONPATH=src python -m newswire.run "${{ github.event.inputs.mode || 'incremental' }}" --limit "${{ github.event.inputs.limit || 8000 }}"
           PYTHONPATH=src python -m newswire.run stats
           PYTHONPATH=src python -m minemodelingpro.export
       - name: Commit the bank
