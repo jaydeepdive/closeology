@@ -168,10 +168,10 @@ def enrich(region_dir):
             n_ton += 1
 
     # last production year from the record prose where the table lacked it
-    from config import last_production_year
+    from config import last_production_year, production_year_in_prose
     for i in leads.index:
         if not leads.at[i, "last_prod_year"] and "produc" in str(leads.at[i, "status"]).lower():
-            y = last_production_year(leads.at[i, "capsule"])
+            y = production_year_in_prose(leads.at[i, "capsule"])
             if y:
                 leads.at[i, "last_prod_year"] = y
     # re-score with the new grade/tonnage/recency, then re-rank

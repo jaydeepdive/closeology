@@ -310,6 +310,30 @@ def last_production_year(*texts):
     return best
 
 
+# Years mentioned in descriptive prose (capsules) are unreliable as production
+# dates — they include ownership/staking events ("In 1980 the property was
+# optioned"), elevations ("between 1650 and 2000 metres"), assessment-report
+# numbers and coordinates. Only trust a prose year when it sits next to a
+# production word, so those false positives don't masquerade as recent output.
+_PROD_YEAR_CTX = _re_year.compile(
+    r"(?:produc\w*|mined|milling|milled|smelt\w*|shipped|shipment|operated|in operation)[^.\n]{0,45}?\b(18\d\d|19\d\d|20[0-2]\d)\b"
+    r"|\b(18\d\d|19\d\d|20[0-2]\d)\b[^.\n]{0,30}?(?:produc\w*|mined|milled|smelt\w*)",
+    _re_year.I)
+
+
+def production_year_in_prose(*texts):
+    """Latest year that appears NEAR a production word, so elevations, staking
+    dates, report numbers and coordinates in prose are not mistaken for a
+    production year. Returns int or None."""
+    best = None
+    for t in texts:
+        for m in _PROD_YEAR_CTX.finditer(str(t or "")):
+            y = int(m.group(1) or m.group(2))
+            if 1850 <= y <= 2035 and (best is None or y > best):
+                best = y
+    return best
+
+
 def parse_tonnes(tonnes_str):
     m = _TONNES_RE.search(str(tonnes_str or ""))
     if not m:
@@ -378,6 +402,64 @@ def _prod_recency(year):
     return (3, 0.1, f"historic pre-1980 workings ({y}) — little modern-economic material likely remains")
 
 
+
+# --- market FUNDABILITY of the dominant metal -------------------------------
+# Two deposits with equal in-situ $/t are not equally financeable. A gold or
+# copper target attracts junior capital; a zinc/lead body does not (smelter-
+# dependent, thin margins, little market appetite in this cycle). This factor
+# scales the economic/grade credit by how financeable the dominant commodity
+# actually is, so paper $/t on an unfundable metal stops out-ranking real
+# gold/copper targets. (Iron/sulphur/manganese already price to ~$0.)
+METAL_FUNDABILITY = {
+    "au": 1.0, "cu": 1.0, "ag": 0.9, "pt": 0.9, "pd": 0.9,
+    "li": 0.85, "li2o": 0.85, "u": 0.85, "u3o8": 0.85, "ni": 0.8, "co": 0.8,
+    "sn": 0.7, "sb": 0.7, "w": 0.7, "wo3": 0.7,
+    "reo": 0.7, "treo": 0.7, "nd": 0.7, "pr": 0.7, "dy": 0.7, "tb": 0.7,
+    "ga": 0.7, "ge": 0.7, "bi": 0.6, "in": 0.6, "te": 0.6, "v": 0.6, "v2o5": 0.6,
+    "mo": 0.45, "zn": 0.4, "pb": 0.3, "cd": 0.2, "al": 0.1,
+    "fe": 0.0, "iron": 0.0, "mn": 0.0, "s": 0.0, "as": 0.0,
+}
+
+
+def dominant_value_metal(grade_str):
+    """Metal abbreviation contributing the most in-situ value in grade_str, else None."""
+    best = None; bestv = 0.0
+    for ab, num, unit in _GRADE_RE.findall(str(grade_str or "")):
+        a = ab.lower(); price = PRICE_KG.get(a)
+        if not price:
+            continue
+        try:
+            v = float(num)
+        except ValueError:
+            continue
+        is_gpt = "g" in unit.lower()
+        if a in _PRECIOUS:
+            gpt = v * 10000.0 if not is_gpt else v
+            if gpt < GRADE_FLOOR.get(a, 0):
+                continue
+            val = (gpt / 1000.0) * price
+        else:
+            pct = v / 10000.0 if is_gpt else v
+            if pct < GRADE_FLOOR.get(a, 0):
+                continue
+            val = (pct * 10.0) * price
+        if val > bestv:
+            bestv = val; best = a
+    return best
+
+
+def fundability_factor(primary_metal="", grade_str=""):
+    """0..1 financeability of the dominant metal — by in-situ value where grades
+    exist, else the labelled primary commodity. Unknown -> 0.8 (mild caution)."""
+    ab = dominant_value_metal(grade_str)
+    if not ab and primary_metal:
+        pm = str(primary_metal).strip()
+        ab = (METAL_ABBR.get(pm.title(), "") or _METAL_WORD.get(pm.lower(), "")).lower()
+    if not ab:
+        return 1.0
+    return METAL_FUNDABILITY.get(ab, 0.8)
+
+
 def score_breakdown(status, deposit_open, grade_str="", tonnes_str="", has_drill=False,
                     spend=0, grade_conf=1.0, last_prod_year=None, primary_metal=""):
     """Same scoring as score_lead, but returns the component parts so a lead can
@@ -413,11 +495,14 @@ def score_breakdown(status, deposit_open, grade_str="", tonnes_str="", has_drill
     known_economic = has_grade_data and gv_raw > 0
     low_value = metal_bucket(primary_metal) in _LOW_VALUE_METAL if primary_metal else False
     if known_economic:
-        gpts = round(min(gv / VALUE_CAP, 1.0) * 22)
+        fund = fundability_factor(primary_metal, grade_str)
+        gpts = round(min(gv / VALUE_CAP, 1.0) * 22 * fund)
         if gpts:
             cl = _CONF_LABEL.get(round(conf, 1), f"{int(conf*100)}%-confidence")
             note = f"In-situ metal value ≈ ${gv_raw:,.0f}/t ({cl}"
             note += f", discounted to ${gv:,.0f}/t)" if conf < 1.0 else ")"
+            if fund < 0.9:
+                note += f" · dominant metal discounted x{fund:.2f} (market fundability)"
             parts.append({"label": "Grade value", "pts": gpts, "note": note})
     elif has_grade_data or low_value:
         # grade is on record but the metals are worth ~$0 (iron/sulphur/industrial),
@@ -428,7 +513,7 @@ def score_breakdown(status, deposit_open, grade_str="", tonnes_str="", has_drill
         # unknown grade -> credit from status. If the commodity itself is unknown
         # ("Other metallic"), we can't be sure it's valuable, so credit cautiously.
         uncertain = metal_bucket(primary_metal) == "Other metallic" if primary_metal else False
-        imp = round(implied_base * imp_factor * (0.5 if uncertain else 1.0))
+        imp = round(implied_base * imp_factor * (0.5 if uncertain else 1.0) * fundability_factor(primary_metal))
         if imp:
             parts.append({"label": "Grade (implied)", "pts": imp,
                           "note": ("No assay and commodity not well defined — partial credit"

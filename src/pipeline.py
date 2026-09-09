@@ -71,7 +71,7 @@ def prep(occ, facts):
     occ["n_metals"] = occ["metal_buckets"].map(len)
     # last production year (recency) — from an explicit column, else parsed from the
     # production string / capsule. Drives the pre-1980 discount in scoring.
-    from config import last_production_year
+    from config import last_production_year, production_year_in_prose
     if "last_prod_year" not in occ:
         occ["last_prod_year"] = None
     def _ly(r):
@@ -79,7 +79,7 @@ def prep(occ, facts):
         if v is not None and str(v).strip() not in ("", "nan", "None"):
             return v
         if "produc" in str(r.get("status", "")).lower():
-            return last_production_year(r.get("production", ""), r.get("capsule", ""))
+            return last_production_year(r.get("production", "")) or production_year_in_prose(r.get("capsule", ""))
         return None
     occ["last_prod_year"] = occ.apply(_ly, axis=1)
     occ["base_score"] = occ.apply(lambda r: score_lead(
