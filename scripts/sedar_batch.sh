@@ -19,7 +19,7 @@ LOG="$REPO/data/keep/sedar_batch.log"
   python3 -m playwright install chromium >/dev/null 2>&1 || true
   export GITHUB_TOKEN="$(git remote get-url origin | sed -E 's#https://([^@]+)@.*#\1#')"
   export GITHUB_REPOSITORY="jaydeepdive/closeology"
-  PYTHONPATH=src python3 -m minemodelingpro.sedar_collect --chrome --limit 25 --throttle 8
+  PYTHONPATH=src python3 -m minemodelingpro.sedar_collect --chrome --limit 60 --max-pages 150 --throttle 8
   git add data/keep/sedar_manifest.json
   git -c user.name=closeology -c user.email=jay@thedeepdive.ca \
       commit -m "SEDAR batch $(date -u +%Y-%m-%dT%H:%MZ)" || echo "nothing to commit"
