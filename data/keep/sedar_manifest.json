@@ -1197,5 +1197,21 @@
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W3251&drmKey=57a9d5405116b0a8&drr=ss1572dd9dd5db2bf34f5d4f8255d2c108248554f4f31e6b2933f7f39ab28f159e4c09f5dd0df39a82960dcf8a79eb515fux&id=0c11f8b7998bcd96106d6f05435b84271287255c5616d314",
   "collected": "2026-09-09T03:00:39Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_sanu-gold-corp_20260908T2015.pdf"
+ },
+ {
+  "key": "troilus-mining-corp_20260909T0701",
+  "node": "W2259",
+  "drm": "eafedac5450a23d1",
+  "file": "sedar_troilus-mining-corp_20260909T0701.pdf",
+  "filing_ref": "troilus-mining-corp_20260909T0701",
+  "company": "Troilus Mining Corp.",
+  "profile": "000005620",
+  "submitted": "09 Sep 2026 07:01 EDT",
+  "jurisdiction": "Qu\u00e9bec",
+  "size_kb": 36985,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2259&drmKey=eafedac5450a23d1&drr=ssf1b2f27151d1687ee013b9d6899cfd7ea46781b6f827ae3172be1462645d0d1c41687463d98f9661a0044615db34a133ux&id=0c11f8b7998bcd9635b825ac250ad9bf95c9379c5ead7b9f",
+  "collected": "2026-09-09T13:00:54Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_troilus-mining-corp_20260909T0701.pdf"
  }
 ]
