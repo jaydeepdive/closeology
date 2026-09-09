@@ -27,6 +27,23 @@ fi
 echo $$ > "$LOCK"
 trap 'rm -f "$LOCK" 2>/dev/null' EXIT
 
+# Adaptive IP-cooldown. SEDAR rate-limits DOWNLOADS per IP; bursts (20-30 in one
+# session) trip a clamp that refuses every download for a day or more. When a run
+# detects the clamp we write a "backoff-until" timestamp and every fire until then
+# skips — no launchd change needed — so the IP gets a long rest and the clamp lifts.
+# A run that actually downloads clears the backoff. Steady state is a gentle trickle
+# (a few per run, spaced across the day) which is far less likely to re-trip it than
+# the old 20-30-at-once bursts.
+BACKOFF="$REPO/data/keep/.sedar_backoff_until"
+RUN_OUT="$REPO/data/keep/.sedar_lastrun.out"
+if [ -f "$BACKOFF" ]; then
+  UNTIL=$(cat "$BACKOFF" 2>/dev/null || echo 0); NOW=$(date +%s)
+  if [ "$NOW" -lt "$UNTIL" ]; then
+    echo "===== $(date) SEDAR batch SKIPPED (IP cooldown, $(( (UNTIL-NOW)/3600 ))h left) =====" >> "$LOG"
+    exit 0
+  fi
+fi
+
 {
   echo "===== $(date) SEDAR batch start ====="
   rm -f .git/index.lock 2>/dev/null || true
@@ -35,7 +52,16 @@ trap 'rm -f "$LOCK" 2>/dev/null' EXIT
   python3 -m playwright install chromium >/dev/null 2>&1 || true
   export GITHUB_TOKEN="$(git remote get-url origin | sed -E 's#https://([^@]+)@.*#\1#')"
   export GITHUB_REPOSITORY="jaydeepdive/closeology"
-  PYTHONPATH=src python3 -m minemodelingpro.sedar_collect --chrome --limit 15 --max-pages 150 --throttle 5
+  PYTHONPATH=src python3 -m minemodelingpro.sedar_collect --chrome --limit 4 --max-pages 150 --throttle 5 | tee "$RUN_OUT"
+  # If the IP clamp is active (no downloads + throttle, or the collector said so),
+  # pause batches for 20h so the IP can recover; otherwise clear any cooldown.
+  if grep -q "IP rate-limit reached" "$RUN_OUT" 2>/dev/null \
+     || { grep -q "collected 0 new report" "$RUN_OUT" 2>/dev/null && grep -q "THROTTLED" "$RUN_OUT" 2>/dev/null; }; then
+    echo $(( $(date +%s) + 72000 )) > "$BACKOFF"
+    echo "IP-limit detected — pausing SEDAR batches ~20h to let SEDAR relent (auto-resumes)."
+  else
+    rm -f "$BACKOFF" 2>/dev/null || true
+  fi
   git add data/keep/sedar_manifest.json
   git -c user.name=closeology -c user.email=jay@thedeepdive.ca \
       commit -m "SEDAR batch $(date -u +%Y-%m-%dT%H:%MZ)" || echo "nothing to commit"
