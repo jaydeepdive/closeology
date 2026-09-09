@@ -1229,5 +1229,21 @@
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W3198&drmKey=9a423026094f95a8&drr=ss4883ff8b101d249c590cb519193522044e480b42870b9918f4e4b6a70226282a34ac7724b662c8cf21b179b79d417aadux&id=0c11f8b7998bcd96fe4b11ef88691aac16c4f1485ae5e660",
   "collected": "2026-09-09T17:08:18Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_blade-resources-inc-000109640_20260909T1306.pdf"
+ },
+ {
+  "key": "integra-resources-corp-000013334_20260730T1618",
+  "node": "W7119",
+  "drm": "2c43ff75ebf943c7",
+  "file": "sedar_integra-resources-corp-000013334_20260730T1618.pdf",
+  "filing_ref": "integra-resources-corp-000013334_20260730T1618",
+  "company": "Integra Resources Corp. (000013334)",
+  "profile": "000013334",
+  "submitted": "30 Jul 2026 16:18 EDT",
+  "jurisdiction": "British Columbia",
+  "size_kb": 19995,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7119&drmKey=2c43ff75ebf943c7&drr=ss7e14436c7958b07ee7e27b6a5d851a5738bf2a99eeecd4e9d7086905f43acf1cb8fca685069953dc9c5dc76d06ce47a3ux&id=0c11f8b7998bcd96021cd3d64661fa5fb3d032495d78ec14",
+  "collected": "2026-09-09T17:18:09Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_integra-resources-corp-000013334_20260730T1618.pdf"
  }
 ]
