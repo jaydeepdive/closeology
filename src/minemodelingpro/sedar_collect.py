@@ -346,19 +346,28 @@ _FETCH_JS = """async (u) => {
 }"""
 
 
-def _download(page, url, dest, log):
+def _download(page, url, dest, log, cooldown=90.0, throttle_retries=4):
     """Fetch the PDF from inside the results page (same-origin, trusted session).
-    Returns 'ok', 'throttled' (SEDAR system-error page → the per-session download
-    limit), or 'fail'. When not throttled this pulls PDFs cleanly; the batch stops
-    on throttle so a fresh session next run resumes."""
+    Returns 'ok', 'throttled', or 'fail'.
+
+    SEDAR+ rate-limits document downloads: after a PDF or two it returns an
+    'unexpected system error' page (HTTP 200) instead of the file. That limit is
+    a short TIME WINDOW, not a hard per-session cap — so instead of quitting the
+    whole batch on the first hit, we COOL DOWN and retry the same document up to
+    `throttle_retries` times. This rides through the window and lets one session
+    pull many reports. Only if it is still throttled after all the cooldowns do
+    we give up (return 'throttled') and let the next batch resume."""
     import base64
-    for attempt in range(2):
+    throttle_hits = 0
+    attempt = 0
+    while attempt < 8:
+        attempt += 1
         try:
             res = page.evaluate(_FETCH_JS, url)
         except Exception as e:
-            log(f"  fetch exception a{attempt+1}: {str(e)[:90]}"); time.sleep(5); continue
+            log(f"  fetch exception a{attempt}: {str(e)[:90]}"); time.sleep(5); continue
         if res.get("error"):
-            log(f"  fetch error a{attempt+1}: {str(res['error'])[:80]}"); time.sleep(6); continue
+            log(f"  fetch error a{attempt}: {str(res['error'])[:80]}"); time.sleep(6); continue
         data = base64.b64decode(res.get("b64") or "")
         if data[:5].startswith(b"%PDF"):
             open(dest, "wb").write(data)
@@ -372,7 +381,14 @@ def _download(page, url, dest, log):
         log(f"  {'THROTTLED' if throttled else 'not a PDF'} (HTTP {res.get('status')}, {len(data)}B)"
             f"{' ' + m.group(1).decode() if m else ''}")
         if throttled:
-            return "throttled"
+            throttle_hits += 1
+            if throttle_hits > throttle_retries:
+                return "throttled"
+            wait = cooldown * throttle_hits          # 90s, 180s, 270s, 360s — back off harder each time
+            log(f"  throttled — cooling down {wait:.0f}s then retrying "
+                f"(attempt {throttle_hits}/{throttle_retries}) to ride out the rate-limit window …")
+            time.sleep(wait)
+            continue
         time.sleep(6)
     return "fail"
 
