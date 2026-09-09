@@ -412,34 +412,13 @@ def collect(max_pages=40, headful=False, cdp=None, ingest=False, throttle=8.0,
             have.add(sk)
     new_rows, downloaded = [], 0
 
-    with sync_playwright() as pw:
-        if cdp:
-            browser = pw.chromium.connect_over_cdp(f"http://localhost:{cdp}")
-            page, context = _find_results_tab(browser, log)
-            if page is None:
-                log("no SEDAR tab found in that Chrome — open the NI 43-101 search there first "
-                    "(sedarplus.ca > Search > Documents > Document type: Technical report (NI 43-101) > Search).")
-                return {"downloaded": 0}
-        else:
-            kw = dict(headless=not headful, accept_downloads=True,
-                      args=["--disable-blink-features=AutomationControlled"],
-                      user_agent=("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-                                  "(KHTML, like Gecko) Chrome/128.0 Safari/537.36"))
-            if chrome:                       # real installed Chrome — passes Akamai like any Chrome
-                kw["channel"] = "chrome"
-                kw.pop("user_agent", None)   # let real Chrome send its own UA
-                kw["headless"] = False       # headed real Chrome is the reliable fingerprint
-            context = pw.chromium.launch_persistent_context(PROFILE, **kw)
-            page = context.pages[0] if context.pages else context.new_page()
-            _open_search(page, log)
-            got = _await_results(context, log, timeout=(210 if chrome else 8))
-            if got is None:
-                log("no results list appeared — nothing to collect.")
-                if not (headful or chrome):
-                    context.close()
-                return {"downloaded": 0}
-            page = got
-            page.wait_for_timeout(4000)          # let the filtered results settle
+    def _session_pass(page):
+        """Walk result pages within ONE SEDAR session, downloading new reports until
+        the session's download quota is spent (SEDAR throttles after ~1 document), the
+        batch limit is hit, or the result pages run out. Returns the stop reason:
+        'throttled' (quota spent — caller should start a fresh session), 'limit', or
+        'exhausted' (no more pages / nothing new left)."""
+        nonlocal downloaded
 
         def _harvest():
             page.wait_for_selector('a[href*="resource.html"]', timeout=60000)
@@ -448,7 +427,6 @@ def collect(max_pages=40, headful=False, cdp=None, ingest=False, throttle=8.0,
             # didn't fully take (belt-and-suspenders on the doctype cascade)
             return [r for r in rs if any("43-101" in c for c in (r.get("cells") or []))]
 
-        stopped = None
         for pageno in range(1, max_pages + 1):
             rows = _harvest()
             if not rows:                          # results may still be re-rendering
@@ -456,7 +434,7 @@ def collect(max_pages=40, headful=False, cdp=None, ingest=False, throttle=8.0,
             log(f"page {pageno}: {len(rows)} NI 43-101 report(s) on this page")
             for r in rows:
                 if limit and downloaded >= limit:
-                    stopped = "limit"; break
+                    return "limit"
                 company, submitted, jurisdiction, size_kb = _row_meta(r.get("cells") or [])
                 profile = _profile_num(r.get("cells") or [])
                 key = _stable_key(company, submitted) or ("node-" + r["node"])
@@ -466,14 +444,13 @@ def collect(max_pages=40, headful=False, cdp=None, ingest=False, throttle=8.0,
                 if os.path.exists(dest):
                     res = "ok"
                 else:
-                    time.sleep(throttle)          # space every download (be gentle)
-                    res = _download(page, r["url"], dest, log)
+                    time.sleep(throttle)          # small spacing (be gentle)
+                    # Detect the throttle FAST (no long cooldown): waiting does not reset
+                    # SEDAR's per-session quota — only a fresh search session does — so we
+                    # return immediately and let the caller cycle the session.
+                    res = _download(page, r["url"], dest, log, throttle_retries=0)
                 if res == "throttled":
-                    # SEDAR's per-session download limit — stop cleanly; a fresh
-                    # session on the next scheduled batch resumes from here.
-                    log(f"SEDAR download limit reached after {downloaded} this batch — stopping; "
-                        f"next batch (fresh session) continues.")
-                    stopped = "throttled"; break
+                    return "throttled"
                 if res != "ok":
                     continue                      # transient miss; try more rows
                 downloaded += 1
@@ -495,18 +472,82 @@ def collect(max_pages=40, headful=False, cdp=None, ingest=False, throttle=8.0,
                             row["archive_url"] = url; _save_ledger(ledger)
                     except Exception as e:
                         log(f"  archive skip: {str(e)[:60]}")
-            if stopped:
-                break
             # next page
             try:
                 nxt = page.get_by_text(re.compile(r"Next\s*»")).first
                 if not nxt.count():
-                    log("no further pages"); break
+                    return "exhausted"
                 nxt.click(timeout=8000); page.wait_for_timeout(2500)
             except Exception:
-                log("could not advance to next page"); break
+                return "exhausted"
+        return "exhausted"
 
-        if not cdp:
+    with sync_playwright() as pw:
+        if cdp:
+            browser = pw.chromium.connect_over_cdp(f"http://localhost:{cdp}")
+            page, context = _find_results_tab(browser, log)
+            if page is None:
+                log("no SEDAR tab found in that Chrome — open the NI 43-101 search there first "
+                    "(sedarplus.ca > Search > Documents > Document type: Technical report (NI 43-101) > Search).")
+                return {"downloaded": 0}
+            _session_pass(page)                   # single user-driven session
+        else:
+            kw = dict(headless=not headful, accept_downloads=True,
+                      args=["--disable-blink-features=AutomationControlled"],
+                      user_agent=("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                                  "(KHTML, like Gecko) Chrome/128.0 Safari/537.36"))
+            if chrome:                       # real installed Chrome — passes Akamai like any Chrome
+                kw["channel"] = "chrome"
+                kw.pop("user_agent", None)   # let real Chrome send its own UA
+                kw["headless"] = False       # headed real Chrome is the reliable fingerprint
+            context = pw.chromium.launch_persistent_context(PROFILE, **kw)
+            page = context.pages[0] if context.pages else context.new_page()
+
+            # SESSION CYCLING — the core of getting more than one report per batch.
+            # SEDAR caps downloads at ~1 per search session and only a NEW session resets
+            # that quota; a stale session cookie in the profile is "born throttled" (0).
+            # So before every search we clear cookies to force a fresh SEDAR session, pull
+            # the session's one report, then cycle again. Bounded by session_budget and by
+            # two consecutive empty sessions (SEDAR IP-limit reached, or nothing new left).
+            session_budget = (max(limit, 1) + 6) if limit else 60
+            empty_streak = 0
+            for sess in range(1, session_budget + 1):
+                if limit and downloaded >= limit:
+                    break
+                try:
+                    context.clear_cookies()       # force a fresh SEDAR session (resets quota)
+                except Exception:
+                    pass
+                if sess > 1:
+                    log(f"— session #{sess}: fresh SEDAR search "
+                        f"(prior session's download quota spent) —")
+                _open_search(page, log)
+                got = _await_results(context, log, timeout=(210 if chrome else 8))
+                if got is None:
+                    log("no results list appeared this session.")
+                    empty_streak += 1
+                    if empty_streak >= 2:
+                        break
+                    continue
+                page = got
+                page.wait_for_timeout(4000)       # let the filtered results settle
+                before = downloaded
+                reason = _session_pass(page)
+                gained = downloaded - before
+                log(f"session #{sess}: +{gained} report(s) [{reason}]  (total {downloaded})")
+                if reason == "limit":
+                    break
+                if reason == "exhausted" and gained == 0:
+                    log("caught up — no further new NI 43-101 reports to download; stopping.")
+                    break
+                if gained == 0:
+                    empty_streak += 1
+                    if empty_streak >= 2:
+                        log("two fresh sessions in a row downloaded 0 — SEDAR IP rate-limit "
+                            "reached for now; the next scheduled batch resumes.")
+                        break
+                else:
+                    empty_streak = 0
             context.close()
 
     log(f"collected {downloaded} new report(s); ledger now {len(ledger)} rows")
