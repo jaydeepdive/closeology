@@ -186,6 +186,10 @@ def run(mode="incremental", limit=400, only=None, max_seconds=None):
             print(f"[newswire] {name} {mode} listing failed: {str(e)[:100]}")
             continue
         print(f"[newswire] {name}: {len(descs)} candidate releases")
+        import os as _os
+        err_streak = 0
+        processed_src = 0
+        per_source_cap = int(_os.environ.get("NEWSWIRE_PER_SOURCE", "40"))
         for d in descs:
             if counts["ok"] + counts["empty"] + counts["error"] >= limit:
                 break
@@ -193,14 +197,25 @@ def run(mode="incremental", limit=400, only=None, max_seconds=None):
                 print(f"[newswire] time budget ({max_seconds}s) reached — stopping cleanly")
                 stop = True
                 break
+            # circuit breaker: a wire whose pages are blocked (fetch-fail) must not
+            # burn the shared budget — after 4 straight failures, drop it and move
+            # on to the next (working) wire.
+            if err_streak >= 4:
+                print(f"[newswire] {name}: 4 consecutive fetch failures — skipping rest of this source")
+                break
+            if processed_src >= per_source_cap:
+                print(f"[newswire] {name}: per-source cap ({per_source_cap}) reached — next source")
+                break
             if store.seen(con, store.rel_id(d["url"])):
                 counts["skipped"] += 1
                 continue
             r = _process(session, con, d)
             counts[r] += 1
+            processed_src += 1
+            err_streak = err_streak + 1 if r == "error" else 0
             con.commit()
-            import os as _os
-            time.sleep(float(_os.environ.get("NEWSWIRE_DELAY", "2.5")))  # gentle pacing
+            # gentle pacing after a real fetch; near-instant after a fast-fail
+            time.sleep(float(_os.environ.get("NEWSWIRE_DELAY", "2.0")) if r != "error" else 0.3)
     con.commit()
     s = store.stats(con)
     print(f"[newswire] {mode} done in {int(time.time()-t0)}s: "

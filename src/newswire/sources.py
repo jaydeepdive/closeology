@@ -410,17 +410,24 @@ def tnw_combined(session):
     return list(rel.values())
 
 
+# Order matters: the crawl walks these in turn under a shared time budget, so the
+# RELIABLE, high-yield wires go FIRST and newsfilecorp goes LAST. newsfilecorp's
+# /release/ pages are Akamai-blocked (fetch-fail), and if it ran first it would
+# burn the whole budget on retries before the working wires (where the day's
+# drill results actually are) were ever crawled. JMN is a source-agnostic
+# aggregator that re-hosts every wire, so it leads as a catch-all.
 ADAPTERS = {
-    "newsfilecorp": {"incremental": nfc_incremental, "backfill": _nfc_backfill},
+    "juniorminingnetwork": {"incremental": jmn_incremental, "backfill": _empty},
     "globenewswire": {"incremental": _gnw_inc, "backfill": _gnw_bf},
     "businesswire": {"incremental": _bw_inc, "backfill": _bw_bf},
     "accesswire": {"incremental": _acw_inc, "backfill": _acw_bf},   # ACCESS Newswire
     "cision": {"incremental": _cnw_inc, "backfill": _cnw_bf},       # newswire.ca / CNW
     "thenewswire": {"incremental": tnw_combined, "backfill": _tnw_g_bf},
-    # JMN aggregator kept as a source-agnostic safety net (now curl_cffi-reachable)
-    "juniorminingnetwork": {"incremental": jmn_incremental, "backfill": _empty},
+    "newsfilecorp": {"incremental": nfc_incremental, "backfill": _nfc_backfill},
 }
 
 
 def fetch_release(session, url):
-    return _get(session, url, timeout=60)
+    # cheap fetch for the crawl: a blocked wire (e.g. newsfilecorp /release/ pages
+    # behind Akamai) must fail fast, not burn the budget on 3x60s retries.
+    return _get(session, url, timeout=25, tries=2)
