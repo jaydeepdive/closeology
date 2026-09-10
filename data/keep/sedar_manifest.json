@@ -1245,5 +1245,21 @@
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W7119&drmKey=2c43ff75ebf943c7&drr=ss7e14436c7958b07ee7e27b6a5d851a5738bf2a99eeecd4e9d7086905f43acf1cb8fca685069953dc9c5dc76d06ce47a3ux&id=0c11f8b7998bcd96021cd3d64661fa5fb3d032495d78ec14",
   "collected": "2026-09-09T17:18:09Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_integra-resources-corp-000013334_20260730T1618.pdf"
+ },
+ {
+  "key": "mustang-energy-corp-000042455_20260910T1556",
+  "node": "W2279",
+  "drm": "208fea1e50af8bac",
+  "file": "sedar_mustang-energy-corp-000042455_20260910T1556.pdf",
+  "filing_ref": "mustang-energy-corp-000042455_20260910T1556",
+  "company": "Mustang Energy Corp. (000042455)",
+  "profile": "000042455",
+  "submitted": "10 Sep 2026 15:56 EDT",
+  "jurisdiction": "British Columbia",
+  "size_kb": 7155,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2279&drmKey=208fea1e50af8bac&drr=ss9fd8053d4e34847934a2a7589f5eeb1206ffc72cfbfaf00b1c1029d0970c6ee6b40ad0d3a0cd3d9a95655db324b449efux&id=0c11f8b7998bcd96b3100c91f8b6ea69f031d9b25c762e58",
+  "collected": "2026-09-10T20:00:45Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_mustang-energy-corp-000042455_20260910T1556.pdf"
  }
 ]
