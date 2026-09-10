@@ -9,7 +9,7 @@ name: closeology-ceo-sedar
 # 3D-model shard store. The feed is a rolling window, so we run every 2 hours.
 on:
   schedule:
-    - cron: "15 */2 * * *"
+    - cron: "15 * * * *"
   workflow_dispatch:
     inputs:
       scrolls:
