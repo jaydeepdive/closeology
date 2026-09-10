@@ -742,7 +742,7 @@ footer.site b{color:var(--ink);}
 <div id="map"></div>
 <div id="panel">
   <header><h1>Daily Radar <span style="color:var(--accent)">·</span> Alberta</h1>
-    <div class="sub">2026-09-09 · fresh drilling against open ground</div></header>
+    <div class="sub">2026-09-10 · fresh drilling against open ground</div></header>
   <div class="stats" id="stats"></div>
   <div id="scroll">
     <div class="sec"><h2>⚡ Edge plays — drilling on the boundary of open ground</h2>
@@ -759,7 +759,7 @@ footer.site b{color:var(--ink);}
 </div></div>
 <script>
 const LEADS={"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-114.14357, 53.63997]}, "properties": {"name": "Onoway", "rank": 1, "metal": "Gold", "status": "Producer - byproduct", "deposit_open": true, "grade": "", "drill": "", "near_a": false, "near_b": false, "minfile": "METID_0315", "url": "", "score": 35, "size": "no tonnage on record", "spend": "", "spend_val": 0.0, "operators": "", "community": "", "community_km": null}}]}, ACT={"type": "FeatureCollection", "features": []}, NEWS=[], MC={"Gold": "#e6b800", "Silver": "#9aa7b4", "Platinum": "#6f7d8c", "Palladium": "#8a94a0", "Copper": "#e07a3f", "Lead": "#7d8a99", "Zinc": "#5fb0c9", "Molybdenum": "#a855c7", "Nickel": "#3fa66a", "Cobalt": "#3b6fd4", "Tungsten": "#8a6d3b", "Tin": "#b0a99f", "Antimony": "#6b7280", "Bismuth": "#c084fc", "Uranium": "#7cc043", "Lithium": "#22c1a6", "Vanadium": "#d4a017", "Rare earths": "#d15fa8", "Niobium": "#4b8bbe", "Tantalum": "#5a7d9a", "Beryllium": "#7bb37b", "Chromium": "#4a9e8f", "Titanium": "#9aa0a6", "Iron": "#b0553f", "Manganese": "#a06a86", "Graphite": "#555b63", "Industrial": "#c9a15f", "Other metallic": "#8091a5"}, LBL={"lead_a": "leads beside ground lapsing <6mo", "lead_b": "leads beside fresh staking", "feat_a": "claims lapsing soon", "feat_b": "claims newly staked", "tag_a": "lapsing", "tag_b": "new stake", "sec": "Leads with claim activity nearby"}, CN={"n_a": 0, "n_b": 0, "n_feat_a": 0, "n_feat_b": 0};
-const DROPPED=[], EDGES=[], EPTS={"type": "FeatureCollection", "features": []}, EOPEN={"type": "FeatureCollection", "features": []}, EHELD={"type": "FeatureCollection", "features": []}, EC={"n": 0, "hot": 0, "open_ha": 0, "news": 0};
+const DROPPED=[{"id": "9324070180", "owner": "1027103 ALBERTA LTD.", "good_to": "", "area_ha": 0.0, "lon": -117.75365, "lat": 53.44606, "near_lead": "Onoway", "near_rank": 1, "near_km": 236.6}], EDGES=[], EPTS={"type": "FeatureCollection", "features": []}, EOPEN={"type": "FeatureCollection", "features": []}, EHELD={"type": "FeatureCollection", "features": []}, EC={"n": 0, "hot": 0, "open_ha": 0, "news": 0};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const mc=m=>MC[m]||'#94a3b8';
 const topo=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'&copy; OpenTopoMap'});
