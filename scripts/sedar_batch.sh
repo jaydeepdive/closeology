@@ -73,6 +73,7 @@ fi
     if git push origin main 2>&1; then pushed="yes"; break; fi
     echo "push rejected (try $i) — rebasing on origin/main and retrying"
     git fetch origin main --quiet || true
+  git fetch -q origin main 2>/dev/null || true; git checkout -q origin/main -- site 2>/dev/null || true  # never carry site/ backward
     git rebase origin/main || { git rebase --abort 2>/dev/null || true; git reset --soft origin/main; git add data/keep/sedar_manifest.json; git -c user.name=closeology -c user.email=jay@thedeepdive.ca commit -m "SEDAR batch $(date -u +%Y-%m-%dT%H:%MZ)" || true; }
     sleep 3
   done

@@ -46,5 +46,6 @@ jobs:
           # retire any legacy monolithic exports (superseded by the shard store)
           git rm -q --cached --ignore-unmatch data/keep/mmp_collars.parquet data/keep/mmp_assays.parquet data/keep/mmp_lithology.parquet data/keep/mmp_deposit_models.parquet 2>/dev/null || true
           git add -A data/keep/mmp data/keep/mmp_collars_sample.csv 2>/dev/null || true
+          git fetch -q origin main 2>/dev/null || true; git checkout -q origin/main -- site 2>/dev/null || true  # never carry site/ backward — the daily build owns it
           git commit -m "MMP drillhole backbone refresh $(date -u +%Y-%m-%d) [skip ci]" || echo "no changes"
           git push || echo "nothing to push"

@@ -62,6 +62,7 @@ jobs:
             git add -A data/keep 2>/dev/null || true
             git reset -q -- 'data/keep/*_claims_snapshot.parquet' 'data/keep/*_boundary.parquet' 'data/keep/*_minfile_facts.parquet' 2>/dev/null || true
             git diff --cached --quiet && { echo "no new drill data"; break; }
+            git fetch -q origin main 2>/dev/null || true; git checkout -q origin/main -- site 2>/dev/null || true  # never carry site/ backward — the daily build owns it
             git commit -q -m "Drill bank refresh $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
             git push origin HEAD:main && break || { echo "retry $i"; sleep 5; }
           done

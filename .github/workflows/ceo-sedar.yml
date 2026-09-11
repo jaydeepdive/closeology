@@ -52,6 +52,7 @@ jobs:
             git stash pop -q 2>/dev/null || true
             git add data/keep/ceo_sedar_manifest.json 2>/dev/null || true
             git diff --cached --quiet && { echo "no new 43-101 filings"; break; }
+            git fetch -q origin main 2>/dev/null || true; git checkout -q origin/main -- site 2>/dev/null || true  # never carry site/ backward — the daily build owns it
             git commit -q -m "ceo.ca 43-101 collect $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
             git push origin HEAD:main && break || { echo "retry $i"; sleep 5; }
           done
