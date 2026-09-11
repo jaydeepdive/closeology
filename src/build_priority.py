@@ -48,7 +48,7 @@ def _load(csv, juris):
         capsule = _s(r.get("capsule"))
         grade, top_metal = E.sort_grade_by_value(grade)   # highest-$ metal first
         _vt, vparts = E.value_parts(grade)
-        drill_top = E.top_intercepts(drill, 3)
+        drill_top = E.top_intercepts(drill, 25)
         production = _s(r.get("production")) or E.production_summary(capsule, drill, status)
         # dominant metal = the metal contributing the most $/t (else first commodity)
         dom_raw = vparts[0][0] if vparts else (top_metal or _s(r.get("primary_metal")))
@@ -63,7 +63,7 @@ def _load(csv, juris):
             "commodity": _s(r.get("commodity")), "status": status, "deposit_open": dopen,
             "hard": _s(r.get("hard_to_stake")).lower() == "true", "grade": grade,
             "size": _s(r.get("deposit_size")) or (tonnes if tonnes else ""),
-            "drill": drill[:300], "spend_str": _s(r.get("exploration_spend_str")),
+            "drill": drill, "spend_str": _s(r.get("exploration_spend_str")),
             "operators": _s(r.get("operators")), "last_work": _s(r.get("last_work_year")),
             "community": _s(r.get("nearest_community")), "community_km": _s(r.get("community_km")),
             "encumbrances": _s(r.get("encumbrances")), "cells_ha": _s(r.get("cells_area_ha")),
@@ -105,6 +105,51 @@ def build(site_dir, regions):
             leads += rows
             juris.append((code, r["name"]))
     leads.sort(key=lambda x: (-x["score"], not x["deposit_open"]))
+
+    # --- nearby staked claims per lead (who holds ground around it) -------------
+    # Read each region's claims-near layer once and attach, to every lead, the
+    # holders with active tenure within ~15 km. This puts the "who is staked
+    # around this" answer on the lead card itself -- no map required.
+    _cn_cache = {}
+
+    def _claims_near_pts(slug):
+        if slug in _cn_cache:
+            return _cn_cache[slug]
+        pts = []
+        try:
+            cp = os.path.join(site_dir, "{0}_claims_near.geojson".format(slug))
+            if os.path.exists(cp):
+                gj = json.load(open(cp))
+                for f in gj.get("features", []):
+                    c = (f.get("geometry") or {}).get("coordinates")
+                    while isinstance(c, list) and c and isinstance(c[0], list):
+                        c = c[0]
+                    if not (isinstance(c, list) and len(c) >= 2):
+                        continue
+                    pr = f.get("properties", {}) or {}
+                    pts.append((c[1], c[0], (pr.get("owner") or "").strip()))
+        except Exception:
+            pts = []
+        _cn_cache[slug] = pts
+        return pts
+
+    for l in leads:
+        plat, plon = l.get("lat"), l.get("lon")
+        holders, n_near = {}, 0
+        if plat and plon:
+            cphi = math.cos(math.radians(plat))
+            for (la, lo, owner) in _claims_near_pts(l["juris"].lower()):
+                dkm = math.hypot((la - plat) * 111.0, (lo - plon) * 111.0 * cphi)
+                if dkm <= 15.0:
+                    n_near += 1
+                    if owner:
+                        h = holders.setdefault(owner, [0, 1e9])
+                        h[0] += 1
+                        h[1] = min(h[1], dkm)
+        ranked = sorted(holders.items(), key=lambda kv: (-kv[1][0], kv[1][1]))
+        l["nearby_n"] = n_near
+        l["nearby_holders"] = [{"owner": k, "n": v[0], "km": round(v[1], 1)}
+                               for k, v in ranked[:15]]
     for i, l in enumerate(leads, 1):
         l["rank"] = i
 
@@ -336,8 +381,9 @@ function card(p){{
     <div class=lbody>
       <div class=why><div class=sechd>Why it ranks here</div>${{parts}}</div>
       <div class=facts><div class=sechd>Qualifying details</div>${{facts.join('')}}
+        ${{`<div class=sechd style="margin-top:12px">Staked ground nearby</div>`+((p.nearby_holders&&p.nearby_holders.length)?(`<div class=pn style="margin:2px 0 5px">${{p.nearby_n}} active claim(s) within ~15 km · ${{p.nearby_holders.length}} holder(s) around this lead:</div>`+p.nearby_holders.map(h=>`<div class=fact><span class=k>${{esc(h.owner)}}</span>${{h.n}} claim${{h.n>1?'s':''}} · nearest ${{h.km}} km</div>`).join('')):(p.nearby_n>0?`<div class=pn style="margin-top:4px">${{p.nearby_n}} active claim(s) within ~15 km (this jurisdiction doesn't publish holder names — check the registry).</div>`:`<div class=pn style="margin-top:4px">No active claims recorded within ~15 km — the ground around this lead looks open.</div>`))}}
         ${{p.production?`<div class=prodbox><b>Past production.</b> ${{esc(p.production)}}</div>`:''}}
-        ${{(p.drill_top&&p.drill_top.length)?(`<div class=sechd style="margin-top:12px">⛏ Top drill results</div>`+p.drill_top.map(x=>`<div class=intercept><b>${{esc(x.text)}}</b> <span class=vpt>≈ $${{x.vpt}}/t</span></div>`).join('')):(p.drill?`<div class=drill><b>Drill / assay.</b> ${{esc(p.drill)}}${{p.drill.length>=300?'…':''}}</div>`:'')}}
+        ${{(p.drill_top&&p.drill_top.length)?(`<div class=sechd style="margin-top:12px">⛏ Drill results</div>`+p.drill_top.map(x=>`<div class=intercept><b>${{esc(x.text)}}</b> <span class=vpt>≈ $${{x.vpt}}/t</span></div>`).join('')):(p.drill?`<div class=drill><b>Drill / assay.</b> ${{esc(p.drill)}}${{false?'…':''}}</div>`:'')}}
         ${{p.hard?`<div class=drill style="border-left-color:#9a5b00"><b>Staking note:</b> ${{esc(p.encumbrances)||'A conditional / registration reserve applies here — a special staking process is required.'}}</div>`:''}}
       </div>
     </div>

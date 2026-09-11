@@ -218,7 +218,7 @@ async function showGround(p){{
     const r=await fetch(p.region+'_opencells.geojson'); const d=await r.json();
     // the dissolved open-ground block(s) this lead belongs to (shared with any
     // neighbouring occurrence sitting in the same open ground)
-    const fs=d.features.filter(f=>String(f.properties.lead_ids||'').split(',').indexOf(String(p.lead_id))>=0);
+    const fs=d.features.filter(f=>{{const q=f.properties||{{}};return String(q.lead_id)===String(p.lead_id)||String(q.lead_ids||'').split(',').indexOf(String(p.lead_id))>=0;}});
     if(fs.length){{
       groundLayer=L.geoJSON({{type:'FeatureCollection',features:fs}},
         {{interactive:false,style:{{color:'#7a0050',weight:2,opacity:1,fillColor:'#ff2fbf',fillOpacity:.5}}}}).addTo(map);
