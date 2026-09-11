@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-11T17:09:18Z",
+  "generated": "2026-09-11T20:24:14Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -11,12 +11,6 @@
       }
     ],
     "deposit_model": [
-      {
-        "file": "mmp/deposit_model/sedar__ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf.parquet",
-        "source": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
-        "rows": 38,
-        "bytes": 10967
-      },
       {
         "file": "mmp/deposit_model/sedar__ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf.parquet",
         "source": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf",
@@ -50,12 +44,6 @@
         "bytes": 21335
       },
       {
-        "file": "mmp/model_method/sedar__ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf.parquet",
-        "source": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
-        "rows": 1,
-        "bytes": 17782
-      },
-      {
         "file": "mmp/model_method/sedar__ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf.parquet",
         "source": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf",
         "rows": 1,
@@ -76,24 +64,10 @@
         "bytes": 12368
       },
       {
-        "file": "mmp/metallurgy/sedar__ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf.parquet",
-        "source": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
-        "rows": 1,
-        "bytes": 17736
-      },
-      {
         "file": "mmp/metallurgy/sedar__ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf.parquet",
         "source": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf",
         "rows": 1,
         "bytes": 12634
-      }
-    ],
-    "economics": [
-      {
-        "file": "mmp/economics/sedar__ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf.parquet",
-        "source": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
-        "rows": 1,
-        "bytes": 18656
       }
     ]
   },
@@ -102,10 +76,10 @@
     "survey": 0,
     "assays": 0,
     "lithology": 0,
-    "deposit_model": 97,
-    "model_method": 4,
-    "metallurgy": 4,
-    "economics": 1
+    "deposit_model": 59,
+    "model_method": 3,
+    "metallurgy": 3,
+    "economics": 0
   },
-  "shard_count": 14
+  "shard_count": 10
 }

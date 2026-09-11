@@ -1,6 +1,6 @@
 {
- "generated": "2026-09-11T17:09:18Z",
- "count": 5,
+ "generated": "2026-09-11T20:24:14Z",
+ "count": 3,
  "archived": 0,
  "reports": [
   {
@@ -11,7 +11,7 @@
    "jurisdiction": null,
    "source_url": "https://ceo.ca/content/sedar/ADY-2026-09-11-technical-report-ni-43-101-english-8e43.pdf",
    "archive_url": null,
-   "collected": "2026-09-11T17:09:18Z",
+   "collected": "2026-09-11T20:24:14Z",
    "collars": 18,
    "assays": 0,
    "resource_rows": 19,
@@ -21,23 +21,6 @@
    "recovery": "average recovery of core was 89.7% | recovering 53\u201367% of the gold"
   },
   {
-   "id": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
-   "company": "ALK",
-   "project": null,
-   "commodity": null,
-   "jurisdiction": null,
-   "source_url": "https://ceo.ca/content/sedar/ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
-   "archive_url": null,
-   "collected": "2026-09-11T17:07:59Z",
-   "collars": 0,
-   "assays": 0,
-   "resource_rows": 38,
-   "has_method": true,
-   "metallurgy_process": "FLOTATION, GRAVITY CIRCUIT, GRAVITY CONCENTRATION, GRAVITY RECOVERY, KNELSON",
-   "refractory": null,
-   "recovery": "recovering approximately 88% of the gold | overall gold recovery assumption of 75% | average total recovery has been 87.9% | Au, achieving a gold recovery of ap"
-  },
-  {
    "id": "sedar:ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf",
    "company": "ALK",
    "project": null,
@@ -45,7 +28,7 @@
    "jurisdiction": null,
    "source_url": "https://ceo.ca/content/sedar/ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf",
    "archive_url": null,
-   "collected": "2026-09-11T17:08:42Z",
+   "collected": "2026-09-11T20:23:46Z",
    "collars": 0,
    "assays": 0,
    "resource_rows": 36,
@@ -62,7 +45,7 @@
    "jurisdiction": null,
    "source_url": "https://ceo.ca/content/sedar/ALK-2026-09-10-technical-report-ni-43-101-english-923b.pdf",
    "archive_url": null,
-   "collected": "2026-09-11T17:09:10Z",
+   "collected": "2026-09-11T20:24:07Z",
    "collars": 0,
    "assays": 0,
    "resource_rows": 4,
@@ -70,23 +53,6 @@
    "metallurgy_process": "CARBON-IN-LEACH, CIL, DUMP LEACH, FLOTATION, GRAVITY RECOVERY, KNELSON",
    "refractory": "refractory",
    "recovery": "recovery of 87%, which is consistent with cu"
-  },
-  {
-   "id": "sedar:MEC-2026-09-10-technical-report-ni-43-101-english-7fe5.pdf",
-   "company": "MEC",
-   "project": null,
-   "commodity": null,
-   "jurisdiction": null,
-   "source_url": "https://ceo.ca/content/sedar/MEC-2026-09-10-technical-report-ni-43-101-english-7fe5.pdf",
-   "archive_url": null,
-   "collected": "2026-09-11T17:07:29Z",
-   "collars": 0,
-   "assays": 0,
-   "resource_rows": 0,
-   "has_method": false,
-   "metallurgy_process": null,
-   "refractory": null,
-   "recovery": null
   }
  ]
 }
