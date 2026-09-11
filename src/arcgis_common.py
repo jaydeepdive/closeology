@@ -57,11 +57,6 @@ def fetch_layer(layer_url, out_fields="*", where="1=1", geom=True, generalize=No
              "returnGeometry": str(geom).lower(), "outSR": "4326",
              "resultOffset": off, "resultRecordCount": page, "f": "geojson"}
         if generalize:
-            # maxAllowableOffset is in the OUTPUT SR's units, and outSR is 4326,
-            # so this value is in DEGREES (~0.0002 deg ~= 20 m). Do NOT pass a
-            # metres-scale number here (e.g. 25) -- at 25 degrees it collapses
-            # every polygon to a coarse integer-degree grid and destroys the
-            # claim fabric.
             q["maxAllowableOffset"] = generalize
         d = _get(layer_url + "/query", q)
         b = d.get("features", [])
@@ -200,7 +195,7 @@ def _polys(feats, colmap):
 def fetch_claims(cfg, out_dir):
     c = cfg["claims"]
     fs = fetch_layer(c["url"], c.get("fields", "*"), c.get("where", "1=1"),
-                     geom=True, generalize=c.get("generalize", 0.0002))
+                     geom=True, generalize=c.get("generalize", 25))
     colmap = {}
     if c.get("id"):
         colmap["_id"] = c["id"]
@@ -229,7 +224,7 @@ def fetch_leases(cfg, out_dir):
     if not l:
         return 0
     fs = fetch_layer(l["url"], l.get("fields", "*"), l.get("where", "1=1"),
-                     geom=True, generalize=l.get("generalize", 0.0002))
+                     geom=True, generalize=l.get("generalize", 25))
     g = _polys(fs, {"claim": l.get("id", "OBJECTID")})
     g["claim"] = g["claim"].astype(str)
     g.to_parquet(os.path.join(out_dir, "leases.parquet"))
@@ -246,7 +241,7 @@ def fetch_reserves(cfg, out_dir):
     frames = []
     for u, w in zip(urls, wheres):
         try:
-            fs = fetch_layer(u, r.get("fields", "*"), w, geom=True, generalize=r.get("generalize", 0.001))
+            fs = fetch_layer(u, r.get("fields", "*"), w, geom=True, generalize=r.get("generalize", 40))
             gg = _polys(fs, {"name": r.get("name_field", "OBJECTID")})
             if len(gg):
                 frames.append(gg)

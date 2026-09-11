@@ -365,21 +365,16 @@ def build(site_dir="site"):
     # Closeology is Canada-only for now, and every radar item must be viewable on
     # the map — so the radar/map/open-ground use only Canadian, geolocated items.
     # (The bank + MineModelingPro keep everything, worldwide.)
-    items = [i for i in items if _is_canada(i.get("country"))]
-    # The map / open-ground / company-claim layers can only use geolocated
-    # releases. The TABLE, however, lists EVERY Canadian release we collected --
-    # including the ones we couldn't pin -- so a result with real assays is never
-    # invisible just because the release didn't publish collar coordinates.
-    geo_items = [i for i in items if i.get("geo") and i.get("pt")]
-    json.dump(_holes_geojson(geo_items), open(os.path.join(site_dir, "drill_holes.geojson"), "w"))
+    items = [i for i in items if _is_canada(i.get("country")) and i.get("geo") and i.get("pt")]
+    json.dump(_holes_geojson(items), open(os.path.join(site_dir, "drill_holes.geojson"), "w"))
     try:
-        og = _drill_open_ground(geo_items)
+        og = _drill_open_ground(items)
         json.dump(og, open(os.path.join(site_dir, "drill_open.geojson"), "w"))
         print(f"[drill_radar] open ground around drilling: {len(og['features'])} cells")
     except Exception as e:
         print("[drill_radar] open-ground calc skipped:", str(e)[:120])
     try:
-        cc = _drill_company_claims(geo_items)
+        cc = _drill_company_claims(items)
         json.dump(cc, open(os.path.join(site_dir, "drill_claims.geojson"), "w"))
         n_own = sum(1 for f in cc["features"] if f["properties"].get("matched") == "owner")
         print(f"[drill_radar] drilling-company claims: {len(cc['features'])} cells "
@@ -407,14 +402,13 @@ def _write(site_dir, items, st):
             "b": _best_str(i["best"]), "u": i["url"], "n": i["pt"]["n"]} for i in geo[:1500]]
     def _map_link(i):
         if not (i["geo"] and i["pt"]):
-            return '<span class=nomap>no map location</span>' 
+            return ""
         from urllib.parse import quote
         u = (f"app.html?lat={i['pt']['lat']}&lon={i['pt']['lon']}&z=13&kind=drill"
              f"&label={quote((i['company'] or 'Drill')[:50])}")
         return f'<a class="mapbtn" href="{u}">🗺 map</a>'
     rows = "".join(
         f'<tr><td class=d>{(i["published"] or "")[:10]}</td><td>{_esc(i["company"])}'
-        f'{(" &middot; <span class=proj>" + _esc(i["project"]) + "</span>") if i.get("project") else ""}'
         f'<div class=t>{_esc((i["title"] or "")[:110])}</div></td>'
         f'<td>{_esc(i["country"] or "")}</td>'
         f'<td class=b>{_esc(_best_str(i["best"]))}</td>'
@@ -454,20 +448,16 @@ th,td{{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vert
 th{{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);}}
 td.d{{white-space:nowrap;color:var(--mut);}} td.b{{font-weight:600;}} td.n{{text-align:center;}}
 .t{{color:var(--mut);font-size:11.5px;margin-top:2px;}}
-.proj{{display:inline-block;font-size:11px;font-weight:600;color:var(--red);border:1px solid var(--line);border-radius:5px;padding:0 6px;margin-left:4px;}}
 .note{{color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;}}
 .mapbtn{{display:inline-block;font-weight:600;font-size:12px;color:#fff !important;background:var(--red);padding:2px 9px;border-radius:6px;text-decoration:none;white-space:nowrap;}}
 .mapbtn:hover{{opacity:.9;}}
-.nomap{{color:var(--mut);font-size:11px;font-style:italic;white-space:nowrap;}}
 .lead2{{color:var(--mut);max-width:820px;}}
 </style></head><body>
 {header}
 <div class="wrap2">
   <div class="hero"><h1>Drill Radar</h1><div class="rule"></div>
   <p class="lead2">Fresh drill-hole results pulled from the mining newswires, parsed for
-  collar coordinates and assay intercepts, and placed on the map where the geology allows. Releases whose collar
-  coordinates we could not parse are still listed in the table below with their
-  assays and a link — they are collected, just not pinned yet.
+  collar coordinates and assay intercepts, and placed on the map where the geology allows.
   Feeds Project Closeology's open-ground screen and banks every collar + assay for
   MineModelingPro deposit modelling.</p></div>
   <div class="kpis">
