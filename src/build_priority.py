@@ -117,16 +117,25 @@ def build(site_dir, regions):
     except Exception:
         _seen = {}
     _today = datetime.date.today()
+    _baseline = (_today - datetime.timedelta(days=30)).isoformat()
+    # Bootstrap guard: the first time the ledger is built -- or if a bad run stamped
+    # every lead with the same day, which flags the ENTIRE list NEW -- treat that
+    # initial population as the baseline, not as brand-new. Only leads that appear
+    # AFTER the ledger is established get today's date and the NEW badge.
+    _bootstrap = (not _seen) or (len(set(_seen.values())) == 1
+                                 and next(iter(_seen.values())) == _today.isoformat())
+    if _bootstrap:
+        _seen = {k: _baseline for k in _seen}
     for l in leads:
         k = l.get("lead_id") or "{0}:{1}:{2}".format(l.get("juris"), l.get("name"), l.get("minfile"))
         if k not in _seen:
-            _seen[k] = _today.isoformat()
+            _seen[k] = _baseline if _bootstrap else _today.isoformat()
         l["first_seen"] = _seen[k]
         try:
             age = (_today - datetime.date.fromisoformat(_seen[k])).days
         except Exception:
             age = 999
-        l["is_new"] = age <= 3            # flagged NEW for its first ~3 days in the system
+        l["is_new"] = 0 <= age <= 3       # flagged NEW for its first ~3 days in the system
     try:
         json.dump(_seen, open(_ledger_p, "w"), indent=0)
     except Exception:

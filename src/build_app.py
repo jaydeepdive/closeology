@@ -258,13 +258,13 @@ async function showGround(p){{
   if(nb){{
     const ranked=Object.keys(owners).sort((a,b)=>owners[b]-owners[a]);
     if(ranked.length){{
-      nb.innerHTML=`<div class=sechd>Who's nearby — ${{ranked.length}} holder(s) within ~5 km</div>`+
+      nb.innerHTML=`<div class=sechd>Who's nearby — ${{ranked.length}} holder(s) within ~15 km</div>`+
         ranked.slice(0,12).map(o=>`<div class=fact><span class=own>${{esc(o)}}</span> <span class=pn>${{owners[o]}} claim${{owners[o]>1?'s':''}}</span></div>`).join('')+
         `<div class=pn style="margin-top:5px">Hover any gold claim on the map for the holder and tenure number.</div>`;
     }} else if(nearCount>0){{
-      nb.innerHTML=`<div class=sechd>Who's nearby — ${{nearCount}} claim(s) within ~5 km</div><div class=pn>Neighbouring ground is staked (shown in gold), but this jurisdiction's dataset doesn't publish holder names. Check the provincial registry for the current holders.</div>`;
+      nb.innerHTML=`<div class=sechd>Who's nearby — ${{nearCount}} claim(s) within ~15 km</div><div class=pn>Neighbouring ground is staked (shown in gold), but this jurisdiction's dataset doesn't publish holder names. Check the provincial registry for the current holders.</div>`;
     }} else {{
-      nb.innerHTML=`<div class=sechd>Who's nearby</div><div class=pn>No active claims recorded within ~5 km — this ground looks open with no immediate neighbours.</div>`;
+      nb.innerHTML=`<div class=sechd>Who's nearby</div><div class=pn>No active claims recorded within ~15 km — this ground looks open with no immediate neighbours.</div>`;
     }}
   }}
   if(bounds && bounds.isValid()){{ map.fitBounds(bounds.pad(0.55)); }}

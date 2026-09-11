@@ -480,7 +480,7 @@ def run_region(region):
     # research what they may have found before committing to stake.
     if claims is not None and len(claims):
         lm = leads.to_crs(metric)
-        halo = gpd.GeoDataFrame(geometry=[lm.geometry.buffer(2500).union_all()], crs=metric)
+        halo = gpd.GeoDataFrame(geometry=[lm.geometry.buffer(15000).union_all()], crs=metric)  # ~15 km, to match the map's "nearby claims" display window (was 2.5 km, far too tight)
         cnear = gpd.sjoin(claims.to_crs(metric), halo, predicate="intersects", how="inner")
         cnear = claims.loc[cnear.index.unique()].to_crs("EPSG:4326")
         gcol = cnear.geometry.name
