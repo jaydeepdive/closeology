@@ -46,6 +46,60 @@ def _company(title):
     return t.strip(" -:|")[:120] or None
 
 
+_PROJ_STOP = {"gold", "silver", "copper", "zinc", "nickel", "cobalt", "lithium",
+              "uranium", "high", "grade", "new", "zone", "project", "property",
+              "deposit", "mine", "prospect", "target", "discovery", "phase",
+              "program", "drilling", "results", "assays", "assay", "north",
+              "south", "east", "west", "depth", "surface", "pit", "resource"}
+# "<Name> Project/Property/Deposit/Mine/Prospect" (Name = up to 4 TitleCase words)
+_PROJ_ANCHOR = re.compile(r"\b((?:[A-Z][A-Za-z0-9'\-]+ ){0,3}[A-Z][A-Za-z0-9'\-]+)\s+"
+                          r"(?:Project|Property|Deposit|Prospect|Gold Mine|Mine)\b")
+# "at [the] <Name>" at the END of the title (the locality named last)
+_PROJ_ATEND = re.compile(r"\bat (?:the |its |their |[0-9]{1,3}% owned |100% owned )?"
+                         r"((?:[A-Z][A-Za-z0-9'\-]+ ){0,3}[A-Z][A-Za-z0-9'\-]+)"
+                         r"(?:\s+(?:Project|Property|Deposit|Prospect|Mine|Zone))?\s*$")
+
+
+def project_from_title(title):
+    """Best-effort project / property name from a release headline. High-precision
+    (explicit 'X Project/Property' anchor, or 'at X' as the final locality); returns
+    None rather than guess. Display + future gazetteer geolocation only -- never a
+    map coordinate, so a miss just leaves the field blank."""
+    if not title:
+        return None
+    t = re.sub(r"\s+", " ", str(title)).strip()
+    t = re.split(r"\s+[-–]\s+(?:Junior Mining Network|GlobeNewswire|Newsfile).*$", t)[0]
+    for rx in (_PROJ_ANCHOR, _PROJ_ATEND):
+        m = rx.search(t)
+        if m:
+            name = m.group(1).strip()
+            toks = name.lower().split()
+            if len(name) > 2 and toks and toks[-1] not in _PROJ_STOP and toks[0] not in _PROJ_STOP:
+                return name[:60]
+    return None
+
+
+def backfill_projects(con=None):
+    """Populate releases.project from the stored title for rows that lack one.
+    No network -- pure re-derivation from data already banked. Idempotent."""
+    own = con is None
+    if own:
+        con = store.connect()
+    rows = con.execute("SELECT id, title FROM releases "
+                       "WHERE (project IS NULL OR project='') AND title IS NOT NULL").fetchall()
+    n = 0
+    for rid, title in rows:
+        p = project_from_title(title)
+        if p:
+            con.execute("UPDATE releases SET project=? WHERE id=?", (p, rid))
+            n += 1
+    con.commit()
+    print(f"[projects] backfilled {n} release project names from titles")
+    if own:
+        con.close()
+    return n
+
+
 _TICK = re.compile(r"\(?\s*(TSX[\.\- ]?V|TSXV|TSX|CSE|NYSE\s*American|NYSE|NASDAQ|OTCQB|OTCQX|OTCMKTS|OTC|FSE|FRA|ASX|LSE|AIM)\s*[:\.]\s*([A-Z]{1,6})(?:\.[A-Z])?\s*\)?", re.I)
 _ISSUER = re.compile(r"([A-Z][A-Za-z0-9&\.\'\-/ ]{2,55}?(?:Ltd|Inc|Corp|Corporation|Limited|Resources|Mining|Metals|Minerals|Gold|Silver|Copper|Exploration|Energy|plc)\.?)\s*\(\s*(?:TSX|CSE|NYSE|NASDAQ|OTC|FSE|FRA|ASX|LSE|AIM)", re.I)
 
@@ -89,6 +143,7 @@ def _process(session, con, desc):
     title = _title(html) or desc.get("title")
     base["title"] = title
     base["company"] = desc.get("company") or _company(title)
+    base["project"] = desc.get("project") or project_from_title(title)
     try:
         _cl = extract._clean(html)
         _tk, _iss = _ticker_issuer(_cl[:20000])
@@ -281,6 +336,9 @@ if __name__ == "__main__":
         raise SystemExit
     if mode == "repair":
         repair()
+        sys.exit(0)
+    if mode == "projects":
+        backfill_projects()
         sys.exit(0)
     limit = 400
     if "--limit" in args:

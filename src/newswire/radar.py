@@ -414,6 +414,7 @@ def _write(site_dir, items, st):
         return f'<a class="mapbtn" href="{u}">🗺 map</a>'
     rows = "".join(
         f'<tr><td class=d>{(i["published"] or "")[:10]}</td><td>{_esc(i["company"])}'
+        f'{(" &middot; <span class=proj>" + _esc(i["project"]) + "</span>") if i.get("project") else ""}'
         f'<div class=t>{_esc((i["title"] or "")[:110])}</div></td>'
         f'<td>{_esc(i["country"] or "")}</td>'
         f'<td class=b>{_esc(_best_str(i["best"]))}</td>'
@@ -453,6 +454,7 @@ th,td{{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vert
 th{{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);}}
 td.d{{white-space:nowrap;color:var(--mut);}} td.b{{font-weight:600;}} td.n{{text-align:center;}}
 .t{{color:var(--mut);font-size:11.5px;margin-top:2px;}}
+.proj{{display:inline-block;font-size:11px;font-weight:600;color:var(--red);border:1px solid var(--line);border-radius:5px;padding:0 6px;margin-left:4px;}}
 .note{{color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;}}
 .mapbtn{{display:inline-block;font-weight:600;font-size:12px;color:#fff !important;background:var(--red);padding:2px 9px;border-radius:6px;text-decoration:none;white-space:nowrap;}}
 .mapbtn:hover{{opacity:.9;}}
