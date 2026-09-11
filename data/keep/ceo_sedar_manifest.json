@@ -58,5 +58,20 @@
   "size_kb": 7896,
   "collected": "2026-09-11T05:58:46Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_ALK-2026-09-10-technical-report-ni-43-101-english-923b.pdf"
+ },
+ {
+  "file": "ceo_ADY-2026-09-11-technical-report-ni-43-101-english-8e43.pdf",
+  "filing_ref": "ADY-2026-09-11-technical-report-ni-43-101-english-8e43.pdf",
+  "company": "ADY",
+  "project": null,
+  "jurisdiction": null,
+  "commodity": null,
+  "submitted": "2026-09-11",
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://ceo.ca/content/sedar/ADY-2026-09-11-technical-report-ni-43-101-english-8e43.pdf",
+  "source": "ceo.ca",
+  "size_kb": 4124,
+  "collected": "2026-09-11T11:18:47Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_ADY-2026-09-11-technical-report-ni-43-101-english-8e43.pdf"
  }
 ]
