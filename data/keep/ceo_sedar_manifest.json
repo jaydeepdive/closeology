@@ -13,5 +13,50 @@
   "size_kb": 5664,
   "collected": "2026-09-10T20:51:16Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_MEC-2026-09-10-technical-report-ni-43-101-english-7fe5.pdf"
+ },
+ {
+  "file": "ceo_ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
+  "filing_ref": "ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
+  "company": "ALK",
+  "project": null,
+  "jurisdiction": null,
+  "commodity": null,
+  "submitted": "2026-09-10",
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://ceo.ca/content/sedar/ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf",
+  "source": "ceo.ca",
+  "size_kb": 6487,
+  "collected": "2026-09-11T05:58:34Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_ALK-2026-09-10-technical-report-ni-43-101-english-b26d.pdf"
+ },
+ {
+  "file": "ceo_ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf",
+  "filing_ref": "ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf",
+  "company": "ALK",
+  "project": null,
+  "jurisdiction": null,
+  "commodity": null,
+  "submitted": "2026-09-10",
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://ceo.ca/content/sedar/ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf",
+  "source": "ceo.ca",
+  "size_kb": 10952,
+  "collected": "2026-09-11T05:58:40Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_ALK-2026-09-10-technical-report-ni-43-101-english-fc68.pdf"
+ },
+ {
+  "file": "ceo_ALK-2026-09-10-technical-report-ni-43-101-english-923b.pdf",
+  "filing_ref": "ALK-2026-09-10-technical-report-ni-43-101-english-923b.pdf",
+  "company": "ALK",
+  "project": null,
+  "jurisdiction": null,
+  "commodity": null,
+  "submitted": "2026-09-10",
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://ceo.ca/content/sedar/ALK-2026-09-10-technical-report-ni-43-101-english-923b.pdf",
+  "source": "ceo.ca",
+  "size_kb": 7896,
+  "collected": "2026-09-11T05:58:46Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_ALK-2026-09-10-technical-report-ni-43-101-english-923b.pdf"
  }
 ]
