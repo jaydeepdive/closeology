@@ -480,7 +480,7 @@ def run_region(region):
     # research what they may have found before committing to stake.
     if claims is not None and len(claims):
         lm = leads.to_crs(metric)
-        halo = gpd.GeoDataFrame(geometry=[lm.geometry.buffer(15000).union_all()], crs=metric)  # ~15 km, to match the map's "nearby claims" display window (was 2.5 km, far too tight)
+        halo = gpd.GeoDataFrame(geometry=[lm.geometry.buffer(200000).union_all()], crs=metric)  # ~200 km: the map shows staked claims across the whole viewport as you zoom out; emitted as compact centroids (below) so even a dense province stays light
         cnear = gpd.sjoin(claims.to_crs(metric), halo, predicate="intersects", how="inner")
         cnear = claims.loc[cnear.index.unique()].to_crs("EPSG:4326")
         gcol = cnear.geometry.name
@@ -506,6 +506,13 @@ def run_region(region):
             if c in out.columns:
                 out[c] = out[c].astype(str).replace({"nan": "", "None": "", "NaT": ""}).str.strip()
         out = gpd.GeoDataFrame(out, geometry="geometry", crs=cnear.crs)
+        # emit CENTROIDS, not polygons: a 200 km window over a dense province is tens
+        # of thousands of claims -- points keep the layer light and the map fast; it
+        # renders them as small markers within the current view.
+        try:
+            out["geometry"] = out.geometry.representative_point()
+        except Exception:
+            pass
         out.to_file(os.path.join(out_dir, "claims_near.geojson"), driver="GeoJSON")
 
     # light occurrences layer for the map

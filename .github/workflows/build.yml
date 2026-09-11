@@ -12,12 +12,12 @@ on:
 
 concurrency:
   group: closeology
-  cancel-in-progress: false      # queue rebuilds instead of cancelling the one that's deploying
+  cancel-in-progress: true       # a newer rebuild supersedes queued/older ones so the latest code deploys promptly (was false, which let dispatches pile into a multi-hour serial backlog)
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 180
     permissions:
       contents: write
     steps:

@@ -179,12 +179,13 @@ const col=m=>MC[m]||'#8091a5';
 const topo=L.tileLayer('https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:17,attribution:'&copy; OpenTopoMap'}});
 const osm=L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:19,attribution:'&copy; OpenStreetMap'}});
 const map=L.map('map',{{layers:[topo],preferCanvas:true}}).setView([58,-96],4);
+map.on('moveend',()=>{{if(drawClaims)drawClaims();}});
 L.control.layers({{'Topographic':topo,'Street':osm}}).addTo(map);
 L.geoJSON(BORDERS,{{interactive:false,style:{{color:'#334155',weight:1.4,opacity:.6,fill:false,dashArray:'4 3'}}}}).addTo(map);
 L.layerGroup(BLABELS.map(b=>L.marker([b.lat,b.lon],{{interactive:false,icon:L.divIcon({{className:'',html:`<span style="font:700 11px Bitter,serif;color:#475569;text-shadow:0 0 3px #fff,0 0 3px #fff">${{b.n}}</span>`}})}}))).addTo(map);
 const cluster=L.markerClusterGroup({{chunkedLoading:true,maxClusterRadius:48,disableClusteringAtZoom:9}});
 map.addLayer(cluster);
-let groundLayer=null, claimLayer=null, selMarker=null, selId=null;
+let groundLayer=null, claimLayer=null, selMarker=null, selId=null, claimPts=null, drawClaims=null;
 const markers={{}};
 let jf='all', mf='all', mins=0, q='';
 function metalMatch(dm){{ if(mf==='all')return true; if(GROUPS[mf])return GROUPS[mf].includes(dm); return dm===mf; }}
@@ -208,6 +209,7 @@ function refresh(){{
 function clearOverlays(){{
   if(groundLayer){{map.removeLayer(groundLayer);groundLayer=null;}}
   if(claimLayer){{map.removeLayer(claimLayer);claimLayer=null;}}
+  claimPts=null; drawClaims=null;
   if(companyClaimLayer){{map.removeLayer(companyClaimLayer);companyClaimLayer=null;}}
   if(drillGround){{map.removeLayer(drillGround);drillGround=null;}}
 }}
@@ -225,32 +227,43 @@ async function showGround(p){{
       bounds=groundLayer.getBounds();
     }}
   }}catch(e){{}}
-  // real neighbouring claims (already-staked ground) so the open ground reads
-  // as the genuine gaps in tenure — and so the user can see WHO is nearby and
-  // research what they may have found before committing to stake.
+  // real neighbouring STAKED claims. Load every claim around this lead (up to
+  // ~200 km) once, then draw whatever falls in the CURRENT map view as small gold
+  // markers -- pan or zoom out and more staked ground appears, at any zoom. The
+  // per-view draw is capped so a dense camp stays fast.
   const owners={{}}; let nearCount=0;
   try{{
     const cr=await fetch(p.region+'_claims_near.geojson');
     if(cr.ok){{
       const cd=await cr.json();
-      const near=(cd.features||[]).filter(f=>{{
-        try{{ const c=L.geoJSON(f).getBounds().getCenter();
-          return Math.abs(c.lat-p.lat)<0.12 && Math.abs(c.lng-p.lon)<0.22; }}catch(_){{return false;}}
-      }});
-      nearCount=near.length;
-      if(near.length){{
-        claimLayer=L.geoJSON({{type:'FeatureCollection',features:near}},{{
-          style:{{color:'#8a6d3b',weight:1,opacity:.8,fillColor:'#c9a227',fillOpacity:.16}},
-          onEachFeature:(f,lyr)=>{{
-            const pr=f.properties||{{}};
-            const own=(pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
-            if(own){{ owners[own]=(owners[own]||0)+1; }}
-            const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{pr.cname?esc(pr.cname)+' ':''}}${{pr.claim?'#'+esc(pr.claim):''}}${{pr.expiry?'<br><span style=\"color:#666\">good to '+esc(pr.expiry)+'</span>':''}}`;
-            if(tip.trim()) lyr.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
-          }}
-        }}).addTo(map);
-        if(!bounds) bounds=claimLayer.getBounds();
+      const cpts=[];
+      for(const f of (cd.features||[])){{
+        const g=f.geometry; if(!g) continue;
+        let c=g.coordinates; while(Array.isArray(c)&&Array.isArray(c[0])) c=c[0];
+        if(!(Array.isArray(c)&&c.length>=2)) continue;
+        cpts.push({{lat:c[1],lng:c[0],pr:f.properties||{{}}}});
       }}
+      claimPts=cpts;
+      const CAP=4000;
+      drawClaims=function(){{
+        if(claimLayer){{map.removeLayer(claimLayer);claimLayer=null;}}
+        const b=map.getBounds(); const grp=L.layerGroup(); let shown=0;
+        for(const q of claimPts){{
+          if(!b.contains([q.lat,q.lng])) continue;
+          const own=(q.pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
+          const mk=L.circleMarker([q.lat,q.lng],{{radius:4,color:'#8a6d3b',weight:1,opacity:.9,fillColor:'#c9a227',fillOpacity:.6}});
+          const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{q.pr.cname?esc(q.pr.cname)+' ':''}}${{q.pr.claim?'#'+esc(q.pr.claim):''}}${{q.pr.expiry?'<br><span style="color:#666">good to '+esc(q.pr.expiry)+'</span>':''}}`;
+          if(tip.trim()) mk.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
+          grp.addLayer(mk); if(++shown>=CAP) break;
+        }}
+        if(shown){{ claimLayer=grp.addTo(map); }}
+      }};
+      const cphi=Math.cos(p.lat*Math.PI/180);
+      for(const q of claimPts){{
+        const dk=Math.hypot((q.lat-p.lat)*111,(q.lng-p.lon)*111*cphi);
+        if(dk<=50){{ nearCount++; const own=(q.pr.owner||'').replace(/\s*-\s*100%$/,'').trim(); if(own) owners[own]=(owners[own]||0)+1; }}
+      }}
+      drawClaims();
     }}
   }}catch(e){{}}
   // fill the "who's nearby" list in the sidebar detail
@@ -258,13 +271,13 @@ async function showGround(p){{
   if(nb){{
     const ranked=Object.keys(owners).sort((a,b)=>owners[b]-owners[a]);
     if(ranked.length){{
-      nb.innerHTML=`<div class=sechd>Who's nearby — ${{ranked.length}} holder(s) within ~15 km</div>`+
+      nb.innerHTML=`<div class=sechd>Who's nearby — ${{ranked.length}} holder(s) within ~50 km</div>`+
         ranked.slice(0,12).map(o=>`<div class=fact><span class=own>${{esc(o)}}</span> <span class=pn>${{owners[o]}} claim${{owners[o]>1?'s':''}}</span></div>`).join('')+
         `<div class=pn style="margin-top:5px">Hover any gold claim on the map for the holder and tenure number.</div>`;
     }} else if(nearCount>0){{
-      nb.innerHTML=`<div class=sechd>Who's nearby — ${{nearCount}} claim(s) within ~15 km</div><div class=pn>Neighbouring ground is staked (shown in gold), but this jurisdiction's dataset doesn't publish holder names. Check the provincial registry for the current holders.</div>`;
+      nb.innerHTML=`<div class=sechd>Who's nearby — ${{nearCount}} claim(s) within ~50 km</div><div class=pn>Neighbouring ground is staked (shown in gold), but this jurisdiction's dataset doesn't publish holder names. Check the provincial registry for the current holders.</div>`;
     }} else {{
-      nb.innerHTML=`<div class=sechd>Who's nearby</div><div class=pn>No active claims recorded within ~15 km — this ground looks open with no immediate neighbours.</div>`;
+      nb.innerHTML=`<div class=sechd>Who's nearby</div><div class=pn>No active claims recorded within ~50 km — this ground looks open with no immediate neighbours.</div>`;
     }}
   }}
   if(bounds && bounds.isValid()){{ map.fitBounds(bounds.pad(0.55)); }}
