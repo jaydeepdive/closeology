@@ -1,0 +1,18 @@
+{
+"type": "FeatureCollection",
+"name": "claims_near",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "claim": "M10299", "cname": "D9", "owner": "Pine Point Mining Limited (100%)", "expiry": "2027-02-22" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -114.0, 61.0 ], [ -115.0, 61.0 ], [ -115.0, 61.0 ], [ -114.0, 61.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M10826", "cname": "PP 26", "owner": "Pine Point Mining Limited (100%)", "expiry": "2029-09-25" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -115.0, 61.0 ], [ -114.0, 61.0 ], [ -115.0, 61.0 ], [ -115.0, 61.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M10830", "cname": "PP 30", "owner": "Pine Point Mining Limited (100%)", "expiry": "2029-09-25" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -114.0, 61.0 ], [ -115.0, 61.0 ], [ -115.0, 61.0 ], [ -114.0, 61.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M10861", "cname": "PP 61", "owner": "Pine Point Mining Limited (100%)", "expiry": "2029-09-25" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -114.0, 61.0 ], [ -114.0, 61.0 ], [ -115.0, 61.0 ], [ -114.0, 61.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M10590", "cname": "GP 1", "owner": "Golden Planet Mining Corp. (100%)", "expiry": "2031-09-14" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -113.0, 65.0 ], [ -113.0, 65.0 ], [ -113.0, 66.0 ], [ -113.0, 65.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M11689", "cname": "MAC 01", "owner": "Trinex Lithium Ltd. (100%)", "expiry": "2029-12-12" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -113.0, 63.0 ], [ -113.0, 63.0 ], [ -114.0, 63.0 ], [ -113.0, 63.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M11690", "cname": "MAC 02", "owner": "Trinex Lithium Ltd. (100%)", "expiry": "2031-12-12" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -113.0, 63.0 ], [ -113.0, 63.0 ], [ -114.0, 63.0 ], [ -113.0, 63.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M11691", "cname": "MAC 03", "owner": "Trinex Lithium Ltd. (100%)", "expiry": "2027-12-12" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -113.0, 63.0 ], [ -113.0, 63.0 ], [ -114.0, 63.0 ], [ -113.0, 63.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M11692", "cname": "MAC 04", "owner": "Trinex Lithium Ltd. (100%)", "expiry": "2029-12-12" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -113.0, 63.0 ], [ -113.0, 63.0 ], [ -114.0, 63.0 ], [ -113.0, 63.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M11840", "cname": "DGC 01", "owner": "Trinex Lithium Ltd. (100%)", "expiry": "2027-02-15" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -113.0, 63.0 ], [ -114.0, 63.0 ], [ -113.0, 63.0 ], [ -113.0, 63.0 ] ] ] } },
+{ "type": "Feature", "properties": { "claim": "M11592", "cname": "BORA BORA 2", "owner": "RGV Lithium Explorations Inc. (100%)", "expiry": "2027-05-05" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -113.0, 62.0 ], [ -114.0, 63.0 ], [ -114.0, 62.0 ], [ -113.0, 62.0 ] ] ] } }
+]
+}
