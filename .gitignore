@@ -19,7 +19,9 @@ data/keep/mmp.sqlite
 # maps / radar were being 404'd because they were ignored and thus never in the
 # fast-deploy artifact. Only the private artifact variant stays ignored.
 site/app_artifact.html
-site/*.geojson
+# site/*.geojson are the MAP LAYERS (open ground, staked claims, drill holes) —
+# they MUST be committed or the fast deploy serves a layerless map (just dots).
+# (large intermediate geojson, if any, can be ignored individually below.)
 site/*.png
 __pycache__/
 *.pyc
