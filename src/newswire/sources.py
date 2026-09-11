@@ -164,37 +164,14 @@ def nfc_rss(session):
 
 
 def nfc_incremental(session):
-    """Daily discovery. RSS holds only a small, per-category recent window, so on
-    a busy news day the tail of releases silently falls off before the crawl sees
-    it -- which is why bursts of same-day drill results went missing from the
-    bank. We now also fold in (a) the news sitemap (the ~5000 most-recent
-    releases, keyword-filtered to drill/assay), and (b) a bounded downward walk of
-    the sequential release-id space from the newest id seen, so no recent id is
-    ever skipped. The id-walk candidates are appended LAST (after the slug-bearing
-    RSS/sitemap hits) so the orchestrator's per-source circuit breaker can only
-    ever trim this redundant tail, never the known-good releases; already-banked
-    ids are skipped by the orchestrator, so the extra breadth is cheap after the
-    first pass."""
     rel = {}
     for r in nfc_rss(session):
         rel[r["id"]] = r
-    try:
-        for r in nfc_sitemap(session):
-            rel.setdefault(r["id"], r)
-    except Exception as e:
-        print(f"[newswire] nfc sitemap skipped: {str(e)[:80]}")
     for cat in NFC_CATS:
         html = _get(session, f"{NFC}/news/{cat}")
         for r in _nfc_from_html(html):
             rel.setdefault(r["id"], r)
         time.sleep(0.4)
-    ids = [int(r["id"]) for r in rel.values() if str(r["id"]).isdigit()]
-    if ids:
-        newest = max(ids)
-        for rid in range(newest, max(1, newest - 400), -1):
-            rel.setdefault(str(rid), {"source": "newsfilecorp", "id": str(rid),
-                                      "url": f"{NFC}/release/{rid}", "title": None,
-                                      "published": None, "company": None})
     return list(rel.values())
 
 
