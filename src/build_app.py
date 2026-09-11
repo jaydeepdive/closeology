@@ -433,7 +433,7 @@ async function showCompanyClaims(rid){{
     const op=outline?outline.properties:{{}};
     const nc=outline?op.n_cells:cells.length;
     if(!nc){{
-      box.innerHTML=`<div class=sechd>Company property</div><div class=pn>No mapped claim block found around these holes in our current claim fabric.</div>`;
+      box.innerHTML=`<div class=sechd>Company property</div><div class=pn>These holes sit on ground the driller holds (you do not drill claims you do not own), but our claim fabric does not cover this spot yet, so we cannot outline the block here or show what is open around it. Confirm the holder and boundaries in the provincial registry.</div>`;
       return;
     }}
     const known=op.holder_known;

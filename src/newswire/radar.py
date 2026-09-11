@@ -90,10 +90,14 @@ _NAME2SLUG = {"Ontario": "on", "Quebec": "qc", "British Columbia": "bc", "Yukon"
 
 
 def _drill_open_ground(items, halo_m=1000):
-    """For each drill program, the OPEN stakeable ground around the whole cluster
-    of holes: tile a halo over all the holes and drop any cell that a currently
-    active claim touches. This is what you could peg on the geology they just
-    drilled. Uses the holes' own jurisdiction's live claim fabric."""
+    """For each drill program, the OPEN stakeable ground around the cluster of
+    holes: tile a halo over the holes and keep only cells that NO active claim
+    touches. Emitted ONLY where the claim fabric actually covers the drilled
+    ground. A company cannot drill ground it does not hold, so if the cells the
+    holes sit in read as unclaimed, our fabric is simply missing that tenure --
+    in that case we suppress the layer for this program rather than paint held,
+    actively-drilled ground as free to stake. Uses the holes' own jurisdiction's
+    live claim fabric."""
     import math
     import geopandas as gpd
     from shapely.geometry import box
@@ -116,30 +120,39 @@ def _drill_open_ground(items, halo_m=1000):
             except Exception:
                 cache[slug] = None
         claims = cache[slug]
+        # No claim fabric for this jurisdiction -> we cannot tell open ground from
+        # simply-unmapped ground, so draw nothing for this program.
+        if claims is None or not len(claims):
+            continue
         ref = sum(h[0] for h in holes) / len(holes)
         dlat = GRID_M / 111320.0
         dlon = GRID_M / (111320.0 * max(0.2, math.cos(math.radians(ref))))
         steps = int(halo_m // GRID_M) + 1
-        cells = set()
+        cells, hole_cells = set(), set()
         for (la, lo) in holes:
             ci, cj = int(lo // dlon), int(la // dlat)
+            hole_cells.add((ci, cj))
             for di in range(-steps, steps + 1):
                 for dj in range(-steps, steps + 1):
                     cells.add((ci + di, cj + dj))
         cells = list(cells)
         polys = [box(i * dlon, j * dlat, (i + 1) * dlon, (j + 1) * dlat) for (i, j) in cells]
-        openmask = [True] * len(polys)
-        if claims is not None and len(claims):
-            try:
-                cg = gpd.GeoDataFrame(geometry=polys, crs="EPSG:4326")
-                cl = claims.to_crs("EPSG:4326")
-                hit = gpd.sjoin(cg, cl[[cl.geometry.name]], predicate="intersects", how="left")
-                taken = set(hit[hit.index_right.notna()].index.tolist())
-                openmask = [i not in taken for i in range(len(polys))]
-            except Exception:
-                pass
-        for pg, ok in zip(polys, openmask):
-            if ok:
+        try:
+            cg = gpd.GeoDataFrame(geometry=polys, crs="EPSG:4326")
+            cl = claims.to_crs("EPSG:4326")
+            hit = gpd.sjoin(cg, cl[[cl.geometry.name]], predicate="intersects", how="left")
+            taken = set(hit[hit.index_right.notna()].index.tolist())
+        except Exception:
+            # Cannot verify coverage -> do not guess; draw nothing for this program.
+            continue
+        # Coverage gate: the cells the holes actually sit in MUST be claimed (the
+        # driller holds them). If none are, the fabric does not reach this ground
+        # and every "open" cell here would be a false positive -> suppress.
+        hole_idx = [k for k, (i, j) in enumerate(cells) if (i, j) in hole_cells]
+        if not any(k in taken for k in hole_idx):
+            continue
+        for k, pg in enumerate(polys):
+            if k not in taken:          # genuinely open: no active claim intersects
                 feats.append({"type": "Feature", "properties": {"rid": it["id"]},
                               "geometry": _map(pg)})
     return {"type": "FeatureCollection", "features": feats}
