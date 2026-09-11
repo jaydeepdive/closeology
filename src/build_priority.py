@@ -3,6 +3,7 @@ one scale, each showing WHY it sits where it does (the score breakdown) plus all
 qualifying detail. Deep Dive-styled (sister site to thedeepdive.ca)."""
 import os
 import json
+import datetime
 import math
 import pandas as pd
 import site_theme as T
@@ -67,6 +68,8 @@ def _load(csv, juris):
             "community": _s(r.get("nearest_community")), "community_km": _s(r.get("community_km")),
             "encumbrances": _s(r.get("encumbrances")), "cells_ha": _s(r.get("cells_area_ha")),
             "n_cells": _s(r.get("n_cells")), "score": bd["total"], "parts": bd["parts"],
+            "spend": spend, "has_drill": bool(drill), "status_l": status.lower(),
+            "first_seen": _s(r.get("first_seen")), "is_new": _s(r.get("is_new")).lower()=="true",
             "lat": _num(r.get("lat")), "lon": _num(r.get("lon")),
         })
     return out
@@ -104,6 +107,31 @@ def build(site_dir, regions):
     leads.sort(key=lambda x: (-x["score"], not x["deposit_open"]))
     for i, l in enumerate(leads, 1):
         l["rank"] = i
+
+    # --- new-lead tracking (#6): a durable first-seen ledger flags leads that
+    # appeared recently (e.g. a property whose claims just lapsed and opened up).
+    _ledger_p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                             "data", "keep", "leads_seen.json")
+    try:
+        _seen = json.load(open(_ledger_p)) if os.path.exists(_ledger_p) else {}
+    except Exception:
+        _seen = {}
+    _today = datetime.date.today()
+    for l in leads:
+        k = l.get("lead_id") or "{0}:{1}:{2}".format(l.get("juris"), l.get("name"), l.get("minfile"))
+        if k not in _seen:
+            _seen[k] = _today.isoformat()
+        l["first_seen"] = _seen[k]
+        try:
+            age = (_today - datetime.date.fromisoformat(_seen[k])).days
+        except Exception:
+            age = 999
+        l["is_new"] = age <= 3            # flagged NEW for its first ~3 days in the system
+    try:
+        json.dump(_seen, open(_ledger_p, "w"), indent=0)
+    except Exception:
+        pass
+
     counts = {c: sum(1 for l in leads if l["juris"] == c) for c, _ in juris}
 
     pill_css = "".join(".p-{0}{{{1}}}".format(c.lower(), PILL.get(c, "background:#eef0f2;color:#444;"))
@@ -133,6 +161,28 @@ def build(site_dir, regions):
     mopts.append('</optgroup><optgroup label="Single metal">')
     for m in metals_sorted:
         mopts.append('<option value="{0}">{0} ({1})</option>'.format(m, mcounts[m]))
+
+    # development-status dropdown (coarse buckets, ranked)
+    _STATUS_ORDER=["Producer","Past Producer","Developed Prospect","Prospect","Discovery","Showing","Occurrence"]
+    def _sb(st):
+        st=(st or "").lower()
+        if "past produc" in st: return "Past Producer"
+        if "produc" in st: return "Producer"
+        if "develop" in st: return "Developed Prospect"
+        if "prospect" in st: return "Prospect"
+        if "discover" in st: return "Discovery"
+        if "showing" in st: return "Showing"
+        return "Occurrence"
+    for l in leads:
+        l["status_bucket"]=_sb(l.get("status"))
+    scounts={}
+    for l in leads:
+        scounts[l["status_bucket"]]=scounts.get(l["status_bucket"],0)+1
+    sopts=['<option value="all">Any status ({0})</option>'.format(len(leads))]
+    for st in _STATUS_ORDER:
+        if scounts.get(st): sopts.append('<option value="{0}">{0} ({1})</option>'.format(st,scounts[st]))
+    n_new=sum(1 for l in leads if l.get("is_new"))
+
     mopts.append('</optgroup>')
 
     html = PAGE.format(
@@ -141,6 +191,7 @@ def build(site_dir, regions):
         leads_json=json.dumps(leads, separators=(",", ":")),
         jopts="".join(jopts), mopts="".join(mopts), region_names=names,
         groups_json=json.dumps({k: sorted(v) for k, v in GROUPS.items()}),
+        sopts="".join(sopts), n_new=n_new,
     )
     os.makedirs(site_dir, exist_ok=True)
     open(os.path.join(site_dir, "index.html"), "w").write(html)          # front page
@@ -163,6 +214,8 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 .fsel input[type=text],.fsel input#q{{width:100%;}}
 .fsel input[type=range]{{height:auto;min-width:150px;padding:0;border:0;}}
 .count{{color:var(--mut);font-size:13px;}}
+.ckopt{{display:flex;align-items:center;gap:6px;height:40px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;text-transform:none;letter-spacing:0;}}
+.ckopt input{{width:16px;height:16px;}}
 .lead{{border:1px solid var(--line);border-radius:12px;padding:0;margin:14px 0;overflow:hidden;background:#fff;}}
 .lead:hover{{box-shadow:0 3px 14px rgba(0,0,0,.06);}}
 .lhead{{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border-bottom:1px solid var(--line);}}
@@ -215,6 +268,14 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
       <select id="msel">{mopts}</select></div>
     <div class="fsel"><label for="sc">Min score: <span id="sv">0</span></label>
       <input id="sc" type="range" min="0" max="90" value="0" step="5"></div>
+    <div class="fsel"><label for="stsel">Development status</label>
+      <select id="stsel">{sopts}</select></div>
+    <div class="fsel"><label for="spsel">Min expl. spend</label>
+      <select id="spsel"><option value="0">Any</option><option value="100000">$100k+</option><option value="500000">$500k+</option><option value="1000000">$1M+</option><option value="5000000">$5M+</option></select></div>
+    <div class="fsel"><label style="visibility:hidden">.</label>
+      <label class="ckopt"><input type="checkbox" id="drchk"> Drilling on record</label></div>
+    <div class="fsel"><label style="visibility:hidden">.</label>
+      <label class="ckopt"><input type="checkbox" id="newchk"> New only ({n_new})</label></div>
   </div>
   <div class="count" id="count"></div>
   <div id="list"></div>
@@ -224,7 +285,7 @@ PAGE = r"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 const LEADS={leads_json};
 const GROUPS={groups_json};
 const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'}}[c]));
-let jf='all', mf='all', q='', mins=0;
+let jf='all', mf='all', q='', mins=0, stf='all', minsp=0, drf=false, newf=false;
 function metalMatch(dm){{
   if(mf==='all') return true;
   if(GROUPS[mf]) return GROUPS[mf].includes(dm);
@@ -256,7 +317,8 @@ function card(p){{
         <div><span class=lname>${{esc(p.name)}}</span>
           <span class="pill p-${{p.juris.toLowerCase()}}">${{p.juris}}</span>
           ${{p.deposit_open?'<span class="pill p-open">deposit open</span>':''}}
-          ${{p.hard?'<span class="pill p-hard">harder to stake</span>':''}}</div>
+          ${{p.hard?'<span class="pill p-hard">harder to stake</span>':''}}
+          ${{p.is_new?'<span class="pill" style="background:#fef3c7;color:#92400e">🆕 new</span>':''}}</div>
         <div class=sub>${{esc(p.metal)}}${{p.minfile?(' · '+esc(p.minfile)):''}}</div>
         <div class=chips>${{chips.join('')}}</div>
         <div style="margin-top:8px"><a class=maplink href="${{mapurl}}">📍 View on the map</a></div>
@@ -275,6 +337,7 @@ function card(p){{
 function render(){{
   const ql=q.toLowerCase();
   const rows=LEADS.filter(p=>(jf==='all'||p.juris===jf) && metalMatch(p.dmetal) && p.score>=mins &&
+    (stf==='all'||p.status_bucket===stf) && (!drf||p.has_drill) && ((+p.spend||0)>=minsp) && (!newf||p.is_new) &&
     (!ql || (p.name+' '+p.metal+' '+p.commodity+' '+p.community+' '+p.metals).toLowerCase().includes(ql)));
   document.getElementById('count').textContent=rows.length+' lead'+(rows.length===1?'':'s')+' shown, ranked by priority';
   document.getElementById('list').innerHTML=rows.length?rows.map(card).join(''):'<div class=empty>No leads match — widen the metal or jurisdiction filter.</div>';
@@ -283,6 +346,10 @@ document.getElementById('jsel').addEventListener('change',e=>{{jf=e.target.value
 document.getElementById('msel').addEventListener('change',e=>{{mf=e.target.value;render();}});
 document.getElementById('sc').addEventListener('input',e=>{{mins=+e.target.value;document.getElementById('sv').textContent=mins;render();}});
 document.getElementById('q').addEventListener('input',e=>{{q=e.target.value;render();}});
+document.getElementById('stsel').addEventListener('change',e=>{{stf=e.target.value;render();}});
+document.getElementById('spsel').addEventListener('change',e=>{{minsp=+e.target.value;render();}});
+document.getElementById('drchk').addEventListener('change',e=>{{drf=e.target.checked;render();}});
+document.getElementById('newchk').addEventListener('change',e=>{{newf=e.target.checked;render();}});
 render();
 </script></body></html>
 """

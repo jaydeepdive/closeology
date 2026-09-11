@@ -292,6 +292,10 @@ function detailHTML(p){{
     <div class=sec><div class=sechd>Qualifying details</div>${{facts.join('')}}
       ${{p.production?`<div class=prodbox><b>Past production.</b> ${{esc(p.production)}}</div>`:''}}
       ${{drill?(`<div class=sechd style="margin-top:10px">⛏ Drill results</div>`+drill):''}}</div>
+    <div class=sec><div class=sechd>Claims — is the ground actually stakeable</div>
+      <div class=fact><span class=k>Available now</span>${{p.n_cells?('<b>'+esc(p.n_cells)+'</b> open cell(s) · ~'+esc(p.cells_ha)+' ha — the magenta block'):'no open cells carved around the deposit right now'}}</div>
+      <div class=fact><span class=k>Staked nearby</span>existing claims are drawn in gold; holders are listed below</div>
+      <div class=pn style="margin-top:4px">What <i>historically</i> made up this property (past tenure since lapsed, or ground now held by others) is not in the public claim dataset — the layers show <b>current</b> open ground vs <b>current</b> claims. Confirm the full tenure history in the provincial registry before assuming every key claim is free.</div></div>
     <div class=sec id=nearby><div class=sechd>Who's nearby</div><div class=pn>Loading neighbouring claim holders…</div></div>
     <div class=sec><div class=sechd>Why it ranks here</div>${{parts}}</div>
     ${{p.url?`<a class=dbtn href="${{esc(p.url)}}" target=_blank>Full record ↗</a>`:''}}`;
@@ -507,7 +511,13 @@ drillCtl.addTo(map);
       let brid=null,bd=1e9;   // the program (release) whose holes are nearest
       Object.keys(drillByRid).forEach(rid=>drillByRid[rid].forEach(ll=>{{
         const dd=Math.hypot(ll[0]-lat,ll[1]-lon); if(dd<bd){{bd=dd;brid=rid;}}}}));
-      if(brid) await selectDrill(brid);   // open its sidebar detail + claims + open ground
+      if(!brid && label){{        // no geolocated holes at this point — match the program by company/project name
+        const lc=label.toLowerCase();
+        brid=Object.keys(drillProg).find(rid=>(((drillProg[rid].company||'')+' '+(drillProg[rid].project||'')).toLowerCase().includes(lc)))||null;
+      }}
+      if(brid){{ await selectDrill(brid); }}
+      else {{ L.circleMarker([lat,lon],{{radius:9,color:'#fff',weight:2,fillColor:'#ff7a00',fillOpacity:.95}}).addTo(map)
+              .bindPopup(`<b>${{(label||'Drill program').replace(/[<>]/g,'')}}</b><br><span style="color:#555">Collar coordinates weren\'t published in this release, so there are no hole pins — open the release for the drill section.</span>`).openPopup(); }}
     }}); return; }}
   // nearest lead to the target (match a radar item to its lead card)
   let best=null, bd=1e9;
