@@ -1325,5 +1325,37 @@
   "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2474&drmKey=dd427c3f460837d8&drr=ss78c26c15080653dce29a913ace5a8f4ad68bf1a6ef417571cda2f1589223b0976c1b3637b70a749f1b2f3b5271582f9aux&id=0c11f8b7998bcd96da1fc0fa3727f461c8913637124b4c7c",
   "collected": "2026-09-11T23:30:36Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_alkane-resources-limited-000109167_20260910T2205.pdf"
+ },
+ {
+  "key": "inversiones-trento-spa-000104170_20260911T2107",
+  "node": "W2635",
+  "drm": "b83cf0e31778cfa0",
+  "file": "sedar_inversiones-trento-spa-000104170_20260911T2107.pdf",
+  "filing_ref": "inversiones-trento-spa-000104170_20260911T2107",
+  "company": "Inversiones Trento SpA (000104170)",
+  "profile": "000104170",
+  "submitted": "11 Sep 2026 21:07 EDT",
+  "jurisdiction": null,
+  "size_kb": 14432,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2635&drmKey=b83cf0e31778cfa0&drr=ss46bc922388484064ee5e1f7fe29c6e0bb7e2810a202cfa822ba8e44ebb6a1cc9d288547f6039220d9bc716e463c9e5bfux&id=0c11f8b7998bcd96e2f1f95762e4a9d578bb5e18e196d3cc",
+  "collected": "2026-09-12T03:00:40Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_inversiones-trento-spa-000104170_20260911T2107.pdf"
+ },
+ {
+  "key": "alkane-resources-limited-000109167_20260910T2204",
+  "node": "W2990",
+  "drm": "1d516fed3b9c0d19",
+  "file": "sedar_alkane-resources-limited-000109167_20260910T2204.pdf",
+  "filing_ref": "alkane-resources-limited-000109167_20260910T2204",
+  "company": "Alkane Resources Limited (000109167)",
+  "profile": "000109167",
+  "submitted": "10 Sep 2026 22:04 EDT",
+  "jurisdiction": "Ontario",
+  "size_kb": 6488,
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://www.sedarplus.ca/csa-party/viewInstance/resource.html?node=W2990&drmKey=1d516fed3b9c0d19&drr=ss46bc922388484064ee5e1f7fe29c6e0bb7e2810a202cfa822ba8e44ebb6a1cc9d288547f6039220d9bc716e463c9e5bfux&id=0c11f8b7998bcd96e2f1f95762e4a9d578bb5e18e196d3cc",
+  "collected": "2026-09-12T03:01:00Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/sedar_alkane-resources-limited-000109167_20260910T2204.pdf"
  }
 ]
