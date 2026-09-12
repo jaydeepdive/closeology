@@ -1,0 +1,54 @@
+opening SEDAR+ home …
+  → Search SEDAR+: https://www.sedarplus.ca/home/#
+  → Documents: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd96e2f1f95762e4a
+  on: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd96e2f1f95762e4a
+  filter category: Continuous disclosure
+  filter type: Technical report
+  filter subtype: Technical report (NI 43-101)
+  submit Search: clicked
+waiting for a results list… (if the browser is sitting on the SEDAR home or an empty search, click Search > Documents, filter to Technical report (NI 43-101), Search)
+results detected: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd96e2f
+page 1: 30 NI 43-101 report(s) on this page
+  ✓ Inversiones Trento SpA (000104170) (14432 KB)  [1]
+  ✓ Alkane Resources Limited (000109167) (6488 KB)  [2]
+page 2: 30 NI 43-101 report(s) on this page
+page 3: 30 NI 43-101 report(s) on this page
+page 4: 30 NI 43-101 report(s) on this page
+  THROTTLED (HTTP 200, 13890B) 20260911-230118-354
+session #1: +2 report(s) [throttled]  (total 2)
+— session #2: fresh SEDAR search (prior session's download quota spent) —
+opening SEDAR+ home …
+  → Search SEDAR+: https://www.sedarplus.ca/home/#
+  → Documents: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd9690d34f783d8a9
+  on: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd9690d34f783d8a9
+  filter category: Continuous disclosure
+  filter type: Technical report
+  filter subtype: Technical report (NI 43-101)
+  submit Search: clicked
+waiting for a results list… (if the browser is sitting on the SEDAR home or an empty search, click Search > Documents, filter to Technical report (NI 43-101), Search)
+results detected: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd9690d
+page 1: 30 NI 43-101 report(s) on this page
+page 2: 30 NI 43-101 report(s) on this page
+page 3: 30 NI 43-101 report(s) on this page
+page 4: 30 NI 43-101 report(s) on this page
+  THROTTLED (HTTP 200, 13890B) 20260911-230157-020
+session #2: +0 report(s) [throttled]  (total 2)
+— session #3: fresh SEDAR search (prior session's download quota spent) —
+opening SEDAR+ home …
+  → Search SEDAR+: https://www.sedarplus.ca/home/#
+  → Documents: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd9690d34f783d8a9
+  on: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd9690d34f783d8a9
+  filter category: Continuous disclosure
+  filter type: Technical report
+  filter subtype: Technical report (NI 43-101)
+  submit Search: clicked
+waiting for a results list… (if the browser is sitting on the SEDAR home or an empty search, click Search > Documents, filter to Technical report (NI 43-101), Search)
+results detected: https://www.sedarplus.ca/csa-party/viewInstance/view.html?id=0c11f8b7998bcd9690d
+page 1: 30 NI 43-101 report(s) on this page
+page 2: 30 NI 43-101 report(s) on this page
+page 3: 30 NI 43-101 report(s) on this page
+page 4: 30 NI 43-101 report(s) on this page
+  THROTTLED (HTTP 200, 13890B) 20260911-230234-649
+session #3: +0 report(s) [throttled]  (total 2)
+two fresh sessions in a row downloaded 0 — SEDAR IP rate-limit reached for now; the next scheduled batch resumes.
+collected 2 new report(s); ledger now 100 rows
