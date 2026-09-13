@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-12T06:26:04Z",
+  "generated": "2026-09-13T06:19:44Z",
   "max_bytes": 94371840,
   "tables": {
     "collars": [
@@ -38,6 +38,12 @@
         "source": "sedar:troilus-mining-corp_20260909T0701",
         "rows": 48,
         "bytes": 14108
+      },
+      {
+        "file": "mmp/collars/sedar__anteros-metals-inc_20260730T0800.parquet",
+        "source": "sedar:anteros-metals-inc_20260730T0800",
+        "rows": 10,
+        "bytes": 13267
       }
     ],
     "deposit_model": [
@@ -124,6 +130,42 @@
         "source": "sedar:troilus-mining-corp_20260909T0701",
         "rows": 30,
         "bytes": 12410
+      },
+      {
+        "file": "mmp/deposit_model/sedar__anteros-metals-inc_20260730T0800.parquet",
+        "source": "sedar:anteros-metals-inc_20260730T0800",
+        "rows": 3,
+        "bytes": 11043
+      },
+      {
+        "file": "mmp/deposit_model/sedar__british-columbia_20260720T1950.parquet",
+        "source": "sedar:british-columbia_20260720T1950",
+        "rows": 5,
+        "bytes": 10980
+      },
+      {
+        "file": "mmp/deposit_model/sedar__faraday-copper-corp-000036463_20260730T1601.parquet",
+        "source": "sedar:faraday-copper-corp-000036463_20260730T1601",
+        "rows": 6,
+        "bytes": 11005
+      },
+      {
+        "file": "mmp/deposit_model/sedar__goldgroup-mining-inc_20260720T0805.parquet",
+        "source": "sedar:goldgroup-mining-inc_20260720T0805",
+        "rows": 22,
+        "bytes": 11313
+      },
+      {
+        "file": "mmp/deposit_model/sedar__white-gold-corp-000008417_20260720T1744.parquet",
+        "source": "sedar:white-gold-corp-000008417_20260720T1744",
+        "rows": 1,
+        "bytes": 10846
+      },
+      {
+        "file": "mmp/deposit_model/sedar__xau-resources-inc_20260717T2030.parquet",
+        "source": "sedar:xau-resources-inc_20260717T2030",
+        "rows": 4,
+        "bytes": 11070
       }
     ],
     "model_method": [
@@ -210,6 +252,30 @@
         "source": "sedar:troilus-mining-corp_20260909T0701",
         "rows": 1,
         "bytes": 17356
+      },
+      {
+        "file": "mmp/model_method/sedar__anteros-metals-inc_20260730T0800.parquet",
+        "source": "sedar:anteros-metals-inc_20260730T0800",
+        "rows": 1,
+        "bytes": 16233
+      },
+      {
+        "file": "mmp/model_method/sedar__faraday-copper-corp-000036463_20260730T1601.parquet",
+        "source": "sedar:faraday-copper-corp-000036463_20260730T1601",
+        "rows": 1,
+        "bytes": 20374
+      },
+      {
+        "file": "mmp/model_method/sedar__goldgroup-mining-inc_20260720T0805.parquet",
+        "source": "sedar:goldgroup-mining-inc_20260720T0805",
+        "rows": 1,
+        "bytes": 18000
+      },
+      {
+        "file": "mmp/model_method/sedar__xau-resources-inc_20260717T2030.parquet",
+        "source": "sedar:xau-resources-inc_20260717T2030",
+        "rows": 1,
+        "bytes": 19643
       }
     ],
     "metallurgy": [
@@ -278,6 +344,30 @@
         "source": "sedar:troilus-mining-corp_20260909T0701",
         "rows": 1,
         "bytes": 19484
+      },
+      {
+        "file": "mmp/metallurgy/sedar__faraday-copper-corp-000036463_20260730T1601.parquet",
+        "source": "sedar:faraday-copper-corp-000036463_20260730T1601",
+        "rows": 1,
+        "bytes": 14152
+      },
+      {
+        "file": "mmp/metallurgy/sedar__goldgroup-mining-inc_20260720T0805.parquet",
+        "source": "sedar:goldgroup-mining-inc_20260720T0805",
+        "rows": 1,
+        "bytes": 16813
+      },
+      {
+        "file": "mmp/metallurgy/sedar__white-gold-corp-000008417_20260720T1744.parquet",
+        "source": "sedar:white-gold-corp-000008417_20260720T1744",
+        "rows": 1,
+        "bytes": 16598
+      },
+      {
+        "file": "mmp/metallurgy/sedar__xau-resources-inc_20260717T2030.parquet",
+        "source": "sedar:xau-resources-inc_20260717T2030",
+        "rows": 1,
+        "bytes": 17752
       }
     ],
     "economics": [
@@ -318,20 +408,38 @@
         "source": "sedar:sanu-gold-corp_20260908T2015",
         "rows": 33,
         "bytes": 7076
+      },
+      {
+        "file": "mmp/assays/sedar__british-columbia_20260720T1950.parquet",
+        "source": "sedar:british-columbia_20260720T1950",
+        "rows": 20,
+        "bytes": 6665
+      },
+      {
+        "file": "mmp/assays/sedar__white-gold-corp-000008417_20260720T1744.parquet",
+        "source": "sedar:white-gold-corp-000008417_20260720T1744",
+        "rows": 28,
+        "bytes": 7085
+      },
+      {
+        "file": "mmp/assays/sedar__xau-resources-inc_20260717T2030.parquet",
+        "source": "sedar:xau-resources-inc_20260717T2030",
+        "rows": 39,
+        "bytes": 7584
       }
     ],
     "survey": [],
     "lithology": []
   },
   "totals": {
-    "collars": 195,
+    "collars": 205,
     "survey": 0,
-    "assays": 296,
+    "assays": 383,
     "lithology": 0,
-    "deposit_model": 250,
-    "model_method": 14,
-    "metallurgy": 11,
+    "deposit_model": 291,
+    "model_method": 18,
+    "metallurgy": 15,
     "economics": 3
   },
-  "shard_count": 51
+  "shard_count": 69
 }
