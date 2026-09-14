@@ -21,7 +21,7 @@ def _r(p):
 
 
 def _borders(regions_cfg):
-    feats, labels = [], []
+    feats, labels, bboxes = [], [], {}
     for rc in regions_cfg:
         bp = os.path.join("data", "keep", f"{rc['slug']}_boundary.parquet")
         if not os.path.exists(bp):
@@ -33,14 +33,17 @@ def _borders(regions_cfg):
             feats.append({"type": "Feature", "properties": {"n": rc["name"]}, "geometry": mapping(simp)})
             c = simp.representative_point()
             labels.append({"n": rc["slug"].upper(), "lat": round(c.y, 4), "lon": round(c.x, 4)})
+            mnx, mny, mxx, mxy = simp.bounds
+            bboxes[rc["slug"].lower()] = [round(mny, 3), round(mnx, 3), round(mxy, 3), round(mxx, 3)]  # [s,w,n,e]
         except Exception:
             continue
-    return {"type": "FeatureCollection", "features": feats}, labels
+    return {"type": "FeatureCollection", "features": feats}, labels, bboxes
 
 
 def build(regions_cfg, html_path):
     site_dir = os.path.dirname(html_path) or "site"
     leads = []
+    claim_regions = []
     jname = {}
     for rc in regions_cfg:
         csv = os.path.join(rc["dir"], "out", "leads.csv")
@@ -60,6 +63,7 @@ def build(regions_cfg, html_path):
         cn = os.path.join(rc["dir"], "out", "claims_near.geojson")
         if os.path.exists(cn):
             shutil.copy(cn, os.path.join(site_dir, f"{rc['slug'].lower()}_claims_near.geojson"))
+            claim_regions.append(rc["slug"].lower())
     leads.sort(key=lambda x: -x["score"])
 
     counts_j, counts_m = {}, {}
@@ -83,7 +87,7 @@ def build(regions_cfg, html_path):
         mopts.append('<option value="{0}">{0} ({1})</option>'.format(m, counts_m[m]))
     mopts.append("</optgroup>")
 
-    borders, blabels = _borders(regions_cfg)
+    borders, blabels, rbboxes = _borders(regions_cfg)
     html = TEMPLATE.format(
         fonts=T.FONTS, theme_css=T.THEME_CSS, header=T.header("app.html"),
         leaflet_css=_r("leaflet.css"), mc_css=_r("mc.css") + _r("mcd.css"),
@@ -93,6 +97,8 @@ def build(regions_cfg, html_path):
         groups_json=json.dumps({k: sorted(v) for k, v in GROUPS.items()}),
         borders_json=json.dumps(borders, separators=(",", ":")),
         blabels_json=json.dumps(blabels, separators=(",", ":")),
+        regionbbox_json=json.dumps(rbboxes, separators=(",", ":")),
+        claim_regions_json=json.dumps(claim_regions),
         jopts="".join(jopts), mopts="".join(mopts),
     )
     open(html_path, "w").write(html)
@@ -186,6 +192,81 @@ L.layerGroup(BLABELS.map(b=>L.marker([b.lat,b.lon],{{interactive:false,icon:L.di
 const cluster=L.markerClusterGroup({{chunkedLoading:true,maxClusterRadius:48,disableClusteringAtZoom:9}});
 map.addLayer(cluster);
 let groundLayer=null, claimLayer=null, selMarker=null, selId=null, claimPts=null, drawClaims=null;
+// ---- persistent "Staked claims" layer: every claim block in the CURRENT view,
+// at any zoom (>=8), loaded per region on demand and capped for rendering speed.
+const REGION_BBOX={regionbbox_json};
+const CLAIM_REGIONS={claim_regions_json};
+let claimsOn=false, claimAllLayer=null, claimCache={{}}, claimLoading={{}};
+async function _loadClaims(slug){{
+  if(claimCache[slug]) return claimCache[slug];
+  if(claimLoading[slug]) return null;
+  claimLoading[slug]=true;
+  try{{
+    const r=await fetch(slug+'_claims_near.geojson');
+    const d=r.ok?await r.json():{{features:[]}};
+    const pts=[];
+    for(const f of (d.features||[])){{
+      const g=f.geometry; if(!g) continue;
+      let c=g.coordinates; while(Array.isArray(c)&&Array.isArray(c[0])) c=c[0];
+      if(!(Array.isArray(c)&&c.length>=2)) continue;
+      pts.push({{lat:c[1],lng:c[0],pr:f.properties||{{}}}});
+    }}
+    claimCache[slug]=pts;
+  }}catch(e){{ claimCache[slug]=[]; }}
+  claimLoading[slug]=false;
+  return claimCache[slug];
+}}
+function _regionsInView(){{
+  const b=map.getBounds(), out=[];
+  for(const slug of CLAIM_REGIONS){{
+    const bb=REGION_BBOX[slug]; if(!bb) continue;
+    if(b.getSouth()<=bb[2] && b.getNorth()>=bb[0] && b.getWest()<=bb[3] && b.getEast()>=bb[1]) out.push(slug);
+  }}
+  return out;
+}}
+async function drawAllClaims(){{
+  const btn=document.getElementById('claimbtn');
+  if(!claimsOn){{ if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} return; }}
+  if(map.getZoom()<8){{
+    if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}}
+    if(btn) btn.textContent='⛏ Staked claims — zoom in';
+    return;
+  }}
+  if(btn) btn.textContent='⛏ Loading claims…';
+  const inview=_regionsInView();
+  await Promise.all(inview.map(_loadClaims));
+  if(!claimsOn) return;
+  if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}}
+  const b=map.getBounds(), grp=L.layerGroup(); let shown=0; const CAP=6000;
+  for(const slug of inview){{
+    for(const q2 of (claimCache[slug]||[])){{
+      if(!b.contains([q2.lat,q2.lng])) continue;
+      const pr=q2.pr, own=(pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
+      const mk=L.circleMarker([q2.lat,q2.lng],{{radius:3.5,color:'#8a6d3b',weight:.7,opacity:.85,fillColor:'#c9a227',fillOpacity:.55}});
+      const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{pr.cname?esc(pr.cname)+' ':''}}${{pr.claim?'#'+esc(pr.claim):''}}${{pr.staked?'<br>staked '+esc(pr.staked):''}}${{pr.expiry?'<br>good to '+esc(pr.expiry):''}}`;
+      if(tip.trim()) mk.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
+      grp.addLayer(mk); if(++shown>=CAP) break;
+    }}
+    if(shown>=CAP) break;
+  }}
+  claimAllLayer=grp.addTo(map);
+  if(btn) btn.textContent = shown>=CAP ? ('⛏ Staked claims ('+CAP+'+)') : ('⛏ Staked claims ('+shown+')');
+}}
+const claimCtl=L.control({{position:'topright'}});
+claimCtl.onAdd=function(){{
+  const d=L.DomUtil.create('div','drillctl');
+  d.innerHTML='<button id=claimbtn>⛏ Staked claims</button>';
+  L.DomEvent.disableClickPropagation(d);
+  d.querySelector('button').onclick=function(){{
+    claimsOn=!claimsOn;
+    const btn=document.getElementById('claimbtn'); if(btn) btn.classList.toggle('on',claimsOn);
+    if(claimsOn){{ drawAllClaims(); }}
+    else {{ if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; }}
+  }};
+  return d;
+}};
+claimCtl.addTo(map);
+map.on('moveend',function(){{ if(claimsOn) drawAllClaims(); }});
 const markers={{}};
 let jf='all', mf='all', mins=0, q='';
 function metalMatch(dm){{ if(mf==='all')return true; if(GROUPS[mf])return GROUPS[mf].includes(dm); return dm===mf; }}

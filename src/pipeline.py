@@ -491,6 +491,8 @@ def run_region(region):
         namecol = _pick("CLAIM_NAME", "NAME", "claim_name")
         owncol = _pick("OWNER_NAME", "owner", "HOLDER", "CLIENT_NAME")
         expcol = _pick("GOOD_TO_DATE", "EXPIRY_DATE", "expiry")
+        isscol = _pick("ISSUE_DATE", "STAKEDATE", "STAKE_DATE", "ISSUE_DT",
+                       "TENURE_ISSUE_DATE", "RECORD_DATE", "GOOD_FROM_DATE", "issue")
         keep = {gcol: "geometry"}
         cols = [gcol]
         if idcol:
@@ -501,8 +503,10 @@ def run_region(region):
             keep[owncol] = "owner"; cols.append(owncol)
         if expcol:
             keep[expcol] = "expiry"; cols.append(expcol)
+        if isscol:
+            keep[isscol] = "staked"; cols.append(isscol)   # when it was originally staked
         out = cnear[cols].rename(columns=keep)
-        for c in ("claim", "cname", "owner", "expiry"):
+        for c in ("claim", "cname", "owner", "expiry", "staked"):
             if c in out.columns:
                 out[c] = out[c].astype(str).replace({"nan": "", "None": "", "NaT": ""}).str.strip()
         out = gpd.GeoDataFrame(out, geometry="geometry", crs=cnear.crs)
