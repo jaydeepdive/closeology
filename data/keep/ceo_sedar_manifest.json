@@ -73,20 +73,5 @@
   "size_kb": 4124,
   "collected": "2026-09-11T11:18:47Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_ADY-2026-09-11-technical-report-ni-43-101-english-8e43.pdf"
- },
- {
-  "file": "ceo_LCU-2026-09-14-technical-report-ni-43-101-english-b9ad.pdf",
-  "filing_ref": "LCU-2026-09-14-technical-report-ni-43-101-english-b9ad.pdf",
-  "company": "LCU",
-  "project": null,
-  "jurisdiction": null,
-  "commodity": null,
-  "submitted": "2026-09-14",
-  "doctype": "Technical report (NI 43-101)",
-  "sedar_url": "https://ceo.ca/content/sedar/LCU-2026-09-14-technical-report-ni-43-101-english-b9ad.pdf",
-  "source": "ceo.ca",
-  "size_kb": 5216,
-  "collected": "2026-09-14T20:57:29Z",
-  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_LCU-2026-09-14-technical-report-ni-43-101-english-b9ad.pdf"
  }
 ]
