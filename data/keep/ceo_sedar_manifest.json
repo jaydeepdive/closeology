@@ -88,5 +88,35 @@
   "size_kb": 5216,
   "collected": "2026-09-14T23:53:08Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_LCU-2026-09-14-technical-report-ni-43-101-english-b9ad.pdf"
+ },
+ {
+  "file": "ceo_STU-2026-09-14-technical-report-ni-43-101-english-1639.pdf",
+  "filing_ref": "STU-2026-09-14-technical-report-ni-43-101-english-1639.pdf",
+  "company": "STU",
+  "project": null,
+  "jurisdiction": null,
+  "commodity": null,
+  "submitted": "2026-09-14",
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://ceo.ca/content/sedar/STU-2026-09-14-technical-report-ni-43-101-english-1639.pdf",
+  "source": "ceo.ca",
+  "size_kb": 20551,
+  "collected": "2026-09-15T04:52:42Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_STU-2026-09-14-technical-report-ni-43-101-english-1639.pdf"
+ },
+ {
+  "file": "ceo_SCMI-2026-09-14-technical-report-ni-43-101-english-362c.pdf",
+  "filing_ref": "SCMI-2026-09-14-technical-report-ni-43-101-english-362c.pdf",
+  "company": "SCMI",
+  "project": null,
+  "jurisdiction": null,
+  "commodity": null,
+  "submitted": "2026-09-14",
+  "doctype": "Technical report (NI 43-101)",
+  "sedar_url": "https://ceo.ca/content/sedar/SCMI-2026-09-14-technical-report-ni-43-101-english-362c.pdf",
+  "source": "ceo.ca",
+  "size_kb": 15812,
+  "collected": "2026-09-15T04:52:49Z",
+  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_SCMI-2026-09-14-technical-report-ni-43-101-english-362c.pdf"
  }
 ]
