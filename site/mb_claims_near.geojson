@@ -2915,6 +2915,8 @@
 { "type": "Feature", "properties": { "claim": "MB16905", "cname": "WALTERS11", "owner": "VALE CANADA LIMITED", "expiry": "2028-08-20", "staked": "2026-06-21" }, "geometry": { "type": "Point", "coordinates": [ -98.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "MB16960", "cname": "JASPER 1", "owner": "4058667 MANITOBA LTD", "expiry": "2028-08-19", "staked": "2026-06-20" }, "geometry": { "type": "Point", "coordinates": [ -101.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "MB16961", "cname": "JASPER 2", "owner": "4058667 MANITOBA LTD", "expiry": "2028-08-19", "staked": "2026-06-20" }, "geometry": { "type": "Point", "coordinates": [ -101.0, 55.0 ] } },
+{ "type": "Feature", "properties": { "claim": "MB16962", "cname": "MANSA", "owner": "4058667 MANITOBA LTD", "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -101.0, 55.0 ] } },
+{ "type": "Feature", "properties": { "claim": "MB16963", "cname": "MUSA", "owner": "4058667 MANITOBA LTD", "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -101.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "MB1756", "cname": "REX 4", "owner": "1911 Gold Corporation", "expiry": "2040-07-27", "staked": "1998-05-28" }, "geometry": { "type": "Point", "coordinates": [ -96.0, 51.0 ] } },
 { "type": "Feature", "properties": { "claim": "MB1764", "cname": "JADE 1B", "owner": "GLOBAL NICKEL INC.", "expiry": "2028-09-18", "staked": "1992-07-20" }, "geometry": { "type": "Point", "coordinates": [ -95.0, 50.0 ] } },
 { "type": "Feature", "properties": { "claim": "MB1765", "cname": "SOAP 1B", "owner": "GLOBAL NICKEL INC.", "expiry": "2028-09-13", "staked": "1996-07-15" }, "geometry": { "type": "Point", "coordinates": [ -95.0, 50.0 ] } },
