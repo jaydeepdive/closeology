@@ -14,7 +14,7 @@ RED = "#D71920"
 
 NAV = [("Priority leads", "index.html"), ("Regions & maps", "regions.html"),
        ("Explore map", "app.html"), ("Drill radar", "drill_radar.html"),
-       ("3D models", "models.html")]
+       ("3D models ↗", "https://jaydeepdive.github.io/minemodelingpro/")]
 
 # daily radars live in a nav hover-dropdown (one page per jurisdiction), listed
 # alphabetically; the dropdown label itself links to the cross-Canada overview.

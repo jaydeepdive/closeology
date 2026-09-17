@@ -257,8 +257,7 @@ def main():
         from newswire import run as nw_run
         nw_run.repair()          # snap wrong-zone collars into their real province + relabel
         nw_radar.build("site")
-        from minemodelingpro import export as mmp_export
-        mmp_export.export()
+        # MMP is now its own repo (jaydeepdive/minemodelingpro); it builds itself.
     except Exception as e:
         print("[build_all] drill radar render skipped:", str(e)[:160])
     tot_edges = sum(len(r["edges"]) for r in email["regions"])

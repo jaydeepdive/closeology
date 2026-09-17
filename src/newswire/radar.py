@@ -392,14 +392,43 @@ def _best_str(b):
     return f"{ln} m @ {g} {b['unit']} {b['el']}"
 
 
+_MMP_INDEX_URL = "https://jaydeepdive.github.io/minemodelingpro/models_index.json"
+
+
+def _mmp_models():
+    """{release_url: model_page_url} from MineModelingPro, for deep-linking a drill
+    release to its 3D model. Fetches MMP's published index; falls back to a
+    committed copy; returns {} if neither is available (links simply omitted)."""
+    import json as _json
+    try:
+        import requests
+        r = requests.get(_MMP_INDEX_URL, timeout=15)
+        if r.ok:
+            return (r.json() or {}).get("by_release", {}) or {}
+    except Exception:
+        pass
+    for q in ("data/keep/mmp_models_index.json", "site/mmp_models_index.json"):
+        try:
+            if os.path.exists(q):
+                return (_json.load(open(q)) or {}).get("by_release", {}) or {}
+        except Exception:
+            pass
+    return {}
+
+
+def _model_link(u):
+    return (f' &middot; <a href="{_esc(u)}" target=_blank rel=noopener>&#129482; 3D&nbsp;model &#8599;</a>') if u else ""
+
+
 def _write(site_dir, items, st):
+    _mmp = _mmp_models()
     os.makedirs(site_dir, exist_ok=True)
     geo = [i for i in items if i["geo"] and i["pt"]]
     json.dump({"generated_items": len(items), "geolocated": len(geo), "stats": st,
                "items": items[:1000]},
               open(os.path.join(site_dir, "drill_radar.json"), "w"))
     pts = [{"lat": i["pt"]["lat"], "lon": i["pt"]["lon"], "c": i["company"],
-            "b": _best_str(i["best"]), "u": i["url"], "n": i["pt"]["n"]} for i in geo[:1500]]
+            "b": _best_str(i["best"]), "u": i["url"], "n": i["pt"]["n"], "m": _mmp.get(i["url"])} for i in geo[:1500]]
     def _map_link(i):
         if not (i["geo"] and i["pt"]):
             return ""
@@ -414,7 +443,7 @@ def _write(site_dir, items, st):
         f'<td class=b>{_esc(_best_str(i["best"]))}</td>'
         f'<td class=n>{i["n_holes"] or "—"}</td>'
         f'<td>{_map_link(i)}</td>'
-        f'<td><a href="{_esc(i["url"])}" target=_blank rel=noopener>release ↗</a></td></tr>'
+        f'<td><a href="{_esc(i["url"])}" target=_blank rel=noopener>release ↗</a>{_model_link(_mmp.get(i["url"]))}</td></tr>'
         for i in items[:400])
     empty = ("<p class=note>The drill bank is still filling — the daily crawl adds new "
              "mining releases each build. Come back after the next run.</p>" if not items else "")
@@ -481,7 +510,7 @@ const g=[];
 PTS.forEach(p=>{{const m=L.circleMarker([p.lat,p.lon],{{radius:6,color:'#7a1620',weight:1,fillColor:'#D71920',fillOpacity:.7}});
   m.bindPopup(`<b>${{p.c}}</b><br>${{p.b||''}}<br>${{p.n}} hole(s) located<br>`+
     `<a href="app.html?lat=${{p.lat}}&lon=${{p.lon}}&z=13&kind=drill&label=${{encodeURIComponent(p.c||'Drill')}}">🗺 see on the map (vs open ground)</a> · `+
-    `<a href="${{p.u}}" target=_blank>release ↗</a>`);
+    `<a href="${{p.u}}" target=_blank>release ↗</a>`+(p.m?` · <a href="${{p.m}}" target=_blank>🧊 3D model ↗</a>`:``));
   m.addTo(map); g.push([p.lat,p.lon]);}});
 if(g.length) map.fitBounds(g,{{padding:[30,30],maxZoom:9}});
 </script></body></html>
