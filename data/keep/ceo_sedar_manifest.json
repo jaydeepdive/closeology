@@ -118,35 +118,5 @@
   "size_kb": 15812,
   "collected": "2026-09-15T04:52:49Z",
   "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_SCMI-2026-09-14-technical-report-ni-43-101-english-362c.pdf"
- },
- {
-  "file": "ceo_APMI-2026-09-16-technical-report-ni-43-101-english-bdf8.pdf",
-  "filing_ref": "APMI-2026-09-16-technical-report-ni-43-101-english-bdf8.pdf",
-  "company": "APMI",
-  "project": null,
-  "jurisdiction": null,
-  "commodity": null,
-  "submitted": "2026-09-16",
-  "doctype": "Technical report (NI 43-101)",
-  "sedar_url": "https://ceo.ca/content/sedar/APMI-2026-09-16-technical-report-ni-43-101-english-bdf8.pdf",
-  "source": "ceo.ca",
-  "size_kb": 27649,
-  "collected": "2026-09-17T07:38:17Z",
-  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_APMI-2026-09-16-technical-report-ni-43-101-english-bdf8.pdf"
- },
- {
-  "file": "ceo_PUMA-2026-09-16-amended-restated-technical-report-ni-43-101-english-6862.pdf",
-  "filing_ref": "PUMA-2026-09-16-amended-restated-technical-report-ni-43-101-english-6862.pdf",
-  "company": "PUMA",
-  "project": null,
-  "jurisdiction": null,
-  "commodity": null,
-  "submitted": "2026-09-16",
-  "doctype": "Technical report (NI 43-101)",
-  "sedar_url": "https://ceo.ca/content/sedar/PUMA-2026-09-16-amended-restated-technical-report-ni-43-101-english-6862.pdf",
-  "source": "ceo.ca",
-  "size_kb": 17049,
-  "collected": "2026-09-17T07:38:22Z",
-  "archive_url": "https://github.com/jaydeepdive/closeology/releases/download/report-archive/ceo_PUMA-2026-09-16-amended-restated-technical-report-ni-43-101-english-6862.pdf"
  }
 ]
