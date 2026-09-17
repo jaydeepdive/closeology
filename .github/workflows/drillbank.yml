@@ -41,10 +41,11 @@ jobs:
         run: pip install -r requirements.txt
       - name: Collect drill results
         run: |
+          # MineTerminalPro API feed FIRST, with its own bounded budget, so a long
+          # crawler backfill can never starve it (public, Cloudflare-cached,
+          # datacenter-reachable; honours the same mode input).
+          PYTHONPATH=src python -m newswire.mineterminal "${{ github.event.inputs.mode || 'incremental' }}" --max-seconds 3000 || echo "mtp step skipped"
           PYTHONPATH=src python -m newswire.run "${{ github.event.inputs.mode || 'incremental' }}" --limit "${{ github.event.inputs.limit || 8000 }}"
-          # MineTerminalPro API feed (public, Cloudflare-cached, datacenter-reachable);
-          # honours the same mode input (incremental / backfill).
-          PYTHONPATH=src python -m newswire.mineterminal "${{ github.event.inputs.mode || 'incremental' }}" --max-seconds 1800 || echo "mtp step skipped"
           PYTHONPATH=src python -m newswire.run stats
       - name: Commit the bank
         run: |
