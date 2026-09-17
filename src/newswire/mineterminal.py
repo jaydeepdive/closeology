@@ -101,10 +101,12 @@ def _pub_date(item):
     return None
 
 
-def collect(mode="incremental", since=None, limit=400, max_seconds=None):
+def collect(mode="incremental", since=None, limit=None, max_seconds=None):
     import os
     if max_seconds is None:
         max_seconds = int(os.environ.get("NEWSWIRE_MAX_SECONDS", "240"))
+    if limit is None:
+        limit = 5000 if mode == "backfill" else 400
     if not since:
         back = 730 if mode == "backfill" else 3   # 3-day window absorbs late/re-approved releases
         since = (datetime.date.today() - datetime.timedelta(days=back)).isoformat()
