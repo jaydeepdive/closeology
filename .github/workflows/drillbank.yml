@@ -43,7 +43,6 @@ jobs:
         run: |
           PYTHONPATH=src python -m newswire.run "${{ github.event.inputs.mode || 'incremental' }}" --limit "${{ github.event.inputs.limit || 8000 }}"
           PYTHONPATH=src python -m newswire.run stats
-          PYTHONPATH=src python -m minemodelingpro.export
       - name: Commit the bank
         run: |
           git config user.name "closeology-bot"
