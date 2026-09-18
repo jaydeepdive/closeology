@@ -52,256 +52,299 @@ footer.site b{color:var(--ink);}
 </style></head><body>
 <div class="topbar"><div class="topwrap">
   <a class="brand" href="index.html"><img src="data:image/png;base64,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" alt="the deep dive"><span class="sub">Project Closeology</span></a>
-  <nav class="menu"><a href="index.html" class="">Priority leads</a><a href="regions.html" class="">Regions & maps</a><a href="app.html" class="">Explore map</a><a href="drill_radar.html" class="">Drill radar</a><a href="models.html" class="">3D models</a><span class="dd"><a class="ddlabel active" href="radar.html">Daily radars</a><div class="dd-menu"><div class="inner"><a href="daily_ab.html">Alberta</a><a href="daily_bc.html">British Columbia</a><a href="daily_mb.html">Manitoba</a><a href="daily_nb.html">New Brunswick</a><a href="daily_nl.html">Newfoundland & Labrador</a><a href="daily_nt.html">Northwest Territories</a><a href="daily_ns.html">Nova Scotia</a><a href="daily_nu.html">Nunavut</a><a href="daily_on.html">Ontario</a><a href="daily_qc.html">Quebec</a><a href="daily_sk.html">Saskatchewan</a><a href="daily_yk.html">Yukon</a></div></div></span></nav>
+  <nav class="menu"><a href="index.html" class="">Priority leads</a><a href="regions.html" class="">Regions & maps</a><a href="app.html" class="">Explore map</a><a href="drill_radar.html" class="">Drill radar</a><a href="https://jaydeepdive.github.io/minemodelingpro/" class="">3D models ↗</a><span class="dd"><a class="ddlabel active" href="radar.html">Daily radars</a><div class="dd-menu"><div class="inner"><a href="daily_ab.html">Alberta</a><a href="daily_bc.html">British Columbia</a><a href="daily_mb.html">Manitoba</a><a href="daily_nb.html">New Brunswick</a><a href="daily_nl.html">Newfoundland & Labrador</a><a href="daily_nt.html">Northwest Territories</a><a href="daily_ns.html">Nova Scotia</a><a href="daily_nu.html">Nunavut</a><a href="daily_on.html">Ontario</a><a href="daily_qc.html">Quebec</a><a href="daily_sk.html">Saskatchewan</a><a href="daily_yk.html">Yukon</a></div></div></span></nav>
 </div></div>
 <div class="wrap">
   <div class="hero"><h1>Daily radar</h1><div class="rule"></div>
     <p>What the scan flagged across every jurisdiction today — the movements worth acting on now.
-       Updated 2026-09-17.</p></div>
+       Updated 2026-09-18.</p></div>
   <div class="summary">
-    <div class="kv"><b>0</b><span>Fresh drill plays</span></div>
-    <div class="kv"><b>58</b><span>Newly-open ground</span></div>
-    <div class="kv"><b>92</b><span>Flagged leads</span></div>
-    <div class="kv"><b>10</b><span>Jurisdictions scanned</span></div>
+    <div class="kv"><b>10</b><span>Fresh drill plays</span></div>
+    <div class="kv"><b>66</b><span>Newly-open ground</span></div>
+    <div class="kv"><b>91</b><span>Flagged leads</span></div>
+    <div class="kv"><b>11</b><span>Jurisdictions scanned</span></div>
   </div>
-  <div class="sec"><h2>Ground just opened <span class="n">58</span></h2><p class="ss">A holder just dropped a whole property beside a lead — grouped here as one block (not cell-by-cell), each with a map view. Freshly stakeable.</p><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Corporation Aurifère Vior Inc. let go of ground</b><span class="tag">4 claims</span></div>
-          <div class="imeta">Whole block dropped — around #24 Vior-Zone Nord
-             · 0.0 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.01458&lon=-78.4875&z=12&region=qc&label=Corporation%20Aurif%C3%A8re%20Vior%20Inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>9219-8845 Québec inc. (Canadian Mining House) let go of ground</b><span class="tag">4 claims</span></div>
-          <div class="imeta">Whole block dropped — around #17 Golden
-             · 0.1 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.84583&lon=-76.45209&z=12&region=qc&label=9219-8845%20Qu%C3%A9bec%20inc.%20%28Canadian%20Mining%20House%29%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>9219-8845 Québec inc. (Canadian Mining House) let go of ground</b><span class="tag">2 claims</span></div>
-          <div class="imeta">Whole block dropped — around #39 Lightning
-             · 0.1 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.85417&lon=-76.53333&z=12&region=qc&label=9219-8845%20Qu%C3%A9bec%20inc.%20%28Canadian%20Mining%20House%29%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Alamos Gold inc. let go of ground</b><span class="tag">7 claims</span></div>
-          <div class="imeta">Whole block dropped — around #9 Goshawk
-             · 0.1 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=61.56845&lon=-75.20298&z=12&region=qc&label=Alamos%20Gold%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Réjean Raymond let go of ground</b><span class="tag">3 claims</span></div>
-          <div class="imeta">Whole block dropped — around #30 Ouest-Goldfield
-             · 0.1 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.0625&lon=-78.47083&z=12&region=qc&label=R%C3%A9jean%20Raymond%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BEATY, ROSS JAMES let go of ground</b><span class="tag">1 claim · ~201.4 ha</span></div>
-          <div class="imeta">Whole block dropped — around #6 WINCO
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=58.78102&lon=-128.1204&z=12&region=bc&label=BEATY%2C%20ROSS%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Bounty Gold Corp. let go of ground</b><span class="tag">2 claims</span></div>
-          <div class="imeta">Whole block dropped — around #61 Lac Janjandashi
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=53.57083&lon=-77.30833&z=12&region=qc&label=Bounty%20Gold%20Corp.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Cibles Minières Critiques inc. let go of ground</b><span class="tag">7 claims</span></div>
-          <div class="imeta">Whole block dropped — around #15 Transfiguration (Labrador Expl.)
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=47.94107&lon=-68.76012&z=12&region=qc&label=Cibles%C2%A0Mini%C3%A8res%20Critiques%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Entreprises Minières Globex Inc let go of ground</b><span class="tag">5 claims</span></div>
-          <div class="imeta">Whole block dropped — around #8 Rochelom
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.77444&lon=-76.01917&z=12&region=qc&label=Entreprises%20Mini%C3%A8res%20Globex%20Inc%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>IAMGold Corporation let go of ground</b><span class="tag">7 claims</span></div>
-          <div class="imeta">Whole block dropped — around #38 AT-32-91
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.89464&lon=-78.7994&z=12&region=qc&label=IAMGold%20Corporation%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Jean Robert 30% let go of ground</b><span class="tag">6 claims</span></div>
-          <div class="imeta">Whole block dropped — around #32 Lac Labrie
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.95&lon=-76.4875&z=12&region=qc&label=Jean%20Robert%2030%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Mosaic minerals corp. let go of ground</b><span class="tag">11 claims</span></div>
-          <div class="imeta">Whole block dropped — around #56 Pike
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=47.3391&lon=-79.06023&z=12&region=qc&label=Mosaic%20minerals%20corp.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Next Source Materials Inc let go of ground</b><span class="tag">7 claims</span></div>
-          <div class="imeta">Whole block dropped — around #11 Delhi Pacific
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=56.39464&lon=-67.88036&z=12&region=qc&label=Next%20Source%20Materials%20Inc%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Ressources Yorbeau Inc. (Les) 37,5% let go of ground</b><span class="tag">11 claims</span></div>
-          <div class="imeta">Whole block dropped — around #19 Gémini - A sud
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.43064&lon=-79.26927&z=12&region=qc&label=Ressources%20Yorbeau%20Inc.%20%28Les%29%2037%2C5%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Rio Tinto Exploration Canada inc. let go of ground</b><span class="tag">12 claims</span></div>
-          <div class="imeta">Whole block dropped — around #37 Lac Rocher
-             · 0.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.58331&lon=-76.34237&z=12&region=qc&label=Rio%20Tinto%20Exploration%20Canada%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>1516847 B.C. LTD. 51% let go of ground</b><span class="tag">5 claims</span></div>
-          <div class="imeta">Whole block dropped — around #85 Deux Orignaux
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.88417&lon=-75.31417&z=12&region=qc&label=1516847%20B.C.%20LTD.%2051%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>9426-9198 Québec inc. let go of ground</b><span class="tag">9 claims</span></div>
-          <div class="imeta">Whole block dropped — around #34 Midrim
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=47.47239&lon=-79.23432&z=12&region=qc&label=9426-9198%20Qu%C3%A9bec%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Bullion Gold Resources Corp. let go of ground</b><span class="tag">6 claims</span></div>
-          <div class="imeta">Whole block dropped — around #65 Lac Rivon-Ouest
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=51.725&lon=-72.79583&z=12&region=qc&label=Bullion%20Gold%20Resources%20Corp.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Entreprises Minières Globex Inc let go of ground</b><span class="tag">5 claims</span></div>
-          <div class="imeta">Whole block dropped — around #28 Harrison
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.64083&lon=-76.90583&z=12&region=qc&label=Entreprises%20Mini%C3%A8res%20Globex%20Inc%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Entreprises Minières Globex Inc let go of ground</b><span class="tag">6 claims</span></div>
-          <div class="imeta">Whole block dropped — around #29 Lac Beaupré-Est
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.6&lon=-76.92083&z=12&region=qc&label=Entreprises%20Mini%C3%A8res%20Globex%20Inc%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Jacqueline Spandel let go of ground</b><span class="tag">2 claims</span></div>
-          <div class="imeta">Whole block dropped — around #55 Guimond
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=47.375&lon=-79.1375&z=12&region=qc&label=Jacqueline%20Spandel%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Q2 Metals Corp. let go of ground</b><span class="tag">3 claims</span></div>
-          <div class="imeta">Whole block dropped — around #6 H-1456-009
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.62083&lon=-77.35417&z=12&region=qc&label=Q2%20Metals%20Corp.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Ressources Yorbeau Inc. (Les) 37,5% let go of ground</b><span class="tag">8 claims</span></div>
-          <div class="imeta">Whole block dropped — around #21 Gémini - B (Zone à cuivre)
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.38334&lon=-79.25833&z=12&region=qc&label=Ressources%20Yorbeau%20Inc.%20%28Les%29%2037%2C5%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Wayne E Holmstead let go of ground</b><span class="tag">2 claims</span></div>
-          <div class="imeta">Whole block dropped — around #10 Lac Dunphy
-             · 0.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=56.05&lon=-67.7125&z=12&region=qc&label=Wayne%20E%20Holmstead%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Corporation Aurifère Vior Inc. let go of ground</b><span class="tag">6 claims</span></div>
-          <div class="imeta">Whole block dropped — around #26 D-91-01 (Option Dejour)
+  <div class="sec"><h2>Fresh drill plays <span class="n">10</span></h2><p class="ss">Recent drilling on held ground beside open, stakeable cells — the reason to act now.</p><div class="item hot">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>🔥 Delta Resources Ltd</b></div>
+          <div class="imeta">Gold · near Silver Mountain East
+             · 66 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=48.58835&lon=-89.88886&z=12&region=on&label=Delta%20Resources%20Ltd&kind=edge">▸ View on map</a></div></div><div class="item hot">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>🔥 Sienna Resources Inc</b></div>
+          <div class="imeta"> · near Fensom
+             · 51 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=48.99815&lon=-79.90276&z=12&region=on&label=Sienna%20Resources%20Inc&kind=edge">▸ View on map</a></div></div><div class="item hot">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>🔥 Transition Metals Corp</b></div>
+          <div class="imeta"> · near Silver Mountain East
+             · 30 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=48.63779&lon=-89.447&z=12&region=on&label=Transition%20Metals%20Corp&kind=edge">▸ View on map</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>Allen J Dubblestein</b></div>
+          <div class="imeta"> · near Bannockburn
+             · 107 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=45.26536&lon=-77.3117&z=12&region=on&label=Allen%20J%20Dubblestein&kind=edge">▸ View on map</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>Solstice Gold Corp</b></div>
+          <div class="imeta"> · near Reef Point Occurrence
+             · 73 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=51.39353&lon=-93.46901&z=12&region=on&label=Solstice%20Gold%20Corp&kind=edge">▸ View on map</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>2683304 Ontario Inc</b></div>
+          <div class="imeta"> · near Silver Mountain East
+             · 68 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=48.07011&lon=-89.54609&z=12&region=on&label=2683304%20Ontario%20Inc&kind=edge">▸ View on map</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>Oakhurst Exploration Corp</b></div>
+          <div class="imeta"> · near Fensom
+             · 46 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=48.46461&lon=-81.42903&z=12&region=on&label=Oakhurst%20Exploration%20Corp&kind=edge">▸ View on map</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>Palladium One Mining Inc</b></div>
+          <div class="imeta">Copper · near Silver Mountain East
+             · 44 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=49.0675&lon=-85.54823&z=12&region=on&label=Palladium%20One%20Mining%20Inc&kind=edge">▸ View on map</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>GFG Resources Inc</b></div>
+          <div class="imeta">Gold · near Fensom
+             · 39 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=48.63035&lon=-80.68606&z=12&region=on&label=GFG%20Resources%20Inc&kind=edge">▸ View on map</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>Critical Resources Ltd</b></div>
+          <div class="imeta"> · near Reef Point Occurrence
+             · 25 ha open beside it</div>
+          <div class="isrc"><a href="https://www.geologyontario.mines.gov.on.ca/" target=_blank>OGS Ontario Drill Hole Database ↗</a>  ·  <a class="mapbtn" href="app.html?lat=49.80873&lon=-92.65358&z=12&region=on&label=Critical%20Resources%20Ltd&kind=edge">▸ View on map</a></div></div></div><div class="sec"><h2>Ground just opened <span class="n">66</span></h2><p class="ss">A holder just dropped a whole property beside a lead — grouped here as one block (not cell-by-cell), each with a map view. Freshly stakeable.</p><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Eastmain Resources Inc. let go of ground</b><span class="tag">16 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
              · 0.4 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.02521&lon=-78.3875&z=12&region=qc&label=Corporation%20Aurif%C3%A8re%20Vior%20Inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Entreprises Minières Globex Inc let go of ground</b><span class="tag">5 claims</span></div>
-          <div class="imeta">Whole block dropped — around #25 Gold Fields
-             · 0.4 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.09083&lon=-78.4225&z=12&region=qc&label=Entreprises%20Mini%C3%A8res%20Globex%20Inc%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#eef2ff;color:#3730a3">NS</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
-          <div class="imeta">Whole block dropped — around #251 Jubilee Zn, Pb Deposit
-             · 2.9 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=46.0&lon=-61.0&z=12&region=ns&label=Jubilee%20Zn%2C%20Pb%20Deposit&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BEATY, ROSS JAMES let go of ground</b><span class="tag">1 claim · ~334.7 ha</span></div>
-          <div class="imeta">Whole block dropped — around #7 KEEL
-             · 5.1 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=58.87478&lon=-129.03607&z=12&region=bc&label=BEATY%2C%20ROSS%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#eef2ff;color:#3730a3">NS</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
-          <div class="imeta">Whole block dropped — around #165 Carleton Au District
-             · 5.6 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=44.0&lon=-66.0&z=12&region=ns&label=Carleton%20Au%20District&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>FORSTER, MURRAY JOHN let go of ground</b><span class="tag">1 claim · ~267.6 ha</span></div>
-          <div class="imeta">Whole block dropped — around #18 DRAGON                        
-             · 6.7 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.43335&lon=-116.37909&z=12&region=bc&label=FORSTER%2C%20MURRAY%20JOHN&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#eef2ff;color:#3730a3">NS</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
-          <div class="imeta">Whole block dropped — around #209 Ardoise Au Prospect
-             · 7.9 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=45.0&lon=-64.0&z=12&region=ns&label=Ardoise%20Au%20Prospect&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BONANZA MINING CORPORATION let go of ground</b><span class="tag">1 claim · ~36.1 ha</span></div>
-          <div class="imeta">Whole block dropped — around #23 FISH CREEK
-             · 10.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=56.05813&lon=-129.92386&z=12&region=bc&label=BONANZA%20MINING%20CORPORATION&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BEATY, ROSS JAMES let go of ground</b><span class="tag">1 claim · ~622.6 ha</span></div>
-          <div class="imeta">Whole block dropped — around #6 WINCO
-             · 10.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=58.68731&lon=-128.11729&z=12&region=bc&label=BEATY%2C%20ROSS%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>ANDERSON, JEFFREY DAVID let go of ground</b><span class="tag">1 claim · ~20.9 ha</span></div>
-          <div class="imeta">Whole block dropped — around #19 MAGNOLIA
-             · 10.9 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.73524&lon=-124.62954&z=12&region=bc&label=ANDERSON%2C%20JEFFREY%20DAVID&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BEATY, ROSS JAMES let go of ground</b><span class="tag">1 claim · ~268.6 ha</span></div>
-          <div class="imeta">Whole block dropped — around #6 WINCO
-             · 11.0 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=58.76638&lon=-128.31105&z=12&region=bc&label=BEATY%2C%20ROSS%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>COLLINS, JEREMY LEE let go of ground</b><span class="tag">1 claim · ~20.9 ha</span></div>
-          <div class="imeta">Whole block dropped — around #9 IDEAL 3
-             · 13.0 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.78524&lon=-125.37331&z=12&region=bc&label=COLLINS%2C%20JEREMY%20LEE&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BEATY, ROSS JAMES let go of ground</b><span class="tag">1 claim · ~150.0 ha</span></div>
-          <div class="imeta">Whole block dropped — around #7 KEEL
-             · 13.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=59.0227&lon=-129.16732&z=12&region=bc&label=BEATY%2C%20ROSS%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>HAMEL, ROBERT JOSEPH let go of ground</b><span class="tag">1 claim · ~63.1 ha</span></div>
-          <div class="imeta">Whole block dropped — around #15 PRIDE OF EMORY
-             · 13.4 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.40194&lon=-121.36689&z=12&region=bc&label=HAMEL%2C%20ROBERT%20JOSEPH&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>WELYCHKO, BRETT JONATHAN BRIAN let go of ground</b><span class="tag">1 claim · ~20.9 ha</span></div>
-          <div class="imeta">Whole block dropped — around #9 IDEAL 3
-             · 13.7 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.7894&lon=-125.37956&z=12&region=bc&label=WELYCHKO%2C%20BRETT%20JONATHAN%20BRIAN&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BEATY, ROSS JAMES let go of ground</b><span class="tag">1 claim · ~270.7 ha</span></div>
-          <div class="imeta">Whole block dropped — around #2 TORO
-             · 15.4 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=58.49563&lon=-125.32966&z=12&region=bc&label=BEATY%2C%20ROSS%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>DEAN , CAMERON  ANDREW let go of ground</b><span class="tag">1 claim · ~41.7 ha</span></div>
-          <div class="imeta">Whole block dropped — around #9 IDEAL 3
-             · 16.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.83941&lon=-125.36394&z=12&region=bc&label=DEAN%20%2C%20CAMERON%20%20ANDREW&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>LAVOIE, RYAN let go of ground</b><span class="tag">1 claim · ~20.9 ha</span></div>
-          <div class="imeta">Whole block dropped — around #9 IDEAL 3
-             · 16.9 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.79774&lon=-125.42332&z=12&region=bc&label=LAVOIE%2C%20RYAN&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>WELYCHKO, BRETT JONATHAN BRIAN let go of ground</b><span class="tag">1 claim · ~20.8 ha</span></div>
-          <div class="imeta">Whole block dropped — around #9 IDEAL 3
-             · 17.1 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.88107&lon=-125.27331&z=12&region=bc&label=WELYCHKO%2C%20BRETT%20JONATHAN%20BRIAN&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>COLLINS, JEREMY LEE let go of ground</b><span class="tag">3 claims · ~62.4 ha</span></div>
-          <div class="imeta">Whole block dropped — around #9 IDEAL 3
-             · 17.5 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.89218&lon=-125.26706&z=12&region=bc&label=COLLINS%2C%20JEREMY%20LEE&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BEATY, ROSS JAMES let go of ground</b><span class="tag">1 claim · ~101.3 ha</span></div>
-          <div class="imeta">Whole block dropped — around #6 WINCO
-             · 23.7 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=58.57059&lon=-128.19856&z=12&region=bc&label=BEATY%2C%20ROSS%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>SCOTT, STEVEN JEFFREY let go of ground</b><span class="tag">1 claim · ~68.2 ha</span></div>
-          <div class="imeta">Whole block dropped — around #14 VB 20
-             · 27.7 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=58.18952&lon=-131.56753&z=12&region=bc&label=SCOTT%2C%20STEVEN%20JEFFREY&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>SHEARER, JOHAN THOM let go of ground</b><span class="tag">1 claim · ~41.7 ha</span></div>
-          <div class="imeta">Whole block dropped — around #9 IDEAL 3
-             · 27.7 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.85606&lon=-125.5452&z=12&region=bc&label=SHEARER%2C%20JOHAN%20THOM&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>ARCWEST EXPLORATION INC. let go of ground</b><span class="tag">1 claim · ~18.5 ha</span></div>
-          <div class="imeta">Whole block dropped — around #10 GRANISLE
-             · 28.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=55.17697&lon=-126.33606&z=12&region=bc&label=ARCWEST%20EXPLORATION%20INC.&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>EAGLE PLAINS RESOURCES LTD. let go of ground</b><span class="tag">2 claims · ~392.4 ha</span></div>
-          <div class="imeta">Whole block dropped — around #10 GRANISLE
-             · 34.3 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.71031&lon=-126.52826&z=12&region=bc&label=EAGLE%20PLAINS%20RESOURCES%20LTD.&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#f3eefe;color:#6d28d9">SK</span><b>randy andrew powder: 50.000%;  Steve   Alphonse Powder: 50.000% let go of ground</b><span class="tag">1 claim</span></div>
-          <div class="imeta">Whole block dropped — around #49 Dianne Lake (north of) Copper-Silver Deposit
-             · 35.7 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=60.0&lon=-109.0&z=12&region=sk&label=randy%20andrew%20powder%3A%2050.000%25%3B%20%20Steve%20%20%20Alphonse%20Powder%3A%2050.0&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e6f4f6;color:#0e7490">NL</span><b>Cape Ray Mining Limited let go of ground</b><span class="tag">1 claim</span></div>
-          <div class="imeta">Whole block dropped — around #53 Ackley City
-             · 37.6 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.0&lon=-55.0&z=12&region=nl&label=Cape%20Ray%20Mining%20Limited&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>SCOTT, STEVEN JEFFREY let go of ground</b><span class="tag">1 claim · ~18.6 ha</span></div>
-          <div class="imeta">Whole block dropped — around #10 GRANISLE
-             · 37.8 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.91868&lon=-125.5673&z=12&region=bc&label=SCOTT%2C%20STEVEN%20JEFFREY&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#f3eefe;color:#6d28d9">SK</span><b>ARGO GOLD INC.: 100.000% let go of ground</b><span class="tag">2 claims</span></div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.21667&lon=-77.45833&z=12&region=qc&label=Eastmain%20Resources%20Inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Exploration Midland inc. let go of ground</b><span class="tag">20 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 1.6 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.2&lon=-77.44167&z=12&region=qc&label=Exploration%20Midland%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Exploration Midland inc. let go of ground</b><span class="tag">24 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 2.1 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.24375&lon=-77.44583&z=12&region=qc&label=Exploration%20Midland%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Jean Robert 30% let go of ground</b><span class="tag">10 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 2.4 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.22167&lon=-77.41417&z=12&region=qc&label=Jean%20Robert%2030%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Exploration Midland inc. let go of ground</b><span class="tag">41 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 2.5 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.21026&lon=-77.52734&z=12&region=qc&label=Exploration%20Midland%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Exploration Midland inc. let go of ground</b><span class="tag">10 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 3.3 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.23417&lon=-77.53417&z=12&region=qc&label=Exploration%20Midland%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Exploration Midland inc. let go of ground</b><span class="tag">35 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 4.3 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.21607&lon=-77.3744&z=12&region=qc&label=Exploration%20Midland%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Exploration Midland inc. let go of ground</b><span class="tag">13 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 4.3 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.24776&lon=-77.3875&z=12&region=qc&label=Exploration%20Midland%20inc.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Luke Schuss let go of ground</b><span class="tag">22 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 5.0 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.26932&lon=-77.4178&z=12&region=qc&label=Luke%20Schuss%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Select Lithium Corp. let go of ground</b><span class="tag">7 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 5.4 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.18155&lon=-77.3875&z=12&region=qc&label=Select%20Lithium%20Corp.%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fce7f3;color:#be185d">QC</span><b>Luke Schuss let go of ground</b><span class="tag">2 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Lidge
+             · 6.2 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=52.2375&lon=-77.55&z=12&region=qc&label=Luke%20Schuss%20100%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 14.1 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.14375&lon=-89.75938&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>RICHARDS, LINDSAY EVAN HURST let go of ground</b><span class="tag">1 claim · ~20.5 ha</span></div>
+          <div class="imeta">Whole block dropped — around #5 COLOSSUS (L.256)              
+             · 22.7 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.5269&lon=-125.52335&z=12&region=bc&label=RICHARDS%2C%20LINDSAY%20EVAN%20HURST&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">2 claims</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 28.6 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.50208&lon=-89.94375&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#f3eefe;color:#6d28d9">SK</span><b>Greenridge Exploration Inc.: 100.000% let go of ground</b><span class="tag">1 claim</span></div>
+          <div class="imeta">Whole block dropped — around #111 Pikoo Diamond Project
+             · 29.8 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=55.0&lon=-103.0&z=12&region=sk&label=Greenridge%20Exploration%20Inc.%3A%20100.000%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e6f4f6;color:#0e7490">NL</span><b>Killick Lithium Inc. let go of ground</b><span class="tag">2 claims</span></div>
+          <div class="imeta">Whole block dropped — around #57 Hope Brook
+             · 30.1 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.0&lon=-58.0&z=12&region=nl&label=Killick%20Lithium%20Inc.&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>RIVERSIDE RESOURCES (BC) INC. let go of ground</b><span class="tag">1 claim · ~415.5 ha</span></div>
+          <div class="imeta">Whole block dropped — around #15 MIDNIGHT NAILS 1-2            
+             · 35.5 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.98533&lon=-118.1449&z=12&region=bc&label=RIVERSIDE%20RESOURCES%20%28BC%29%20INC.&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
+          <div class="imeta">Whole block dropped — around #12 Reef Point Occurrence
+             · 36.1 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.67708&lon=-92.78438&z=12&region=on&label=Reef%20Point%20Occurrence&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#f3eefe;color:#6d28d9">SK</span><b>Debbie Dahrouge: 100.000% let go of ground</b><span class="tag">2 claims</span></div>
           <div class="imeta">Whole block dropped — around #183 Rottenstone Mine
              · 39.0 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=56.0&lon=-105.0&z=12&region=sk&label=ARGO%20GOLD%20INC.%3A%20100.000%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>DELORME, GUY RICHARD let go of ground</b><span class="tag">1 claim · ~163.7 ha</span></div>
-          <div class="imeta">Whole block dropped — around #18 DRAGON                        
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=56.0&lon=-105.0&z=12&region=sk&label=Debbie%20Dahrouge%3A%20100.000%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#f3eefe;color:#6d28d9">SK</span><b>EAGLE PLAINS RESOURCES LTD.: 100.000% let go of ground</b><span class="tag">12 claims</span></div>
+          <div class="imeta">Whole block dropped — around #183 Rottenstone Mine
+             · 39.0 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=56.0&lon=-105.0&z=12&region=sk&label=EAGLE%20PLAINS%20RESOURCES%20LTD.%3A%20100.000%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#f3eefe;color:#6d28d9">SK</span><b>Jasper jon arthur Mowatt: 100.000% let go of ground</b><span class="tag">1 claim</span></div>
+          <div class="imeta">Whole block dropped — around #183 Rottenstone Mine
+             · 39.0 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=56.0&lon=-105.0&z=12&region=sk&label=Jasper%20jon%20arthur%20Mowatt%3A%20100.000%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">3 claims</span></div>
+          <div class="imeta">Whole block dropped — around #12 Reef Point Occurrence
+             · 39.2 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.70625&lon=-92.74063&z=12&region=on&label=Reef%20Point%20Occurrence&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>RICHARDS, LINDSAY EVAN HURST let go of ground</b><span class="tag">1 claim · ~20.6 ha</span></div>
+          <div class="imeta">Whole block dropped — around #5 COLOSSUS (L.256)              
+             · 40.3 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.34773&lon=-125.69209&z=12&region=bc&label=RICHARDS%2C%20LINDSAY%20EVAN%20HURST&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BOT, JOHN CHRISOSTOM let go of ground</b><span class="tag">2 claims · ~75.0 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
              · 40.7 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.71664&lon=-116.56354&z=12&region=bc&label=DELORME%2C%20GUY%20RICHARD&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.58114&lon=-126.23292&z=12&region=bc&label=BOT%2C%20JOHN%20CHRISOSTOM&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BIG TARGETS GOLD & SILVER MINING LTD. let go of ground</b><span class="tag">1 claim · ~112.5 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 41.3 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.57698&lon=-126.23293&z=12&region=bc&label=BIG%20TARGETS%20GOLD%20%26%20SILVER%20MINING%20LTD.&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>EDWARDS, ROBIN APRIL let go of ground</b><span class="tag">1 claim · ~37.4 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 43.9 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.73114&lon=-126.73296&z=12&region=bc&label=EDWARDS%2C%20ROBIN%20APRIL&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>VYE, JASON let go of ground</b><span class="tag">1 claim · ~241.6 ha</span></div>
+          <div class="imeta">Whole block dropped — around #12 DALEY WEST
+             · 47.7 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.92697&lon=-127.02361&z=12&region=bc&label=VYE%2C%20JASON&kind=drop">▸ View on map</a></div></div><div class="item drop">
           <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>SCOTT, STEVEN JEFFREY let go of ground</b><span class="tag">1 claim · ~18.6 ha</span></div>
-          <div class="imeta">Whole block dropped — around #10 GRANISLE
-             · 41.9 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.92281&lon=-126.8111&z=12&region=bc&label=SCOTT%2C%20STEVEN%20JEFFREY&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BURKE, MICHAEL ANTHONY let go of ground</b><span class="tag">1 claim · ~61.7 ha</span></div>
-          <div class="imeta">Whole block dropped — around #11 MAGNET
-             · 42.0 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.45397&lon=-127.54845&z=12&region=bc&label=BURKE%2C%20MICHAEL%20ANTHONY&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#f3eefe;color:#6d28d9">SK</span><b>GEM OIL INC.: 100.000% let go of ground</b><span class="tag">1 claim</span></div>
-          <div class="imeta">Whole block dropped — around #69 Moonlight Uranium Zone
-             · 58.2 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=59.0&lon=-104.0&z=12&region=sk&label=GEM%20OIL%20INC.%3A%20100.000%25&kind=drop">▸ View on map</a></div></div><div class="item drop">
-          <div class="ihead"><span class="jp" style="background:#f3eefe;color:#6d28d9">SK</span><b>Mine-Find Geochem Ltd.: 100.000% let go of ground</b><span class="tag">6 claims</span></div>
-          <div class="imeta">Whole block dropped — around #61 Duddridge Lake Uranium Deposit
-             · 131.0 km from the lead</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=55.0&lon=-108.0&z=12&region=sk&label=Mine-Find%20Geochem%20Ltd.%3A%20100.000%25&kind=drop">▸ View on map</a></div></div></div><div class="sec"><h2>Leads flagged by claim activity <span class="n">92</span></h2><p class="ss">Existing leads where a claim is lapsing or fresh staking just landed nearby.</p><div class="item">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>MAPLE LEAF</b>
-            <span class="sc">score 71</span></div>
-          <div class="imeta">Gold · Developed Prospect   · Au 15.1g/t
-             · beside ground lapsing soon · Kakawis 16.7 km</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.27111&lon=-125.73167&z=12&region=bc&label=MAPLE%20LEAF&kind=lead">▸ View on map</a>  ·  <a href="http://minfile.gov.bc.ca/Summary.aspx?minfilno=092F++039" target=_blank>record ↗</a></div></div><div class="item">
+          <div class="imeta">Whole block dropped — around #12 DALEY WEST
+             · 50.1 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.78946&lon=-127.36111&z=12&region=bc&label=SCOTT%2C%20STEVEN%20JEFFREY&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>HAMBLIN, ROBERT WINSTON let go of ground</b><span class="tag">1 claim · ~75.0 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 51.0 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.54989&lon=-126.55794&z=12&region=bc&label=HAMBLIN%2C%20ROBERT%20WINSTON&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">8 claims</span></div>
+          <div class="imeta">Whole block dropped — around #2 Principle Strategic Minerals Prospect
+             · 51.5 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=46.7599&lon=-83.28984&z=12&region=on&label=Principle%20Strategic%20Minerals%20Prospect&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>DOUGLAS, IAN JAMES let go of ground</b><span class="tag">2 claims · ~261.2 ha</span></div>
+          <div class="imeta">Whole block dropped — around #12 DALEY WEST
+             · 56.0 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.76447&lon=-127.1783&z=12&region=bc&label=DOUGLAS%2C%20IAN%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 58.3 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.63542&lon=-90.40313&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>SKETCHLEY, DESI JASON let go of ground</b><span class="tag">1 claim · ~94.1 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 58.6 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.42281&lon=-126.25793&z=12&region=bc&label=SKETCHLEY%2C%20DESI%20JASON&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>FOLLETT HOSGOOD, AMANDA JANE let go of ground</b><span class="tag">1 claim · ~18.7 ha</span></div>
+          <div class="imeta">Whole block dropped — around #12 DALEY WEST
+             · 60.3 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.73113&lon=-127.17361&z=12&region=bc&label=FOLLETT%20HOSGOOD%2C%20AMANDA%20JANE&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>MERKLEY, DANIEL MORICE let go of ground</b><span class="tag">1 claim · ~131.6 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 62.8 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.45196&lon=-126.62982&z=12&region=bc&label=MERKLEY%2C%20DANIEL%20MORICE&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>WARWICK, MALCOM RAYMOND let go of ground</b><span class="tag">1 claim · ~20.9 ha</span></div>
+          <div class="imeta">Whole block dropped — around #6 IDEAL 3
+             · 64.6 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.59774&lon=-124.34202&z=12&region=bc&label=WARWICK%2C%20MALCOM%20RAYMOND&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>ZIMMER, CHRISTOPHER JAMES let go of ground</b><span class="tag">1 claim · ~37.4 ha</span></div>
+          <div class="imeta">Whole block dropped — around #12 DALEY WEST
+             · 65.6 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.63737&lon=-127.4736&z=12&region=bc&label=ZIMMER%2C%20CHRISTOPHER%20JAMES&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">15 claims</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 77.5 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.75708&lon=-90.61063&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">16 claims</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 80.1 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.75625&lon=-90.65469&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">4 claims</span></div>
+          <div class="imeta">Whole block dropped — around #3 Fensom
+             · 83.6 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=46.89583&lon=-80.85625&z=12&region=on&label=Fensom&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">9 claims</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 84.8 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.99792&lon=-89.59688&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>EAGLE PLAINS RESOURCES LTD. let go of ground</b><span class="tag">3 claims · ~790.5 ha</span></div>
+          <div class="imeta">Whole block dropped — around #13 DRAGON                        
+             · 85.9 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=51.15555&lon=-116.38124&z=12&region=bc&label=EAGLE%20PLAINS%20RESOURCES%20LTD.&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">38 claims</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 90.4 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.74868&lon=-90.87303&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 94.0 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.74375&lon=-90.90313&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>RICHARDS, LINDSAY EVAN HURST let go of ground</b><span class="tag">1 claim · ~20.7 ha</span></div>
+          <div class="imeta">Whole block dropped — around #8 ORMOND 3 (L.353)
+             · 94.2 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.05188&lon=-126.6984&z=12&region=bc&label=RICHARDS%2C%20LINDSAY%20EVAN%20HURST&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 97.7 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.77292&lon=-90.93438&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">6 claims</span></div>
+          <div class="imeta">Whole block dropped — around #2 Principle Strategic Minerals Prospect
+             · 99.2 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=47.04445&lon=-83.92395&z=12&region=on&label=Principle%20Strategic%20Minerals%20Prospect&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>DORNER, HENRY WILLIAM let go of ground</b><span class="tag">1 claim · ~21.1 ha</span></div>
+          <div class="imeta">Whole block dropped — around #15 MIDNIGHT NAILS 1-2            
+             · 101.4 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.26865&lon=-118.45427&z=12&region=bc&label=DORNER%2C%20HENRY%20WILLIAM&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>THOMSON, JUSTIN DAVID let go of ground</b><span class="tag">1 claim · ~20.9 ha</span></div>
+          <div class="imeta">Whole block dropped — around #13 DRAGON                        
+             · 102.2 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.61035&lon=-117.15424&z=12&region=bc&label=THOMSON%2C%20JUSTIN%20DAVID&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>SCOTT, STEVEN JEFFREY let go of ground</b><span class="tag">2 claims · ~76.2 ha</span></div>
+          <div class="imeta">Whole block dropped — around #1 PACKSACK
+             · 110.1 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=53.94152&lon=-127.77669&z=12&region=bc&label=SCOTT%2C%20STEVEN%20JEFFREY&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">4 claims</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 113.4 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.72708&lon=-91.23438&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">6 claims</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 114.7 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.83194&lon=-91.16563&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>DELISLE, DENIS ANDREW let go of ground</b><span class="tag">1 claim · ~56.8 ha</span></div>
+          <div class="imeta">Whole block dropped — around #12 DALEY WEST
+             · 115.4 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=54.19152&lon=-127.69232&z=12&region=bc&label=DELISLE%2C%20DENIS%20ANDREW&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">3 claims</span></div>
+          <div class="imeta">Whole block dropped — around #17 Silver Mountain East
+             · 116.4 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.76875&lon=-91.24688&z=12&region=on&label=Silver%20Mountain%20East&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>NOTH, GERALD ERIC JOSEPH let go of ground</b><span class="tag">1 claim · ~38.1 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 119.4 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=53.87906&lon=-125.99851&z=12&region=bc&label=NOTH%2C%20GERALD%20ERIC%20JOSEPH&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>REID, CHANTAL let go of ground</b><span class="tag">2 claims · ~286.0 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 120.9 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=53.86447&lon=-125.94382&z=12&region=bc&label=REID%2C%20CHANTAL&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>FOXTAIL RESOURCE CORP let go of ground</b><span class="tag">1 claim · ~171.6 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 121.6 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=53.86031&lon=-125.97976&z=12&region=bc&label=FOXTAIL%20RESOURCE%20CORP&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>BRUNETTE, HELENE MARIE let go of ground</b><span class="tag">2 claims · ~57.2 ha</span></div>
+          <div class="imeta">Whole block dropped — around #7 GRANISLE
+             · 125.0 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=53.86344&lon=-125.65475&z=12&region=bc&label=BRUNETTE%2C%20HELENE%20MARIE&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">5 claims</span></div>
+          <div class="imeta">Whole block dropped — around #14 Rock Brook Resources Property
+             · 125.0 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=46.66375&lon=-79.21437&z=12&region=on&label=Rock%20Brook%20Resources%20Property&kind=drop">▸ View on map</a></div></div><div class="item drop">
+          <div class="ihead"><span class="jp" style="background:#fdeaea;color:#c81e1e">ON</span><b>A holder let go of ground</b><span class="tag">1 claim</span></div>
+          <div class="imeta">Whole block dropped — around #2 Principle Strategic Minerals Prospect
+             · 128.3 km from the lead</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=47.34792&lon=-83.90312&z=12&region=on&label=Principle%20Strategic%20Minerals%20Prospect&kind=drop">▸ View on map</a></div></div></div><div class="sec"><h2>Leads flagged by claim activity <span class="n">91</span></h2><p class="ss">Existing leads where a claim is lapsing or fresh staking just landed nearby.</p><div class="item">
           <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>IDEAL 3</b>
             <span class="sc">score 67</span></div>
           <div class="imeta">Gold · Showing              · Au 4.4g/t, Ag 20.9g/t
@@ -327,16 +370,16 @@ footer.site b{color:var(--ink);}
           <div class="imeta">Copper · Prospect             · Ag 15g/t, Cu 13.36%
              · beside fresh staking · Toby Creek 6.1 km</div>
           <div class="isrc"><a class="mapbtn" href="app.html?lat=50.37417&lon=-116.36167&z=12&region=bc&label=DRAGON%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20&kind=lead">▸ View on map</a>  ·  <a href="http://minfile.gov.bc.ca/Summary.aspx?minfilno=082KSE071" target=_blank>record ↗</a></div></div><div class="item">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>MAGNOLIA</b>
-            <span class="sc">score 61</span></div>
-          <div class="imeta">Copper · Prospect             · Au 9.9g/t, Ag 231g/t, Cu 4.60%, Pb 16.00%, Zn 15.00%
-             · beside ground lapsing soon · beside fresh staking · Marshall School Junction 1.9 km</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=49.70361&lon=-124.48639&z=12&region=bc&label=MAGNOLIA&kind=lead">▸ View on map</a>  ·  <a href="http://minfile.gov.bc.ca/Summary.aspx?minfilno=092F++274" target=_blank>record ↗</a></div></div><div class="item">
-          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>CORMORANT                     </b>
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>MIDNIGHT NAILS 1-2            </b>
+            <span class="sc">score 57</span></div>
+          <div class="imeta">Gold · Prospect             · Au 11.1g/t, Ag 76.0g/t, Pb 1.05%
+             · beside ground lapsing soon · beside fresh staking · Cherryville 8.1 km</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.17861&lon=-118.54&z=12&region=bc&label=MIDNIGHT%20NAILS%201-2%20%20%20%20%20%20%20%20%20%20%20%20&kind=lead">▸ View on map</a>  ·  <a href="http://minfile.gov.bc.ca/Summary.aspx?minfilno=082LSE063" target=_blank>record ↗</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>KING GEORGE (L.159)</b>
             <span class="sc">score 55</span></div>
-          <div class="imeta">Copper · Prospect             · Ag 6.86g/t, Au 2.06g/t, Cu 2.7%
-             · beside ground lapsing soon · Granite Bay 5.3 km</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=50.18694&lon=-125.28056&z=12&region=bc&label=CORMORANT%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20&kind=lead">▸ View on map</a>  ·  <a href="http://minfile.gov.bc.ca/Summary.aspx?minfilno=092K++098" target=_blank>record ↗</a></div></div><div class="item">
+          <div class="imeta">Copper · Prospect             · Au 2.1g/t, Ag 10.3g/t, Cu 7.95%, Ni 0.05%
+             · beside ground lapsing soon · beside fresh staking · East Sooke 0.8 km</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=48.36806&lon=-123.69528&z=12&region=bc&label=KING%20GEORGE%20%28L.159%29&kind=lead">▸ View on map</a>  ·  <a href="http://minfile.gov.bc.ca/Summary.aspx?minfilno=092B++011" target=_blank>record ↗</a></div></div><div class="item">
           <div class="ihead"><span class="jp" style="background:#e8f0fe;color:#1a56db">BC</span><b>SILVER BELL                   </b>
             <span class="sc">score 55</span></div>
           <div class="imeta">Gold · Prospect             · Ag 98.8g/t, Au 3.3g/t, Pb 3.88%, Zn 3.95%
@@ -696,7 +739,12 @@ footer.site b{color:var(--ink);}
             <span class="sc">score 20</span></div>
           <div class="imeta">Other metallic · Past Producer
              · beside ground lapsing soon</div>
-          <div class="isrc"><a class="mapbtn" href="app.html?lat=51.02481&lon=-95.68564&z=12&region=mb&label=Gabrielle%20Shaft&kind=lead">▸ View on map</a></div></div></div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=51.02481&lon=-95.68564&z=12&region=mb&label=Gabrielle%20Shaft&kind=lead">▸ View on map</a></div></div><div class="item">
+          <div class="ihead"><span class="jp" style="background:#fef3e2;color:#b45309">MB</span><b>Lynn Lake 'A' Mine- 'B' Shaft</b>
+            <span class="sc">score 20</span></div>
+          <div class="imeta">Other metallic · Past Producer
+             · beside ground lapsing soon</div>
+          <div class="isrc"><a class="mapbtn" href="app.html?lat=56.84053&lon=-101.0402&z=12&region=mb&label=Lynn%20Lake%20%27A%27%20Mine-%20%27B%27%20Shaft&kind=lead">▸ View on map</a></div></div></div>
 </div>
 <footer class="site"><b>Project Closeology</b> — a sister project to <a href="https://thedeepdive.ca" target="_blank">The Deep Dive</a>. Screening signals over official data (BC MTO/MINFILE, Ontario LIO/MDI); metal values are approximate and refreshed daily. Always confirm every claim and boundary in the official title system before staking — this is decision support, not staking advice.</footer>
 </body></html>
