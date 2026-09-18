@@ -1,6 +1,6 @@
-name: closeology-mineterminal
+name: closeology-miningnewsterminal
 
-# Pulls the public MineTerminalPro drill feed (/api/v1/drills) into the drill
+# Pulls the public MiningNewsTerminal drill feed (/api/v1/drills) into the drill
 # bank. Standalone (not coupled to the crawler) so a long backfill can never be
 # starved by, or starve, the wire crawl. Incremental a few times daily; a 24-month
 # backfill on demand via workflow_dispatch (mode=backfill).
@@ -14,7 +14,7 @@ on:
         default: "incremental"
 
 concurrency:
-  group: closeology-mineterminal
+  group: closeology-miningnewsterminal
   cancel-in-progress: false
 
 jobs:
@@ -30,8 +30,8 @@ jobs:
           python-version: "3.11"
       - name: Python deps
         run: pip install -r requirements.txt
-      - name: Pull the MineTerminalPro drill feed
-        run: PYTHONPATH=src python -m newswire.mineterminal "${{ github.event.inputs.mode || 'incremental' }}" --max-seconds 4200
+      - name: Pull the MiningNewsTerminal drill feed
+        run: PYTHONPATH=src python -m newswire.miningnewsterminal "${{ github.event.inputs.mode || 'incremental' }}" --max-seconds 4200
       - name: Commit the bank
         run: |
           git config user.name "closeology-bot"
@@ -48,6 +48,6 @@ jobs:
             git reset -q -- 'data/keep/*_claims_snapshot.parquet' 'data/keep/*_boundary.parquet' 'data/keep/*_minfile_facts.parquet' 2>/dev/null || true
             git diff --cached --quiet && { echo "no new drill data"; break; }
             git fetch -q origin main 2>/dev/null || true; git checkout -q origin/main -- site 2>/dev/null || true
-            git commit -q -m "MTP feed refresh $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
+            git commit -q -m "MiningNewsTerminal feed refresh $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
             git push origin HEAD:main && break || { echo "retry $i"; sleep 5; }
           done

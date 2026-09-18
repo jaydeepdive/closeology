@@ -1,21 +1,21 @@
-"""MineTerminalPro drill feed -> Closeology drill bank.
+"""MiningNewsTerminal drill feed -> Closeology drill bank.
 
 miningnewsterminal.com exposes a public, no-auth JSON API of parsed drill-result
 releases. We use it as a high-recall DISCOVERY feed and a body-text source: for
 each release we pull the article body and run Closeology's own extractor +
-geolocator on it, so hole/interval IDs stay consistent for the 3D models. MTP's
+geolocator on it, so hole/interval IDs stay consistent for the 3D models. MiningNewsTerminal's
 own pre-parsed intervals are used as a FALLBACK when our extractor finds none.
 
 Guards for the quirks the API owner documented:
   * published_at is UTC but serialized without 'Z' -> we key on the `date` field.
   * /api/v1/drills honours `since` (day-granular); /api/v1/news/recent ignores it.
-  * no coordinates exist anywhere in MTP -> geolocation is entirely ours.
-  * some MTP grades are extraction errors -> plausibility filter on the fallback.
+  * no coordinates exist anywhere in MiningNewsTerminal -> geolocation is entirely ours.
+  * some MiningNewsTerminal grades are extraction errors -> plausibility filter on the fallback.
   * key everything on event_id / source_url; de-duplicate against the bank.
 
 Run:
-  PYTHONPATH=src python -m newswire.mineterminal incremental
-  PYTHONPATH=src python -m newswire.mineterminal backfill --since 2024-09-17
+  PYTHONPATH=src python -m newswire.miningnewsterminal incremental
+  PYTHONPATH=src python -m newswire.miningnewsterminal backfill --since 2024-09-17
 """
 import sys
 import json
@@ -77,9 +77,9 @@ def _plausible(iv):
     return True
 
 
-def _map_mtp_intervals(mtp):
+def _map_mnt_intervals(mnt):
     out = []
-    for iv in (mtp or []):
+    for iv in (mnt or []):
         row = {"hole_id": iv.get("hole_id"), "from_m": iv.get("from_m"),
                "to_m": iv.get("to_m"), "length_m": iv.get("length_m"),
                "element": iv.get("metal"), "grade": iv.get("grade"),
@@ -117,10 +117,10 @@ def collect(mode="incremental", since=None, limit=None, max_seconds=None):
     page, pages, t0 = 1, 1, time.time()
     while page <= pages:
         if sources._expired() or (time.time() - t0) > max_seconds:
-            print("[mtp] time budget reached — stopping"); break
+            print("[mnt] time budget reached — stopping"); break
         d = _drills_page(session, page, since)
         if not d.get("ok"):
-            print(f"[mtp] page {page} not ok — stopping"); break
+            print(f"[mnt] page {page} not ok — stopping"); break
         pages = d.get("pages", page)
         items = d.get("items", [])
         if not items:
@@ -140,7 +140,7 @@ def collect(mode="incremental", since=None, limit=None, max_seconds=None):
                 holes, iv_html, meta = extract.extract(body)
             except Exception:
                 holes, iv_html, meta = [], [], {"utm_zone": None, "utm_hemi": None, "datum": None}
-            ivs = iv_html if iv_html else _map_mtp_intervals(it.get("intervals"))
+            ivs = iv_html if iv_html else _map_mnt_intervals(it.get("intervals"))
             releases.append({
                 "url": url, "source": "miningnewsterminal",
                 "company": it.get("company"), "ticker": it.get("ticker"),
@@ -152,11 +152,11 @@ def collect(mode="incremental", since=None, limit=None, max_seconds=None):
             new += 1
         page += 1
     con.close()
-    print(f"[mtp] {mode} since {since}: {new} new releases fetched, {skipped} already banked")
+    print(f"[mnt] {mode} since {since}: {new} new releases fetched, {skipped} already banked")
     if releases:
         ingest_json.ingest(releases)
     else:
-        print("[mtp] nothing new to ingest")
+        print("[mnt] nothing new to ingest")
     return {"new": new, "skipped": skipped}
 
 
