@@ -501,12 +501,13 @@ async function showCompanyClaims(rid){{
   if(companyClaimLayer){{map.removeLayer(companyClaimLayer);companyClaimLayer=null;}}
   const by=await drillClaimsLoad(); const fs=by[rid]||[];
   const outline=fs.find(f=>f.properties.matched==='outline');
-  const cells=fs.filter(f=>f.properties.matched!=='outline');
+  const cells=fs.filter(f=>f.properties.matched!=='outline'&&f.properties.matched!=='info');
   companyClaimLayer=L.layerGroup();
   if(cells.length){{
     L.geoJSON({{type:'FeatureCollection',features:cells}},{{
-      style:f=>({{color:'#c33',weight:.5,opacity:.7,fillColor:'#e11d38',
-        fillOpacity:(f.properties.matched==='owner'?.22:.16)}}),
+      style:f=>(f.properties.matched==='nearby'
+        ?({{color:'#9a7d0a',weight:.5,opacity:.65,fillColor:'#f2c200',fillOpacity:.15}})
+        :({{color:'#c33',weight:.5,opacity:.7,fillColor:'#e11d38',fillOpacity:(f.properties.matched==='owner'?.22:.16)}})),
       onEachFeature:(f,lyr)=>{{
         const pr=f.properties||{{}};
         const tip=`${{pr.owner?'<b>'+esc(pr.owner)+'</b><br>':''}}`+
@@ -524,22 +525,29 @@ async function showCompanyClaims(rid){{
   try{{ if(outline){{ const b=L.geoJSON(outline).getBounds(); if(b.isValid()) map.fitBounds(b.pad(0.4),{{maxZoom:13}}); }} }}catch(e){{}}
   const box=document.getElementById('coclaims');
   if(box){{
+    const info=((fs.find(f=>f.properties.matched==='info')||{{}}).properties)||{{}};
     const op=outline?outline.properties:{{}};
-    const nc=outline?op.n_cells:cells.length;
-    if(!nc){{
-      box.innerHTML=`<div class=sechd>Company property</div><div class=pn>These holes sit on ground the driller holds (you do not drill claims you do not own), but our claim fabric does not cover this spot yet, so we cannot outline the block here or show what is open around it. Confirm the holder and boundaries in the provincial registry.</div>`;
+    const nearby=cells.filter(f=>f.properties.matched==='nearby').length;
+    const hasBlock=(info.has_block)|| !!outline;
+    const nc=outline?op.n_cells:0;
+    const km=info.nearby_km||6;
+    if(!hasBlock && !nearby){{
+      box.innerHTML=`<div class=sechd>Company property</div><div class=pn>These holes don't line up with any mapped claim near here — the ground either isn't in our claim fabric yet or the collars need repositioning. Confirm the holder and boundaries in the provincial registry.</div>`;
       return;
     }}
-    const known=op.holder_known;
-    const size=`<div class=fact><span class=k>Claim cells</span>${{nc}}</div>`+
+    const size=`<div class=fact><span class=k>Claim cells</span>${{nc||nearby}}</div>`+
       (op.area_ha!=null?`<div class=fact><span class=k>Area</span>≈ ${{op.area_ha.toLocaleString()}} ha</div>`:'');
-    if(known){{
+    if(hasBlock && op.holder_known){{
       box.innerHTML=`<div class=sechd>Company property — where their claims start &amp; end</div>`+
         (op.holder?`<div class=fact><span class=k>Holder</span><span class=own>${{esc(op.holder)}}</span></div>`:'')+size+
-        `<div class=pn style="margin-top:6px">Bold red outline = this holder's property boundary (from the provincial tenure registry). Magenta cells (⛏ open ground) are what's still stakeable up against it. Hover any red cell for its tenure number and expiry.</div>`;
-    }} else {{
+        `<div class=pn style="margin-top:6px">Bold red outline = this holder's property boundary. Gold cells = other staked ground within ~${{km}} km. Magenta cells (⛏ open ground) are what's still stakeable. Hover any cell for its tenure/holder and expiry.</div>`;
+    }} else if(hasBlock){{
       box.innerHTML=`<div class=sechd>Claim block around the holes${{op.bounded?' (local footprint)':''}}</div>`+size+
-        `<div class=pn style="margin-top:6px">Ontario doesn't publish claim holders in bulk, so this is the <b>contiguous staked block the drill holes sit in</b> — it traces the drilled ground but ${{op.bounded?'was clipped to the local footprint because it runs into a dense multi-operator camp':'may include an adjacent operator where properties abut'}}. Confirm the exact holder and boundaries in <a href="https://www.mlas.mndm.gov.on.ca/mlas/" target=_blank>Ontario MLAS</a>. Magenta cells (⛏ open ground) show what's open up against it.</div>`;
+        `<div class=pn style="margin-top:6px">${{esc(info.province||'This province')}} doesn't publish claim holders in bulk, so the red block is the <b>contiguous staked ground the holes sit in</b>. Gold cells = other staked ground within ~${{km}} km; magenta cells (⛏ open ground) show what's open. Confirm the holder in the provincial registry.</div>`;
+    }} else {{
+      box.innerHTML=`<div class=sechd>Staked ground nearby</div>`+
+        `<div class=fact><span class=k>Staked cells</span>${{nearby}} within ~${{km}} km</div>`+
+        `<div class=pn style="margin-top:6px">These holes plot just off the mapped claim fabric, so we can't outline the driller's exact block — but this is what's staked around them (gold). ${{info.publishes_holders?'Hover any cell for the holder and tenure.':esc(info.province||'This province')+" doesn't publish holders in bulk — check the provincial registry for who holds them."}} Magenta cells (⛏ open ground) show what's open.</div>`;
     }}
   }}
 }}
