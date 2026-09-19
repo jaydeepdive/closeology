@@ -4700,6 +4700,7 @@
 { "type": "Feature", "properties": { "claim": "041369M", "cname": null, "owner": "Karen Huebner-Thompson", "expiry": "", "staked": "2026-09-16" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "041370M", "cname": null, "owner": "Karen Huebner-Thompson", "expiry": "", "staked": "2026-09-16" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "041371M", "cname": null, "owner": "Karen Huebner-Thompson", "expiry": "", "staked": "2026-09-16" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 47.0 ] } },
-{ "type": "Feature", "properties": { "claim": "041372M", "cname": null, "owner": "Corwin Northcott", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } }
+{ "type": "Feature", "properties": { "claim": "041372M", "cname": null, "owner": "Corwin Northcott", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041373M", "cname": null, "owner": "Seabourne Resources Inc.", "expiry": "", "staked": "2026-09-18" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 47.0 ] } }
 ]
 }
