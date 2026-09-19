@@ -242,7 +242,8 @@ async function drawAllClaims(){{
     for(const q2 of (claimCache[slug]||[])){{
       if(!b.contains([q2.lat,q2.lng])) continue;
       const pr=q2.pr, own=(pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
-      const mk=L.circleMarker([q2.lat,q2.lng],{{radius:3.5,color:'#8a6d3b',weight:.7,opacity:.85,fillColor:'#c9a227',fillOpacity:.55}});
+      const dLa=0.0024, dLo=0.0024/Math.max(0.2,Math.cos(q2.lat*Math.PI/180));
+      const mk=L.rectangle([[q2.lat-dLa/2,q2.lng-dLo/2],[q2.lat+dLa/2,q2.lng+dLo/2]],{{color:'#8a6d3b',weight:.5,opacity:.8,fillColor:'#e0b83a',fillOpacity:.35}});
       const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{pr.cname?esc(pr.cname)+' ':''}}${{pr.claim?'#'+esc(pr.claim):''}}${{pr.staked?'<br>staked '+esc(pr.staked):''}}${{pr.expiry?'<br>good to '+esc(pr.expiry):''}}`;
       if(tip.trim()) mk.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
       grp.addLayer(mk); if(++shown>=CAP) break;
@@ -332,7 +333,8 @@ async function showGround(p){{
         for(const q of claimPts){{
           if(!b.contains([q.lat,q.lng])) continue;
           const own=(q.pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
-          const mk=L.circleMarker([q.lat,q.lng],{{radius:4,color:'#8a6d3b',weight:1,opacity:.9,fillColor:'#c9a227',fillOpacity:.6}});
+          const dLa=0.0024, dLo=0.0024/Math.max(0.2,Math.cos(q.lat*Math.PI/180));
+        const mk=L.rectangle([[q.lat-dLa/2,q.lng-dLo/2],[q.lat+dLa/2,q.lng+dLo/2]],{{color:'#8a6d3b',weight:.5,opacity:.85,fillColor:'#e0b83a',fillOpacity:.4}});
           const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{q.pr.cname?esc(q.pr.cname)+' ':''}}${{q.pr.claim?'#'+esc(q.pr.claim):''}}${{q.pr.expiry?'<br><span style="color:#666">good to '+esc(q.pr.expiry)+'</span>':''}}`;
           if(tip.trim()) mk.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
           grp.addLayer(mk); if(++shown>=CAP) break;
