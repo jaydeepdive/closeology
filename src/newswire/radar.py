@@ -37,50 +37,97 @@ def _score_interval(el, grade, length, unit):
     return v * g * length
 
 
+def _norm_title(t):
+    return re.sub(r"[^a-z0-9]+", "", (t or "").lower())
+
+
+def _build_item(rid, source, url, company, title, pub, country, project, holes, ivs):
+    by_hole, all_by_hole = {}, {}
+    best, best_s = None, -1
+    for (hid, fr, to, ln, el, gr, un, sub) in ivs:
+        all_by_hole.setdefault(hid, []).append(
+            {"from": fr, "to": to, "len": ln, "el": el, "grade": gr, "unit": un, "sub": bool(sub)})
+        if sub:
+            continue
+        sc = _score_interval(el, gr, ln, un)
+        token = {"from": fr, "to": to, "len": ln, "el": el, "grade": gr, "unit": un, "sc": sc}
+        b = by_hole.get(hid)
+        if b is None or sc > b["sc"]:
+            by_hole[hid] = token
+        if sc > best_s:
+            best_s = sc
+            best = {"hole": hid, "len": ln, "el": el, "grade": gr, "unit": un}
+    holes_d = []
+    for (hid, lat, lon, depth, az, dip) in holes:
+        holes_d.append({"hole": hid, "lat": lat, "lon": lon, "depth_m": depth,
+                        "azimuth": az, "dip": dip, "best": by_hole.get(hid),
+                        "intervals": all_by_hole.get(hid, [])})
+    pt = None
+    if holes:
+        clat = sum(h[1] for h in holes) / len(holes)
+        clon = sum(h[2] for h in holes) / len(holes)
+        pt = {"lat": round(clat, 5), "lon": round(clon, 5), "n": len(holes)}
+    return {"id": rid, "source": source, "url": url,
+            "company": company or (title or "")[:60], "title": title,
+            "published": pub, "country": country, "project": project,
+            "n_holes": len(holes), "n_intervals": len(ivs), "best": best, "pt": pt,
+            "holes": holes_d, "geo": bool(holes)}
+
+
 def _load(con):
     rows = con.execute("""
-        SELECT r.id,r.source,r.url,r.company,r.title,r.published,r.country,r.project,
-               r.n_holes,r.n_intervals
+        SELECT r.id,r.source,r.url,r.company,r.title,r.published,r.country,r.project
         FROM releases r WHERE r.status='ok'
         ORDER BY COALESCE(r.published,'') DESC, r.fetched_at DESC""").fetchall()
-    items = []
-    for (rid, source, url, company, title, pub, country, project, nh, ni) in rows:
+    recs = []
+    for (rid, source, url, company, title, pub, country, project) in rows:
         holes = con.execute("SELECT hole_id,lat,lon,depth_m,azimuth,dip FROM holes "
                             "WHERE release_id=? AND lat IS NOT NULL", (rid,)).fetchall()
         ivs = con.execute("SELECT hole_id,from_m,to_m,length_m,element,grade,unit,is_subinterval "
                           "FROM intervals WHERE release_id=?", (rid,)).fetchall()
-        # per-hole: best interval (for ranking) AND the FULL list of intervals
-        by_hole, all_by_hole = {}, {}
-        best, best_s = None, -1
-        for (hid, fr, to, ln, el, gr, un, sub) in ivs:
-            all_by_hole.setdefault(hid, []).append(
-                {"from": fr, "to": to, "len": ln, "el": el, "grade": gr, "unit": un, "sub": bool(sub)})
-            if sub:
-                continue
-            sc = _score_interval(el, gr, ln, un)
-            token = {"from": fr, "to": to, "len": ln, "el": el, "grade": gr, "unit": un, "sc": sc}
-            b = by_hole.get(hid)
-            if b is None or sc > b["sc"]:
-                by_hole[hid] = token
-            if sc > best_s:
-                best_s = sc
-                best = {"hole": hid, "len": ln, "el": el, "grade": gr, "unit": un}
-        holes_d = []
-        for (hid, lat, lon, depth, az, dip) in holes:
-            holes_d.append({"hole": hid, "lat": lat, "lon": lon, "depth_m": depth,
-                            "azimuth": az, "dip": dip, "best": by_hole.get(hid),
-                            "intervals": all_by_hole.get(hid, [])})
-        pt = None
-        if holes:
-            clat = sum(h[1] for h in holes) / len(holes)
-            clon = sum(h[2] for h in holes) / len(holes)
-            pt = {"lat": round(clat, 5), "lon": round(clon, 5), "n": len(holes)}
-        items.append({"id": rid, "source": source, "url": url,
-                      "company": company or (title or "")[:60], "title": title,
-                      "published": pub, "country": country, "project": project,
-                      "n_holes": nh, "n_intervals": ni, "best": best, "pt": pt,
-                      "holes": holes_d, "geo": bool(holes)})
+        recs.append({"rid": rid, "source": source, "url": url, "company": company,
+                     "title": title, "pub": pub, "country": country, "project": project,
+                     "holes": holes, "ivs": ivs})
+    # Collapse duplicate announcements — the same release re-published across Junior
+    # Mining Network, the original wire, and MiningNewsTerminal shows up as separate
+    # rows, each parsing different pieces (one gets collars, another the assays).
+    # Group by headline and MERGE holes + intervals so one copy's collars pick up
+    # another's assay table, and rank a single clean row.
+    from collections import OrderedDict
+    groups = OrderedDict()
+    for r in recs:
+        nt = _norm_title(r["title"])
+        key = nt[:40] if len(nt) >= 20 else "rid:" + r["rid"]
+        groups.setdefault(key, []).append(r)
+    items = []
+    for grp in groups.values():
+        if len(grp) == 1:
+            g = grp[0]
+            items.append(_build_item(g["rid"], g["source"], g["url"], g["company"],
+                                     g["title"], g["pub"], g["country"], g["project"],
+                                     g["holes"], g["ivs"]))
+            continue
+        base = max(grp, key=lambda r: (len(r["holes"]), len(r["ivs"])))
+        holes = {}
+        for r in grp:
+            for h in r["holes"]:
+                hid = h[0]
+                if hid not in holes or (holes[hid][1] is None and h[1] is not None):
+                    holes[hid] = h
+        ivs, seen = [], set()
+        for r in grp:
+            for iv in r["ivs"]:
+                k = (iv[0], iv[1], iv[2], iv[4], iv[5], iv[6])
+                if k in seen:
+                    continue
+                seen.add(k); ivs.append(iv)
+        comp = next((r["company"] for r in sorted(grp, key=lambda r: len(r["company"] or "zzzz"))
+                     if r["company"] and len(r["company"]) < 60), base["company"])
+        items.append(_build_item(base["rid"], base["source"], base["url"], comp,
+                                  base["title"], base["pub"], base["country"], base["project"],
+                                  list(holes.values()), ivs))
     return items
+
 
 
 _NAME2SLUG = {"Ontario": "on", "Quebec": "qc", "British Columbia": "bc", "Yukon": "yk",
