@@ -510,7 +510,7 @@ async function showCompanyClaims(rid){{
         :({{color:'#c33',weight:.5,opacity:.7,fillColor:'#e11d38',fillOpacity:(f.properties.matched==='owner'?.22:.16)}})),
       onEachFeature:(f,lyr)=>{{
         const pr=f.properties||{{}};
-        const tip=`${{pr.owner?'<b>'+esc(pr.owner)+'</b><br>':''}}`+
+        const tip=`${{pr.kind==='lease'?'<b>Mining lease / patent</b><br>':''}}${{pr.owner?'<b>'+esc(pr.owner)+'</b><br>':''}}`+
           `${{pr.cname?esc(pr.cname)+' ':''}}${{pr.claim?'#'+esc(pr.claim):''}}`+
           `${{pr.expiry?'<br><span style=\"color:#666\">good to '+esc(pr.expiry)+'</span>':''}}`;
         if(tip.trim()) lyr.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});

@@ -136,6 +136,34 @@ _NAME2SLUG = {"Ontario": "on", "Quebec": "qc", "British Columbia": "bc", "Yukon"
               "Nova Scotia": "ns", "New Brunswick": "nb", "Alberta": "ab", "Nunavut": "nu"}
 
 
+def _load_tenure(slug):
+    """All held mining ground for a jurisdiction: unpatented CLAIMS plus LEASES/
+    patents/licences. Operating mines sit on leased or patented ground, not
+    stakeable claims, so a claims-only fabric wrongly reads their drill sites as
+    'no tenure'. Folding leases in fixes that (e.g. Sudbury/Levack)."""
+    import geopandas as gpd
+    import pandas as pd
+    frames = []
+    for fn, kind in (("claims.parquet", "claim"), ("leases.parquet", "lease")):
+        fp = os.path.join("data", slug, fn)
+        if os.path.exists(fp):
+            try:
+                gg = gpd.read_parquet(fp)
+                gg["_kind"] = kind
+                frames.append(gg)
+            except Exception:
+                pass
+    if not frames:
+        return None
+    if len(frames) == 1:
+        return frames[0]
+    try:
+        return gpd.GeoDataFrame(pd.concat(frames, ignore_index=True),
+                                geometry="geometry", crs=frames[0].crs)
+    except Exception:
+        return frames[0]
+
+
 def _drill_open_ground(items, halo_m=1000):
     """For each drill program, the OPEN stakeable ground around the cluster of
     holes: tile a halo over the holes and keep only cells that NO active claim
@@ -161,11 +189,7 @@ def _drill_open_ground(items, halo_m=1000):
         if not slug:
             continue
         if slug not in cache:
-            cp = os.path.join("data", slug, "claims.parquet")
-            try:
-                cache[slug] = gpd.read_parquet(cp) if os.path.exists(cp) else None
-            except Exception:
-                cache[slug] = None
+            cache[slug] = _load_tenure(slug)
         claims = cache[slug]
         # No claim fabric for this jurisdiction -> we cannot tell open ground from
         # simply-unmapped ground, so draw nothing for this program.
@@ -258,11 +282,7 @@ def _drill_company_claims(items, bbox_km=35, seed_m=1500, nearby_m=6000, cap=150
         if not slug:
             continue
         if slug not in cache:
-            cp = os.path.join("data", slug, "claims.parquet")
-            try:
-                cache[slug] = gpd.read_parquet(cp) if os.path.exists(cp) else None
-            except Exception:
-                cache[slug] = None
+            cache[slug] = _load_tenure(slug)
         claims = cache[slug]
         if claims is None or not len(claims):
             continue
@@ -307,6 +327,7 @@ def _drill_company_claims(items, bbox_km=35, seed_m=1500, nearby_m=6000, cap=150
             r = cand.iloc[i]
             owner = str(r[owncol]) if owncol else ""
             return {"rid": it["id"], "matched": matched,
+                    "kind": (str(r["_kind"]) if "_kind" in cand.columns and r.get("_kind") is not None else "claim"),
                     "owner": re.sub(r"\s*[-:]?\s*\d+(?:\.\d+)?%\s*$", "", owner).strip() or None,
                     "claim": str(r[idcol]) if idcol and r[idcol] is not None else None,
                     "cname": str(r[namecol]) if namecol and r[namecol] is not None else None,
