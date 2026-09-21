@@ -54,7 +54,14 @@ def occurrences():
     p = "data/bc/minfile_mineral.csv"
     if not os.path.exists(p):
         os.makedirs("data/bc", exist_ok=True)
-        urllib.request.urlretrieve(OCC_CSV, p)
+        for _att in range(4):
+            try:
+                urllib.request.urlretrieve(OCC_CSV, p)
+                break
+            except Exception as _e:
+                if _att == 3:
+                    raise
+                time.sleep(5 * (_att + 1))
     df = pd.read_csv(p, dtype=str)
 
     def comm(r):
@@ -102,7 +109,10 @@ def fetch_aris():
 
 def run():
     occurrences()
-    fetch_aris()
+    try:
+        fetch_aris()
+    except Exception as e:
+        print("[aris] enrichment skipped (non-fatal):", str(e)[:120])
     jobs = [
         ("claims", "WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW", None,
          "TENURE_NUMBER_ID,CLAIM_NAME,TENURE_TYPE_DESCRIPTION,OWNER_NAME,ISSUE_DATE,GOOD_TO_DATE,AREA_IN_HECTARES"),

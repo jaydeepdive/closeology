@@ -61,7 +61,10 @@ def _have(p):
 
 
 def _bc():
-    ingest.run()
+    try:
+        ingest.run()
+    except Exception as e:
+        print("[build_all] BC enrichment ingest failed, continuing with claims/map:", str(e)[:120])
     keep = "data/keep/bc_minfile_facts.parquet"
     if _have(keep):
         shutil.copy(keep, "data/bc/minfile_facts.parquet")
