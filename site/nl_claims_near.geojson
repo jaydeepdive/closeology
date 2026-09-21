@@ -242,7 +242,7 @@
 { "type": "Feature", "properties": { "claim": "023551M", "cname": "Springdale, Central NL", "owner": "D3 Exploration Ltd.", "expiry": "2030-12-17", "staked": "2015-11-17" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } },
 { "type": "Feature", "properties": { "claim": "025608M", "cname": "Flatwater Pond Area, Baie Verte PeninsulaPond", "owner": "Almar Consultants", "expiry": "2027-12-27", "staked": "2017-11-24" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } },
 { "type": "Feature", "properties": { "claim": "023987M", "cname": "Joe Batts Pond Area, Central NL", "owner": "New Found Gold Corp.", "expiry": "2031-06-09", "staked": "2016-05-08" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 49.0 ] } },
-{ "type": "Feature", "properties": { "claim": "024225M", "cname": "Northwest Gander River, Central  NL", "owner": "Quest Inc.", "expiry": "2026-10-19", "staked": "2016-09-17" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "024225M", "cname": "Northwest Gander River, Central  NL", "owner": "Quest Inc.", "expiry": "2031-10-17", "staked": "2016-09-17" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "017841M", "cname": "Wabush Lake", "owner": "Iron Ore Company of Canada", "expiry": "2025-07-29", "staked": "2010-06-29" }, "geometry": { "type": "Point", "coordinates": [ -67.0, 53.0 ] } },
 { "type": "Feature", "properties": { "claim": "023875M", "cname": "Joe Batts Pond, Central NL", "owner": "New Found Gold Corp.", "expiry": "2031-04-14", "staked": "2016-03-13" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "023881M", "cname": "Joe Batts Brook, Central NL", "owner": "New Found Gold Corp.", "expiry": "2031-04-21", "staked": "2016-03-22" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 49.0 ] } },
@@ -4701,6 +4701,8 @@
 { "type": "Feature", "properties": { "claim": "041370M", "cname": null, "owner": "Karen Huebner-Thompson", "expiry": "", "staked": "2026-09-16" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "041371M", "cname": null, "owner": "Karen Huebner-Thompson", "expiry": "", "staked": "2026-09-16" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 47.0 ] } },
 { "type": "Feature", "properties": { "claim": "041372M", "cname": null, "owner": "Corwin Northcott", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } },
-{ "type": "Feature", "properties": { "claim": "041373M", "cname": null, "owner": "Seabourne Resources Inc.", "expiry": "", "staked": "2026-09-18" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 47.0 ] } }
+{ "type": "Feature", "properties": { "claim": "041373M", "cname": null, "owner": "Seabourne Resources Inc.", "expiry": "", "staked": "2026-09-18" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 47.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041374M", "cname": null, "owner": "Lawrence Peters", "expiry": "", "staked": "2026-09-21" }, "geometry": { "type": "Point", "coordinates": [ -63.0, 56.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041375M", "cname": null, "owner": "Lawrence Peters", "expiry": "", "staked": "2026-09-21" }, "geometry": { "type": "Point", "coordinates": [ -63.0, 56.0 ] } }
 ]
 }
