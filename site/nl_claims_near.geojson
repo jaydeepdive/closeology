@@ -2592,7 +2592,6 @@
 { "type": "Feature", "properties": { "claim": "039011M", "cname": null, "owner": "Donna Lewis", "expiry": "2030-03-27", "staked": "2025-02-25" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "039012M", "cname": null, "owner": "Donna Lewis", "expiry": "2030-03-27", "staked": "2025-02-25" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "039024M", "cname": null, "owner": "E. Michele Noel", "expiry": "2030-09-14", "staked": "2025-02-27" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
-{ "type": "Feature", "properties": { "claim": "039025M", "cname": null, "owner": "Claude R. Roberts", "expiry": "2027-07-10", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "039027M", "cname": null, "owner": "Golden Promise Mines Inc.", "expiry": "2029-03-05", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "039031M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "2030-04-02", "staked": "2025-03-03" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "039032M", "cname": null, "owner": "85893 Newfoundland & Labrador Inc.", "expiry": "2030-04-03", "staked": "2025-03-04" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 49.0 ] } },
@@ -4696,6 +4695,7 @@
 { "type": "Feature", "properties": { "claim": "041376M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -64.25, 54.5 ] } },
 { "type": "Feature", "properties": { "claim": "041377M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -64.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "041378M", "cname": null, "owner": "Carey Galeschuk", "expiry": "", "staked": "2026-09-22" }, "geometry": { "type": "Point", "coordinates": [ -59.0, 48.0 ] } },
-{ "type": "Feature", "properties": { "claim": "041379M", "cname": null, "owner": "Carey Galeschuk", "expiry": "", "staked": "2026-09-22" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } }
+{ "type": "Feature", "properties": { "claim": "041379M", "cname": null, "owner": "Carey Galeschuk", "expiry": "", "staked": "2026-09-22" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041380M", "cname": null, "owner": "Joan Tremblett", "expiry": "", "staked": "2026-09-23" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 50.0 ] } }
 ]
 }
