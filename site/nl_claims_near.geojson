@@ -374,7 +374,6 @@
 { "type": "Feature", "properties": { "claim": "025831M", "cname": "Coles Pond, Great Northern Peninsula", "owner": "Golden Goose Discoveries Corp.", "expiry": "2031-08-25", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 51.0 ] } },
 { "type": "Feature", "properties": { "claim": "024793M", "cname": "Batteau", "owner": "Iron Bird Explorations LTD", "expiry": "2027-02-08", "staked": "2017-01-09" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 53.0 ] } },
 { "type": "Feature", "properties": { "claim": "024652M", "cname": "Croque, Great Northern Peninsula", "owner": "Golden Goose Discoveries Corp.", "expiry": "2027-01-13", "staked": "2016-12-14" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 51.0 ] } },
-{ "type": "Feature", "properties": { "claim": "026071M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2028-05-30", "staked": "2018-04-30" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "024535M", "cname": "Red Cliff Pond, Baie Verte Peninsula", "owner": "Tilt Cove Ltd.", "expiry": "2026-12-07", "staked": "2016-11-06" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } },
 { "type": "Feature", "properties": { "claim": "020752M", "cname": "Marystown, Burin Peninsula", "owner": "Seabourne Resources Inc.", "expiry": "2028-01-10", "staked": "2012-12-11" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 47.0 ] } },
 { "type": "Feature", "properties": { "claim": "023547M", "cname": "West Arm Brook, Central NL", "owner": "Great Atlantic Resources Corp.", "expiry": "2030-12-17", "staked": "2015-11-17" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 49.0 ] } },
@@ -965,8 +964,6 @@
 { "type": "Feature", "properties": { "claim": "033672M", "cname": null, "owner": "2653438 Ont Inc.", "expiry": "2026-12-05", "staked": "2021-11-05" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 51.0 ] } },
 { "type": "Feature", "properties": { "claim": "033675M", "cname": null, "owner": "Evan Marks", "expiry": "2026-12-08", "staked": "2021-11-08" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "033676M", "cname": null, "owner": "Prospector Metals Corp.", "expiry": "2030-09-05", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 50.0 ] } },
-{ "type": "Feature", "properties": { "claim": "033696M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2026-12-12", "staked": "2021-11-12" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
-{ "type": "Feature", "properties": { "claim": "033697M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2026-12-12", "staked": "2021-11-12" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "033703M", "cname": null, "owner": "85893 Newfoundland & Labrador Inc.", "expiry": "2026-12-12", "staked": "2021-11-12" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 53.0 ] } },
 { "type": "Feature", "properties": { "claim": "033704M", "cname": null, "owner": "85893 Newfoundland & Labrador Inc.", "expiry": "2026-12-12", "staked": "2021-11-12" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 53.0 ] } },
 { "type": "Feature", "properties": { "claim": "033713M", "cname": null, "owner": "Michael Collins", "expiry": "2026-12-15", "staked": "2021-11-15" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 49.0 ] } },
@@ -1444,8 +1441,6 @@
 { "type": "Feature", "properties": { "claim": "036125M", "cname": null, "owner": "Abaxx Technologies Inc.", "expiry": "2027-05-11", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -67.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "036132M", "cname": null, "owner": "Stephen Rogers", "expiry": "2028-06-15", "staked": "2023-05-16" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "036135M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2028-05-30", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
-{ "type": "Feature", "properties": { "claim": "036136M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2027-12-13", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
-{ "type": "Feature", "properties": { "claim": "036141M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2029-05-23", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "036147M", "cname": null, "owner": "16772919 Canada Inc.", "expiry": "2028-06-18", "staked": "2023-05-19" }, "geometry": { "type": "Point", "coordinates": [ -67.0, 53.0 ] } },
 { "type": "Feature", "properties": { "claim": "036153M", "cname": null, "owner": "Canterra Minerals Corporation", "expiry": "2028-06-22", "staked": "2023-05-23" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "036154M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "2028-06-22", "staked": "2023-05-23" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } },
@@ -1623,7 +1618,6 @@
 { "type": "Feature", "properties": { "claim": "036762M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "2028-11-17", "staked": "2023-10-18" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "036767M", "cname": null, "owner": "Shawn Ryan", "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "036769M", "cname": null, "owner": "Herb Simms", "expiry": "2028-11-19", "staked": "2023-10-20" }, "geometry": { "type": "Point", "coordinates": [ -53.0, 47.0 ] } },
-{ "type": "Feature", "properties": { "claim": "036772M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2027-12-13", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "036776M", "cname": null, "owner": "1446199 B.C. LTD.", "expiry": "2028-11-22", "staked": "2023-10-23" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "036777M", "cname": null, "owner": "First Atlantic Nickel Corp.", "expiry": "2028-11-22", "staked": "2023-10-23" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "036778M", "cname": null, "owner": "Darrin Hicks", "expiry": "2028-11-22", "staked": "2023-10-23" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 48.0 ] } },
@@ -4696,6 +4690,12 @@
 { "type": "Feature", "properties": { "claim": "041377M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -64.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "041378M", "cname": null, "owner": "Carey Galeschuk", "expiry": "", "staked": "2026-09-22" }, "geometry": { "type": "Point", "coordinates": [ -59.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "041379M", "cname": null, "owner": "Carey Galeschuk", "expiry": "", "staked": "2026-09-22" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } },
-{ "type": "Feature", "properties": { "claim": "041380M", "cname": null, "owner": "Joan Tremblett", "expiry": "", "staked": "2026-09-23" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 50.0 ] } }
+{ "type": "Feature", "properties": { "claim": "041380M", "cname": null, "owner": "Joan Tremblett", "expiry": "", "staked": "2026-09-23" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 50.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041381M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-09-24" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041382M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2029-05-23", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041384M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2028-05-30", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041385M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2027-12-13", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041386M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2026-12-12", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041387M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2026-12-12", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } }
 ]
 }
