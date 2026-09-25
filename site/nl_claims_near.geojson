@@ -4696,6 +4696,12 @@
 { "type": "Feature", "properties": { "claim": "041384M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2028-05-30", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "041385M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2027-12-13", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "041386M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2026-12-12", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
-{ "type": "Feature", "properties": { "claim": "041387M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2026-12-12", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } }
+{ "type": "Feature", "properties": { "claim": "041387M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2026-12-12", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041388M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-09-24" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041389M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-09-24" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041390M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-09-24" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041391M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-09-24" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041392M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-09-24" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041394M", "cname": null, "owner": "Donald McGrath", "expiry": "", "staked": "2026-09-25" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 49.0 ] } }
 ]
 }
