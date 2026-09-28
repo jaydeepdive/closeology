@@ -146,9 +146,15 @@ def build_top(regions, n_edges=6, n_drop=8, n_leads=8, site=""):
                 "text": f"#{l.get('rank')} {l.get('name')} · {l.get('metal')} · score {int(_num(l.get('score')))}",
                 "url": l.get("url") or "", "map_url": _abs(l.get("map_url"))}
 
+    # The daily email is EVENT-DRIVEN: fresh drilling on open ground (edges) +
+    # ground just opened (drops) + drill news. The static top-scored deposit list
+    # is intentionally NOT sent — its ranking barely moves, so it repeated the same
+    # handful of properties every day. The full ranked leads live on the radar page
+    # (built from email["regions"]); the email only carries the count + a link there.
     return {
         "counts": {"edges": len(edges), "dropped": len(drops), "leads": len(leads)},
         "edges": [edge_line(j, e) for j, e in edges[:n_edges]],
         "dropped": [drop_line(j, d) for j, d in drops[:n_drop]],
-        "leads": [lead_line(j, l) for j, l in leads[:n_leads]],
+        "leads": [],                 # suppressed on purpose — see note above
+        "leads_url": (site + "radar.html") if site else "radar.html",
     }
