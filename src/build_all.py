@@ -241,11 +241,35 @@ def main():
             if ll[0] is not None and ll[1] is not None:
                 e["map_url"] = digest.map_url(slug, ll[0], ll[1], zoom=12,
                                               label=e.get("company") or e.get("property"), kind="edge")
+        # Surface FRESH drilling even when it didn't land on open ground: a recent,
+        # dated release is worth showing as current activity (with its assay) rather
+        # than dropping it so the email pads out with 2-3 yr old government holes.
+        # Only the open-ground plays carry "ha open"; these carry the date + assay.
+        edges_all = list(dp.get("edges", []))
+        try:
+            _nip = os.path.join(d, "news_items.json")
+            if os.path.exists(_nip):
+                _seen = {(str(e.get("company", "")).lower(), str(e.get("date") or "")[:10])
+                         for e in edges_all}
+                for _it in _json.load(open(_nip)).get("items", []):
+                    _k = (str(_it.get("company", "")).lower(), str(_it.get("date") or "")[:10])
+                    if _k in _seen:
+                        continue
+                    _seen.add(_k)
+                    edges_all.append({
+                        "company": _it.get("company"), "property": _it.get("project"),
+                        "source": "News release", "date": _it.get("date"),
+                        "assay": _it.get("highlight"), "open_ha": 0, "hot": True,
+                        "map_url": digest.map_url(slug, _it.get("lat"), _it.get("lon"),
+                                                  zoom=12, label=_it.get("company"), kind="edge"),
+                    })
+        except Exception as _e:
+            print("[build_all] fresh-news merge skipped for", slug, ":", str(_e)[:100])
         email["regions"].append({"slug": slug, "name": name.get(slug, slug.upper()),
                                  "labels": dp["labels"], "counts": dp["counts"],
                                  "map": f"https://jaydeepdive.github.io/closeology/{slug}.html",
                                  "radar": "https://jaydeepdive.github.io/closeology/radar.html",
-                                 "edges": dp.get("edges", [])[:20],
+                                 "edges": edges_all[:40],
                                  "edge_counts": dp.get("edge_counts", {"n": 0, "hot": 0, "open_ha": 0}),
                                  "leads": flagged[:20],
                                  "dropped_properties": dropped_props[:25],

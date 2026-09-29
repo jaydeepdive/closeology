@@ -102,7 +102,7 @@ def _abbr(name):
     return m.get(name, (name or "")[:2].upper())
 
 
-def build_top(regions, n_edges=6, n_drop=8, n_leads=8, site=""):
+def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
     """Collapse every region's signals into one short, ranked set for the email."""
     edges, drops, leads = [], [], []
     for r in regions:
