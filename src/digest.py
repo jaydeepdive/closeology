@@ -113,7 +113,27 @@ def build_top(regions, n_edges=6, n_drop=8, n_leads=8, site=""):
             drops.append((juris, d))
         for l in r.get("leads", []):
             leads.append((juris, l))
-    edges.sort(key=lambda x: (0 if x[1].get("hot") else 1, -_num(x[1].get("open_ha"))))
+    def _edge_rec(e):
+        """Sortable recency int (YYYYMMDD). News releases carry a date; government
+        drill-DB plays carry only a year. Newer = larger."""
+        d = e.get("date")
+        if d:
+            try:
+                y, m, dd = str(d)[:10].split("-")
+                return int(y) * 10000 + int(m) * 100 + int(dd)
+            except Exception:
+                pass
+        y = e.get("year")
+        try:
+            if y:
+                return int(y) * 10000
+        except Exception:
+            pass
+        return 0
+    # Fresh drilling leads: hot first, then the most RECENT play, then the most
+    # open ground. This stops the same stale government holes (ranked only by
+    # hectares) from heading the email day after day.
+    edges.sort(key=lambda x: (0 if x[1].get("hot") else 1, -_edge_rec(x[1]), -_num(x[1].get("open_ha"))))
     drops.sort(key=lambda x: (-_num(x[1].get("area_ha")), _num(x[1].get("near_km"), 1e9)))
     leads.sort(key=lambda x: -_num(x[1].get("score")))
 
@@ -125,8 +145,19 @@ def build_top(regions, n_edges=6, n_drop=8, n_leads=8, site=""):
         prop = e.get("property")
         oh = e.get("open_ha")
         bit = f" · {round(_num(oh))} ha open{(' to the '+e.get('open_dir')) if e.get('open_dir') else ''}" if oh else ""
+        # when the play happened — a dated news release, else the government drill year
+        when = ""
+        d = e.get("date")
+        if d:
+            when = f" · {str(d)[:10]}"
+        elif e.get("year"):
+            when = f" · {e.get('year')} drill DB"
+        assay = e.get("assay")
+        atxt = f" · {assay}" if assay else ""
         return {"juris": j, "hot": bool(e.get("hot")),
-                "text": f"{comp}{(' — '+prop) if prop else ''}{bit}",
+                "date": (str(e.get("date"))[:10] if e.get("date") else ""),
+                "year": e.get("year", ""), "source": e.get("source", ""),
+                "text": f"{comp}{(' — '+prop) if prop else ''}{bit}{when}{atxt}",
                 "map_url": _abs(e.get("map_url"))}
 
     def drop_line(j, d):

@@ -201,6 +201,17 @@ def main():
         {"slug": p["slug"], "metric_crs": p["metric_crs"]} for p in PROVINCES] + [
         {"slug": "qc", "metric_crs": "EPSG:3978"}, {"slug": "nu", "metric_crs": "EPSG:3978"}]}
     name = {r["slug"]: r["name"] for r in REGIONS_SITE}
+    # Route the drill bank's FRESH, geolocated releases into each region's
+    # news_items.json so the daily email's edge plays reflect current drilling
+    # (the bank is filled by drillbank.yml/miningnewsterminal.yml). Without this
+    # the email falls back to the 1-3 yr lagging government drill layers and
+    # repeats the same plays for days. Non-fatal: a failure just leaves the
+    # government layers as the fallback.
+    try:
+        import drillbank_news
+        drillbank_news.build(live)
+    except Exception as e:
+        print("[build_all] drillbank->news_items bridge skipped:", str(e)[:160])
     email = {"generated": TODAY, "site": "https://jaydeepdive.github.io/closeology/", "regions": []}
     for slug in live:
         d = f"data/{slug}"
