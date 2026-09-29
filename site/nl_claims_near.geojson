@@ -617,7 +617,7 @@
 { "type": "Feature", "properties": { "claim": "027493M", "cname": null, "owner": "Canterra Minerals Corporation", "expiry": "2029-11-29", "staked": "2019-10-30" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "022691M", "cname": "Gander Lake Area, Central NL", "owner": "New Found Gold Corp.", "expiry": "2029-12-18", "staked": "2014-11-18" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "010215M", "cname": "St. Patricks, Central NL", "owner": "FireFly Metals Canada Limited (50%)/100709 Newfoundland & Labrador Inc. (50%)", "expiry": "2027-01-11", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } },
-{ "type": "Feature", "properties": { "claim": "030678M", "cname": null, "owner": "Mineral Lands Admin", "expiry": "2026-08-17", "staked": "2020-03-11" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 47.0 ] } },
+{ "type": "Feature", "properties": { "claim": "030678M", "cname": null, "owner": "Mineral Lands Admin", "expiry": "2026-10-21", "staked": "2020-03-11" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 47.0 ] } },
 { "type": "Feature", "properties": { "claim": "030697M", "cname": null, "owner": "Canterra Minerals Corporation", "expiry": "2027-01-29", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "030702M", "cname": null, "owner": "Mineral Lands Admin", "expiry": "2026-08-05", "staked": "2020-03-20" }, "geometry": { "type": "Point", "coordinates": [ -53.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "030704M", "cname": null, "owner": "Canterra Minerals Corporation", "expiry": "2031-06-27", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 48.0 ] } },
@@ -3015,7 +3015,6 @@
 { "type": "Feature", "properties": { "claim": "039666M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "2030-09-27", "staked": "2025-08-28" }, "geometry": { "type": "Point", "coordinates": [ -53.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "039667M", "cname": null, "owner": "Pirate Gold Corp.", "expiry": "2030-09-27", "staked": "2025-08-28" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "039668M", "cname": null, "owner": "Ventra Metals Corp.", "expiry": "2030-09-29", "staked": "2025-08-30" }, "geometry": { "type": "Point", "coordinates": [ -62.0, 54.0 ] } },
-{ "type": "Feature", "properties": { "claim": "039669M", "cname": null, "owner": "Jonathan Ballard", "expiry": "2030-09-30", "staked": "2025-08-31" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "039670M", "cname": null, "owner": "Jeffrey Neville", "expiry": "2030-10-01", "staked": "2025-09-01" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 50.0 ] } },
 { "type": "Feature", "properties": { "claim": "039671M", "cname": null, "owner": "Jeffrey Neville", "expiry": "2030-10-01", "staked": "2025-09-01" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 50.0 ] } },
 { "type": "Feature", "properties": { "claim": "039672M", "cname": null, "owner": "Fred Keats", "expiry": "2030-10-02", "staked": "2025-09-02" }, "geometry": { "type": "Point", "coordinates": [ -55.0, 49.0 ] } },
@@ -4706,6 +4705,9 @@
 { "type": "Feature", "properties": { "claim": "041397M", "cname": null, "owner": "Jeffrey Neville", "expiry": "", "staked": "2026-09-25" }, "geometry": { "type": "Point", "coordinates": [ -61.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "041398M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-09-28" }, "geometry": { "type": "Point", "coordinates": [ -57.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "041399M", "cname": null, "owner": "Atlas Salt Inc.", "expiry": "", "staked": "2026-09-28" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 52.0 ] } },
-{ "type": "Feature", "properties": { "claim": "041400M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 48.0 ] } }
+{ "type": "Feature", "properties": { "claim": "041400M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041401M", "cname": null, "owner": "Herb Simms", "expiry": "", "staked": "2026-09-28" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041402M", "cname": null, "owner": "Afzaal Pirzada", "expiry": "", "staked": "2026-09-28" }, "geometry": { "type": "Point", "coordinates": [ -59.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041403M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-09-29" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 48.0 ] } }
 ]
 }
