@@ -257,16 +257,53 @@ def _candidate_points():
     return cand
 
 
+def _drill_points_qc():
+    """Quebec drill-result collar locations from the drill bank, so the claim
+    fabric is fetched where companies are actually DRILLING, not only near
+    catalogued SIGEOM occurrences. Without this, a fresh drill play away from a
+    known occurrence (e.g. Cupani's Blue Lake) pulls zero claims even though the
+    GESTIM registry holds them."""
+    import sqlite3
+    db = os.path.join("data", "keep", "drillbank.sqlite")
+    if not os.path.exists(db):
+        return []
+    try:
+        from newswire import geolocate as _G
+    except Exception:
+        _G = None
+    try:
+        con = sqlite3.connect(db)
+        rows = con.execute(
+            "SELECT lat, lon FROM holes WHERE lat IS NOT NULL AND lon IS NOT NULL "
+            "AND lat BETWEEN 44 AND 63 AND lon BETWEEN -80 AND -57").fetchall()
+        con.close()
+    except Exception:
+        return []
+    out = []
+    for lat, lon in rows:
+        if _G is None or _G.region_from_latlon(lat, lon) == "Quebec":
+            out.append((lon, lat))
+    return out
+
+
 def fetch_claims():
     """Tile the WFS 'Actifs' claim layer only around candidate occurrences."""
     cand = _candidate_points()
-    T, PAD = 0.25, 0.05                       # ~20 km tiles, ~5 km pad at edges
+    T = 0.25                                  # ~20 km WFS tiles
     tiles = set()
-    for pt in cand.geometry:
-        for bx in range(int((pt.x - PAD) // T), int((pt.x + PAD) // T) + 1):
-            for by in range(int((pt.y - PAD) // T), int((pt.y + PAD) // T) + 1):
+
+    def _add(x, y, pad):
+        for bx in range(int((x - pad) // T), int((x + pad) // T) + 1):
+            for by in range(int((y - pad) // T), int((y + pad) // T) + 1):
                 tiles.add((bx, by))
-    print(f"[qc] fetching claims over {len(tiles)} tiles near {len(cand)} candidates…")
+
+    for pt in cand.geometry:                  # near catalogued occurrences
+        _add(pt.x, pt.y, 0.05)
+    drill = _drill_points_qc()                # AND where companies are drilling
+    for (lon, lat) in drill:                  # wider pad so the whole block + ~6 km is covered
+        _add(lon, lat, 0.12)
+    print(f"[qc] fetching claims over {len(tiles)} tiles "
+          f"({len(cand)} occurrences + {len(drill)} drill collars)…")
     seen, rows, geoms = set(), [], []
     for k, (bx, by) in enumerate(sorted(tiles)):
         bbox = (bx * T, by * T, (bx + 1) * T, (by + 1) * T)
