@@ -247,12 +247,20 @@ def repair(con=None):
             continue
         # sharpen the region hint from the release title when the stored country
         # is generic — a title like "...Langis Project in Ontario" pins the zones.
-        hint = country
-        if not country or country in ("Canada", None):
-            hint = _country(title or "") or country
+        # Prefer the jurisdiction named in the title; fall back to the stored
+        # country. A prior bad relabel can have stored a wrong province (e.g. a
+        # US project mislabelled 'British Columbia'), so the title wins when it
+        # names a place.
+        hint = _country(title or "") or country
         before = [(h.get("lat"), h.get("lon")) for h in holes]
         for h in holes:
             h["lat"] = h["lon"] = None          # force re-geolocation
+            # Restore the RELEASE's declared zone, overriding any zone a prior
+            # bad snap wrote onto the hole (that corrupted zone would otherwise be
+            # trusted and keep e.g. an Alaska collar frozen in BC). If the release
+            # declared no zone, keep the hole's own.
+            if rz:
+                h["utm_zone"] = rz
         geolocate.locate_holes(holes, rz, rh, rd, region=hint)
         for (blat, blon), h in zip(before, holes):
             if (h.get("lat"), h.get("lon")) != (blat, blon):
