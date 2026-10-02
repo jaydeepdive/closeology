@@ -4701,6 +4701,7 @@
 { "type": "Feature", "properties": { "claim": "041400M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "041401M", "cname": null, "owner": "Herb Simms", "expiry": "", "staked": "2026-09-28" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "041402M", "cname": null, "owner": "Afzaal Pirzada", "expiry": "", "staked": "2026-09-28" }, "geometry": { "type": "Point", "coordinates": [ -59.0, 48.0 ] } },
-{ "type": "Feature", "properties": { "claim": "041403M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-09-29" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 48.0 ] } }
+{ "type": "Feature", "properties": { "claim": "041403M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-09-29" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 48.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041404M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } }
 ]
 }
