@@ -207,6 +207,14 @@ def main():
     # the email falls back to the 1-3 yr lagging government drill layers and
     # repeats the same plays for days. Non-fatal: a failure just leaves the
     # government layers as the fallback.
+    # Re-geolocate banked collars FIRST (repair is idempotent) so US projects that
+    # were wrongly snapped into a Canadian province land back in the US and drop
+    # out of the Canadian email/radar, and so the bridge below sees correct coords.
+    try:
+        from newswire import run as _nw_run
+        _nw_run.repair()
+    except Exception as e:
+        print("[build_all] pre-bridge drill repair skipped:", str(e)[:160])
     try:
         import drillbank_news
         drillbank_news.build(live)

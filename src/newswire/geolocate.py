@@ -113,6 +113,15 @@ def region_from_latlon(lat, lon):
                 return name
     except Exception:
         pass
+    # not inside a Canadian province polygon: check the known US mining-state
+    # bboxes (Alaska/Nevada/Arizona/NC) so a US collar is labelled as such and
+    # kept OUT of the Canadian radar, instead of being swept up as "Canada".
+    for _usname in ("Alaska", "Nevada", "Arizona", "North Carolina"):
+        _info = _REGION.get(_usname)
+        if _info:
+            la0, la1, lo0, lo1 = _info[1]
+            if la0 <= lat <= la1 and lo0 <= lon <= lo1:
+                return _usname
     if 41 <= lat <= 84 and -141 <= lon <= -52:
         return "Canada"
     if 24 <= lat <= 50 and -125 <= lon <= -66:
@@ -136,6 +145,17 @@ def _prov_names():
 
 def _in_province(lat, lon):
     return lat is not None and region_from_latlon(lat, lon) in _prov_names()
+
+
+def _in_known_region(lat, lon):
+    """True if the point is inside a real mining jurisdiction we recognise — a
+    Canadian province OR a known US mining state (Alaska/Nevada/Arizona/NC). Used
+    to decide whether a DECLARED-zone collar is already well placed (trust it) or
+    landed nowhere plausible (then a province snap is worth trying)."""
+    if lat is None:
+        return False
+    r = region_from_latlon(lat, lon)
+    return r in _prov_names() or r in ("Alaska", "Nevada", "Arizona", "North Carolina")
 
 
 def _canada_hint(region):
@@ -191,16 +211,23 @@ def locate_holes(holes, zone, hemi, datum, region=None):
         if not (1e5 <= e <= 9e5 and 0 <= nth <= 1e7):
             continue
         z = h.get("utm_zone") or zone
+        declared = bool(z)                      # was a UTM zone actually stated?
         lat = lon = None
         if z:
             lat, lon = utm_to_ll(e, nth, z, h.get("utm_hemi") or hemi, h.get("datum") or datum)
         if lat is None and region:
             lat, lon, z = _infer(e, nth, region, datum, hemi or "N")
-        # correct a wrong-zone guess that fell outside every Canadian province
+            declared = False                    # the zone was inferred, not stated
+        # Snap into a Canadian province only when we don't trust the placement:
+        # the zone was GUESSED, or a declared zone landed nowhere plausible (e.g.
+        # the ocean). A declared zone that lands in a real jurisdiction — including
+        # a US one like Alaska or Nevada — is trusted, so a legitimate US project
+        # is never dragged into Canada (and then frozen there by the relabel loop).
         if lat is not None and not _in_province(lat, lon):
-            snap = _snap_canada(e, nth, h.get("utm_hemi") or hemi, h.get("datum") or datum, region)
-            if snap:
-                lat, lon, z = snap
+            if (not declared) or (not _in_known_region(lat, lon)):
+                snap = _snap_canada(e, nth, h.get("utm_hemi") or hemi, h.get("datum") or datum, region)
+                if snap:
+                    lat, lon, z = snap
         if lat is not None:
             h["lat"], h["lon"], h["utm_zone"] = lat, lon, z
             h["utm_hemi"] = h.get("utm_hemi") or hemi or "N"
