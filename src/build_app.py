@@ -196,7 +196,7 @@ let groundLayer=null, claimLayer=null, selMarker=null, selId=null, claimPts=null
 // at any zoom (>=8), loaded per region on demand and capped for rendering speed.
 const REGION_BBOX={regionbbox_json};
 const CLAIM_REGIONS={claim_regions_json};
-let claimsOn=false, claimAllLayer=null, claimCache={{}}, claimLoading={{}};
+let claimsOn=true, claimAllLayer=null, claimCache={{}}, claimLoading={{}};   // staked ground visible by default
 async function _loadClaims(slug){{
   if(claimCache[slug]) return claimCache[slug];
   if(claimLoading[slug]) return null;
@@ -243,7 +243,7 @@ async function drawAllClaims(){{
       if(!b.contains([q2.lat,q2.lng])) continue;
       const pr=q2.pr, own=(pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
       const dLa=0.0024, dLo=0.0024/Math.max(0.2,Math.cos(q2.lat*Math.PI/180));
-      const mk=L.rectangle([[q2.lat-dLa/2,q2.lng-dLo/2],[q2.lat+dLa/2,q2.lng+dLo/2]],{{color:'#8a6d3b',weight:.5,opacity:.8,fillColor:'#e0b83a',fillOpacity:.35}});
+      const mk=L.rectangle([[q2.lat-dLa/2,q2.lng-dLo/2],[q2.lat+dLa/2,q2.lng+dLo/2]],{{color:'#6b4e0a',weight:.9,opacity:.95,fillColor:'#f2b50a',fillOpacity:.55}});
       const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{pr.cname?esc(pr.cname)+' ':''}}${{pr.claim?'#'+esc(pr.claim):''}}${{pr.staked?'<br>staked '+esc(pr.staked):''}}${{pr.expiry?'<br>good to '+esc(pr.expiry):''}}`;
       if(tip.trim()) mk.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
       grp.addLayer(mk); if(++shown>=CAP) break;
@@ -256,7 +256,7 @@ async function drawAllClaims(){{
 const claimCtl=L.control({{position:'topright'}});
 claimCtl.onAdd=function(){{
   const d=L.DomUtil.create('div','drillctl');
-  d.innerHTML='<button id=claimbtn>⛏ Staked claims</button>';
+  d.innerHTML='<button id=claimbtn class="'+(claimsOn?'on':'')+'">⛏ Staked claims</button>';
   L.DomEvent.disableClickPropagation(d);
   d.querySelector('button').onclick=function(){{
     claimsOn=!claimsOn;
@@ -334,7 +334,7 @@ async function showGround(p){{
           if(!b.contains([q.lat,q.lng])) continue;
           const own=(q.pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
           const dLa=0.0024, dLo=0.0024/Math.max(0.2,Math.cos(q.lat*Math.PI/180));
-        const mk=L.rectangle([[q.lat-dLa/2,q.lng-dLo/2],[q.lat+dLa/2,q.lng+dLo/2]],{{color:'#8a6d3b',weight:.5,opacity:.85,fillColor:'#e0b83a',fillOpacity:.4}});
+        const mk=L.rectangle([[q.lat-dLa/2,q.lng-dLo/2],[q.lat+dLa/2,q.lng+dLo/2]],{{color:'#6b4e0a',weight:.9,opacity:.95,fillColor:'#f2b50a',fillOpacity:.55}});
           const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{q.pr.cname?esc(q.pr.cname)+' ':''}}${{q.pr.claim?'#'+esc(q.pr.claim):''}}${{q.pr.expiry?'<br><span style="color:#666">good to '+esc(q.pr.expiry)+'</span>':''}}`;
           if(tip.trim()) mk.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
           grp.addLayer(mk); if(++shown>=CAP) break;
