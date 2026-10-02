@@ -611,6 +611,7 @@ drillCtl.addTo(map);
     return;
   }}
   const z=parseInt(q.get('z'))||12, kind=q.get('kind')||'', label=q.get('label')||'';
+  try{{ map.invalidateSize(); }}catch(e){{}}   // size the map before any fitBounds
   if(kind==='drill'){{ map.setView([lat,lon], z); showDrill(true).then(async ()=>{{
       let brid=null,bd=1e9;   // the program (release) whose holes are nearest
       Object.keys(drillByRid).forEach(rid=>drillByRid[rid].forEach(ll=>{{
@@ -622,6 +623,9 @@ drillCtl.addTo(map);
       if(brid){{ await selectDrill(brid); }}
       else {{ L.circleMarker([lat,lon],{{radius:9,color:'#fff',weight:2,fillColor:'#ff7a00',fillOpacity:.95}}).addTo(map)
               .bindPopup(`<b>${{(label||'Drill program').replace(/[<>]/g,'')}}</b><br><span style="color:#555">Collar coordinates weren\'t published in this release, so there are no hole pins — open the release for the drill section.</span>`).openPopup(); }}
+      // fitBounds during async load can land at world zoom when the map container
+      // isn't sized yet — recompute size and re-assert a sane view on the play.
+      setTimeout(()=>{{ try{{ map.invalidateSize(); if(map.getZoom()<8) map.setView([lat,lon], Math.max(z,12)); }}catch(e){{}} }}, 300);
     }}); return; }}
   // nearest lead to the target (match a radar item to its lead card)
   let best=null, bd=1e9;
