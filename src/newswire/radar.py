@@ -164,18 +164,24 @@ def _load_tenure(slug):
         return frames[0]
 
 
-def _drill_open_ground(items, halo_m=1000):
-    """For each drill program, the OPEN stakeable ground around the cluster of
-    holes: tile a halo over the holes and keep only cells that NO active claim
-    touches. Emitted ONLY where the claim fabric actually covers the drilled
-    ground. A company cannot drill ground it does not hold, so if the cells the
-    holes sit in read as unclaimed, our fabric is simply missing that tenure --
-    in that case we suppress the layer for this program rather than paint held,
-    actively-drilled ground as free to stake. Uses the holes' own jurisdiction's
-    live claim fabric."""
+def _drill_open_ground(items, halo_m=6000, cap_cells=5000):
+    """OPEN, stakeable ground within ~halo_m of each drill program: tile the halo
+    over the hole cluster, drop every cell that touches active tenure (claims OR
+    leases/patents), and dissolve what's left into the open-ground block(s).
+
+    Matches the ~6 km radius of the staked-claims layer so the map shows, side by
+    side, what's STAKED (gold) and what's OPEN (magenta) across the whole view —
+    not just the 1 km right on the holes (which, for a program sitting inside its
+    own block, is all staked and therefore looked empty).
+
+    Coverage gate: emit only where the jurisdiction's claim fabric actually reaches
+    this ground — there must be SOME staked ground in the halo. If a 6 km halo has
+    zero tenure, our data doesn't cover it and every 'open' cell would be a false
+    positive, so we suppress the layer for that program."""
     import math
     import geopandas as gpd
     from shapely.geometry import box
+    from shapely.ops import unary_union
     from shapely.geometry import mapping as _map
     from newswire import geolocate
     from config import GRID_M
@@ -196,16 +202,20 @@ def _drill_open_ground(items, halo_m=1000):
         if claims is None or not len(claims):
             continue
         ref = sum(h[0] for h in holes) / len(holes)
+        reflon = sum(h[1] for h in holes) / len(holes)
         dlat = GRID_M / 111320.0
         dlon = GRID_M / (111320.0 * max(0.2, math.cos(math.radians(ref))))
         steps = int(halo_m // GRID_M) + 1
-        cells, hole_cells = set(), set()
+        # candidate cells = union of a halo around every hole
+        cells = set()
         for (la, lo) in holes:
             ci, cj = int(lo // dlon), int(la // dlat)
-            hole_cells.add((ci, cj))
             for di in range(-steps, steps + 1):
                 for dj in range(-steps, steps + 1):
                     cells.add((ci + di, cj + dj))
+        if len(cells) > cap_cells:          # bound compute/size: keep cells nearest the cluster
+            cc_i, cc_j = int(reflon // dlon), int(ref // dlat)
+            cells = set(sorted(cells, key=lambda c: (c[0] - cc_i) ** 2 + (c[1] - cc_j) ** 2)[:cap_cells])
         cells = list(cells)
         polys = [box(i * dlon, j * dlat, (i + 1) * dlon, (j + 1) * dlat) for (i, j) in cells]
         try:
@@ -214,18 +224,29 @@ def _drill_open_ground(items, halo_m=1000):
             hit = gpd.sjoin(cg, cl[[cl.geometry.name]], predicate="intersects", how="left")
             taken = set(hit[hit.index_right.notna()].index.tolist())
         except Exception:
-            # Cannot verify coverage -> do not guess; draw nothing for this program.
+            continue                        # cannot verify coverage -> do not guess
+        # Coverage gate: the fabric must reach this halo (some cell is staked),
+        # otherwise 'open' here just means 'not in our data'.
+        if not taken:
             continue
-        # Coverage gate: the cells the holes actually sit in MUST be claimed (the
-        # driller holds them). If none are, the fabric does not reach this ground
-        # and every "open" cell here would be a false positive -> suppress.
-        hole_idx = [k for k, (i, j) in enumerate(cells) if (i, j) in hole_cells]
-        if not any(k in taken for k in hole_idx):
+        open_polys = [polys[k] for k in range(len(polys)) if k not in taken]
+        if not open_polys:
             continue
-        for k, pg in enumerate(polys):
-            if k not in taken:          # genuinely open: no active claim intersects
-                feats.append({"type": "Feature", "properties": {"rid": it["id"]},
-                              "geometry": _map(pg)})
+        try:
+            blob = unary_union(open_polys)
+        except Exception:
+            blob = None
+        if blob is None or blob.is_empty:
+            continue
+        geoms = list(blob.geoms) if blob.geom_type == "MultiPolygon" else [blob]
+        area_ha = round(sum(g.area for g in geoms) * (111320.0 ** 2) *
+                        math.cos(math.radians(ref)) / 1e4)
+        for g in geoms:
+            if g.is_empty:
+                continue
+            feats.append({"type": "Feature",
+                          "properties": {"rid": it["id"], "kind": "open", "area_ha": area_ha},
+                          "geometry": _map(g)})
     return {"type": "FeatureCollection", "features": feats}
 
 

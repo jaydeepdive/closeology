@@ -239,8 +239,12 @@ def main():
         for e in dp.get("edges", []):
             ll = e.get("lat"), e.get("lon")
             if ll[0] is not None and ll[1] is not None:
+                # a news-release play links to the DRILL view (shows the company's
+                # staked block, who holds the ground within ~6 km, and the open,
+                # stakeable cells); government-DB plays keep the generic edge pin.
+                _kind = "drill" if e.get("source") == "News release" else "edge"
                 e["map_url"] = digest.map_url(slug, ll[0], ll[1], zoom=12,
-                                              label=e.get("company") or e.get("property"), kind="edge")
+                                              label=e.get("company") or e.get("property"), kind=_kind)
         # Surface FRESH drilling even when it didn't land on open ground: a recent,
         # dated release is worth showing as current activity (with its assay) rather
         # than dropping it so the email pads out with 2-3 yr old government holes.
@@ -261,7 +265,7 @@ def main():
                         "source": "News release", "date": _it.get("date"),
                         "assay": _it.get("highlight"), "open_ha": 0, "hot": True,
                         "map_url": digest.map_url(slug, _it.get("lat"), _it.get("lon"),
-                                                  zoom=12, label=_it.get("company"), kind="edge"),
+                                                  zoom=12, label=_it.get("company"), kind="drill"),
                     })
         except Exception as _e:
             print("[build_all] fresh-news merge skipped for", slug, ":", str(_e)[:100])
