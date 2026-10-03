@@ -4702,6 +4702,16 @@
 { "type": "Feature", "properties": { "claim": "041401M", "cname": null, "owner": "Herb Simms", "expiry": "", "staked": "2026-09-28" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
 { "type": "Feature", "properties": { "claim": "041402M", "cname": null, "owner": "Afzaal Pirzada", "expiry": "", "staked": "2026-09-28" }, "geometry": { "type": "Point", "coordinates": [ -59.0, 48.0 ] } },
 { "type": "Feature", "properties": { "claim": "041403M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-09-29" }, "geometry": { "type": "Point", "coordinates": [ -58.0, 48.0 ] } },
-{ "type": "Feature", "properties": { "claim": "041404M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } }
+{ "type": "Feature", "properties": { "claim": "041404M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041405M", "cname": null, "owner": "Clyde McLean", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -61.0, 55.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041406M", "cname": null, "owner": "D3 Exploration Ltd.", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -56.0, 50.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041407M", "cname": null, "owner": "Herb Simms", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -53.0, 47.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041408M", "cname": null, "owner": "Herb Simms", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -53.0, 47.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041409M", "cname": null, "owner": "Kirk Burry", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041410M", "cname": null, "owner": "Joanne Burry", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -54.0, 49.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041411M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -67.0, 54.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041412M", "cname": null, "owner": "Jamil Sader", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -67.0, 54.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041413M", "cname": null, "owner": "Jamil Sader", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -67.0, 55.0 ] } },
+{ "type": "Feature", "properties": { "claim": "041414M", "cname": null, "owner": "Jamil Sader", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -67.0, 55.0 ] } }
 ]
 }

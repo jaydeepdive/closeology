@@ -65,7 +65,6 @@
 { "type": "Feature", "properties": { "claim": "9721050145", "cname": "", "owner": "SUNWEST HEARTLAND TERMINALS LTD.", "expiry": "", "staked": "2021-05-10" }, "geometry": { "type": "Point", "coordinates": [ -113.0, 54.0 ] } },
 { "type": "Feature", "properties": { "claim": "9721050144", "cname": "", "owner": "VALUE CREATION INC.", "expiry": "", "staked": "2021-05-10" }, "geometry": { "type": "Point", "coordinates": [ -113.0, 54.0 ] } },
 { "type": "Feature", "properties": { "claim": "9421060204", "cname": "", "owner": "BURNCO ROCK PRODUCTS LTD.", "expiry": "", "staked": "2021-06-14" }, "geometry": { "type": "Point", "coordinates": [ -115.0, 52.0 ] } },
-{ "type": "Feature", "properties": { "claim": "9318080294", "cname": "", "owner": "MONEY ROCK RESOURCES LTD.", "expiry": "", "staked": "2018-08-30" }, "geometry": { "type": "Point", "coordinates": [ -113.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "9422100251", "cname": "", "owner": "BARAKAT RESOURCES LTD.", "expiry": "", "staked": "2022-10-29" }, "geometry": { "type": "Point", "coordinates": [ -115.0, 52.0 ] } },
 { "type": "Feature", "properties": { "claim": "9422100252", "cname": "", "owner": "BARAKAT RESOURCES LTD.", "expiry": "", "staked": "2022-10-29" }, "geometry": { "type": "Point", "coordinates": [ -115.0, 52.0 ] } },
 { "type": "Feature", "properties": { "claim": "9422100253", "cname": "", "owner": "BARAKAT RESOURCES LTD.", "expiry": "", "staked": "2022-10-29" }, "geometry": { "type": "Point", "coordinates": [ -115.0, 52.0 ] } },
@@ -199,7 +198,6 @@
 { "type": "Feature", "properties": { "claim": "9324040289", "cname": "", "owner": "THIBAULT, PIERRE", "expiry": "", "staked": "2024-04-19" }, "geometry": { "type": "Point", "coordinates": [ -113.0, 53.0 ] } },
 { "type": "Feature", "properties": { "claim": "9409090471", "cname": "", "owner": "ROCKPOINT GAS STORAGE CANADA LTD.", "expiry": "", "staked": "2009-09-23" }, "geometry": { "type": "Point", "coordinates": [ -112.0, 54.0 ] } },
 { "type": "Feature", "properties": { "claim": "9410030823", "cname": "", "owner": "WARWICK GAS STORAGE LTD.", "expiry": "", "staked": "2010-03-17" }, "geometry": { "type": "Point", "coordinates": [ -112.0, 54.0 ] } },
-{ "type": "Feature", "properties": { "claim": "9316100298", "cname": "", "owner": "MONEY ROCK RESOURCES LTD.", "expiry": "", "staked": "2016-10-03" }, "geometry": { "type": "Point", "coordinates": [ -113.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "9825010173", "cname": "", "owner": "CALCIUM INCORPORATED", "expiry": "", "staked": "2025-01-13" }, "geometry": { "type": "Point", "coordinates": [ -113.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "9825010171", "cname": "", "owner": "TIGER CALCIUM SERVICES INC.", "expiry": "", "staked": "2025-01-13" }, "geometry": { "type": "Point", "coordinates": [ -114.0, 55.0 ] } },
 { "type": "Feature", "properties": { "claim": "9825010172", "cname": "", "owner": "TIGER CALCIUM SERVICES INC.", "expiry": "", "staked": "2025-01-13" }, "geometry": { "type": "Point", "coordinates": [ -114.0, 55.0 ] } },
@@ -269,6 +267,7 @@
 { "type": "Feature", "properties": { "claim": "260168401", "cname": "", "owner": "HRYHOR, DONALD WAYNE", "expiry": "", "staked": "2026-09-04" }, "geometry": { "type": "Point", "coordinates": [ -115.0, 52.0 ] } },
 { "type": "Feature", "properties": { "claim": "260168601", "cname": "", "owner": "THIBAULT, PIERRE", "expiry": "", "staked": "2026-09-07" }, "geometry": { "type": "Point", "coordinates": [ -112.0, 53.0 ] } },
 { "type": "Feature", "properties": { "claim": "9306060989", "cname": "", "owner": "MONEY ROCK RESOURCES LTD.", "expiry": "", "staked": "2006-06-06" }, "geometry": { "type": "Point", "coordinates": [ -113.0, 55.0 ] } },
-{ "type": "Feature", "properties": { "claim": "260168501", "cname": "", "owner": "HRYHOR, DONALD WAYNE", "expiry": "", "staked": "2026-09-04" }, "geometry": { "type": "Point", "coordinates": [ -115.0, 52.0 ] } }
+{ "type": "Feature", "properties": { "claim": "260168501", "cname": "", "owner": "HRYHOR, DONALD WAYNE", "expiry": "", "staked": "2026-09-04" }, "geometry": { "type": "Point", "coordinates": [ -115.0, 52.0 ] } },
+{ "type": "Feature", "properties": { "claim": "9316100298", "cname": "", "owner": "MONEY ROCK RESOURCES LTD.", "expiry": "", "staked": "2016-10-03" }, "geometry": { "type": "Point", "coordinates": [ -113.0, 55.0 ] } }
 ]
 }
