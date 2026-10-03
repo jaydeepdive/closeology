@@ -2,6 +2,7 @@
 "type": "FeatureCollection",
 "name": "claims_near",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"xy_coordinate_resolution": 1e-05,
 "features": [
 { "type": "Feature", "properties": { "claim": "05927", "cname": "", "owner": "", "expiry": "2027-04-08", "staked": "2005-04-08" }, "geometry": { "type": "Point", "coordinates": [ -63.0, 45.0 ] } },
 { "type": "Feature", "properties": { "claim": "50931", "cname": "", "owner": "", "expiry": "2027-04-01", "staked": "2016-04-01" }, "geometry": { "type": "Point", "coordinates": [ -61.0, 47.0 ] } },
