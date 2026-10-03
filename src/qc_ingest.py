@@ -286,50 +286,94 @@ def _drill_points_qc():
     return out
 
 
-def fetch_claims():
-    """Tile the WFS 'Actifs' claim layer only around candidate occurrences."""
-    cand = _candidate_points()
-    T = 0.25                                  # ~20 km WFS tiles
-    tiles = set()
-
-    def _add(x, y, pad):
-        for bx in range(int((x - pad) // T), int((x + pad) // T) + 1):
-            for by in range(int((y - pad) // T), int((y + pad) // T) + 1):
-                tiles.add((bx, by))
-
-    for pt in cand.geometry:                  # near catalogued occurrences
-        _add(pt.x, pt.y, 0.05)
-    drill = _drill_points_qc()                # AND where companies are drilling
-    for (lon, lat) in drill:                  # wider pad so the whole block + ~6 km is covered
-        _add(lon, lat, 0.12)
-    print(f"[qc] fetching claims over {len(tiles)} tiles "
-          f"({len(cand)} occurrences + {len(drill)} drill collars)…")
-    seen, rows, geoms = set(), [], []
-    for k, (bx, by) in enumerate(sorted(tiles)):
-        bbox = (bx * T, by * T, (bx + 1) * T, (by + 1) * T)
+def _wfs_shapezip(bbox, count=50000):
+    """Fetch SGM:Actifs for a bbox as a zipped shapefile (compact, and the WFS caps
+    JSON/paging) -> GeoDataFrame in EPSG:4326. Raises on persistent failure."""
+    params = {"service": "wfs", "version": "2.0.0", "request": "GetFeature",
+              "typeNames": "SGM:Actifs", "outputFormat": "SHAPE-ZIP",
+              "srsName": "EPSG:4326", "count": count,
+              "bbox": "%f,%f,%f,%f,EPSG:4326" % bbox}
+    tmp = os.path.join("data", "qc", "_tile.zip")
+    last = None
+    for a in range(4):
         try:
-            feats = _wfs_bbox("SGM:Actifs", bbox)
-        except Exception as e:
-            print(f"[qc] tile {bx},{by} skipped ({str(e)[:40]})")
-            continue
-        for f in feats:
-            p = f.get("properties", {})
-            no = str(p.get("NO_TITRE") or "")
-            if no in seen or not f.get("geometry"):
-                continue
+            r = requests.get(WFS, params=params, headers=UA, timeout=180)
+            r.raise_for_status()
+            if r.content[:2] != b"PK":
+                raise RuntimeError("not a zip: " + r.content[:120].decode("latin1", "ignore"))
+            with open(tmp, "wb") as fh:
+                fh.write(r.content)
+            g = gpd.read_file("zip://" + os.path.abspath(tmp))
             try:
-                gm = shape(f["geometry"])
+                os.remove(tmp)
             except Exception:
-                continue
-            if gm.is_empty:
-                continue
-            seen.add(no)
-            rows.append({"TENURE_NUMBER_ID": no, "OWNER_NAME": str(p.get("TITULAIRE") or ""),
-                         "CLAIM_NAME": "", "ISSUE_DATE": "", "GOOD_TO_DATE": ""})
-            geoms.append(gm)
-    g = gpd.GeoDataFrame(rows, geometry=geoms, crs="EPSG:4326")
-    g.to_parquet("data/qc/claims.parquet")
-    print(f"[qc] claims {len(g)} (over {len(tiles)} tiles near {len(cand)} candidates)")
+                pass
+            if g.crs is None:
+                g = g.set_crs("EPSG:4326")
+            elif str(g.crs).upper() not in ("EPSG:4326",):
+                g = g.to_crs("EPSG:4326")
+            return g
+        except Exception as e:
+            last = e
+            time.sleep(3 * (a + 1))
+    raise last if last else RuntimeError("wfs shapezip failed")
+
+
+# The public WFS caps one response at 50k features and rejects startIndex paging,
+# so we can't page. Instead we tile with an ADAPTIVE QUADTREE: fetch a bbox, and
+# whenever it comes back at the cap, split it into four and recurse. This pulls the
+# ENTIRE active-titles layer (~235k) so Quebec matches every other province.
+_WFS_CAP = 50000
+
+
+def fetch_claims():
+    """Download ALL active Quebec mining titles (GESTIM 'Actifs') via an adaptive
+    bbox quadtree over the SHAPE-ZIP WFS, giving Quebec the same complete claim
+    fabric as the ArcGIS-served provinces (no occurrence/drill gating)."""
+    os.makedirs("data/qc", exist_ok=True)
+    frames, seen = [], set()
+    stats = {"req": 0}
+
+    def _tile(bbox, depth):
+        stats["req"] += 1
+        try:
+            g = _wfs_shapezip(bbox)
+        except Exception as e:
+            print(f"[qc] tile {tuple(round(v,2) for v in bbox)} failed d{depth}: {str(e)[:60]}")
+            return
+        n = len(g)
+        if n >= _WFS_CAP and depth < 7:
+            lo0, la0, lo1, la1 = bbox
+            mlo, mla = (lo0 + lo1) / 2.0, (la0 + la1) / 2.0
+            for q in ((lo0, la0, mlo, mla), (mlo, la0, lo1, mla),
+                      (lo0, mla, mlo, la1), (mlo, mla, lo1, la1)):
+                _tile(q, depth + 1)
+            return
+        if n and "NO_TITRE" in g.columns:
+            g = g[~g["NO_TITRE"].astype(str).isin(seen)]
+            seen.update(g["NO_TITRE"].dropna().astype(str).tolist())
+            if len(g):
+                frames.append(g)
+
+    _tile((-80.0, 44.8, -56.5, 62.8), 0)      # Quebec claim extent
+    print(f"[qc] claims quadtree: {stats['req']} WFS tiles, {len(seen)} titles")
+
+    cols = {"TENURE_NUMBER_ID": [], "OWNER_NAME": [], "CLAIM_NAME": [],
+            "ISSUE_DATE": [], "GOOD_TO_DATE": []}
+    if not frames:
+        print("[qc] WARNING: no claims fetched")
+        gpd.GeoDataFrame(cols, geometry=[], crs="EPSG:4326").to_parquet("data/qc/claims.parquet")
+        return
+    allg = gpd.GeoDataFrame(pd.concat(frames, ignore_index=True), crs="EPSG:4326")
+    allg = allg[allg.geometry.notna() & ~allg.geometry.is_empty]
+    out = gpd.GeoDataFrame({
+        "TENURE_NUMBER_ID": allg.get("NO_TITRE", pd.Series([""] * len(allg))).astype(str).values,
+        "OWNER_NAME": allg.get("TITULAIRE", pd.Series([""] * len(allg))).astype(str).values,
+        "CLAIM_NAME": "", "ISSUE_DATE": "", "GOOD_TO_DATE": "",
+    }, geometry=allg.geometry.values, crs="EPSG:4326")
+    out.to_parquet("data/qc/claims.parquet")
+    print(f"[qc] claims {len(out)} (full province)")
+
 
 
 def fetch_reserves():
