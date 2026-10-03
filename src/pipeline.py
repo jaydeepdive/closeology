@@ -479,10 +479,12 @@ def run_region(region):
     # holds the surrounding staked ground, so a user can see the neighbours and
     # research what they may have found before committing to stake.
     if claims is not None and len(claims):
-        lm = leads.to_crs(metric)
-        halo = gpd.GeoDataFrame(geometry=[lm.geometry.buffer(200000).union_all()], crs=metric)  # ~200 km: the map shows staked claims across the whole viewport as you zoom out; emitted as compact centroids (below) so even a dense province stays light
-        cnear = gpd.sjoin(claims.to_crs(metric), halo, predicate="intersects", how="inner")
-        cnear = claims.loc[cnear.index.unique()].to_crs("EPSG:4326")
+        # The explore map's "Staked claims" layer must show EVERY staked claim in
+        # the jurisdiction — a real claim map — not only those near a lead, or
+        # remote areas (e.g. far-north Quebec) read as empty. Emit ALL claims as
+        # compact centroids; the client draws only those in the current viewport
+        # (capped at a few thousand), so the full province stays fast on the map.
+        cnear = claims.to_crs("EPSG:4326")
         gcol = cnear.geometry.name
 
         def _pick(*names):
@@ -517,7 +519,16 @@ def run_region(region):
             out["geometry"] = out.geometry.representative_point()
         except Exception:
             pass
-        out.to_file(os.path.join(out_dir, "claims_near.geojson"), driver="GeoJSON")
+        # round centroid coords to ~1 m so a full-province point layer stays compact
+        try:
+            from shapely.geometry import Point as _Pt
+            out["geometry"] = [
+                _Pt(round(g.x, 5), round(g.y, 5)) if g is not None and not g.is_empty else g
+                for g in out.geometry.values]
+        except Exception:
+            pass
+        out.to_file(os.path.join(out_dir, "claims_near.geojson"), driver="GeoJSON",
+                    COORDINATE_PRECISION=5)
 
     # light occurrences layer for the map
     o = occ.copy()
