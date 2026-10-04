@@ -260,30 +260,12 @@ def main():
                 _kind = "drill" if e.get("source") == "News release" else "edge"
                 e["map_url"] = digest.map_url(slug, ll[0], ll[1], zoom=12,
                                               label=e.get("company") or e.get("property"), kind=_kind)
-        # Surface FRESH drilling even when it didn't land on open ground: a recent,
-        # dated release is worth showing as current activity (with its assay) rather
-        # than dropping it so the email pads out with 2-3 yr old government holes.
-        # Only the open-ground plays carry "ha open"; these carry the date + assay.
-        edges_all = list(dp.get("edges", []))
-        try:
-            _nip = os.path.join(d, "news_items.json")
-            if os.path.exists(_nip):
-                _seen = {(str(e.get("company", "")).lower(), str(e.get("date") or "")[:10])
-                         for e in edges_all}
-                for _it in _json.load(open(_nip)).get("items", []):
-                    _k = (str(_it.get("company", "")).lower(), str(_it.get("date") or "")[:10])
-                    if _k in _seen:
-                        continue
-                    _seen.add(_k)
-                    edges_all.append({
-                        "company": _it.get("company"), "property": _it.get("project"),
-                        "source": "News release", "date": _it.get("date"),
-                        "assay": _it.get("highlight"), "open_ha": 0, "hot": True,
-                        "map_url": digest.map_url(slug, _it.get("lat"), _it.get("lon"),
-                                                  zoom=12, label=_it.get("company"), kind="drill"),
-                    })
-        except Exception as _e:
-            print("[build_all] fresh-news merge skipped for", slug, ":", str(_e)[:100])
+        # The opportunity feed shows ONLY plays with real open, stakeable ground.
+        # Fresh drilling that is fully surrounded by staked claims (open_ha == 0) is
+        # NOT a staking opportunity, so it is excluded here regardless of how good the
+        # intercept is (it still lives in the full drill bank / drill_radar). This is
+        # why fully-staked plays like Evergold no longer appear as "act now" edges.
+        edges_all = [e for e in dp.get("edges", []) if (e.get("open_ha") or 0) > 0]
         email["regions"].append({"slug": slug, "name": name.get(slug, slug.upper()),
                                  "labels": dp["labels"], "counts": dp["counts"],
                                  "map": f"https://jaydeepdive.github.io/closeology/{slug}.html",

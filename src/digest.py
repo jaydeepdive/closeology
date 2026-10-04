@@ -108,6 +108,8 @@ def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
     for r in regions:
         juris = _abbr(r.get("name", r.get("slug", "")))
         for e in r.get("edges", []):
+            if (e.get("open_ha") or 0) <= 0:   # opportunity feed = real open ground only
+                continue
             edges.append((juris, e))
         for d in r.get("dropped_properties", []):
             drops.append((juris, d))

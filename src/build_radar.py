@@ -28,6 +28,8 @@ def build(email, site_dir):
         slug = r["slug"]
         for e in r.get("edges", []):
             p = e.get("properties", e)
+            if (p.get("open_ha") or e.get("open_ha") or 0) <= 0:   # open ground only
+                continue
             edges.append((slug, p))
         # prefer the grouped PROPERTIES (one per dropped block); fall back to raw
         props = r.get("dropped_properties")
