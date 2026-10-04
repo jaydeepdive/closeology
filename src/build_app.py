@@ -274,17 +274,13 @@ async function drawClaimTiles(){{
   for(let ix=ix0;ix<=ix1;ix++){{ for(let iy=iy0;iy<=iy1;iy++){{ const k=ix+'_'+iy; if(idx._set.has(k)) need.push(k); }} }}
   if(btn) btn.textContent='⛏ Loading claims…';
   await Promise.all(need.map(async k=>{{ if(claimTileCache[k]) return; try{{ const r=await fetch('claimtiles/'+k+'.geojson'); claimTileCache[k]= r.ok? await r.json():{{features:[]}}; }}catch(e){{ claimTileCache[k]={{features:[]}}; }} }}));
-  if(!claimsOn || map.getZoom()<8) return;            // view changed while loading
+  if(!claimsOn || map.getZoom()<10) return;            // view changed while loading
   if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}}
-  // Collect every claim in view (deduped), THEN thin uniformly if there are too
-  // many — never truncate by tile order, which would blank whole regions (e.g.
-  // the eastern half of the viewport) while leaving the west fully drawn.
-  let all=[]; const seen=new Set();
+  const feats=[], seen=new Set(); let shown=0; const CAP=14000;
   for(const k of need){{ const d=claimTileCache[k]; if(!d) continue;
-    for(const f of (d.features||[])){{ const id=f.properties&&f.properties.c; if(id){{ if(seen.has(id)) continue; seen.add(id); }} all.push(f); }}
+    for(const f of (d.features||[])){{ const id=f.properties&&f.properties.c; if(id){{ if(seen.has(id)) continue; seen.add(id); }} feats.push(f); if(++shown>=CAP) break; }}
+    if(shown>=CAP) break;
   }}
-  const CAP=20000; let feats=all, shown=all.length, thinned=false;
-  if(all.length>CAP){{ const step=Math.ceil(all.length/CAP); feats=all.filter((_,i)=>i%step===0); shown=feats.length; thinned=true; }}
   claimTileLayer=L.geoJSON({{type:'FeatureCollection',features:feats}},{{
     renderer:L.canvas({{padding:0.5}}),
     style:{{color:'#2a1f00',weight:1,opacity:.95,fillColor:'#f4b400',fillOpacity:.5}},
@@ -292,7 +288,7 @@ async function drawClaimTiles(){{
       const tip=(own?'<b>'+esc(own)+'</b><br>':'')+(p.c?'claim #'+esc(p.c):'')+(p.e?'<br><span style="color:#555">good to '+esc((''+p.e).slice(0,10))+'</span>':'');
       if(tip.trim()) l.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}}); }}
   }}).addTo(map);
-  if(btn) btn.textContent = thinned ? ('⛏ Staked claims ('+all.length+', thinned — zoom in)') : ('⛏ Staked claims ('+shown+')');
+  if(btn) btn.textContent = shown>=CAP ? ('⛏ Staked claims ('+CAP+'+)') : ('⛏ Staked claims ('+shown+')');
 }}
 // staked-AREA overview for zoomed-out views: fixed-PIXEL marks (so they stay
 // visible when the polygons would shrink to nothing), one per ~5 km staked cell.
@@ -307,7 +303,7 @@ async function drawCoverage(){{
   const btn=document.getElementById('claimbtn');
   if(!claimsOn){{ if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} return; }}
   const d=await _cov();
-  if(!claimsOn || map.getZoom()>=8 || map.getZoom()<6){{ if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} if(btn&&map.getZoom()<6) btn.textContent='⛏ Staked claims — zoom in'; return; }}
+  if(!claimsOn || map.getZoom()>=10){{ if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} return; }}
   const b=map.getBounds(); const feats=[]; let shown=0; const CAP=80000;
   for(const f of (d.features||[])){{ const c=f.geometry.coordinates; if(!b.contains([c[1],c[0]])) continue; feats.push(f); if(++shown>=CAP) break; }}
   if(covLayer){{map.removeLayer(covLayer);covLayer=null;}}
@@ -324,7 +320,7 @@ function refreshClaims(){{
   const btn=document.getElementById('claimbtn');
   if(!claimsOn){{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; return; }}
   const z=map.getZoom();
-  if(z>=8){{ if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} drawClaimTiles(); }}
+  if(z>=10){{ if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} drawClaimTiles(); }}
   else {{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} drawCoverage(); }}
 }}
 const claimCtl=L.control({{position:'topright'}});
