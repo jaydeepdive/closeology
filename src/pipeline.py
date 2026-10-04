@@ -383,11 +383,16 @@ def run_region(region):
     leads["deposit_open"] = leads["deposit_open"].astype(bool)
     leads = attach_spend(leads, _rd(os.path.join(d, "spend_reports.parquet")), metric)
     leads["exploration_spend_str"] = leads["exploration_spend"].map(_spend_str)
-    leads["score"] = leads.apply(lambda r: score_lead(
-        r["status"], r["deposit_open"], r.get("grade_str", ""), r.get("tonnes_str", ""),
-        bool(r.get("drill_highlights")), r.get("exploration_spend", 0),
-        grade_conf=r.get("grade_conf", 1.0), last_prod_year=r.get("last_prod_year"),
-        primary_metal=r.get("primary_metal", "")), axis=1)
+    if len(leads):
+        leads["score"] = leads.apply(lambda r: score_lead(
+            r["status"], r["deposit_open"], r.get("grade_str", ""), r.get("tonnes_str", ""),
+            bool(r.get("drill_highlights")), r.get("exploration_spend", 0),
+            grade_conf=r.get("grade_conf", 1.0), last_prod_year=r.get("last_prod_year"),
+            primary_metal=r.get("primary_metal", "")), axis=1)
+    else:
+        # empty candidate set (lightly-staked province): apply(axis=1) on an empty
+        # frame returns a DataFrame, not a Series, and crashes the assignment — guard it
+        leads["score"] = pd.Series(dtype=float)
     # QUALITY FLOOR: a lead must clear a minimum opportunity score. This is
     # jurisdiction-fair (a recent past producer or a developed/classified deposit on
     # open ground clears it whether or not its province publishes assays), but it

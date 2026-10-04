@@ -195,7 +195,7 @@ def _polys(feats, colmap):
 def fetch_claims(cfg, out_dir):
     c = cfg["claims"]
     fs = fetch_layer(c["url"], c.get("fields", "*"), c.get("where", "1=1"),
-                     geom=True, generalize=c.get("generalize"))   # exact: maxAllowableOffset is in DEGREES here (outSR=4326); 25 collapsed every claim
+                     geom=True, generalize=c.get("generalize", 0.0002))   # ~18 m in DEGREES (outSR=4326); the old default 25 meant 25 DEGREES and collapsed every claim
     colmap = {}
     if c.get("id"):
         colmap["_id"] = c["id"]

@@ -193,7 +193,12 @@ def main():
     # map shows actual claim BLOCK boundaries loaded per-viewport (not centroid dots).
     try:
         import claim_tiles
-        claim_tiles.build([r["slug"] for r in regions_site], "site")
+        # Tile EVERY province that fetched claims — claim tiles need only
+        # claims.parquet, not the lead pipeline — so a region whose lead build
+        # failed (e.g. ab/nb) still shows correct boundaries, not stale tiles.
+        _tile_slugs = [r["slug"] for r in REGIONS_SITE
+                       if os.path.exists(os.path.join("data", r["slug"], "claims.parquet"))]
+        claim_tiles.build(_tile_slugs, "site")
     except Exception as e:
         print("[build_all] claim tiles skipped:", str(e)[:160])
     import build_priority

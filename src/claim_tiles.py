@@ -10,7 +10,7 @@ All jurisdictions merge into ONE geographic tile set:
     site/claimtiles/index.json          {"t": T, "tiles": ["ix_iy", ...]}
 Each feature: {"c": tenure#, "o": owner, "e": good-to date}, EPSG:4326 polygon.
 """
-import os
+import os, glob
 import json
 import math
 
@@ -51,6 +51,9 @@ def build(slugs, site_dir="site"):
 
     root = os.path.join(site_dir, "claimtiles")
     os.makedirs(root, exist_ok=True)
+    for _old in glob.glob(os.path.join(root, "*.geojson")):   # drop stale tiles so a
+        try: os.remove(_old)                                  # removed/failed region
+        except OSError: pass                                  # can't leave orphans
     buckets = {}          # (ix, iy) -> list of feature dicts
     cov = {}              # coarse staked-AREA cells for the zoomed-out overview
     COVR = 0.05           # ~5 km coverage cell
