@@ -253,6 +253,53 @@ async function drawAllClaims(){{
   claimAllLayer=grp.addTo(map);
   if(btn) btn.textContent = shown>=CAP ? ('⛏ Staked claims ('+CAP+'+)') : ('⛏ Staked claims ('+shown+')');
 }}
+// ---- REAL claim-polygon tiles: load the actual boundaries for the current
+// viewport so the map shows true claim BLOCKS (not centroid dots), refreshed as
+// you pan/zoom. One geographic 0.5-deg tile set across every province.
+let claimTileIdx=null, claimTileCache={{}}, claimTileLayer=null;
+async function _claimTileIdx(){{
+  if(claimTileIdx) return claimTileIdx;
+  try{{ const r=await fetch('claimtiles/index.json'); claimTileIdx = r.ok ? await r.json() : {{t:0.5,tiles:[]}}; }}
+  catch(e){{ claimTileIdx={{t:0.5,tiles:[]}}; }}
+  claimTileIdx._set = new Set(claimTileIdx.tiles||[]);
+  return claimTileIdx;
+}}
+async function drawClaimTiles(){{
+  const btn=document.getElementById('claimbtn');
+  if(!claimsOn){{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} return; }}
+  const idx=await _claimTileIdx(); const T=idx.t||0.5; const b=map.getBounds();
+  const ix0=Math.floor(b.getWest()/T), ix1=Math.floor(b.getEast()/T);
+  const iy0=Math.floor(b.getSouth()/T), iy1=Math.floor(b.getNorth()/T);
+  const need=[];
+  for(let ix=ix0;ix<=ix1;ix++){{ for(let iy=iy0;iy<=iy1;iy++){{ const k=ix+'_'+iy; if(idx._set.has(k)) need.push(k); }} }}
+  if(btn) btn.textContent='⛏ Loading claims…';
+  await Promise.all(need.map(async k=>{{ if(claimTileCache[k]) return; try{{ const r=await fetch('claimtiles/'+k+'.geojson'); claimTileCache[k]= r.ok? await r.json():{{features:[]}}; }}catch(e){{ claimTileCache[k]={{features:[]}}; }} }}));
+  if(!claimsOn || map.getZoom()<10) return;            // view changed while loading
+  if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}}
+  const feats=[], seen=new Set(); let shown=0; const CAP=14000;
+  for(const k of need){{ const d=claimTileCache[k]; if(!d) continue;
+    for(const f of (d.features||[])){{ const id=f.properties&&f.properties.c; if(id){{ if(seen.has(id)) continue; seen.add(id); }} feats.push(f); if(++shown>=CAP) break; }}
+    if(shown>=CAP) break;
+  }}
+  claimTileLayer=L.geoJSON({{type:'FeatureCollection',features:feats}},{{
+    renderer:L.canvas({{padding:0.5}}),
+    style:{{color:'#2a1f00',weight:1,opacity:.95,fillColor:'#f4b400',fillOpacity:.5}},
+    onEachFeature:(f,l)=>{{ const p=f.properties||{{}}; const own=(p.o||'').replace(/\s*-?\s*100%$/,'').trim();
+      const tip=(own?'<b>'+esc(own)+'</b><br>':'')+(p.c?'claim #'+esc(p.c):'')+(p.e?'<br><span style="color:#555">good to '+esc((''+p.e).slice(0,10))+'</span>':'');
+      if(tip.trim()) l.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}}); }}
+  }}).addTo(map);
+  if(btn) btn.textContent = shown>=CAP ? ('⛏ Staked claims ('+CAP+'+)') : ('⛏ Staked claims ('+shown+')');
+}}
+// choose the staked-claims rendering by zoom: real polygon BLOCKS up close (>=10),
+// a light centroid overview when a bit zoomed out (8-9), a hint below that.
+function refreshClaims(){{
+  const btn=document.getElementById('claimbtn');
+  if(!claimsOn){{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; return; }}
+  const z=map.getZoom();
+  if(z>=10){{ if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} drawClaimTiles(); }}
+  else if(z>=8){{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} drawAllClaims(); }}
+  else {{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(btn) btn.textContent='⛏ Staked claims — zoom in'; }}
+}}
 const claimCtl=L.control({{position:'topright'}});
 claimCtl.onAdd=function(){{
   const d=L.DomUtil.create('div','drillctl');
@@ -261,13 +308,13 @@ claimCtl.onAdd=function(){{
   d.querySelector('button').onclick=function(){{
     claimsOn=!claimsOn;
     const btn=document.getElementById('claimbtn'); if(btn) btn.classList.toggle('on',claimsOn);
-    if(claimsOn){{ drawAllClaims(); }}
-    else {{ if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; }}
+    if(claimsOn){{ refreshClaims(); }}
+    else {{ if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; }}
   }};
   return d;
 }};
 claimCtl.addTo(map);
-map.on('moveend',function(){{ if(claimsOn) drawAllClaims(); }});
+map.on('moveend',function(){{ if(claimsOn) refreshClaims(); }});
 const markers={{}};
 let jf='all', mf='all', mins=0, q='';
 function metalMatch(dm){{ if(mf==='all')return true; if(GROUPS[mf])return GROUPS[mf].includes(dm); return dm===mf; }}
@@ -326,27 +373,16 @@ async function showGround(p){{
         cpts.push({{lat:c[1],lng:c[0],pr:f.properties||{{}}}});
       }}
       claimPts=cpts;
-      const CAP=4000;
-      drawClaims=function(){{
-        if(claimLayer){{map.removeLayer(claimLayer);claimLayer=null;}}
-        const b=map.getBounds(); const grp=L.layerGroup(); let shown=0;
-        for(const q of claimPts){{
-          if(!b.contains([q.lat,q.lng])) continue;
-          const own=(q.pr.owner||'').replace(/\s*-\s*100%$/,'').trim();
-          const dLa=0.0024, dLo=0.0024/Math.max(0.2,Math.cos(q.lat*Math.PI/180));
-        const mk=L.rectangle([[q.lat-dLa/2,q.lng-dLo/2],[q.lat+dLa/2,q.lng+dLo/2]],{{color:'#6b4e0a',weight:.9,opacity:.95,fillColor:'#f2b50a',fillOpacity:.55}});
-          const tip=`${{own?'<b>'+esc(own)+'</b><br>':''}}${{q.pr.cname?esc(q.pr.cname)+' ':''}}${{q.pr.claim?'#'+esc(q.pr.claim):''}}${{q.pr.expiry?'<br><span style="color:#666">good to '+esc(q.pr.expiry)+'</span>':''}}`;
-          if(tip.trim()) mk.bindTooltip(tip,{{sticky:true,direction:'top',className:'claimtip'}});
-          grp.addLayer(mk); if(++shown>=CAP) break;
-        }}
-        if(shown){{ claimLayer=grp.addTo(map); }}
-      }};
+      // the real claim BLOCK polygons are drawn by the global viewport tile layer
+      // (drawClaimTiles); here we only tally who holds the ground within ~50 km for
+      // the "who's nearby" sidebar. No per-lead centroid squares anymore.
+      drawClaims=null;
       const cphi=Math.cos(p.lat*Math.PI/180);
       for(const q of claimPts){{
         const dk=Math.hypot((q.lat-p.lat)*111,(q.lng-p.lon)*111*cphi);
         if(dk<=50){{ nearCount++; const own=(q.pr.owner||'').replace(/\s*-\s*100%$/,'').trim(); if(own) owners[own]=(owners[own]||0)+1; }}
       }}
-      drawClaims();
+      if(claimsOn) refreshClaims();
     }}
   }}catch(e){{}}
   // fill the "who's nearby" list in the sidebar detail

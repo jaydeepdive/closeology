@@ -189,6 +189,13 @@ def main():
     info_regions = [r for r in REGIONS_SITE if r.get("info")]
 
     build_app.build(regions_site, "site/app.html")   # ONE unified all-Canada map
+    # Real claim-polygon tiles for the Explore map's "Staked claims" layer, so the
+    # map shows actual claim BLOCK boundaries loaded per-viewport (not centroid dots).
+    try:
+        import claim_tiles
+        claim_tiles.build([r["slug"] for r in regions_site], "site")
+    except Exception as e:
+        print("[build_all] claim tiles skipped:", str(e)[:160])
     import build_priority
     build_priority.build("site", regions_site)         # index.html (front page)
     build_site.build("site", regions_site + info_regions)   # regions.html hub + CSV/XLSX
