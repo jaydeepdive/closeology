@@ -290,15 +290,38 @@ async function drawClaimTiles(){{
   }}).addTo(map);
   if(btn) btn.textContent = shown>=CAP ? ('⛏ Staked claims ('+CAP+'+)') : ('⛏ Staked claims ('+shown+')');
 }}
+// staked-AREA overview for zoomed-out views: fixed-PIXEL marks (so they stay
+// visible when the polygons would shrink to nothing), one per ~5 km staked cell.
+let covData=null, covLayer=null;
+async function _cov(){{
+  if(covData) return covData;
+  try{{ const r=await fetch('claim_coverage.geojson'); covData = r.ok ? await r.json() : {{features:[]}}; }}
+  catch(e){{ covData={{features:[]}}; }}
+  return covData;
+}}
+async function drawCoverage(){{
+  const btn=document.getElementById('claimbtn');
+  if(!claimsOn){{ if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} return; }}
+  const d=await _cov();
+  if(!claimsOn || map.getZoom()>=10){{ if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} return; }}
+  const b=map.getBounds(); const feats=[]; let shown=0; const CAP=80000;
+  for(const f of (d.features||[])){{ const c=f.geometry.coordinates; if(!b.contains([c[1],c[0]])) continue; feats.push(f); if(++shown>=CAP) break; }}
+  if(covLayer){{map.removeLayer(covLayer);covLayer=null;}}
+  const z=map.getZoom(); const rad = z>=9?4:(z>=7?3:2);
+  covLayer=L.geoJSON({{type:'FeatureCollection',features:feats}},{{
+    renderer:L.canvas({{padding:0.5}}),
+    pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:rad,color:'#4a3500',weight:.4,opacity:.9,fillColor:'#f4b400',fillOpacity:.9}})
+  }}).addTo(map);
+  if(btn) btn.textContent='⛏ Staked areas ('+shown+') — zoom in for boundaries';
+}}
 // choose the staked-claims rendering by zoom: real polygon BLOCKS up close (>=10),
 // a light centroid overview when a bit zoomed out (8-9), a hint below that.
 function refreshClaims(){{
   const btn=document.getElementById('claimbtn');
-  if(!claimsOn){{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; return; }}
+  if(!claimsOn){{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; return; }}
   const z=map.getZoom();
-  if(z>=10){{ if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} drawClaimTiles(); }}
-  else if(z>=8){{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} drawAllClaims(); }}
-  else {{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(btn) btn.textContent='⛏ Staked claims — zoom in'; }}
+  if(z>=10){{ if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} drawClaimTiles(); }}
+  else {{ if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} drawCoverage(); }}
 }}
 const claimCtl=L.control({{position:'topright'}});
 claimCtl.onAdd=function(){{
@@ -309,7 +332,7 @@ claimCtl.onAdd=function(){{
     claimsOn=!claimsOn;
     const btn=document.getElementById('claimbtn'); if(btn) btn.classList.toggle('on',claimsOn);
     if(claimsOn){{ refreshClaims(); }}
-    else {{ if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; }}
+    else {{ if(claimAllLayer){{map.removeLayer(claimAllLayer);claimAllLayer=null;}} if(claimTileLayer){{map.removeLayer(claimTileLayer);claimTileLayer=null;}} if(covLayer){{map.removeLayer(covLayer);covLayer=null;}} if(btn) btn.textContent='⛏ Staked claims'; }}
   }};
   return d;
 }};

@@ -52,6 +52,8 @@ def build(slugs, site_dir="site"):
     root = os.path.join(site_dir, "claimtiles")
     os.makedirs(root, exist_ok=True)
     buckets = {}          # (ix, iy) -> list of feature dicts
+    cov = {}              # coarse staked-AREA cells for the zoomed-out overview
+    COVR = 0.05           # ~5 km coverage cell
     total = 0
     for slug in slugs:
         fp = os.path.join("data", slug, "claims.parquet")
@@ -87,6 +89,11 @@ def build(slugs, site_dir="site"):
                 continue
             feat = {"type": "Feature", "properties": {"c": c, "o": o, "e": e},
                     "geometry": mapping(gg)}
+            # coarse coverage cell (centre of the claim) for the overview layer
+            ccx = (minx + maxx) / 2.0
+            ccy = (miny + maxy) / 2.0
+            ck = (int(math.floor(ccx / COVR)), int(math.floor(ccy / COVR)))
+            cov[ck] = cov.get(ck, 0) + 1
             ix0, ix1 = int(math.floor(minx / T)), int(math.floor(maxx / T))
             iy0, iy1 = int(math.floor(miny / T)), int(math.floor(maxy / T))
             # guard against a stray bad geometry spanning the globe
@@ -110,7 +117,20 @@ def build(slugs, site_dir="site"):
         tiles.append(key)
     json.dump({"t": T, "tiles": tiles}, open(os.path.join(root, "index.json"), "w"),
               separators=(",", ":"))
-    print(f"[claimtiles] wrote {len(tiles)} tiles ({total} polygons) from {len(slugs)} regions")
+    # staked-area overview: one point per populated ~5 km cell, rendered as
+    # fixed-pixel marks so claims stay VISIBLE when zoomed out (polygons shrink to
+    # nothing there). count 'n' lets the client fade sparse cells.
+    cov_feats = []
+    for (cx, cy), n in cov.items():
+        lon = round((cx + 0.5) * COVR, 4)
+        lat = round((cy + 0.5) * COVR, 4)
+        cov_feats.append({"type": "Feature", "properties": {"n": n},
+                          "geometry": {"type": "Point", "coordinates": [lon, lat]}})
+    json.dump({"type": "FeatureCollection", "features": cov_feats},
+              open(os.path.join(site_dir, "claim_coverage.geojson"), "w"),
+              separators=(",", ":"))
+    print(f"[claimtiles] wrote {len(tiles)} tiles ({total} polygons), "
+          f"{len(cov_feats)} coverage cells, from {len(slugs)} regions")
     return len(tiles)
 
 
