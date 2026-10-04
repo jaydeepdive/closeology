@@ -36,14 +36,16 @@ jobs:
           git config user.name "closeology-bot"
           git config user.email "actions@github.com"
           # The full build regenerates site/ + data/keep wholesale and is slow, so
-          # drillbank/collector commits often land mid-build. Rebase the generated
-          # files onto the LATEST origin tip each attempt (reset --soft keeps our
-          # files, moves the base) so every push is a clean fast-forward; retry
-          # through races. This is why an earlier fix kept getting lost.
+          # drillbank/collector AND source-code commits often land mid-build.
+          # Re-point onto the LATEST origin tip each attempt with a MIXED reset so
+          # the index matches origin/main for ALL paths; then stage ONLY the
+          # generated files. (A --soft reset kept the stale index from this build's
+          # original checkout and committed it, silently reverting any src/ change
+          # pushed mid-build — that is why earlier fixes kept getting lost.)
           ok=0
           for i in $(seq 1 8); do
             git fetch -q origin main || true
-            git reset --soft origin/main
+            git reset -q origin/main            # MIXED: index + HEAD -> origin tip, keep worktree
             git add -A site data/keep 2>/dev/null || true
             if git diff --cached --quiet; then echo "no changes"; ok=1; break; fi
             git commit -q -m "Daily rebuild $(date -u +%Y-%m-%d) [skip ci]"
