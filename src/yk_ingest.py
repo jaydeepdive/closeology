@@ -107,10 +107,13 @@ def fetch_claims():
     # resolution -- leaving the fabric with ~3k degenerate points and nearly all
     # Yukon ground (incl. actively-drilled, fully-staked deposits like Carmacks)
     # reading as "open". 0.0002 deg ~= 15-20 m: trims vertices, keeps claim shape.
+    # GRANT_NUMBER (e.g. "YF87651") is the UNIQUE claim identifier; CLAIM_NUMBER is
+    # only the number within a name group (many claims share "1","2","3"...), so it
+    # must NOT be used as the tenure id. CLAIM_LABEL ("OC 721") is the readable name.
     fs = _fetch(f"{GYM}/{CLAIM_L}",
-                "CLAIM_NUMBER,CLAIM_NAME,OWNER_NAME,STAKING_DATE,EXPIRY_DATE,TENURE_STATUS",
+                "GRANT_NUMBER,CLAIM_LABEL,CLAIM_NAME,OWNER_NAME,STAKING_DATE,EXPIRY_DATE,TENURE_STATUS",
                 geom=True, generalize=0.0002)
-    g = _polys(fs, {"TENURE_NUMBER_ID": "CLAIM_NUMBER", "CLAIM_NAME": "CLAIM_NAME",
+    g = _polys(fs, {"TENURE_NUMBER_ID": "GRANT_NUMBER", "CLAIM_NAME": "CLAIM_LABEL",
                     "OWNER_NAME": "OWNER_NAME", "_iss": "STAKING_DATE", "_exp": "EXPIRY_DATE"})
     g["ISSUE_DATE"] = g["_iss"].map(_epoch)
     g["GOOD_TO_DATE"] = g["_exp"].map(_epoch)
