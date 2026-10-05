@@ -346,6 +346,56 @@ claimCtl.onAdd=function(){{
 }};
 claimCtl.addTo(map);
 map.on('moveend',function(){{ if(claimsOn) refreshClaims(); }});
+
+// ---- CLAIM WATCH overlays: expiring-soon (<=7d) and recently-dropped (30d).
+// Points render in the 'leads' pane (SVG) so they sit above the claim canvas and
+// are hoverable/clickable; both default OFF to keep the map uncluttered.
+let expOn=false, dropOn=false, expLayer=null, dropLayer=null, expData=null, dropData=null;
+async function _loadJSON(u){{ try{{ const r=await fetch(u); return r.ok? await r.json():{{features:[]}}; }}catch(e){{ return {{features:[]}}; }} }}
+function _expColor(p){{ const d=p.days_to_expiry; if(d===null||d===undefined) return '#e4572e'; if(d<0) return '#b00020'; if(d<=2) return '#e4572e'; return '#f59e0b'; }}
+async function drawExpiring(){{
+  const btn=document.getElementById('expbtn');
+  if(!expOn){{ if(expLayer){{map.removeLayer(expLayer);expLayer=null;}} if(btn) btn.textContent='⏳ Expiring <7d'; return; }}
+  if(!expData) expData=await _loadJSON('expiring.geojson');
+  if(expLayer){{map.removeLayer(expLayer);expLayer=null;}}
+  const feats=(expData.features||[]);
+  expLayer=L.geoJSON({{type:'FeatureCollection',features:feats}},{{
+    renderer:leadRenderer, pane:'leads',
+    pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:6,color:'#3a0a0a',weight:1,fillColor:_expColor(f.properties),fillOpacity:.95}}),
+    onEachFeature:(f,l)=>{{ const p=f.properties||{{}}; const d=p.days_to_expiry;
+      const when = (d===null||d===undefined)?'good-to date unknown':(d<0?('past good-to by '+(-d)+'d — may lapse'):('expires in '+d+' day'+(d===1?'':'s')));
+      const own=(p.owner||'').replace(/\s*-?\s*100%$/,'').trim();
+      const anni=p.anniversary?'<br><span style="color:#888">(territorial anniversary date — grace period may apply)</span>':'';
+      l.bindTooltip((own?'<b>'+esc(own)+'</b><br>':'')+'claim #'+esc(p.tid)+' · '+esc(p.prov)+'<br><b style="color:'+_expColor(p)+'">'+esc(when)+'</b>'+(p.expiry?'<br>good to '+esc(p.expiry):'')+(p.area_ha?'<br>'+esc(p.area_ha)+' ha':'')+anni,
+        {{sticky:true,direction:'top',className:'claimtip'}}); }}
+  }}).addTo(map);
+  if(btn) btn.textContent='⏳ Expiring <7d ('+feats.length+')';
+}}
+async function drawDropped(){{
+  const btn=document.getElementById('dropbtn');
+  if(!dropOn){{ if(dropLayer){{map.removeLayer(dropLayer);dropLayer=null;}} if(btn) btn.textContent='🔓 Just dropped (30d)'; return; }}
+  if(!dropData) dropData=await _loadJSON('dropped.geojson');
+  if(dropLayer){{map.removeLayer(dropLayer);dropLayer=null;}}
+  const feats=(dropData.features||[]);
+  dropLayer=L.geoJSON({{type:'FeatureCollection',features:feats}},{{
+    renderer:leadRenderer, pane:'leads',
+    pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:6,color:'#064e1f',weight:1,fillColor:'#17b26a',fillOpacity:.95}}),
+    onEachFeature:(f,l)=>{{ const p=f.properties||{{}}; const own=(p.owner||'').replace(/\s*-?\s*100%$/,'').trim();
+      l.bindTooltip('<b style="color:#0a7a3d">JUST OPENED</b><br>'+(own?'was: <b>'+esc(own)+'</b><br>':'')+'claim #'+esc(p.tid)+' · '+esc(p.prov)+(p.drop_after?'<br>active until ~'+esc(p.drop_after):'')+(p.area_ha?'<br>'+esc(p.area_ha)+' ha':'')+'<br><span style="color:#888">no longer in the registry — verify before staking</span>',
+        {{sticky:true,direction:'top',className:'claimtip'}}); }}
+  }}).addTo(map);
+  if(btn) btn.textContent='🔓 Just dropped (30d) ('+feats.length+')';
+}}
+const watchCtl=L.control({{position:'topright'}});
+watchCtl.onAdd=function(){{
+  const d=L.DomUtil.create('div','drillctl');
+  d.innerHTML='<button id=expbtn>⏳ Expiring <7d</button><button id=dropbtn style="margin-top:4px">🔓 Just dropped (30d)</button>';
+  L.DomEvent.disableClickPropagation(d);
+  d.querySelector('#expbtn').onclick=function(){{ expOn=!expOn; this.classList.toggle('on',expOn); drawExpiring(); }};
+  d.querySelector('#dropbtn').onclick=function(){{ dropOn=!dropOn; this.classList.toggle('on',dropOn); drawDropped(); }};
+  return d;
+}};
+watchCtl.addTo(map);
 const markers={{}};
 let jf='all', mf='all', mins=0, q='';
 function metalMatch(dm){{ if(mf==='all')return true; if(GROUPS[mf])return GROUPS[mf].includes(dm); return dm===mf; }}

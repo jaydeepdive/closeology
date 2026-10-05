@@ -201,6 +201,16 @@ def main():
         claim_tiles.build(_tile_slugs, "site")
     except Exception as e:
         print("[build_all] claim tiles skipped:", str(e)[:160])
+    # Claim watch: expiring-soon (from today's good-to dates) + recently-dropped
+    # (snapshot diff vs the committed registry). Same province set as the tiles.
+    try:
+        import claim_watch
+        _watch_slugs = [r["slug"] for r in REGIONS_SITE
+                        if os.path.exists(os.path.join("data", r["slug"], "claims.parquet"))]
+        claim_watch.run(_watch_slugs, "site")
+    except Exception as e:
+        import traceback
+        print("[build_all] claim watch skipped:", str(e)[:160]); traceback.print_exc()
     import build_priority
     build_priority.build("site", regions_site)         # index.html (front page)
     build_site.build("site", regions_site + info_regions)   # regions.html hub + CSV/XLSX
@@ -284,6 +294,11 @@ def main():
     # regions + a link to the radar for the rest) so the email can't be a wall
     import digest as _digest
     email["top"] = _digest.build_top(email["regions"], site=email["site"])
+    try:
+        import claim_watch as _cw
+        email["watch"] = _cw.email_summary("site", site_url=email["site"])
+    except Exception as _e:
+        print("[build_all] email watch summary skipped:", str(_e)[:100])
     _json.dump(email, open("site/daily_email.json", "w"))
     import build_radar
     build_radar.build(email, "site")                   # radar.html cross-Canada overview
