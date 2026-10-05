@@ -346,7 +346,8 @@ def _maplink(p):
 
 
 def build_page(site_dir="site", today=None):
-    """Render the standalone 'Claim watch' page from the expiring/dropped outputs."""
+    """Render the standalone 'Claim watch' page: Expiring and Recently-dropped on
+    separate tabs, each a sortable table."""
     import site_theme as T
     today = today or _today()
     tstr = _d2s(today)
@@ -363,43 +364,46 @@ def build_page(site_dir="site", today=None):
     except Exception:
         meta = {}
     tracking_since = meta.get("tracking_since", tstr)
+    CAP = 5000
 
-    CAP = 3000
-
-    def _prop(f):
-        p = dict(f["properties"]); c = f["geometry"]["coordinates"]
+    def _prop(fe):
+        p = dict(fe["properties"]); c = fe["geometry"]["coordinates"]
         p["lon"], p["lat"] = c[0], c[1]
         return p
 
-    exp_rows = sorted((_prop(f) for f in exp),
+    exp_rows = sorted((_prop(fe) for fe in exp),
                       key=lambda p: (999 if p.get("days_to_expiry") is None else p["days_to_expiry"]))
-    drp_rows = sorted((_prop(f) for f in drp), key=lambda p: p.get("drop_after", ""), reverse=True)
+    drp_rows = sorted((_prop(fe) for fe in drp), key=lambda p: p.get("drop_after", ""), reverse=True)
 
     def _exp_tr(p):
         d = p.get("days_to_expiry")
         if d is None:
-            when, cls = "unknown", ""
+            when, cls, sort = "unknown", "", 999
         elif d < 0:
-            when, cls = f"{-d}d past · may lapse", "bad"
+            when, cls, sort = f"{-d}d past · may lapse", "bad", d
         elif d <= 2:
-            when, cls = f"{d}d", "bad"
+            when, cls, sort = f"{d}d", "bad", d
         else:
-            when, cls = f"{d}d", "warn"
+            when, cls, sort = f"{d}d", "warn", d
         anni = ' <span class="muted">(anniv.)</span>' if p.get("anniversary") else ""
         own = _esc((p.get("owner") or "").rstrip("%").rstrip(" -"))
-        return (f'<tr data-days="{999 if d is None else d}" data-prov="{_esc(p.get("prov"))}">'
-                f'<td>{_esc(p.get("prov"))}</td><td>{_esc(p.get("tid"))}</td>'
-                f'<td>{own}</td><td>{_esc(p.get("expiry"))}{anni}</td>'
-                f'<td class="{cls}">{when}</td><td class="r">{_esc(p.get("area_ha") or "")}</td>'
+        ar = p.get("area_ha")
+        return (f'<tr><td data-s="{_esc(p.get("prov"))}">{_esc(p.get("prov"))}</td>'
+                f'<td data-s="{_esc(p.get("tid"))}">{_esc(p.get("tid"))}</td>'
+                f'<td data-s="{own.lower()}">{own}</td>'
+                f'<td data-s="{_esc(p.get("expiry"))}">{_esc(p.get("expiry"))}{anni}</td>'
+                f'<td class="{cls}" data-s="{sort}">{when}</td>'
+                f'<td class="r" data-s="{ar if ar is not None else -1}">{_esc(ar if ar is not None else "")}</td>'
                 f'<td><a href="{_maplink(p)}">map ↗</a></td></tr>')
 
     def _drp_tr(p):
         own = _esc((p.get("owner") or "").rstrip("%").rstrip(" -"))
-        return (f'<tr data-prov="{_esc(p.get("prov"))}" data-date="{_esc(p.get("drop_after"))}">'
-                f'<td>{_esc(p.get("prov"))}</td><td>{_esc(p.get("tid"))}</td>'
-                f'<td>{own or "<span class=muted>unknown</span>"}</td>'
-                f'<td>active until ~{_esc(p.get("drop_after"))}</td>'
-                f'<td class="r">{_esc(p.get("area_ha") or "")}</td>'
+        ar = p.get("area_ha")
+        return (f'<tr><td data-s="{_esc(p.get("prov"))}">{_esc(p.get("prov"))}</td>'
+                f'<td data-s="{_esc(p.get("tid"))}">{_esc(p.get("tid"))}</td>'
+                f'<td data-s="{own.lower()}">{own or "<span class=muted>unknown</span>"}</td>'
+                f'<td data-s="{_esc(p.get("drop_after"))}">active until ~{_esc(p.get("drop_after"))}</td>'
+                f'<td class="r" data-s="{ar if ar is not None else -1}">{_esc(ar if ar is not None else "")}</td>'
                 f'<td><a href="{_maplink(p)}">map ↗</a></td></tr>')
 
     exp_body = "".join(_exp_tr(p) for p in exp_rows[:CAP]) or '<tr><td colspan=7 class=muted>No claims expiring in the next 7 days.</td></tr>'
@@ -407,8 +411,11 @@ def build_page(site_dir="site", today=None):
         '<tr><td colspan=6 class=muted>No drops recorded yet — this list fills in as '
         'claims lapse from ' + _esc(tracking_since) + ' onward (complete after ~30 days).</td></tr>')
 
-    byprov = lambda rows: ", ".join(f'{k} {v}' for k, v in sorted(
-        {r["prov"]: sum(1 for x in rows if x["prov"] == r["prov"]) for r in rows}.items()))
+    def byprov(rows):
+        d = {}
+        for r in rows:
+            d[r["prov"]] = d.get(r["prov"], 0) + 1
+        return ", ".join(f'{k} {v}' for k, v in sorted(d.items(), key=lambda kv: -kv[1]))
 
     css = T.THEME_CSS + """
 .wrap{max-width:1180px;margin:0 auto;padding:22px;}
@@ -416,16 +423,34 @@ def build_page(site_dir="site", today=None):
 .stat .k{font-family:'Bitter',serif;font-weight:800;font-size:30px;}
 .stat .k.exp{color:#d97706;} .stat .k.drop{color:#0a7a3d;}
 .stat .lab{color:var(--mut);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;}
-.dl{font-size:13px;color:var(--mut);margin:4px 0 18px;}
+.dl{font-size:13px;color:var(--mut);margin:4px 0 16px;}
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin:10px 0 0;}
+.tabs button{font-family:'Bitter',serif;font-weight:700;font-size:15px;padding:9px 16px;border:0;background:none;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--red);}
+.panel{display:none;} .panel.on{display:block;}
+.subhd{color:var(--mut);font-size:12.5px;margin:12px 0 2px;}
 table.cw{border-collapse:collapse;width:100%;font-size:13.5px;margin:6px 0 10px;}
 table.cw th,table.cw td{border-bottom:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top;}
-table.cw th{font-family:'Bitter',serif;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);cursor:pointer;user-select:none;white-space:nowrap;}
+table.cw th{font-family:'Bitter',serif;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);cursor:pointer;user-select:none;white-space:nowrap;position:relative;}
+table.cw th:hover{color:var(--ink);}
+table.cw th .ar{opacity:.35;font-size:10px;margin-left:3px;}
+table.cw th.sorted .ar{opacity:1;color:var(--red);}
 table.cw td.r,table.cw th.r{text-align:right;}
 td.bad{color:#b00020;font-weight:700;} td.warn{color:#d97706;font-weight:700;}
 .muted{color:var(--mut);}
-.note{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--mut);margin:8px 0 20px;}
-h2.sec{font-size:21px;margin:26px 0 2px;}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--mut);margin:10px 0 16px;}
 """
+
+    def _th(label, idx, num=False, r=False):
+        return (f'<th data-c="{idx}"{" data-num=1" if num else ""}'
+                f'{" class=r" if r else ""}>{label}<span class="ar">▴▾</span></th>')
+
+    exp_head = ("<tr>" + _th("Jurisdiction", 0) + _th("Claim #", 1) + _th("Holder", 2)
+                + _th("Good-to", 3) + _th("Expires in", 4, num=True)
+                + _th("Area (ha)", 5, num=True, r=True) + "<th>Map</th></tr>")
+    drp_head = ("<tr>" + _th("Jurisdiction", 0) + _th("Claim #", 1) + _th("Was held by", 2)
+                + _th("Status", 3) + _th("Area (ha)", 4, num=True, r=True) + "<th>Map</th></tr>")
+
     html_doc = f"""<!doctype html><html lang=en><head><meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>Claim watch · Project Closeology</title>{T.FONTS}<style>{css}</style></head><body>
@@ -441,31 +466,45 @@ h2.sec{font-size:21px;margin:26px 0 2px;}
   </div>
   <div class="dl">Download: <a href="expiring.csv">expiring.csv</a> · <a href="dropped.csv">dropped.csv</a> · <a href="claim_watch.xlsx">claim_watch.xlsx</a></div>
 
-  <h2 class="sec">⏳ Expiring this week</h2>
-  <div class="muted" style="font-size:12.5px">{byprov(exp_rows) or "—"}</div>
-  <table class="cw" id="exptab"><thead><tr>
-    <th data-c=0>Jurisdiction</th><th data-c=1>Claim #</th><th data-c=2>Holder</th>
-    <th data-c=3>Good-to</th><th data-c=4 data-num=1>Expires in</th><th class=r data-c=5 data-num=1>Area (ha)</th><th>Map</th>
-  </tr></thead><tbody>{exp_body}</tbody></table>
+  <div class="tabs">
+    <button id="tab-exp" class="on" onclick="showTab('exp')">⏳ Expiring this week ({len(exp_rows)})</button>
+    <button id="tab-drop" onclick="showTab('drop')">\U0001f513 Recently dropped ({len(drp_rows)})</button>
+  </div>
 
-  <h2 class="sec">🔓 Just dropped — ground that recently opened</h2>
-  <div class="note">A claim counts as "dropped" once it disappears from its jurisdiction's registry (lapsed, forfeited or cancelled).
-  Detection works by comparing daily snapshots, so this window fills in going forward from <b>{_esc(tracking_since)}</b> and is complete after ~30 days. There is no public feed to backfill older drops.</div>
-  <div class="muted" style="font-size:12.5px">{byprov(drp_rows) or "—"}</div>
-  <table class="cw" id="droptab"><thead><tr>
-    <th data-c=0>Jurisdiction</th><th data-c=1>Claim #</th><th data-c=2>Was held by</th>
-    <th data-c=3>Status</th><th class=r data-c=4 data-num=1>Area (ha)</th><th>Map</th>
-  </tr></thead><tbody>{drp_body}</tbody></table>
+  <div id="panel-exp" class="panel on">
+    <div class="subhd">{byprov(exp_rows) or "—"}</div>
+    <table class="cw" id="exptab"><thead>{exp_head}</thead><tbody>{exp_body}</tbody></table>
+  </div>
+
+  <div id="panel-drop" class="panel">
+    <div class="note">A claim counts as "dropped" once it disappears from its jurisdiction's registry (lapsed, forfeited or cancelled).
+    Detection works by comparing daily snapshots, so this window fills in going forward from <b>{_esc(tracking_since)}</b> and is complete after ~30 days. There is no public feed to backfill older drops.</div>
+    <div class="subhd">{byprov(drp_rows) or "—"}</div>
+    <table class="cw" id="droptab"><thead>{drp_head}</thead><tbody>{drp_body}</tbody></table>
+  </div>
 </div>
 {T.footer()}
 <script>
+function showTab(k){{
+  document.getElementById('panel-exp').classList.toggle('on',k==='exp');
+  document.getElementById('panel-drop').classList.toggle('on',k==='drop');
+  document.getElementById('tab-exp').classList.toggle('on',k==='exp');
+  document.getElementById('tab-drop').classList.toggle('on',k==='drop');
+}}
 document.querySelectorAll('table.cw th[data-c]').forEach(function(th){{
   th.onclick=function(){{
     var tb=th.closest('table').tBodies[0], ci=+th.dataset.c, num=th.dataset.num==='1';
-    var rows=[].slice.call(tb.rows); var dir=th._d=-(th._d||-1);
-    rows.sort(function(a,b){{var x=a.cells[ci]?a.cells[ci].innerText.trim():'',y=b.cells[ci]?b.cells[ci].innerText.trim():'';
-      if(num){{x=parseFloat(x.replace(/[^0-9.\-]/g,''))||0;y=parseFloat(y.replace(/[^0-9.\-]/g,''))||0;return (x-y)*dir;}}
-      return x<y?-dir:x>y?dir:0;}});
+    var dir=th._d=-(th._d||-1);
+    th.closest('thead').querySelectorAll('th').forEach(function(h){{h.classList.remove('sorted');}});
+    th.classList.add('sorted');
+    var rows=[].slice.call(tb.rows).filter(function(r){{return r.cells.length>2;}});
+    rows.sort(function(a,b){{
+      var ca=a.cells[ci], cb=b.cells[ci];
+      var x=ca?(ca.dataset.s!==undefined?ca.dataset.s:ca.innerText.trim()):'';
+      var y=cb?(cb.dataset.s!==undefined?cb.dataset.s:cb.innerText.trim()):'';
+      if(num){{x=parseFloat(x)||0;y=parseFloat(y)||0;return (x-y)*dir;}}
+      return x<y?-dir:x>y?dir:0;
+    }});
     rows.forEach(function(r){{tb.appendChild(r);}});
   }};
 }});
@@ -473,7 +512,6 @@ document.querySelectorAll('table.cw th[data-c]').forEach(function(th){{
 </body></html>"""
     open(os.path.join(site_dir, "watch.html"), "w").write(html_doc)
     print(f"[claim_watch] watch.html — {len(exp_rows)} expiring, {len(drp_rows)} dropped")
-
 
 def email_summary(site_dir="site", site_url="", n=6):
     """Compact watch block for the daily email, read from watch.json. Each item is
