@@ -6,7 +6,6 @@ import re
 import pandas as pd
 
 sys.path.insert(0, "src")
-from access_parser import AccessParser
 
 DB = "data/bc/MinFile-pc.accdb"
 RESCAT = {"BA": "Assay", "CB": "Combined", "IF": "Inferred", "IN": "Indicated",
@@ -85,7 +84,8 @@ def _highlights(txt):
 
 
 def build():
-    db = AccessParser(DB)
+    from access_parser import AccessParser   # lazy: only the .mdb builder needs it,
+    db = AccessParser(DB)                   # so importing helpers like _fmt_t stays dependency-free
     e01 = _df(db, "E01_Minfile_Occurrences")[["MINFILE_ID", "MINFILNO"]]
     e19 = _df(db, "E19_Commodity_Types")
     gr = _df(db, "R28_Minfile_Inventory_Commodities")

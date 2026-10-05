@@ -13,3 +13,4 @@ camelot-py
 opencv-python-headless
 curl_cffi
 playwright
+access_parser

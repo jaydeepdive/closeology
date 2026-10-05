@@ -150,9 +150,11 @@ PROVINCES = [
                    "fields": "AgreementNumber,DesRep,ReceivedDate,Status",
                    "id": "AgreementNumber", "owner": "DesRep", "issue": "ReceivedDate",
                    "where": "Status='ACTIVE'"},
-        "reserves": {"url": f"{_AB}/Mineral_Restrictions/MapServer/0",
-                     "where": "MineralType LIKE '%METALLICS%' AND Status='ACTIVE'",
-                     "name_field": "RestrictionName"},
+        # NOTE: the Mineral_Restrictions METALLICS layer totals ~1.4M km2 (2x
+        # Alberta) — it is blanket metallic-rights coverage, NOT a no-stake mask.
+        # Treating it as no-stake blanked every occurrence's open ground (0 leads),
+        # so AB computes open ground from actual claims only, like the other provinces.
+        # (Re-add a correctly scoped protected-areas layer here if one is found.)
     },
 ]
 
