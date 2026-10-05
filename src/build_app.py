@@ -185,6 +185,13 @@ const col=m=>MC[m]||'#8091a5';
 const topo=L.tileLayer('https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:17,attribution:'&copy; OpenTopoMap'}});
 const osm=L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png',{{maxZoom:19,attribution:'&copy; OpenStreetMap'}});
 const map=L.map('map',{{layers:[topo],preferCanvas:true}}).setView([58,-96],4);
+// Claim/coverage vectors draw in a LOWER pane so the opportunity (lead) markers
+// stay ON TOP and clickable. Lead markers use an SVG renderer, whose empty area
+// passes pointer events THROUGH to the claim canvas below — so claim hover
+// tooltips still work where no lead marker sits on top.
+map.createPane('claims'); map.getPane('claims').style.zIndex=250;
+const claimRenderer=L.canvas({{pane:'claims',padding:0.5}});
+const leadRenderer=L.svg({{padding:0.5}});
 map.on('moveend',()=>{{if(drawClaims)drawClaims();}});
 L.control.layers({{'Topographic':topo,'Street':osm}}).addTo(map);
 L.geoJSON(BORDERS,{{interactive:false,style:{{color:'#334155',weight:1.4,opacity:.6,fill:false,dashArray:'4 3'}}}}).addTo(map);
@@ -282,7 +289,7 @@ async function drawClaimTiles(){{
   }}
   const shown=feats.length;
   claimTileLayer=L.geoJSON({{type:'FeatureCollection',features:feats}},{{
-    renderer:L.canvas({{padding:0.5}}),
+    renderer:claimRenderer,
     style:{{color:'#2a1f00',weight:1,opacity:.95,fillColor:'#f4b400',fillOpacity:.5}},
     onEachFeature:(f,l)=>{{ const p=f.properties||{{}}; const own=(p.o||'').replace(/\s*-?\s*100%$/,'').trim();
       const tip=(own?'<b>'+esc(own)+'</b><br>':'')+(p.c?'claim #'+esc(p.c):'')+(p.e?'<br><span style="color:#555">good to '+esc((''+p.e).slice(0,10))+'</span>':'');
@@ -309,7 +316,7 @@ async function drawCoverage(){{
   if(covLayer){{map.removeLayer(covLayer);covLayer=null;}}
   const z=map.getZoom(); const rad = z>=9?4:(z>=7?3:2);
   covLayer=L.geoJSON({{type:'FeatureCollection',features:feats}},{{
-    renderer:L.canvas({{padding:0.5}}),
+    renderer:claimRenderer,
     pointToLayer:(f,ll)=>L.circleMarker(ll,{{radius:rad,color:'#4a3500',weight:.4,opacity:.9,fillColor:'#f4b400',fillOpacity:.9}})
   }}).addTo(map);
   if(btn) btn.textContent='⛏ Staked areas ('+shown+') — zoom in for boundaries';
@@ -345,7 +352,7 @@ function pass(p){{ return (jf==='all'||p.juris===jf) && metalMatch(p.dmetal) && 
   (!q || (p.name+' '+p.dmetal+' '+p.commodity+' '+p.community).toLowerCase().includes(q)); }}
 LEADS.forEach(p=>{{
   const r=3.5+Math.max(0,Math.min(p.score,90))/13, op=0.5+Math.max(0,Math.min(p.score,90))/180;
-  const m=L.circleMarker([p.lat,p.lon],{{radius:r,color:'#0b1526',weight:.8,fillColor:col(p.dmetal),fillOpacity:op}});
+  const m=L.circleMarker([p.lat,p.lon],{{radius:r,color:'#0b1526',weight:.8,fillColor:col(p.dmetal),fillOpacity:op,renderer:leadRenderer}});
   m.on('click',()=>select(p.id)); markers[p.id]=m;
 }});
 function refresh(){{
