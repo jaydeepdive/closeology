@@ -4711,6 +4711,7 @@
 { "type": "Feature", "properties": { "claim": "041411M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -67.23556, 54.50571 ] } },
 { "type": "Feature", "properties": { "claim": "041412M", "cname": null, "owner": "Jamil Sader", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -67.10134, 54.48564 ] } },
 { "type": "Feature", "properties": { "claim": "041413M", "cname": null, "owner": "Jamil Sader", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -67.24068, 54.56634 ] } },
-{ "type": "Feature", "properties": { "claim": "041414M", "cname": null, "owner": "Jamil Sader", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -67.09811, 54.55525 ] } }
+{ "type": "Feature", "properties": { "claim": "041414M", "cname": null, "owner": "Jamil Sader", "expiry": "", "staked": "2026-10-02" }, "geometry": { "type": "Point", "coordinates": [ -67.09811, 54.55525 ] } },
+{ "type": "Feature", "properties": { "claim": "041415M", "cname": null, "owner": "DAVID HANN", "expiry": "", "staked": "2026-10-05" }, "geometry": { "type": "Point", "coordinates": [ -57.74486, 48.98422 ] } }
 ]
 }
