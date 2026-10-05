@@ -209,7 +209,6 @@ def main():
                         if os.path.exists(os.path.join("data", r["slug"], "claims.parquet"))]
         claim_watch.run(_watch_slugs, "site")
     except Exception as e:
-        import traceback
         print("[build_all] claim watch skipped:", str(e)[:160]); traceback.print_exc()
     import build_priority
     build_priority.build("site", regions_site)         # index.html (front page)
