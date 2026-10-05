@@ -189,9 +189,10 @@ const map=L.map('map',{{layers:[topo],preferCanvas:true}}).setView([58,-96],4);
 // stay ON TOP and clickable. Lead markers use an SVG renderer, whose empty area
 // passes pointer events THROUGH to the claim canvas below — so claim hover
 // tooltips still work where no lead marker sits on top.
-map.createPane('claims'); map.getPane('claims').style.zIndex=250;
+map.createPane('claims'); map.getPane('claims').style.zIndex=410;   // above the base overlay canvas
+map.createPane('leads');  map.getPane('leads').style.zIndex=420;    // leads on top, clickable
 const claimRenderer=L.canvas({{pane:'claims',padding:0.5}});
-const leadRenderer=L.svg({{padding:0.5}});
+const leadRenderer=L.svg({{pane:'leads',padding:0.5}});
 map.on('moveend',()=>{{if(drawClaims)drawClaims();}});
 L.control.layers({{'Topographic':topo,'Street':osm}}).addTo(map);
 L.geoJSON(BORDERS,{{interactive:false,style:{{color:'#334155',weight:1.4,opacity:.6,fill:false,dashArray:'4 3'}}}}).addTo(map);
