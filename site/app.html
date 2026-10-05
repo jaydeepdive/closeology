@@ -940,9 +940,14 @@ async function drawClaimTiles(){
   await Promise.all(need.map(async k=>{ if(claimTileCache[k]) return; try{ const r=await fetch('claimtiles/'+k+'.geojson'); claimTileCache[k]= r.ok? await r.json():{features:[]}; }catch(e){ claimTileCache[k]={features:[]}; } }));
   if(!claimsOn || map.getZoom()<8) return;            // view changed while loading
   if(claimTileLayer){map.removeLayer(claimTileLayer);claimTileLayer=null;}
-  const feats=[], seen=new Set();   // render EVERY claim in view — never drop/thin any
+  const feats=[], seen=new Set();
   for(const k of need){ const d=claimTileCache[k]; if(!d) continue;
-    for(const f of (d.features||[])){ const id=f.properties&&f.properties.c; if(id){ if(seen.has(id)) continue; seen.add(id); } feats.push(f); }
+    for(const f of (d.features||[])){
+      let cc=f.geometry&&f.geometry.coordinates;
+      try{ while(Array.isArray(cc[0])) cc=cc[0]; }catch(e){ cc=null; }
+      const key=((f.properties&&f.properties.c)||'')+'@'+(cc?cc[0].toFixed(4)+','+cc[1].toFixed(4):String(seen.size));
+      if(seen.has(key)) continue; seen.add(key); feats.push(f);
+    }
   }
   const shown=feats.length;
   claimTileLayer=L.geoJSON({type:'FeatureCollection',features:feats},{
