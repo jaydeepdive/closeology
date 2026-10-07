@@ -679,8 +679,6 @@
 { "type": "Feature", "properties": { "claim": "030960M", "cname": null, "owner": "Nidon Enterprises Ltd.", "expiry": "2030-08-01", "staked": "2020-07-02" }, "geometry": { "type": "Point", "coordinates": [ -55.0195, 48.95162 ] } },
 { "type": "Feature", "properties": { "claim": "030961M", "cname": null, "owner": "Unity Resources Inc.", "expiry": "2030-08-01", "staked": "2020-07-02" }, "geometry": { "type": "Point", "coordinates": [ -55.04925, 48.97659 ] } },
 { "type": "Feature", "properties": { "claim": "030964M", "cname": null, "owner": "Vulcan Minerals Inc.", "expiry": "2030-08-02", "staked": "2020-07-03" }, "geometry": { "type": "Point", "coordinates": [ -54.50828, 49.06811 ] } },
-{ "type": "Feature", "properties": { "claim": "030965M", "cname": null, "owner": "Vulcan Minerals Inc.", "expiry": "2030-08-02", "staked": "2020-07-03" }, "geometry": { "type": "Point", "coordinates": [ -55.28999, 48.62998 ] } },
-{ "type": "Feature", "properties": { "claim": "030966M", "cname": null, "owner": "Vulcan Minerals Inc.", "expiry": "2030-08-02", "staked": "2020-07-03" }, "geometry": { "type": "Point", "coordinates": [ -54.51794, 49.14892 ] } },
 { "type": "Feature", "properties": { "claim": "030983M", "cname": null, "owner": "Alterra Resources Inc.", "expiry": "2030-07-26", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.71166, 52.22617 ] } },
 { "type": "Feature", "properties": { "claim": "030992M", "cname": null, "owner": "Quest Inc.", "expiry": "2030-08-05", "staked": "2020-07-06" }, "geometry": { "type": "Point", "coordinates": [ -54.41444, 49.29277 ] } },
 { "type": "Feature", "properties": { "claim": "030997M", "cname": null, "owner": "Cape Ray Mining Limited", "expiry": "2026-11-16", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -59.11195, 47.68516 ] } },
@@ -2759,7 +2757,7 @@
 { "type": "Feature", "properties": { "claim": "039360M", "cname": null, "owner": "Andrew Quinlan", "expiry": "2030-06-26", "staked": "2025-05-27" }, "geometry": { "type": "Point", "coordinates": [ -54.84397, 49.45664 ] } },
 { "type": "Feature", "properties": { "claim": "039362M", "cname": null, "owner": "85893 Newfoundland & Labrador Inc.", "expiry": "2030-06-26", "staked": "2025-05-27" }, "geometry": { "type": "Point", "coordinates": [ -55.93617, 49.67886 ] } },
 { "type": "Feature", "properties": { "claim": "039364M", "cname": null, "owner": "85893 Newfoundland & Labrador Inc.", "expiry": "2030-06-26", "staked": "2025-05-27" }, "geometry": { "type": "Point", "coordinates": [ -55.17314, 48.76514 ] } },
-{ "type": "Feature", "properties": { "claim": "039365M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "2030-06-26", "staked": "2025-05-27" }, "geometry": { "type": "Point", "coordinates": [ -57.26707, 48.44655 ] } },
+{ "type": "Feature", "properties": { "claim": "039365M", "cname": null, "owner": "Quadro Resources Ltd.", "expiry": "2030-06-26", "staked": "2025-05-27" }, "geometry": { "type": "Point", "coordinates": [ -57.26707, 48.44655 ] } },
 { "type": "Feature", "properties": { "claim": "039366M", "cname": null, "owner": "FPX Nickel Corp", "expiry": "2030-06-26", "staked": "2025-05-27" }, "geometry": { "type": "Point", "coordinates": [ -56.5231, 49.54559 ] } },
 { "type": "Feature", "properties": { "claim": "039367M", "cname": null, "owner": "Kirby House", "expiry": "2030-06-26", "staked": "2025-05-27" }, "geometry": { "type": "Point", "coordinates": [ -55.6227, 51.31017 ] } },
 { "type": "Feature", "properties": { "claim": "039368M", "cname": null, "owner": "85893 Newfoundland & Labrador Inc.", "expiry": "2030-06-26", "staked": "2025-05-27" }, "geometry": { "type": "Point", "coordinates": [ -55.78163, 49.48395 ] } },
@@ -2795,7 +2793,6 @@
 { "type": "Feature", "properties": { "claim": "039425M", "cname": null, "owner": "1470199 B.C. Ltd.", "expiry": "2030-07-23", "staked": "2025-06-23" }, "geometry": { "type": "Point", "coordinates": [ -56.10469, 48.9899 ] } },
 { "type": "Feature", "properties": { "claim": "039428M", "cname": null, "owner": "Shawn Ryan", "expiry": "2027-07-05", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -67.1757, 54.54912 ] } },
 { "type": "Feature", "properties": { "claim": "039429M", "cname": null, "owner": "Noelle Burton", "expiry": "2031-07-11", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.61691, 49.93859 ] } },
-{ "type": "Feature", "properties": { "claim": "039433M", "cname": null, "owner": "Paul Saunders", "expiry": "2030-08-01", "staked": "2025-07-02" }, "geometry": { "type": "Point", "coordinates": [ -57.90651, 49.23039 ] } },
 { "type": "Feature", "properties": { "claim": "039434M", "cname": null, "owner": "Puddle Pond Resources Inc.", "expiry": "2031-06-06", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.06398, 49.33807 ] } },
 { "type": "Feature", "properties": { "claim": "039435M", "cname": null, "owner": "Maritime Resources Corp.", "expiry": "2030-08-02", "staked": "2025-07-03" }, "geometry": { "type": "Point", "coordinates": [ -56.26628, 49.61845 ] } },
 { "type": "Feature", "properties": { "claim": "039436M", "cname": null, "owner": "Paul Saunders", "expiry": "2030-08-04", "staked": "2025-07-05" }, "geometry": { "type": "Point", "coordinates": [ -57.92, 49.21684 ] } },
@@ -4543,7 +4540,7 @@
 { "type": "Feature", "properties": { "claim": "041243M", "cname": null, "owner": "Pirate Gold Corp.", "expiry": "2031-09-17", "staked": "2026-08-18" }, "geometry": { "type": "Point", "coordinates": [ -56.45662, 49.61939 ] } },
 { "type": "Feature", "properties": { "claim": "041244M", "cname": null, "owner": "Matthew Stead", "expiry": "2031-09-17", "staked": "2026-08-18" }, "geometry": { "type": "Point", "coordinates": [ -56.33091, 48.68332 ] } },
 { "type": "Feature", "properties": { "claim": "041245M", "cname": null, "owner": "FPX Nickel Corp", "expiry": "", "staked": "2026-08-18" }, "geometry": { "type": "Point", "coordinates": [ -56.41828, 49.64184 ] } },
-{ "type": "Feature", "properties": { "claim": "041246M", "cname": null, "owner": "Rosalind Lannon", "expiry": "2031-09-17", "staked": "2026-08-18" }, "geometry": { "type": "Point", "coordinates": [ -56.04429, 49.28866 ] } },
+{ "type": "Feature", "properties": { "claim": "041246M", "cname": null, "owner": "George Lannon", "expiry": "2031-09-17", "staked": "2026-08-18" }, "geometry": { "type": "Point", "coordinates": [ -56.04429, 49.28866 ] } },
 { "type": "Feature", "properties": { "claim": "041247M", "cname": null, "owner": "D3 Exploration Ltd.", "expiry": "2031-09-17", "staked": "2026-08-18" }, "geometry": { "type": "Point", "coordinates": [ -55.8575, 49.48696 ] } },
 { "type": "Feature", "properties": { "claim": "041248M", "cname": null, "owner": "Wayde Guinchard", "expiry": "2031-09-17", "staked": "2026-08-18" }, "geometry": { "type": "Point", "coordinates": [ -54.49987, 48.89437 ] } },
 { "type": "Feature", "properties": { "claim": "041249M", "cname": null, "owner": "Hilary Butt", "expiry": "2031-09-17", "staked": "2026-08-18" }, "geometry": { "type": "Point", "coordinates": [ -56.02022, 49.28854 ] } },
@@ -4720,6 +4717,8 @@
 { "type": "Feature", "properties": { "claim": "041421M", "cname": null, "owner": "DAVID HANN", "expiry": "", "staked": "2026-10-05" }, "geometry": { "type": "Point", "coordinates": [ -57.73508, 49.47903 ] } },
 { "type": "Feature", "properties": { "claim": "041422M", "cname": null, "owner": "Jonathan Ballard", "expiry": "2030-10-03", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.09153, 48.10865 ] } },
 { "type": "Feature", "properties": { "claim": "041423M", "cname": null, "owner": "Jonathan Ballard", "expiry": "2030-10-03", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.12184, 48.10717 ] } },
-{ "type": "Feature", "properties": { "claim": "041424M", "cname": null, "owner": "Jonathan Ballard", "expiry": "2030-10-03", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.1176, 48.12281 ] } }
+{ "type": "Feature", "properties": { "claim": "041424M", "cname": null, "owner": "Jonathan Ballard", "expiry": "2030-10-03", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.1176, 48.12281 ] } },
+{ "type": "Feature", "properties": { "claim": "041425M", "cname": null, "owner": "Carey Galeschuk", "expiry": "", "staked": "2026-10-07" }, "geometry": { "type": "Point", "coordinates": [ -59.29735, 47.62096 ] } },
+{ "type": "Feature", "properties": { "claim": "041426M", "cname": null, "owner": "Wilson J. Jacobs", "expiry": "", "staked": "2026-10-07" }, "geometry": { "type": "Point", "coordinates": [ -55.76046, 48.95298 ] } }
 ]
 }
