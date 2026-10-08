@@ -1028,6 +1028,8 @@
 { "type": "Feature", "properties": { "claim": "260173701", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.69642, 55.06052 ] } },
 { "type": "Feature", "properties": { "claim": "260173703", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.74738, 55.06039 ] } },
 { "type": "Feature", "properties": { "claim": "260173705", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.72189, 55.07491 ] } },
-{ "type": "Feature", "properties": { "claim": "260173707", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.67087, 55.07502 ] } }
+{ "type": "Feature", "properties": { "claim": "260173707", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.67087, 55.07502 ] } },
+{ "type": "Feature", "properties": { "claim": "260187202", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-10-06" }, "geometry": { "type": "Point", "coordinates": [ -110.08623, 50.93937 ] } },
+{ "type": "Feature", "properties": { "claim": "260187201", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-10-06" }, "geometry": { "type": "Point", "coordinates": [ -110.13175, 50.79752 ] } }
 ]
 }
