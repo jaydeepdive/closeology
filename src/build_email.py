@@ -3,6 +3,7 @@ dict so the scheduled email task fetches a ready-to-send body instead of composi
 HTML itself (which was fragile and leaked raw markup)."""
 import html as _html
 import os
+import json as _json
 
 
 def _esc(v):
@@ -105,14 +106,71 @@ def render(d):
     return subject, html
 
 
+def payload(d):
+    """Compact, email-only dict the scheduled task fetches on its own. Kept small
+    (no `regions`, items already capped upstream) so WebFetch never truncates it."""
+    gen = d.get("generated", "")
+    site = d.get("site", "https://jaydeepdive.github.io/closeology/")
+    top = d.get("top", {}) or {}
+    watch = d.get("watch", {}) or {}
+    wexp = watch.get("expiring", {}) or {}
+    wdrp = watch.get("dropped", {}) or {}
+    n_edges = top.get("counts", {}).get("edges", len(top.get("edges", []) or []))
+    n_wdrop = wdrp.get("n", 0)
+    n_wexp = wexp.get("n", 0)
+    watch_url = watch.get("watch_url") or (site + "watch.html")
+
+    def _items(lst):
+        out = []
+        for it in (lst or []):
+            out.append({"juris": it.get("juris", ""), "text": it.get("text", ""),
+                        "hot": bool(it.get("hot")), "map_url": it.get("map_url", ""),
+                        "url": it.get("url", "")})
+        return out
+
+    secs = [{"title": "\U0001f525 Act now \u2014 fresh drilling by open ground",
+             "empty": "No fresh drilling on an open boundary today.",
+             "items": _items(top.get("edges", []))}]
+    if watch:
+        secs.append({"title": f"\U0001f513 Just dropped \u2014 claims that lapsed (last 30 days, {n_wdrop})",
+                     "empty": (None if wdrp.get("items") else
+                               f"No drops recorded yet \u2014 tracking since {wdrp.get('tracking_since', gen)}, complete after ~30 days."),
+                     "items": _items(wdrp.get("items", []))})
+        if wexp.get("items"):
+            secs.append({"title": f"\u23f3 Expiring this week ({n_wexp})",
+                         "empty": None, "items": _items(wexp.get("items", []))})
+    if top.get("dropped"):
+        secs.append({"title": "\u2691 Properties just opened", "empty": None,
+                     "items": _items(top.get("dropped", []))})
+    if top.get("leads"):
+        secs.append({"title": "\u2b50 Top leads with activity nearby", "empty": None,
+                     "items": _items(top.get("leads", []))})
+
+    return {
+        "generated": gen,
+        "email_ready": True,
+        "email_subject": (f"Closeology \u2014 {n_edges} plays \u00b7 {n_wdrop} just dropped "
+                          f"\u00b7 {n_wexp} expiring ({gen})" if watch else
+                          f"Closeology \u2014 {n_edges} plays ({gen})"),
+        "site": site,
+        "radar_url": site + "radar.html",
+        "watch_url": watch_url,
+        "intro": "The movements worth a look today \u2014 full detail and maps on the radar.",
+        "sections": secs,
+    }
+
+
 def build(email_dict, site_dir="site"):
     subject, html = render(email_dict)
     email_dict["email_subject"] = subject
-    email_dict["email_html"] = html          # ready-to-send body; task sends verbatim
     email_dict["email_ready"] = True
     try:
         os.makedirs(site_dir, exist_ok=True)
         open(os.path.join(site_dir, "daily_email.html"), "w").write(html)
+        # compact, email-only JSON the scheduled task fetches (no regions -> no truncation)
+        _json.dump(payload(email_dict),
+                   open(os.path.join(site_dir, "daily_email_payload.json"), "w"),
+                   ensure_ascii=False)
     except Exception as e:
         print("[build_email] write failed:", str(e)[:100])
     return subject, html
