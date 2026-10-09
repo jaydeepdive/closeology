@@ -108,6 +108,7 @@ def render(d):
 def build(email_dict, site_dir="site"):
     subject, html = render(email_dict)
     email_dict["email_subject"] = subject
+    email_dict["email_html"] = html          # ready-to-send body; task sends verbatim
     email_dict["email_ready"] = True
     try:
         os.makedirs(site_dir, exist_ok=True)
