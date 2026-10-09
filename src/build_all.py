@@ -298,6 +298,11 @@ def main():
         email["watch"] = _cw.email_summary("site", site_url=email["site"])
     except Exception as _e:
         print("[build_all] email watch summary skipped:", str(_e)[:100])
+    try:
+        import build_email as _be
+        _be.build(email, "site")          # deterministic daily_email.html + email_subject
+    except Exception as _e:
+        print("[build_all] daily email render skipped:", str(_e)[:120])
     _json.dump(email, open("site/daily_email.json", "w"))
     import build_radar
     build_radar.build(email, "site")                   # radar.html cross-Canada overview

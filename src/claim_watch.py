@@ -250,7 +250,11 @@ def build_outputs(reg, site_dir="site", today=None, meta=None):
     # dropped: not seen today but seen within DROP_WINDOW, in a province updated today
     updated = set((meta or {}).get("updated_provinces", []))
     drop_floor = _d2s(today - datetime.timedelta(days=DROP_WINDOW_DAYS))
-    drop_mask = (reg["last_seen"] != tstr) & (reg["last_seen"] >= drop_floor) & \
+    # Require a claim to be ABSENT for >=2 consecutive builds before calling it
+    # dropped, so a single incomplete province fetch (which self-corrects the next
+    # day) does not produce a spurious wave of "drops".
+    drop_confirm = _d2s(today - datetime.timedelta(days=2))
+    drop_mask = (reg["last_seen"] <= drop_confirm) & (reg["last_seen"] >= drop_floor) & \
                 (reg["prov"].isin(updated) if updated else False)
     dropped = reg[drop_mask].copy().sort_values("last_seen", ascending=False)
 
