@@ -2816,7 +2816,6 @@
 { "type": "Feature", "properties": { "claim": "039465M", "cname": null, "owner": "Newfoundland Gold Retriever Corp.", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -59.65406, 53.62969 ] } },
 { "type": "Feature", "properties": { "claim": "039466M", "cname": null, "owner": "Killick Lithium Inc.", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -57.75915, 47.89109 ] } },
 { "type": "Feature", "properties": { "claim": "039467M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -57.09144, 48.53679 ] } },
-{ "type": "Feature", "properties": { "claim": "039469M", "cname": null, "owner": "George Lannon", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -57.90502, 48.39157 ] } },
 { "type": "Feature", "properties": { "claim": "039470M", "cname": null, "owner": "White Fox Silver Resources Inc.", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -53.95271, 47.29313 ] } },
 { "type": "Feature", "properties": { "claim": "039471M", "cname": null, "owner": "Canstar Resources Inc.", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -56.65606, 48.81519 ] } },
 { "type": "Feature", "properties": { "claim": "039472M", "cname": null, "owner": "Angie Stockley", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -56.8518, 48.25784 ] } },
@@ -3015,7 +3014,6 @@
 { "type": "Feature", "properties": { "claim": "039684M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "2030-10-11", "staked": "2025-09-11" }, "geometry": { "type": "Point", "coordinates": [ -61.40998, 52.98254 ] } },
 { "type": "Feature", "properties": { "claim": "032197M", "cname": null, "owner": "Latitude Uranium Inc.", "expiry": "2031-03-24", "staked": "2021-02-22" }, "geometry": { "type": "Point", "coordinates": [ -62.31438, 55.78396 ] } },
 { "type": "Feature", "properties": { "claim": "032700M", "cname": null, "owner": "Latitude Uranium Inc.", "expiry": "2031-06-12", "staked": "2021-05-13" }, "geometry": { "type": "Point", "coordinates": [ -62.20954, 55.64599 ] } },
-{ "type": "Feature", "properties": { "claim": "039685M", "cname": null, "owner": "Leroy Smith", "expiry": "2030-10-13", "staked": "2025-09-13" }, "geometry": { "type": "Point", "coordinates": [ -54.10355, 47.83451 ] } },
 { "type": "Feature", "properties": { "claim": "039686M", "cname": null, "owner": "Zonte Metals Inc.", "expiry": "2028-10-02", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.75331, 47.7972 ] } },
 { "type": "Feature", "properties": { "claim": "039687M", "cname": null, "owner": "Noelle Burton", "expiry": "2031-08-29", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -55.64465, 49.94325 ] } },
 { "type": "Feature", "properties": { "claim": "039688M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "2030-10-17", "staked": "2025-09-17" }, "geometry": { "type": "Point", "coordinates": [ -55.74798, 47.94296 ] } },
@@ -4713,6 +4711,7 @@
 { "type": "Feature", "properties": { "claim": "041425M", "cname": null, "owner": "Carey Galeschuk", "expiry": "", "staked": "2026-10-07" }, "geometry": { "type": "Point", "coordinates": [ -59.29735, 47.62096 ] } },
 { "type": "Feature", "properties": { "claim": "041426M", "cname": null, "owner": "Wilson J. Jacobs", "expiry": "", "staked": "2026-10-07" }, "geometry": { "type": "Point", "coordinates": [ -55.76046, 48.95298 ] } },
 { "type": "Feature", "properties": { "claim": "041427M", "cname": null, "owner": "Stockworks exploration ltd", "expiry": "", "staked": "2026-10-08" }, "geometry": { "type": "Point", "coordinates": [ -55.45661, 49.28216 ] } },
-{ "type": "Feature", "properties": { "claim": "041428M", "cname": null, "owner": "Stockworks exploration ltd", "expiry": "", "staked": "2026-10-08" }, "geometry": { "type": "Point", "coordinates": [ -55.46334, 49.28675 ] } }
+{ "type": "Feature", "properties": { "claim": "041428M", "cname": null, "owner": "Stockworks exploration ltd", "expiry": "", "staked": "2026-10-08" }, "geometry": { "type": "Point", "coordinates": [ -55.46334, 49.28675 ] } },
+{ "type": "Feature", "properties": { "claim": "041429M", "cname": null, "owner": "Leroy Smith", "expiry": "2030-10-13", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.10083, 47.82335 ] } }
 ]
 }
