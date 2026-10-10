@@ -4712,6 +4712,8 @@
 { "type": "Feature", "properties": { "claim": "041426M", "cname": null, "owner": "Wilson J. Jacobs", "expiry": "", "staked": "2026-10-07" }, "geometry": { "type": "Point", "coordinates": [ -55.76046, 48.95298 ] } },
 { "type": "Feature", "properties": { "claim": "041427M", "cname": null, "owner": "Stockworks exploration ltd", "expiry": "", "staked": "2026-10-08" }, "geometry": { "type": "Point", "coordinates": [ -55.45661, 49.28216 ] } },
 { "type": "Feature", "properties": { "claim": "041428M", "cname": null, "owner": "Stockworks exploration ltd", "expiry": "", "staked": "2026-10-08" }, "geometry": { "type": "Point", "coordinates": [ -55.46334, 49.28675 ] } },
-{ "type": "Feature", "properties": { "claim": "041429M", "cname": null, "owner": "Leroy Smith", "expiry": "2030-10-13", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.10083, 47.82335 ] } }
+{ "type": "Feature", "properties": { "claim": "041429M", "cname": null, "owner": "Leroy Smith", "expiry": "2030-10-13", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.10083, 47.82335 ] } },
+{ "type": "Feature", "properties": { "claim": "041430M", "cname": null, "owner": "Alex Bailey", "expiry": "", "staked": "2026-10-09" }, "geometry": { "type": "Point", "coordinates": [ -58.5033, 48.18063 ] } },
+{ "type": "Feature", "properties": { "claim": "041431M", "cname": null, "owner": "Jeffery Brushett", "expiry": "", "staked": "2026-10-10" }, "geometry": { "type": "Point", "coordinates": [ -54.89803, 47.68534 ] } }
 ]
 }

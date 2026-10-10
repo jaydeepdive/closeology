@@ -1011,10 +1011,7 @@
 { "type": "Feature", "properties": { "claim": "9626060183", "cname": "", "owner": "SUREWAY CONTRACTING LTD.", "expiry": "", "staked": "2026-06-30" }, "geometry": { "type": "Point", "coordinates": [ -113.26443, 53.66133 ] } },
 { "type": "Feature", "properties": { "claim": "9322070198", "cname": "", "owner": "HAIMILA, RAYMOND ARTHUR", "expiry": "", "staked": "2022-07-18" }, "geometry": { "type": "Point", "coordinates": [ -112.94882, 55.13723 ] } },
 { "type": "Feature", "properties": { "claim": "9326080186", "cname": "", "owner": "CANADIAN SILICA INDUSTRIES INC.", "expiry": "", "staked": "2026-08-25" }, "geometry": { "type": "Point", "coordinates": [ -117.38643, 56.17212 ] } },
-{ "type": "Feature", "properties": { "claim": "260168401", "cname": "", "owner": "HRYHOR, DONALD WAYNE", "expiry": "", "staked": "2026-09-04" }, "geometry": { "type": "Point", "coordinates": [ -114.74573, 51.83871 ] } },
 { "type": "Feature", "properties": { "claim": "260168601", "cname": "", "owner": "THIBAULT, PIERRE", "expiry": "", "staked": "2026-09-07" }, "geometry": { "type": "Point", "coordinates": [ -112.45022, 52.71054 ] } },
-{ "type": "Feature", "properties": { "claim": "9306060989", "cname": "", "owner": "MONEY ROCK RESOURCES LTD.", "expiry": "", "staked": "2006-06-06" }, "geometry": { "type": "Point", "coordinates": [ -113.40388, 55.21004 ] } },
-{ "type": "Feature", "properties": { "claim": "260168501", "cname": "", "owner": "HRYHOR, DONALD WAYNE", "expiry": "", "staked": "2026-09-04" }, "geometry": { "type": "Point", "coordinates": [ -114.93461, 51.83863 ] } },
 { "type": "Feature", "properties": { "claim": "9326090151", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-09-23" }, "geometry": { "type": "Point", "coordinates": [ -110.01652, 50.64469 ] } },
 { "type": "Feature", "properties": { "claim": "9326090152", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-09-23" }, "geometry": { "type": "Point", "coordinates": [ -110.03965, 50.78297 ] } },
 { "type": "Feature", "properties": { "claim": "9326090154", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-09-23" }, "geometry": { "type": "Point", "coordinates": [ -110.67582, 53.2853 ] } },
@@ -1030,6 +1027,9 @@
 { "type": "Feature", "properties": { "claim": "260173705", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.72189, 55.07491 ] } },
 { "type": "Feature", "properties": { "claim": "260173707", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.67087, 55.07502 ] } },
 { "type": "Feature", "properties": { "claim": "260187202", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-10-06" }, "geometry": { "type": "Point", "coordinates": [ -110.08623, 50.93937 ] } },
-{ "type": "Feature", "properties": { "claim": "260187201", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-10-06" }, "geometry": { "type": "Point", "coordinates": [ -110.13175, 50.79752 ] } }
+{ "type": "Feature", "properties": { "claim": "260187201", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-10-06" }, "geometry": { "type": "Point", "coordinates": [ -110.13175, 50.79752 ] } },
+{ "type": "Feature", "properties": { "claim": "9326100117", "cname": "", "owner": "HRYHOR, DONALD WAYNE", "expiry": "", "staked": "2026-10-09" }, "geometry": { "type": "Point", "coordinates": [ -114.93461, 51.83863 ] } },
+{ "type": "Feature", "properties": { "claim": "9326100116", "cname": "", "owner": "HRYHOR, DONALD WAYNE", "expiry": "", "staked": "2026-10-09" }, "geometry": { "type": "Point", "coordinates": [ -114.74573, 51.83871 ] } },
+{ "type": "Feature", "properties": { "claim": "9306060989", "cname": "", "owner": "MONEY ROCK RESOURCES LTD.", "expiry": "", "staked": "2006-06-06" }, "geometry": { "type": "Point", "coordinates": [ -113.42321, 55.21274 ] } }
 ]
 }
