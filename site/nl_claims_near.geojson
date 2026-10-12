@@ -4714,6 +4714,9 @@
 { "type": "Feature", "properties": { "claim": "041428M", "cname": null, "owner": "Stockworks exploration ltd", "expiry": "", "staked": "2026-10-08" }, "geometry": { "type": "Point", "coordinates": [ -55.46334, 49.28675 ] } },
 { "type": "Feature", "properties": { "claim": "041429M", "cname": null, "owner": "Leroy Smith", "expiry": "2030-10-13", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.10083, 47.82335 ] } },
 { "type": "Feature", "properties": { "claim": "041430M", "cname": null, "owner": "Alex Bailey", "expiry": "", "staked": "2026-10-09" }, "geometry": { "type": "Point", "coordinates": [ -58.5033, 48.18063 ] } },
-{ "type": "Feature", "properties": { "claim": "041431M", "cname": null, "owner": "Jeffery Brushett", "expiry": "", "staked": "2026-10-10" }, "geometry": { "type": "Point", "coordinates": [ -54.89803, 47.68534 ] } }
+{ "type": "Feature", "properties": { "claim": "041431M", "cname": null, "owner": "Jeffery Brushett", "expiry": "", "staked": "2026-10-10" }, "geometry": { "type": "Point", "coordinates": [ -54.89803, 47.68534 ] } },
+{ "type": "Feature", "properties": { "claim": "041432M", "cname": null, "owner": "Grassroots Prospecting and Prospect Generation Inc.", "expiry": "", "staked": "2026-10-12" }, "geometry": { "type": "Point", "coordinates": [ -62.4137, 57.12286 ] } },
+{ "type": "Feature", "properties": { "claim": "041433M", "cname": null, "owner": "Grassroots Prospecting and Prospect Generation Inc.", "expiry": "", "staked": "2026-10-12" }, "geometry": { "type": "Point", "coordinates": [ -57.45641, 50.31021 ] } },
+{ "type": "Feature", "properties": { "claim": "041434M", "cname": null, "owner": "Grassroots Prospecting and Prospect Generation Inc.", "expiry": "", "staked": "2026-10-12" }, "geometry": { "type": "Point", "coordinates": [ -57.40736, 50.32161 ] } }
 ]
 }
