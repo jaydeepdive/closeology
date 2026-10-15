@@ -4708,6 +4708,11 @@
 { "type": "Feature", "properties": { "claim": "041434M", "cname": null, "owner": "Grassroots Prospecting and Prospect Generation Inc.", "expiry": "", "staked": "2026-10-12" }, "geometry": { "type": "Point", "coordinates": [ -57.40736, 50.32161 ] } },
 { "type": "Feature", "properties": { "claim": "041435M", "cname": null, "owner": "Alexander S. Duffitt", "expiry": "", "staked": "2026-10-13" }, "geometry": { "type": "Point", "coordinates": [ -55.96651, 49.55548 ] } },
 { "type": "Feature", "properties": { "claim": "041436M", "cname": null, "owner": "Dean White", "expiry": "", "staked": "2026-10-13" }, "geometry": { "type": "Point", "coordinates": [ -58.42181, 48.39534 ] } },
-{ "type": "Feature", "properties": { "claim": "041437M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-10-14" }, "geometry": { "type": "Point", "coordinates": [ -58.19193, 49.3897 ] } }
+{ "type": "Feature", "properties": { "claim": "041437M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-10-14" }, "geometry": { "type": "Point", "coordinates": [ -58.19193, 49.3897 ] } },
+{ "type": "Feature", "properties": { "claim": "041438M", "cname": null, "owner": "Afzaal Pirzada", "expiry": "", "staked": "2026-10-14" }, "geometry": { "type": "Point", "coordinates": [ -58.89623, 48.16503 ] } },
+{ "type": "Feature", "properties": { "claim": "041439M", "cname": null, "owner": "Anteros Metals Inc", "expiry": "", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -57.46108, 48.96322 ] } },
+{ "type": "Feature", "properties": { "claim": "041440M", "cname": null, "owner": "Joan Tremblett", "expiry": "", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -54.48027, 49.28298 ] } },
+{ "type": "Feature", "properties": { "claim": "041441M", "cname": null, "owner": "Donnie Harris", "expiry": "", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -54.47009, 49.28043 ] } },
+{ "type": "Feature", "properties": { "claim": "041442M", "cname": null, "owner": "Joan Tremblett", "expiry": "", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -54.47306, 49.28965 ] } }
 ]
 }
