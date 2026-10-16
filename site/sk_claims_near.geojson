@@ -962,7 +962,7 @@
 { "type": "Feature", "properties": { "claim": "S-107361", "cname": "", "owner": "WATERBURY LAKE URANIUM CORPORATION: 100.000%", "expiry": "2042-07-10", "staked": "2004-04-12" }, "geometry": { "type": "Point", "coordinates": [ -104.234, 58.30946 ] } },
 { "type": "Feature", "properties": { "claim": "S-107362", "cname": "", "owner": "WATERBURY LAKE URANIUM CORPORATION: 100.000%", "expiry": "2042-07-14", "staked": "2004-04-16" }, "geometry": { "type": "Point", "coordinates": [ -104.33808, 58.29288 ] } },
 { "type": "Feature", "properties": { "claim": "S-107329", "cname": "", "owner": "ORANO CANADA INC.: 100.000%", "expiry": "2027-09-13", "staked": "2004-06-16" }, "geometry": { "type": "Point", "coordinates": [ -109.49099, 57.88457 ] } },
-{ "type": "Feature", "properties": { "claim": "S-108031", "cname": "", "owner": "NEPTUNE ENERGY CORP.: 100.000%", "expiry": "2026-11-07", "staked": "2005-08-10" }, "geometry": { "type": "Point", "coordinates": [ -108.41462, 59.64381 ] } },
+{ "type": "Feature", "properties": { "claim": "S-108031", "cname": "", "owner": "NEPTUNE ENERGY CORP.: 100.000%", "expiry": "2027-11-07", "staked": "2005-08-10" }, "geometry": { "type": "Point", "coordinates": [ -108.41462, 59.64381 ] } },
 { "type": "Feature", "properties": { "claim": "S-108047", "cname": "", "owner": "ISOENERGY LTD.: 50.000%;  PUREPOINT URANIUM GROUP INC.: 50.000%", "expiry": "2043-05-25", "staked": "2005-02-25" }, "geometry": { "type": "Point", "coordinates": [ -104.27772, 58.07684 ] } },
 { "type": "Feature", "properties": { "claim": "S-108048", "cname": "", "owner": "ISOENERGY LTD.: 50.000%;  PUREPOINT URANIUM GROUP INC.: 50.000%", "expiry": "2043-05-25", "staked": "2005-02-25" }, "geometry": { "type": "Point", "coordinates": [ -104.3696, 58.05365 ] } },
 { "type": "Feature", "properties": { "claim": "S-108053", "cname": "", "owner": "NEPTUNE ENERGY CORP.: 100.000%", "expiry": "2033-03-12", "staked": "2005-12-13" }, "geometry": { "type": "Point", "coordinates": [ -108.73651, 59.5131 ] } },
@@ -7337,6 +7337,9 @@
 { "type": "Feature", "properties": { "claim": "MC00024288", "cname": "", "owner": "Elizabeth Nolan: 100.000%", "expiry": "2029-01-11", "staked": "2026-10-13" }, "geometry": { "type": "Point", "coordinates": [ -107.63213, 56.72344 ] } },
 { "type": "Feature", "properties": { "claim": "MC00024289", "cname": "", "owner": "Elsa Opple: 100.000%", "expiry": "2029-01-11", "staked": "2026-10-13" }, "geometry": { "type": "Point", "coordinates": [ -106.08807, 55.62363 ] } },
 { "type": "Feature", "properties": { "claim": "MC00024290", "cname": "", "owner": "Carey Rus Galeschuk: 100.000%", "expiry": "2029-01-11", "staked": "2026-10-13" }, "geometry": { "type": "Point", "coordinates": [ -102.35342, 54.85331 ] } },
-{ "type": "Feature", "properties": { "claim": "MC00024291", "cname": "", "owner": "Carey Rus Galeschuk: 100.000%", "expiry": "2029-01-11", "staked": "2026-10-13" }, "geometry": { "type": "Point", "coordinates": [ -102.05758, 54.58788 ] } }
+{ "type": "Feature", "properties": { "claim": "MC00024291", "cname": "", "owner": "Carey Rus Galeschuk: 100.000%", "expiry": "2029-01-11", "staked": "2026-10-13" }, "geometry": { "type": "Point", "coordinates": [ -102.05758, 54.58788 ] } },
+{ "type": "Feature", "properties": { "claim": "MC00024292", "cname": "", "owner": "Gary Clayton Dunn: 100.000%", "expiry": "2029-01-13", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -105.72248, 59.44257 ] } },
+{ "type": "Feature", "properties": { "claim": "MC00024293", "cname": "", "owner": "GEM OIL INC.: 100.000%", "expiry": "2029-01-13", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -103.19385, 55.71486 ] } },
+{ "type": "Feature", "properties": { "claim": "MC00024294", "cname": "", "owner": "Gary Clayton Dunn: 100.000%", "expiry": "2029-01-13", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -105.61105, 59.40799 ] } }
 ]
 }
