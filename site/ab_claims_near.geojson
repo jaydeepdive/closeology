@@ -1032,6 +1032,19 @@
 { "type": "Feature", "properties": { "claim": "260173706", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.69641, 55.07498 ] } },
 { "type": "Feature", "properties": { "claim": "260173707", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.67087, 55.07502 ] } },
 { "type": "Feature", "properties": { "claim": "260193201", "cname": "", "owner": "FAGE, ADAM", "expiry": "", "staked": "2026-10-14" }, "geometry": { "type": "Point", "coordinates": [ -116.74264, 52.84149 ] } },
-{ "type": "Feature", "properties": { "claim": "260193301", "cname": "", "owner": "HAIMILA, RAYMOND ARTHUR", "expiry": "", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -113.55778, 55.24273 ] } }
+{ "type": "Feature", "properties": { "claim": "260193301", "cname": "", "owner": "HAIMILA, RAYMOND ARTHUR", "expiry": "", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -113.55778, 55.24273 ] } },
+{ "type": "Feature", "properties": { "claim": "260195501", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.67725, 55.04593 ] } },
+{ "type": "Feature", "properties": { "claim": "260195502", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.69644, 55.03142 ] } },
+{ "type": "Feature", "properties": { "claim": "260195503", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.72812, 55.02957 ] } },
+{ "type": "Feature", "properties": { "claim": "260195504", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.74738, 55.03132 ] } },
+{ "type": "Feature", "properties": { "claim": "260195505", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.77285, 55.03124 ] } },
+{ "type": "Feature", "properties": { "claim": "260195506", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.78888, 55.0312 ] } },
+{ "type": "Feature", "properties": { "claim": "260195507", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.78892, 55.04566 ] } },
+{ "type": "Feature", "properties": { "claim": "260195508", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.77286, 55.04389 ] } },
+{ "type": "Feature", "properties": { "claim": "260195601", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.74738, 55.04395 ] } },
+{ "type": "Feature", "properties": { "claim": "260195602", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.73134, 55.04582 ] } },
+{ "type": "Feature", "properties": { "claim": "260195603", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.69643, 55.05129 ] } },
+{ "type": "Feature", "properties": { "claim": "260195604", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.76658, 55.06395 ] } },
+{ "type": "Feature", "properties": { "claim": "260195605", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.76345, 55.07481 ] } }
 ]
 }
