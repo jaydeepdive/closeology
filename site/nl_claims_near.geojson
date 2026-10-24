@@ -4701,6 +4701,8 @@
 { "type": "Feature", "properties": { "claim": "041457M", "cname": null, "owner": "Nidon Enterprises Ltd.", "expiry": "", "staked": "2026-10-21" }, "geometry": { "type": "Point", "coordinates": [ -56.76862, 48.775 ] } },
 { "type": "Feature", "properties": { "claim": "041458M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.7277, 48.7929 ] } },
 { "type": "Feature", "properties": { "claim": "041459M", "cname": null, "owner": "Alex Bailey", "expiry": "", "staked": "2026-10-21" }, "geometry": { "type": "Point", "coordinates": [ -55.98145, 49.99869 ] } },
-{ "type": "Feature", "properties": { "claim": "041460M", "cname": null, "owner": "Andrew Jedemann", "expiry": "", "staked": "2026-10-22" }, "geometry": { "type": "Point", "coordinates": [ -56.61928, 47.81858 ] } }
+{ "type": "Feature", "properties": { "claim": "041460M", "cname": null, "owner": "Andrew Jedemann", "expiry": "", "staked": "2026-10-22" }, "geometry": { "type": "Point", "coordinates": [ -56.61928, 47.81858 ] } },
+{ "type": "Feature", "properties": { "claim": "041461M", "cname": null, "owner": "Afzaal Pirzada", "expiry": "", "staked": "2026-10-23" }, "geometry": { "type": "Point", "coordinates": [ -58.7678, 48.24366 ] } },
+{ "type": "Feature", "properties": { "claim": "041462M", "cname": null, "owner": "Afzaal Pirzada", "expiry": "", "staked": "2026-10-23" }, "geometry": { "type": "Point", "coordinates": [ -58.83001, 48.24125 ] } }
 ]
 }
