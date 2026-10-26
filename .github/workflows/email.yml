@@ -1,15 +1,18 @@
 name: closeology-email
 
-# Sends Jordan's daily Closeology email right after the daily data rebuild.
-# Runs on GitHub's runners (full internet + Gmail SMTP, no approval gate), reads
-# the already-built site/daily_email_payload.json + site/daily_email.html from
-# the checkout, and sends via SMTP. The Gmail App Password comes from the
-# encrypted repo secret SMTP_PASS and never appears in the repo.
+# Sends Jordan's daily Closeology email on its OWN schedule, independent of the
+# data build. Reads the committed site/daily_email_payload.json + daily_email.html
+# from the checkout and sends via SMTP from GitHub's runners (full internet +
+# Gmail SMTP, no approval gate). Because it runs on a schedule rather than only
+# after a successful build, a one-off build failure never stops the email: it
+# simply sends the most recent good digest. The script's own freshness gate
+# (<= 2 days old) prevents sending genuinely stale data, and sends NOTHING if
+# the data is missing or stale. The Gmail App Password comes from the encrypted
+# repo secret SMTP_PASS and never appears in the repo.
 
 on:
-  workflow_run:
-    workflows: ["closeology-daily"]
-    types: [completed]
+  schedule:
+    - cron: "0 18 * * *"     # daily 18:00 UTC (~noon Regina), after the build normally commits
   workflow_dispatch: {}      # manual "Run workflow" button for testing
 
 permissions:
@@ -22,8 +25,6 @@ concurrency:
 jobs:
   send:
     runs-on: ubuntu-latest
-    # after a real build only if it succeeded; always allow manual dispatch
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
