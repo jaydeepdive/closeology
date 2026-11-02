@@ -127,7 +127,7 @@ def build(site_dir, regions):
                     if not (isinstance(c, list) and len(c) >= 2):
                         continue
                     pr = f.get("properties", {}) or {}
-                    pts.append((c[1], c[0], (pr.get("owner") or "").strip()))
+                    pts.append((c[1], c[0], _s(pr.get("owner"))))
         except Exception:
             pts = []
         _cn_cache[slug] = pts

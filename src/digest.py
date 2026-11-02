@@ -8,6 +8,20 @@ carries a map deep-link so it can be looked at, which is the whole point."""
 import math
 
 
+def _s(v):
+    """Safe text: '' for None/NaN/blank, otherwise stripped str. Source data often
+    stores a blank field as NaN (a float), which has no .strip() and is truthy,
+    so `(x or "").strip()` crashes on it."""
+    if v is None:
+        return ""
+    try:
+        if v != v:          # NaN
+            return ""
+    except Exception:
+        pass
+    return str(v).strip()
+
+
 def _num(v, d=0.0):
     try:
         f = float(v)
@@ -45,11 +59,11 @@ def group_dropped(rows, slug, cluster_km=3.0):
     out = []
     # stable order so clustering is deterministic: by owner, then lead, then space
     rows = [r for r in rows if r.get("lat") is not None and r.get("lon") is not None]
-    rows = sorted(rows, key=lambda r: (str(r.get("owner", "")), int(r.get("near_rank", 0) or 0),
+    rows = sorted(rows, key=lambda r: (_s(r.get("owner")), int(r.get("near_rank", 0) or 0),
                                        _num(r.get("lat")), _num(r.get("lon"))))
     groups = []
     for r in rows:
-        owner = (r.get("owner") or "").strip()
+        owner = _s(r.get("owner"))
         lat, lon = _num(r.get("lat")), _num(r.get("lon"))
         placed = False
         for g in groups:
@@ -70,10 +84,10 @@ def group_dropped(rows, slug, cluster_km=3.0):
         rs = g["rows"]
         area = round(sum(_num(x.get("area_ha")) for x in rs), 1)
         near_km = round(min(_num(x.get("near_km"), 1e9) for x in rs), 1)
-        near_lead = next((x.get("near_lead") for x in rs if x.get("near_lead")), "")
+        near_lead = next((_s(x.get("near_lead")) for x in rs if _s(x.get("near_lead"))), "")
         near_rank = g["near_rank"]
-        goods = [x.get("good_to") for x in rs if x.get("good_to")]
-        ids = [x.get("id") for x in rs if x.get("id")]
+        goods = [_s(x.get("good_to")) for x in rs if _s(x.get("good_to"))]
+        ids = [_s(x.get("id")) for x in rs if _s(x.get("id"))]
         out.append({
             "owner": g["owner"], "n_claims": len(rs), "area_ha": area,
             "near_lead": near_lead, "near_rank": near_rank, "near_km": near_km,

@@ -10,6 +10,20 @@ import pandas as pd
 import geopandas as gpd
 from shapely.geometry import shape, Point
 
+
+def _s(v):
+    """Safe text: '' for None/NaN/blank, otherwise stripped str. Source data often
+    stores a blank field as NaN (a float), which has no .strip() and is truthy,
+    so `(x or "").strip()` crashes on it."""
+    if v is None:
+        return ""
+    try:
+        if v != v:          # NaN
+            return ""
+    except Exception:
+        pass
+    return str(v).strip()
+
 GYM = "https://mapservices.gov.yk.ca/arcgis/rest/services/GeoYukon/GY_Mining/MapServer"
 GYG = "https://mapservices.gov.yk.ca/arcgis/rest/services/GeoYukon/GY_Geological/MapServer"
 OCC_L, CLAIM_L, LEASE_L, WITHDRAWN_L = 4, 36, 37, 54
@@ -69,13 +83,13 @@ def fetch_occurrences():
         is_prod = str(p.get("PRODUCER_IND") or "").upper().startswith("Y")
         # Yukon MINFILE flags producers via PRODUCER_IND, not the status text; fold it in
         # so the pipeline treats them as past producers (production credit + status label).
-        status = "Past Producer" if is_prod else (p.get("DEPOSIT_STATUS") or "").strip()
+        status = "Past Producer" if is_prod else _s(p.get("DEPOSIT_STATUS"))
         rows.append({"minfile": str(p.get("MINFILE_NUMBER") or "").strip(),
-                     "name": (p.get("MINFILE_NAME") or p.get("MINFILE_NUMBER") or "").strip(),
+                     "name": (_s(p.get("MINFILE_NAME")) or _s(p.get("MINFILE_NUMBER"))),
                      "status": status,
                      "commodities": comm, "commodity": ", ".join(comm),
-                     "deposit_type": (p.get("DEPOSIT_TYPE") or "").strip(),
-                     "minfile_url": (p.get("LINK_TO_DOCUMENT") or "").strip(),
+                     "deposit_type": _s(p.get("DEPOSIT_TYPE")),
+                     "minfile_url": _s(p.get("LINK_TO_DOCUMENT")),
                      "prod_ind": "Y" if is_prod else "N",
                      "township": ""})
         geoms.append(Point(float(lon), float(lat)))

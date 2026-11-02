@@ -7,7 +7,22 @@ import pandas as pd
 import geopandas as gpd
 from shapely.geometry import box
 from config import (metal_bucket, score_lead, METAL_ABBR, METAL_ORDER,
+
                     GRID_M, NEIGHBOR_M, TOP_N)
+
+
+def _s(v):
+    """Safe text: '' for None/NaN/blank, otherwise stripped str. Source data often
+    stores a blank field as NaN (a float), which has no .strip() and is truthy,
+    so `(x or "").strip()` crashes on it."""
+    if v is None:
+        return ""
+    try:
+        if v != v:          # NaN
+            return ""
+    except Exception:
+        pass
+    return str(v).strip()
 
 STATUS_CAND = ("produc", "prospect", "deposit", "discovery", "developed")
 MIN_LEAD_SCORE = 18            # floor only sheds sub-merit noise; pre-1980 producers
@@ -188,7 +203,7 @@ def enrich(leads, communities, reserves, parks, metric):
     def size_note(r):
         bits = []
         if r.get("tonnes_str"):
-            cat = (r.get("resource_cat") or "").strip()
+            cat = _s(r.get("resource_cat"))
             bits.append(f"{r['tonnes_str']}" + (f" ({cat.lower()})" if cat else ""))
         elif r.get("has_resource"):
             bits.append((r.get("resource_cat") or "resource").strip() + " resource")
