@@ -195,9 +195,12 @@ def build(site_dir="site", static_dir="api_static"):
     tmp_nd = os.path.join(work, "claims.ndjson")
     cov_nd = os.path.join(work, "coverage.ndjson")
 
-    seen = set()
+    seen = set()              # (jur, id) — one record per claim
+    seen_geom = set()         # (jur, id, geometry) — every distinct polygon of a claim
+    by_key = {}               # (jur, id) -> record, to widen bbox over multi-part claims
     recs = {}                 # jur -> list of records (no geometry)
     stats = {}                # jur -> counters / bbox
+    parts_extra = 0
     with open(tmp_nd, "w") as nd:
         for ft in _iter_features(tile_dir):
             p = ft.get("properties") or {}
@@ -206,15 +209,35 @@ def build(site_dir="site", static_dir="api_static"):
             if not cid or not jur:
                 continue
             key = (jur, cid)
-            if key in seen:                      # claims crossing tile edges repeat
+            # claims crossing tile edges repeat verbatim; a claim made of several
+            # separate polygons arrives as distinct geometries — keep every one
+            gk = (jur, cid, hash(json.dumps(ft.get("geometry"), separators=(",", ":"))))
+            if gk in seen_geom:
                 continue
-            seen.add(key)
+            seen_geom.add(gk)
             try:
                 geom = shape(ft["geometry"])
                 rp = geom.representative_point()
                 minx, miny, maxx, maxy = geom.bounds
             except Exception:
                 continue
+            if key in seen:
+                # extra part of a claim already recorded: widen its bbox and draw the
+                # part in the vector tiles, but keep a single record per claim
+                r0 = by_key[key]
+                b = r0["bbox"]
+                r0["bbox"] = [round(min(b[0], minx), 5), round(min(b[1], miny), 5),
+                              round(max(b[2], maxx), 5), round(max(b[3], maxy), 5)]
+                sb = stats[jur]["bbox"]
+                sb[0], sb[1], sb[2], sb[3] = min(sb[0], minx), min(sb[1], miny), max(sb[2], maxx), max(sb[3], maxy)
+                vp = {k: v for k, v in r0.items() if k in ("id", "jurisdiction", "holder", "name",
+                                                            "issued", "expiry", "area_ha")
+                      and v not in ("", None)}
+                nd.write(json.dumps({"type": "Feature", "properties": vp, "geometry": ft["geometry"]},
+                                    separators=(",", ":"), ensure_ascii=False) + "\n")
+                parts_extra += 1
+                continue
+            seen.add(key)
             lon, lat = round(rp.x, 5), round(rp.y, 5)
             rec = {"id": cid, "jurisdiction": jur,
                    "holder": p.get("o", "") or "", "name": p.get("n", "") or "",
@@ -225,6 +248,7 @@ def build(site_dir="site", static_dir="api_static"):
                    "tile": f"{int(math.floor(lon / TILE_DEG))}_{int(math.floor(lat / TILE_DEG))}",
                    "record_url": _record_url(jur, cid)}
             recs.setdefault(jur, []).append(rec)
+            by_key[key] = rec
             s = stats.setdefault(jur, {"n": 0, "holder": 0, "name": 0, "issued": 0, "expiry": 0,
                                        "area_ha": 0, "bbox": [180, 90, -180, -90]})
             s["n"] += 1
@@ -256,7 +280,8 @@ def build(site_dir="site", static_dir="api_static"):
         print(f"[api] coverage layer skipped: {str(e)[:80]}")
 
     total = sum(len(v) for v in recs.values())
-    print(f"[api] {total} unique claims across {len(recs)} jurisdictions")
+    print(f"[api] {total} unique claims across {len(recs)} jurisdictions "
+          f"(+{parts_extra} extra polygons of multi-part claims, all drawn)")
 
     # ---- vector tiles ---------------------------------------------------------
     pm = os.path.join(out, "claims.pmtiles")
