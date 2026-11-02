@@ -210,6 +210,14 @@ def main():
         claim_watch.run(_watch_slugs, "site")
     except Exception as e:
         print("[build_all] claim watch skipped:", str(e)[:160]); traceback.print_exc()
+    # Public claims API (/api/v1): vector tiles, per-claim lookup, bulk CSV, manifests,
+    # docs + map examples — built from the claim tiles above. Must never break the
+    # build: the site deploys with or without it.
+    try:
+        import build_api
+        build_api.build("site", "api_static")
+    except Exception as e:
+        print("[build_all] claims API skipped:", str(e)[:160]); traceback.print_exc()
     import build_priority
     build_priority.build("site", regions_site)         # index.html (front page)
     build_site.build("site", regions_site + info_regions)   # regions.html hub + CSV/XLSX

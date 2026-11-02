@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: System deps
-        run: sudo apt-get update -q && sudo apt-get install -y -q mdbtools
+        run: sudo apt-get update -q && sudo apt-get install -y -q mdbtools tippecanoe   # tippecanoe: claims API vector tiles
       - name: Python deps
         run: pip install -r requirements.txt
       - name: Rebuild all Canadian jurisdictions
@@ -53,6 +53,24 @@ jobs:
             echo "push race, retry $i"; sleep $((RANDOM % 6 + 4))
           done
           [ "$ok" = 1 ] || echo "WARNING: build commit did not land"
+
+      - name: Publish claims API data branch
+        # site/api is gitignored on main; publish it as a single force-pushed commit on
+        # `api-data` so deploy.yml can splice it in without growing main's history.
+        continue-on-error: true          # never block the site deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ ! -f site/api/v1/index.json ]; then echo "no claims API built this run"; exit 0; fi
+          tmp=$(mktemp -d)
+          cp -r site/api/. "$tmp"/
+          cd "$tmp"
+          git init -q
+          git checkout -q -b api-data
+          git add -A
+          git -c user.name=closeology-bot -c user.email=actions@github.com commit -q -m "Claims API data $(date -u +%Y-%m-%d) [skip ci]"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" api-data
+          echo "published api-data ($(du -sh --exclude=.git . | cut -f1))"
 
       - uses: actions/upload-pages-artifact@v3
         with:

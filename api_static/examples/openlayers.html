@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claims overlay — OpenLayers</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.2.4/ol.css">
+<script src="https://cdn.jsdelivr.net/npm/ol@v9.2.4/dist/ol.js"></script>
+<script src="../closeology-claims.js"></script>
+<style>
+  html,body,#map{margin:0;height:100%}
+  #tag{position:absolute;top:10px;left:44px;z-index:2;background:#fff;padding:6px 10px;border-radius:6px;font:13px system-ui;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  #pop{background:#fff;border-radius:6px;padding:8px 10px;box-shadow:0 1px 6px rgba(0,0,0,.3);transform:translate(-50%,-100%) translateY(-10px)}
+</style>
+</head>
+<body>
+<div id="tag">Closeology claims · OpenLayers + GeoJSON tiles · claims draw from zoom 9</div>
+<div id="map"></div>
+<div id="pop"></div>
+<script>
+  const api = new URLSearchParams(location.search).get("api");
+  if (api) CloseologyClaims.setBase(api);
+
+  const map = new ol.Map({
+    target: "map",
+    layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
+    view: new ol.View({ center: ol.proj.fromLonLat([-81.33, 48.47]), zoom: 10 })   // Timmins, Ontario
+  });
+
+  // One call: adds a bbox-loading claims layer (+ coverage dots when zoomed out).
+  const overlay = CloseologyClaims.addToOpenLayers(map, ol);
+
+  // Click popups
+  const pop = new ol.Overlay({ element: document.getElementById("pop"), positioning: "bottom-center" });
+  map.addOverlay(pop);
+  map.on("singleclick", e => {
+    const f = map.forEachFeatureAtPixel(e.pixel, f => f, { layerFilter: l => l === overlay.claims });
+    if (!f) { pop.setPosition(undefined); return; }
+    overlay.popupHTML(f).then(html => { pop.getElement().innerHTML = html; pop.setPosition(e.coordinate); });
+  });
+  window.map = map; window.claimsOverlay = overlay;
+</script>
+</body>
+</html>

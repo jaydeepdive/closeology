@@ -8,7 +8,18 @@ the current viewport and they render as true blocks (adjacent cells share edges)
 All jurisdictions merge into ONE geographic tile set:
     site/claimtiles/<ix>_<iy>.geojson   (ix=floor(lon/T), iy=floor(lat/T))
     site/claimtiles/index.json          {"t": T, "tiles": ["ix_iy", ...]}
-Each feature: {"c": tenure#, "o": owner, "e": good-to date}, EPSG:4326 polygon.
+Each feature (EPSG:4326 polygon) carries:
+    c  claim / tenure number          (always)
+    j  jurisdiction code, e.g. "ON"   (always)
+    o  holder                         ("" when the source does not publish it)
+    e  good-to / anniversary date     (YYYY-MM-DD, "" when not published)
+    n  claim / property name          (only when present)
+    i  issue / staking date           (only when present, YYYY-MM-DD)
+    a  area in hectares               (only when known)
+
+PUBLIC API CONTRACT: these tiles are the GeoJSON layer of the public claims API
+(/api/v1, see build_api.py and api_static/). Keys may be ADDED but existing keys
+must not be renamed or change meaning without bumping the API version.
 """
 import os, glob
 import json
@@ -16,8 +27,42 @@ import math
 
 T = 0.5  # tile size in degrees (~35 km); a z>=10 viewport spans a few tiles
 
+# internal region slug -> standard Canadian province/territory code
+JURIS_CODE = {"ab": "AB", "bc": "BC", "mb": "MB", "nb": "NB", "nl": "NL", "ns": "NS",
+              "nt": "NT", "nu": "NU", "on": "ON", "qc": "QC", "sk": "SK", "yk": "YT"}
 
-def _standardize(g):
+_JUNK = {"nan", "nat", "none", "null", "<na>"}
+
+
+def _txt(v):
+    """'' for None/NaN/junk, otherwise the stripped string."""
+    if v is None:
+        return ""
+    try:
+        if v != v:            # NaN
+            return ""
+    except Exception:
+        pass
+    s = str(v).strip()
+    return "" if s.lower() in _JUNK else s
+
+
+def _date(v):
+    """Normalise a source date to YYYY-MM-DD; keep the raw text if unparseable."""
+    s = _txt(v)
+    if not s:
+        return ""
+    try:
+        from claim_watch import _parse_date
+        d = _parse_date(s)
+        if d:
+            return d.strftime("%Y-%m-%d")
+    except Exception:
+        pass
+    return s[:10]
+
+
+def _standardize(g, slug=""):
     import geopandas as gpd
 
     def col(*names):
@@ -25,19 +70,43 @@ def _standardize(g):
             if n in g.columns:
                 return n
         return None
+    # column candidates mirror claim_watch._current_claims so the map, the watch
+    # page and the API all read the same fields from each provincial source
     idc = col("TENURE_NUMBER_ID", "claim", "tenure", "NO_TITRE")
     oc = col("OWNER_NAME", "owner", "HOLDER", "TITULAIRE")
-    ec = col("GOOD_TO_DATE", "EXPIRY_DATE", "expiry")
+    ec = col("GOOD_TO_DATE", "EXPIRY_DATE", "expiry", "ANNIV_DT", "GOODSTANDI")
+    nc = col("CLAIM_NAME", "name", "CNAME")
+    ic = col("ISSUE_DATE", "issue", "STAKING_DT")
+    ac = col("AREA_IN_HECTARES", "area_ha", "AREA_HA")
     n = len(g)
+    if g.crs is None:
+        g = g.set_crs("EPSG:4326")
+    elif str(g.crs).upper() not in ("EPSG:4326",):
+        g = g.to_crs("EPSG:4326")
+    area = [None] * n
+    if ac:
+        area = list(g[ac].values)
+    else:
+        try:
+            area = list((g.to_crs("EPSG:3978").area / 1e4).values)   # Canada Atlas Lambert
+        except Exception:
+            pass
+
+    def _area(v):
+        try:
+            f = float(v)
+            return round(f, 2) if math.isfinite(f) and f > 0 else ""
+        except Exception:
+            return ""
     out = gpd.GeoDataFrame({
-        "c": g[idc].astype(str).values if idc else [""] * n,
-        "o": g[oc].astype(str).values if oc else [""] * n,
-        "e": g[ec].astype(str).values if ec else [""] * n,
-    }, geometry=g.geometry.values, crs=g.crs)
-    if out.crs is None:
-        out = out.set_crs("EPSG:4326")
-    elif str(out.crs).upper() not in ("EPSG:4326",):
-        out = out.to_crs("EPSG:4326")
+        "c": [_txt(v) for v in g[idc].values] if idc else [""] * n,
+        "o": [_txt(v) for v in g[oc].values] if oc else [""] * n,
+        "e": [_date(v) for v in g[ec].values] if ec else [""] * n,
+        "n": [_txt(v) for v in g[nc].values] if nc else [""] * n,
+        "i": [_date(v) for v in g[ic].values] if ic else [""] * n,
+        "a": [_area(v) for v in area],
+    }, geometry=g.geometry.values, crs="EPSG:4326")
+    out["j"] = JURIS_CODE.get(slug, slug.upper())
     return out
 
 
@@ -69,13 +138,13 @@ def build(slugs, site_dir="site"):
             continue
         if g is None or not len(g):
             continue
-        g = _standardize(g)
         g = g[g.geometry.notna() & ~g.geometry.is_empty]
-        clean = {"nan": "", "None": "", "NaT": "", "none": ""}
-        for ccol in ("c", "o", "e"):
-            g[ccol] = g[ccol].astype(str).map(lambda v: "" if v in clean else v)
+        if not len(g):
+            continue
+        g = _standardize(g, slug)
         ndone = 0
-        for c, o, e, geom in zip(g["c"], g["o"], g["e"], g.geometry):
+        for c, o, e, nm, iss, ar, j, geom in zip(g["c"], g["o"], g["e"], g["n"], g["i"],
+                                                 g["a"], g["j"], g.geometry):
             if geom is None or geom.is_empty:
                 continue
             gg = geom
@@ -90,8 +159,14 @@ def build(slugs, site_dir="site"):
                 minx, miny, maxx, maxy = gg.bounds
             except Exception:
                 continue
-            feat = {"type": "Feature", "properties": {"c": c, "o": o, "e": e},
-                    "geometry": mapping(gg)}
+            props = {"c": c, "o": o, "e": e, "j": j}
+            if nm:
+                props["n"] = nm
+            if iss:
+                props["i"] = iss
+            if ar != "":
+                props["a"] = ar
+            feat = {"type": "Feature", "properties": props, "geometry": mapping(gg)}
             # coarse coverage cell (centre of the claim) for the overview layer
             ccx = (minx + maxx) / 2.0
             ccy = (miny + maxy) / 2.0
@@ -139,4 +214,4 @@ def build(slugs, site_dir="site"):
 
 if __name__ == "__main__":
     import sys
-    build(sys.argv[1:] or ["bc", "on", "yk", "qc", "sk", "mb", "nl", "nt", "ns", "ab", "nu"])
+    build(sys.argv[1:] or ["bc", "on", "yk", "qc", "sk", "mb", "nl", "nt", "ns", "ab", "nu", "nb"])

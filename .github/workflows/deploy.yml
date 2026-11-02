@@ -21,6 +21,13 @@ jobs:
       url: ${{ steps.dep.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Attach claims API (rebuilt daily on the api-data branch)
+        continue-on-error: true          # never block the site deploy
+        run: |
+          mkdir -p site/api
+          if git fetch -q --depth=1 origin api-data; then git archive FETCH_HEAD | tar -x -C site/api; else echo "no api-data branch yet"; fi
+          cp -r api_static/. site/api/   # docs/examples from main are always the latest
+          ls site/api site/api/v1 2>/dev/null | head -20
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

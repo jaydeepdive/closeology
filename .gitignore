@@ -39,3 +39,9 @@ data/keep/mmp_reextract.sqlite
 data/keep/ocr_cache/
 data/keep/mmp_reextract.sqlite-journal
 *.sqlite-journal
+
+# Public claims API (site/api/) is rebuilt by every daily build and published on the
+# orphan `api-data` branch (force-pushed, one commit) so its large daily-changing
+# files never bloat main's history. Both deploy workflows splice that branch into
+# site/api before uploading Pages. Docs/examples source lives in api_static/.
+site/api/
