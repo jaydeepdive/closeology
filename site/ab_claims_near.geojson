@@ -1043,9 +1043,10 @@
 { "type": "Feature", "properties": { "claim": "260195601", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.74738, 55.04395 ] } },
 { "type": "Feature", "properties": { "claim": "260195603", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.69643, 55.05129 ] } },
 { "type": "Feature", "properties": { "claim": "260195605", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.76345, 55.07481 ] } },
+{ "type": "Feature", "properties": { "claim": "9316100298", "cname": "", "owner": "MONEY ROCK RESOURCES LTD.", "expiry": "", "staked": "2016-10-03" }, "geometry": { "type": "Point", "coordinates": [ -113.33006, 55.15915 ] } },
 { "type": "Feature", "properties": { "claim": "260204401", "cname": "", "owner": "R360 ENVIRONMENTAL SOLUTIONS CANADA INC.", "expiry": "", "staked": "2026-10-29" }, "geometry": { "type": "Point", "coordinates": [ -110.61162, 53.85327 ] } },
+{ "type": "Feature", "properties": { "claim": "260205101", "cname": "", "owner": "THIBAULT, PIERRE", "expiry": "", "staked": "2026-10-31" }, "geometry": { "type": "Point", "coordinates": [ -112.24814, 52.38314 ] } },
 { "type": "Feature", "properties": { "claim": "260204201", "cname": "", "owner": "R360 ENVIRONMENTAL SOLUTIONS CANADA INC.", "expiry": "", "staked": "2026-10-29" }, "geometry": { "type": "Point", "coordinates": [ -110.66102, 53.88235 ] } },
-{ "type": "Feature", "properties": { "claim": "260204501", "cname": "", "owner": "R360 ENVIRONMENTAL SOLUTIONS CANADA INC.", "expiry": "", "staked": "2026-10-29" }, "geometry": { "type": "Point", "coordinates": [ -110.66103, 53.85332 ] } },
-{ "type": "Feature", "properties": { "claim": "9316100298", "cname": "", "owner": "MONEY ROCK RESOURCES LTD.", "expiry": "", "staked": "2016-10-03" }, "geometry": { "type": "Point", "coordinates": [ -113.33006, 55.15915 ] } }
+{ "type": "Feature", "properties": { "claim": "260204501", "cname": "", "owner": "R360 ENVIRONMENTAL SOLUTIONS CANADA INC.", "expiry": "", "staked": "2026-10-29" }, "geometry": { "type": "Point", "coordinates": [ -110.66103, 53.85332 ] } }
 ]
 }
