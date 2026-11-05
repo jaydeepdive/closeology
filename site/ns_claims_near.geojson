@@ -1093,7 +1093,6 @@
 { "type": "Feature", "properties": { "claim": "57393", "cname": "", "owner": "", "expiry": "2027-10-07", "staked": "2025-10-07" }, "geometry": { "type": "Point", "coordinates": [ -62.42188, 44.96008 ] } },
 { "type": "Feature", "properties": { "claim": "57395", "cname": "", "owner": "", "expiry": "2027-10-07", "staked": "2025-10-07" }, "geometry": { "type": "Point", "coordinates": [ -60.17968, 45.91494 ] } },
 { "type": "Feature", "properties": { "claim": "56081", "cname": "", "owner": "", "expiry": "2027-11-24", "staked": "2023-11-24" }, "geometry": { "type": "Point", "coordinates": [ -64.99219, 44.408 ] } },
-{ "type": "Feature", "properties": { "claim": "56649", "cname": "", "owner": "", "expiry": "2026-11-20", "staked": "2024-11-20" }, "geometry": { "type": "Point", "coordinates": [ -64.98828, 44.40627 ] } },
 { "type": "Feature", "properties": { "claim": "56754", "cname": "", "owner": "", "expiry": "2027-02-07", "staked": "2025-02-07" }, "geometry": { "type": "Point", "coordinates": [ -65.00261, 44.40453 ] } },
 { "type": "Feature", "properties": { "claim": "52775", "cname": "", "owner": "", "expiry": "2027-10-10", "staked": "2018-10-10" }, "geometry": { "type": "Point", "coordinates": [ -61.8125, 45.25869 ] } },
 { "type": "Feature", "properties": { "claim": "57397", "cname": "", "owner": "", "expiry": "2027-10-15", "staked": "2025-10-15" }, "geometry": { "type": "Point", "coordinates": [ -63.89583, 45.59203 ] } },

@@ -6026,6 +6026,7 @@
 { "type": "Feature", "properties": { "claim": "SV15956", "cname": "BERG 12", "owner": "Critical Discoveries", "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -97.26379, 50.43864 ] } },
 { "type": "Feature", "properties": { "claim": "SV15957", "cname": "BERG 7", "owner": "Critical Discoveries", "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -97.65631, 50.58602 ] } },
 { "type": "Feature", "properties": { "claim": "SV15958", "cname": "BERG 15", "owner": "Critical Discoveries", "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -97.8253, 50.95492 ] } },
+{ "type": "Feature", "properties": { "claim": "SV15959", "cname": "Gamman", "owner": "Le Léannec, Luc", "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -98.25598, 49.26443 ] } },
 { "type": "Feature", "properties": { "claim": "SV9679", "cname": "ANT", "owner": "GOSSAN RESOURCES LIMITED", "expiry": "2027-02-25", "staked": "2000-12-27" }, "geometry": { "type": "Point", "coordinates": [ -97.52405, 50.6157 ] } },
 { "type": "Feature", "properties": { "claim": "SV9680", "cname": "HILL", "owner": "GOSSAN RESOURCES LIMITED", "expiry": "2027-02-25", "staked": "2000-12-27" }, "geometry": { "type": "Point", "coordinates": [ -97.51806, 50.6063 ] } },
 { "type": "Feature", "properties": { "claim": "SV9712", "cname": "BURNING MTN. 6", "owner": "Love, Karen", "expiry": "2027-04-22", "staked": "2001-02-21" }, "geometry": { "type": "Point", "coordinates": [ -101.1051, 52.44027 ] } },
