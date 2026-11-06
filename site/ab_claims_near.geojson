@@ -1026,8 +1026,6 @@
 { "type": "Feature", "properties": { "claim": "260173706", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.69641, 55.07498 ] } },
 { "type": "Feature", "properties": { "claim": "260173707", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-09-17" }, "geometry": { "type": "Point", "coordinates": [ -111.67087, 55.07502 ] } },
 { "type": "Feature", "properties": { "claim": "260193201", "cname": "", "owner": "FAGE, ADAM", "expiry": "", "staked": "2026-10-14" }, "geometry": { "type": "Point", "coordinates": [ -116.74264, 52.84149 ] } },
-{ "type": "Feature", "properties": { "claim": "260195507", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.78892, 55.04566 ] } },
-{ "type": "Feature", "properties": { "claim": "260195508", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.77286, 55.04389 ] } },
 { "type": "Feature", "properties": { "claim": "9411100597", "cname": "", "owner": "HEIDELBERG MATERIALS CANADA LIMITED", "expiry": "", "staked": "2011-10-12" }, "geometry": { "type": "Point", "coordinates": [ -117.3237, 53.00529 ] } },
 { "type": "Feature", "properties": { "claim": "260193301", "cname": "", "owner": "HAIMILA, RAYMOND ARTHUR", "expiry": "", "staked": "2026-10-15" }, "geometry": { "type": "Point", "coordinates": [ -113.55778, 55.24273 ] } },
 { "type": "Feature", "properties": { "claim": "260187202", "cname": "", "owner": "PLAINS POTASH CORPORATION", "expiry": "", "staked": "2026-10-06" }, "geometry": { "type": "Point", "coordinates": [ -110.08623, 50.93937 ] } },
@@ -1047,6 +1045,8 @@
 { "type": "Feature", "properties": { "claim": "260195504", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.74738, 55.03132 ] } },
 { "type": "Feature", "properties": { "claim": "260195505", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.77285, 55.03124 ] } },
 { "type": "Feature", "properties": { "claim": "260195506", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.78888, 55.0312 ] } },
-{ "type": "Feature", "properties": { "claim": "260195501", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.67725, 55.04593 ] } }
+{ "type": "Feature", "properties": { "claim": "260195501", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.67725, 55.04593 ] } },
+{ "type": "Feature", "properties": { "claim": "260195507", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.78892, 55.04566 ] } },
+{ "type": "Feature", "properties": { "claim": "260195508", "cname": "", "owner": "MILLENNIUM LAND (111) LTD.", "expiry": "", "staked": "2026-10-16" }, "geometry": { "type": "Point", "coordinates": [ -111.77286, 55.04389 ] } }
 ]
 }

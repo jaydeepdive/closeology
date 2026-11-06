@@ -4713,6 +4713,8 @@
 { "type": "Feature", "properties": { "claim": "041513M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -53.32919, 48.59192 ] } },
 { "type": "Feature", "properties": { "claim": "041514M", "cname": null, "owner": "Grassroots Prospecting and Prospect Generation Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -57.45265, 50.28316 ] } },
 { "type": "Feature", "properties": { "claim": "041515M", "cname": null, "owner": "Roland Quinlan", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -53.83823, 47.62441 ] } },
-{ "type": "Feature", "properties": { "claim": "041516M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -54.7477, 49.52465 ] } }
+{ "type": "Feature", "properties": { "claim": "041516M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -54.7477, 49.52465 ] } },
+{ "type": "Feature", "properties": { "claim": "041517M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "", "staked": "2026-11-06" }, "geometry": { "type": "Point", "coordinates": [ -56.87473, 48.52326 ] } },
+{ "type": "Feature", "properties": { "claim": "041518M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "", "staked": "2026-11-06" }, "geometry": { "type": "Point", "coordinates": [ -56.88142, 48.55926 ] } }
 ]
 }
