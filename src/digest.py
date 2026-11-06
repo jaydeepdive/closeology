@@ -116,6 +116,9 @@ def _abbr(name):
     return m.get(name, (name or "")[:2].upper())
 
 
+FRESH_EDGE_DAYS = 120   # matches news.FRESH_DAYS
+
+
 def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
     """Collapse every region's signals into one short, ranked set for the email."""
     edges, drops, leads = [], [], []
@@ -149,6 +152,24 @@ def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
     # Fresh drilling leads: hot first, then the most RECENT play, then the most
     # open ground. This stops the same stale government holes (ranked only by
     # hectares) from heading the email day after day.
+    # "Act now — fresh drilling" must be FRESH. A dated news release counts if it
+    # is within FRESH_EDGE_DAYS; a government drill-DB hole (year only, no date)
+    # counts only if drilled THIS calendar year. Older plays stay on the map and
+    # radar page but never headline the email as "fresh".
+    import datetime as _dt
+    _today = _dt.date.today()
+    def _is_fresh(e):
+        d = e.get("date")
+        if d:
+            try:
+                return (_today - _dt.date.fromisoformat(str(d)[:10])).days <= FRESH_EDGE_DAYS
+            except Exception:
+                return False
+        try:
+            return int(e.get("year") or 0) >= _today.year
+        except Exception:
+            return False
+    edges = [x for x in edges if _is_fresh(x[1])]
     edges.sort(key=lambda x: (0 if x[1].get("hot") else 1, -_edge_rec(x[1]), -_num(x[1].get("open_ha"))))
     drops.sort(key=lambda x: (-_num(x[1].get("area_ha")), _num(x[1].get("near_km"), 1e9)))
     leads.sort(key=lambda x: -_num(x[1].get("score")))

@@ -119,7 +119,7 @@ def _source_cfg(region_dir):
     if os.path.exists(on):
         d = gpd.read_parquet(on)
         return d, {
-            "kind": "drill", "recent": 3, "hot": 1,
+            "kind": "drill", "recent": 3, "hot": 0,   # 🔥 = drilled this calendar year only
             "company": "COMPANY_NAME", "prop": "PROPERTY_NAME", "year": "YEAR_DRILLED",
             "elems": "ELEMENTS", "comments": "COMMENTS", "spend": None,
             "source": "OGS Ontario Drill Hole Database",
