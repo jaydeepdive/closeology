@@ -4715,6 +4715,7 @@
 { "type": "Feature", "properties": { "claim": "041515M", "cname": null, "owner": "Roland Quinlan", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -53.83823, 47.62441 ] } },
 { "type": "Feature", "properties": { "claim": "041516M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -54.7477, 49.52465 ] } },
 { "type": "Feature", "properties": { "claim": "041517M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "", "staked": "2026-11-06" }, "geometry": { "type": "Point", "coordinates": [ -56.87473, 48.52326 ] } },
-{ "type": "Feature", "properties": { "claim": "041518M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "", "staked": "2026-11-06" }, "geometry": { "type": "Point", "coordinates": [ -56.88142, 48.55926 ] } }
+{ "type": "Feature", "properties": { "claim": "041518M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "", "staked": "2026-11-06" }, "geometry": { "type": "Point", "coordinates": [ -56.88142, 48.55926 ] } },
+{ "type": "Feature", "properties": { "claim": "041519M", "cname": null, "owner": "Titjaluk Logistics LTD.", "expiry": "", "staked": "2026-11-07" }, "geometry": { "type": "Point", "coordinates": [ -56.06374, 50.78632 ] } }
 ]
 }
