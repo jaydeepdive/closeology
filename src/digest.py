@@ -116,7 +116,7 @@ def _abbr(name):
     return m.get(name, (name or "")[:2].upper())
 
 
-FRESH_EDGE_DAYS = 120   # matches news.FRESH_DAYS
+FRESH_EDGE_DAYS = 3     # "Act now" = announced in the last 3 days, nothing older
 
 
 def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
@@ -153,7 +153,7 @@ def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
     # open ground. This stops the same stale government holes (ranked only by
     # hectares) from heading the email day after day.
     # "Act now — fresh drilling" must be FRESH. A dated news release counts if it
-    # is within FRESH_EDGE_DAYS; a government drill-DB hole (year only, no date)
+    # is within FRESH_EDGE_DAYS (3); a government drill-DB hole (year only, no date)
     # counts only if drilled THIS calendar year. Older plays stay on the map and
     # radar page but never headline the email as "fresh".
     import datetime as _dt
@@ -165,10 +165,9 @@ def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
                 return (_today - _dt.date.fromisoformat(str(d)[:10])).days <= FRESH_EDGE_DAYS
             except Exception:
                 return False
-        try:
-            return int(e.get("year") or 0) >= _today.year
-        except Exception:
-            return False
+        # Government drill-DB holes carry only a year (no date), so they can
+        # never be proven to be from the last 3 days: excluded from "Act now".
+        return False
     edges = [x for x in edges if _is_fresh(x[1])]
     edges.sort(key=lambda x: (0 if x[1].get("hot") else 1, -_edge_rec(x[1]), -_num(x[1].get("open_ha"))))
     drops.sort(key=lambda x: (-_num(x[1].get("area_ha")), _num(x[1].get("near_km"), 1e9)))

@@ -68,8 +68,8 @@ def render(d):
                    f"· {top.get('counts',{}).get('leads',0)} leads ({gen})")
 
     secs = []
-    secs.append(_section("\U0001f525 Act now — fresh drilling by open ground", edges,
-                         empty_msg="No fresh drilling on an open boundary today."))
+    secs.append(_section("\U0001f525 Act now — drilling next to open ground (last 3 days)", edges,
+                         empty_msg="No drilling announced next to open ground in the last 3 days."))
     if watch:
         dmsg = None if wdrp.get("items") else (
             f"No drops recorded yet — tracking since {wdrp.get('tracking_since', gen)}, complete after ~30 days.")
@@ -128,8 +128,8 @@ def payload(d):
                         "url": it.get("url", "")})
         return out
 
-    secs = [{"title": "\U0001f525 Act now \u2014 fresh drilling by open ground",
-             "empty": "No fresh drilling on an open boundary today.",
+    secs = [{"title": "\U0001f525 Act now \u2014 drilling next to open ground (last 3 days)",
+             "empty": "No drilling announced next to open ground in the last 3 days.",
              "items": _items(top.get("edges", []))}]
     if watch:
         secs.append({"title": f"\U0001f513 Just dropped \u2014 claims that lapsed (last 30 days, {n_wdrop})",
