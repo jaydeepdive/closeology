@@ -6,6 +6,13 @@ name: deploy-pages-fast
 on:
   push:
     branches: [main]
+    # only when something that is actually served changes. Pushes that touch only
+    # pipeline code (src/, tools/, workflows) have nothing to deploy -- the next
+    # build.yml run rebuilds and deploys the site -- and a pointless Pages deploy
+    # racing the build's own deploy is what timed out on 2026-11-09.
+    paths:
+      - 'site/**'
+      - 'api_static/**'
 permissions:
   pages: write
   id-token: write

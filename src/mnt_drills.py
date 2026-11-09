@@ -292,17 +292,17 @@ def collect(days=3, fetch=True, cache=CACHE):
             continue
         seen.add(key)
         b = bank.get(_url_key(it.get("source_url"))) or bank.get((_norm(comp), date))
-        juris, lat, lon, how = "", None, None, ""
+        # what the release itself says comes first: the bank's province label is often
+        # the head office (Vancouver), and its collars can be mis-zoned.
+        body = _article(it["event_id"]) if (fetch and it.get("event_id")) else ""
+        if fetch and it.get("event_id"):
+            import time; time.sleep(1.1)                 # stay well under MNT's 60 req/min
+        said = _where(it.get("headline"), body)
+        juris, lat, lon, how = said, None, None, ""
         if b and b[1] is not None:                       # our own geolocated collars
-            lat, lon, how = float(b[1]), float(b[2]), "collars"
-            juris = PROV.get(b[0] or "", "") or US.get(b[0] or "", "") or (b[0] or "")
-        if not juris:                                    # what the release itself says
-            body = _article(it["event_id"]) if (fetch and it.get("event_id")) else ""
-            juris = _where(it.get("headline"), body)
-            if fetch and it.get("event_id"):
-                import time; time.sleep(1.1)             # stay well under MNT's 60 req/min
-        if not juris and b and b[0]:
-            juris = PROV.get(b[0], "") or US.get(b[0], "") or b[0]
+            cj = PROV.get(b[0] or "", "") or US.get(b[0] or "", "") or (b[0] or "")
+            if not said or said == cj:
+                juris, lat, lon, how = cj or said, float(b[1]), float(b[2]), "collars"
         rows.append({"company": comp, "project": proj, "date": date,
                      "headline": it.get("headline") or "", "best": _best_txt(it.get("best")),
                      "url": it.get("release_url") or it.get("source_url") or "",
