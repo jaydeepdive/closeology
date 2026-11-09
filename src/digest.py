@@ -119,6 +119,13 @@ def _abbr(name):
 FRESH_EDGE_DAYS = 3     # "Act now" = announced in the last 3 days, nothing older
 
 
+def _norm_co(txt):
+    """first words of a company name, for de-duplicating the same release"""
+    import re as _re
+    t = _re.split(r" — | · ", str(txt or ""))[0].lower()
+    return " ".join(_re.sub(r"[^a-z0-9 ]", " ", t).split()[:2])
+
+
 def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
     """Collapse every region's signals into one short, ranked set for the email."""
     edges, drops, leads = [], [], []
@@ -218,9 +225,21 @@ def build_top(regions, n_edges=8, n_drop=8, n_leads=8, site=""):
     # is intentionally NOT sent — its ranking barely moves, so it repeated the same
     # handful of properties every day. The full ranked leads live on the radar page
     # (built from email["regions"]); the email only carries the count + a link there.
+    # "Act now" = EVERY drill result released in the last 3 days (MiningNewsTerminal),
+    # open-ground plays first; plus any other fresh open-ground play from the wires.
+    act = []
+    try:
+        import mnt_drills
+        act = mnt_drills.lines(regions, site=site)
+    except Exception as ex:
+        print("[digest] MNT drill list unavailable:", str(ex)[:120])
+    have = {(_norm_co(l["text"]), l.get("date")) for l in act}
+    extra = [edge_line(j, e) for j, e in edges
+             if (_norm_co(e.get("company") or ""), str(e.get("date"))[:10]) not in have]
+    act = [l for l in act if l.get("open_ha")] + extra + [l for l in act if not l.get("open_ha")]
     return {
-        "counts": {"edges": len(edges), "dropped": len(drops), "leads": len(leads)},
-        "edges": [edge_line(j, e) for j, e in edges[:n_edges]],
+        "counts": {"edges": len(act), "dropped": len(drops), "leads": len(leads)},
+        "edges": act[:max(n_edges, 60)],
         "dropped": [drop_line(j, d) for j, d in drops[:n_drop]],
         "leads": [],                 # suppressed on purpose — see note above
         "leads_url": (site + "radar.html") if site else "radar.html",

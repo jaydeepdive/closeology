@@ -73,15 +73,15 @@ def _headline(ivs):
     return s
 
 
-def build(region_slugs, db=DB, out_root="data"):
+def build(region_slugs, db=DB, out_root="data", extra=None):
     """Write data/<slug>/news_items.json for every slug in region_slugs from the
     bank's releases published within RECENT_DAYS that have >=1 geolocated hole.
     Returns {slug: n_items}. Regions with no fresh located release get an EMPTY
     items file (so a stale prior file can't linger)."""
     counts = {s: 0 for s in region_slugs}
     if not os.path.exists(db):
-        print("[drillbank_news] no bank at", db, "- skipping")
-        return counts
+        print("[drillbank_news] no bank at", db, "- MNT items only")
+        db = ":memory:"
     import sys
     if "src" not in sys.path:
         sys.path.insert(0, "src")
@@ -91,9 +91,12 @@ def build(region_slugs, db=DB, out_root="data"):
     con.row_factory = sqlite3.Row
     cur = con.cursor()
     cutoff = (datetime.date.today() - datetime.timedelta(days=RECENT_DAYS)).isoformat()
-    cur.execute("""select id, company, ticker, project, published, url, title
-                   from releases where published >= ? order by published desc""", (cutoff,))
-    rels = cur.fetchall()
+    try:
+        cur.execute("""select id, company, ticker, project, published, url, title
+                       from releases where published >= ? order by published desc""", (cutoff,))
+        rels = cur.fetchall()
+    except sqlite3.Error:
+        rels = []
 
     buckets = {s: [] for s in region_slugs}
     seen = {s: set() for s in region_slugs}     # de-dup by (company, project, date)
@@ -122,6 +125,20 @@ def build(region_slugs, db=DB, out_root="data"):
             continue
         seen[slug].add(key)
         buckets[slug].append(item)
+
+    # every MiningNewsTerminal drill result of the last few days goes in FIRST, located
+    # or not, so news.py edge-tests all of them (not just the few with collar coords)
+    for slug, its in (extra or {}).items():
+        if slug not in buckets:
+            continue
+        add = []
+        for item in its:
+            key = (str(item.get("company", "")).lower(), str(item.get("project", "")).lower(), item.get("date"))
+            if key in seen[slug]:
+                continue
+            seen[slug].add(key)
+            add.append(item)
+        buckets[slug] = add + buckets[slug]
 
     for slug in region_slugs:
         d = os.path.join(out_root, slug)

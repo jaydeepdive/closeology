@@ -244,9 +244,15 @@ def main():
         _nw_run.repair()
     except Exception as e:
         print("[build_all] pre-bridge drill repair skipped:", str(e)[:160])
+    _mnt_extra = None
+    try:
+        import mnt_drills
+        _mnt_extra = mnt_drills.news_items(mnt_drills.collect(days=3))
+    except Exception as e:
+        print("[build_all] MiningNewsTerminal drill pull skipped:", str(e)[:160])
     try:
         import drillbank_news
-        drillbank_news.build(live)
+        drillbank_news.build(live, extra=_mnt_extra)
     except Exception as e:
         print("[build_all] drillbank->news_items bridge skipped:", str(e)[:160])
     email = {"generated": TODAY, "site": "https://jaydeepdive.github.io/closeology/", "regions": []}

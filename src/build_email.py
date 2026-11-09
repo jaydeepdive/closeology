@@ -28,6 +28,9 @@ def _row(item, hot_ok=True):
     j = item.get("juris", "")
     hot = " \U0001f525" if (hot_ok and item.get("hot")) else ""
     txt = _esc(item.get("text", ""))
+    if item.get("url"):
+        txt = (f'<a href="{_esc(item["url"])}" style="color:#334155;text-decoration:none;'
+               f'border-bottom:1px solid #cbd5e1;">{txt}</a>')
     return (f'<tr><td style="padding:7px 0;border-bottom:1px solid #f1f5f9;font:400 14px/1.45 '
             f'-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif;color:#334155;">'
             f'{_chip(j)}{txt}{hot}{_maplink(item.get("map_url"))}</td></tr>')
@@ -62,14 +65,14 @@ def render(d):
     radar = site + "radar.html"
 
     if watch:
-        subject = f"Closeology — {n_edges} plays · {n_wdrop} just dropped · {n_wexp} expiring ({gen})"
+        subject = f"Closeology — {n_edges} new drill results · {n_wdrop} just dropped · {n_wexp} expiring ({gen})"
     else:
-        subject = (f"Closeology — {n_edges} plays · {top.get('counts',{}).get('dropped',0)} dropped "
+        subject = (f"Closeology — {n_edges} new drill results · {top.get('counts',{}).get('dropped',0)} dropped "
                    f"· {top.get('counts',{}).get('leads',0)} leads ({gen})")
 
     secs = []
-    secs.append(_section("\U0001f525 Act now — drilling next to open ground (last 3 days)", edges,
-                         empty_msg="No drilling announced next to open ground in the last 3 days."))
+    secs.append(_section("\U0001f525 Act now — new drill results (last 3 days)", edges,
+                         empty_msg="No drill results released in the last 3 days."))
     if watch:
         dmsg = None if wdrp.get("items") else (
             f"No drops recorded yet — tracking since {wdrp.get('tracking_since', gen)}, complete after ~30 days.")
@@ -128,8 +131,8 @@ def payload(d):
                         "url": it.get("url", "")})
         return out
 
-    secs = [{"title": "\U0001f525 Act now \u2014 drilling next to open ground (last 3 days)",
-             "empty": "No drilling announced next to open ground in the last 3 days.",
+    secs = [{"title": "\U0001f525 Act now \u2014 new drill results (last 3 days)",
+             "empty": "No drill results released in the last 3 days.",
              "items": _items(top.get("edges", []))}]
     if watch:
         secs.append({"title": f"\U0001f513 Just dropped \u2014 claims that lapsed (last 30 days, {n_wdrop})",
@@ -149,7 +152,7 @@ def payload(d):
     return {
         "generated": gen,
         "email_ready": True,
-        "email_subject": (f"Closeology \u2014 {n_edges} plays \u00b7 {n_wdrop} just dropped "
+        "email_subject": (f"Closeology \u2014 {n_edges} new drill results \u00b7 {n_wdrop} just dropped "
                           f"\u00b7 {n_wexp} expiring ({gen})" if watch else
                           f"Closeology \u2014 {n_edges} plays ({gen})"),
         "site": site,
