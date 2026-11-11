@@ -4704,6 +4704,10 @@
 { "type": "Feature", "properties": { "claim": "041520M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "", "staked": "2026-11-07" }, "geometry": { "type": "Point", "coordinates": [ -62.90159, 56.8659 ] } },
 { "type": "Feature", "properties": { "claim": "041521M", "cname": null, "owner": "Titjaluk Logistics LTD.", "expiry": "", "staked": "2026-11-07" }, "geometry": { "type": "Point", "coordinates": [ -56.17997, 50.62953 ] } },
 { "type": "Feature", "properties": { "claim": "041522M", "cname": null, "owner": "Vinland Lithinm Inc.", "expiry": "", "staked": "2026-11-09" }, "geometry": { "type": "Point", "coordinates": [ -57.74818, 47.82596 ] } },
-{ "type": "Feature", "properties": { "claim": "041523M", "cname": null, "owner": "Jeffery Brushett", "expiry": "", "staked": "2026-11-10" }, "geometry": { "type": "Point", "coordinates": [ -54.91378, 47.70813 ] } }
+{ "type": "Feature", "properties": { "claim": "041523M", "cname": null, "owner": "Jeffery Brushett", "expiry": "", "staked": "2026-11-10" }, "geometry": { "type": "Point", "coordinates": [ -54.91378, 47.70813 ] } },
+{ "type": "Feature", "properties": { "claim": "041524M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "", "staked": "2026-11-10" }, "geometry": { "type": "Point", "coordinates": [ -57.28044, 48.41953 ] } },
+{ "type": "Feature", "properties": { "claim": "041525M", "cname": null, "owner": "Jonathan Moulton", "expiry": "", "staked": "2026-11-10" }, "geometry": { "type": "Point", "coordinates": [ -55.84935, 49.39243 ] } },
+{ "type": "Feature", "properties": { "claim": "041526M", "cname": null, "owner": "Jonathan Moulton", "expiry": "", "staked": "2026-11-10" }, "geometry": { "type": "Point", "coordinates": [ -55.89063, 49.39509 ] } },
+{ "type": "Feature", "properties": { "claim": "041527M", "cname": null, "owner": "Jonathan Moulton", "expiry": "", "staked": "2026-11-11" }, "geometry": { "type": "Point", "coordinates": [ -55.90576, 49.33451 ] } }
 ]
 }

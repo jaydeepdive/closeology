@@ -7343,7 +7343,8 @@
 { "type": "Feature", "properties": { "claim": "MC00024352", "cname": "", "owner": "Ramp Metals (BC) Inc.: 100.000%", "expiry": "2029-02-01", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -105.33205, 56.05298 ] } },
 { "type": "Feature", "properties": { "claim": "MC00024353", "cname": "", "owner": "Carey Rus Galeschuk: 100.000%", "expiry": "2029-02-01", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -104.04747, 56.61113 ] } },
 { "type": "Feature", "properties": { "claim": "MC00014675", "cname": "", "owner": "Atha Energy Corp.: 100.000%", "expiry": "2027-01-07", "staked": "2021-03-08" }, "geometry": { "type": "Point", "coordinates": [ -106.63704, 59.11688 ] } },
-{ "type": "Feature", "properties": { "claim": "S-113388", "cname": "", "owner": "Wapaw Bay Resources Inc.: 100.000%", "expiry": "2026-11-13", "staked": "2009-08-05" }, "geometry": { "type": "Point", "coordinates": [ -104.6269, 54.87327 ] } },
-{ "type": "Feature", "properties": { "claim": "S-113846", "cname": "", "owner": "Wapaw Bay Resources Inc.: 100.000%", "expiry": "2026-11-13", "staked": "2009-08-05" }, "geometry": { "type": "Point", "coordinates": [ -104.6462, 54.85429 ] } }
+{ "type": "Feature", "properties": { "claim": "S-113388", "cname": "", "owner": "Wapaw Bay Resources Inc.: 100.000%", "expiry": "2027-11-02", "staked": "2009-08-05" }, "geometry": { "type": "Point", "coordinates": [ -104.6269, 54.87327 ] } },
+{ "type": "Feature", "properties": { "claim": "S-113846", "cname": "", "owner": "Wapaw Bay Resources Inc.: 100.000%", "expiry": "2027-11-02", "staked": "2009-08-05" }, "geometry": { "type": "Point", "coordinates": [ -104.6462, 54.85429 ] } },
+{ "type": "Feature", "properties": { "claim": "MC00024354", "cname": "", "owner": "Chris Knudsen: 100.000%", "expiry": "2029-02-08", "staked": "2026-11-10" }, "geometry": { "type": "Point", "coordinates": [ -105.32144, 55.20252 ] } }
 ]
 }
