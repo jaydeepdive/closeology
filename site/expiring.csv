@@ -1,920 +1,953 @@
 tid,prov,owner,name,expiry,area_ha,anniversary,days_to_expiry,bucket,lon,lat
-1068938,BC,COPPERGOLD EXPLORATION CORP.,BOT 3,2026-10-29,1806.6,False,-14,lapsing,-127.14248,56.05404
-1068935,BC,COPPERGOLD EXPLORATION CORP.,MOT 1,2026-10-29,1805.4,False,-14,lapsing,-127.12061,56.07904
-1068936,BC,COPPERGOLD EXPLORATION CORP.,MOT 2,2026-10-29,1804.6,False,-14,lapsing,-127.18624,56.09362
-104988,NU,6081 Nunavut Ltd. (100%),,2026-10-29,252.7,True,-14,lapsing,-95.76193,63.71912
-104990,NU,6081 Nunavut Ltd. (100%),,2026-10-29,185.4,True,-14,lapsing,-95.67598,63.72122
-1074194,BC,TIDAL GOLD CORP.,GUMBO,2026-10-29,38.6,False,-14,lapsing,-132.433,53.37682
-1097239,BC,COPPERGOLD EXPLORATION CORP.,MOTASEMO,2026-10-29,1550.9,False,-14,lapsing,-127.07374,56.12488
-1116491,BC,COPPERGOLD EXPLORATION CORP.,,2026-10-29,1552.7,False,-14,lapsing,-126.94561,56.07905
-1074199,BC,TIDAL GOLD CORP.,RUMPLESTILTSKIN,2026-10-29,38.6,False,-14,lapsing,-132.36424,53.34765
-1044250,BC,COPPERGOLD EXPLORATION CORP.,MOT 3,2026-10-29,36.1,False,-14,lapsing,-127.14249,56.08738
-104984,NU,6081 Nunavut Ltd. (100%),,2026-10-29,335.5,True,-14,lapsing,-95.0822,63.84832
-MB11542,MB,10197729 Manitoba Inc.,VIC 11542,2026-10-29,250.9,False,-14,lapsing,-99.23674,54.1986
-MB11536,MB,10197729 Manitoba Inc.,VIC 11536,2026-10-29,254.1,False,-14,lapsing,-99.26187,54.21288
-MB11497,MB,10197729 Manitoba Inc.,VIC 11497,2026-10-29,254.6,False,-14,lapsing,-99.26175,54.16975
-1041314,BC,COPPERGOLD EXPLORATION CORP.,MOT 1,2026-10-29,36.1,False,-14,lapsing,-127.12999,56.08738
-1041287,BC,COPPERGOLD EXPLORATION CORP.,MOT 18,2026-10-29,36.1,False,-14,lapsing,-127.07998,56.07071
-MB11543,MB,10197729 Manitoba Inc.,VIC 11543,2026-10-29,248.8,False,-14,lapsing,-99.21201,54.19864
-MB11538,MB,10197729 Manitoba Inc.,VIC 11538,2026-10-29,249.3,False,-14,lapsing,-99.21188,54.213
-MB11498,MB,10197729 Manitoba Inc.,VIC 11498,2026-10-29,249.2,False,-14,lapsing,-99.23687,54.16983
-MB11548,MB,10197729 Manitoba Inc.,VIC 11548,2026-10-29,249.0,False,-14,lapsing,-99.21209,54.18424
-MB11546,MB,10197729 Manitoba Inc.,VIC 11546,2026-10-29,254.8,False,-14,lapsing,-99.26175,54.18416
-MB11545,MB,10197729 Manitoba Inc.,VIC 11545,2026-10-29,251.8,False,-14,lapsing,-99.28682,54.18402
-MB11547,MB,10197729 Manitoba Inc.,VIC 11547,2026-10-29,250.2,False,-14,lapsing,-99.23675,54.18419
-MB11550,MB,10197729 Manitoba Inc.,VIC 11550,2026-10-29,249.6,False,-14,lapsing,-99.28661,54.16961
-MB11537,MB,10197729 Manitoba Inc.,VIC 11537,2026-10-29,248.8,False,-14,lapsing,-99.23672,54.21293
-600132,BC,COPPERGOLD EXPLORATION CORP.,MOT 11,2026-10-29,18.1,False,-14,lapsing,-127.09248,56.06863
-1074196,BC,TIDAL GOLD CORP.,NEEDLES,2026-10-29,19.3,False,-14,lapsing,-132.45487,53.38098
-MB11540,MB,10197729 Manitoba Inc.,VIC 11540,2026-10-29,181.7,False,-14,lapsing,-99.28332,54.1985
-MB11544,MB,10197729 Manitoba Inc.,VIC 11544,2026-10-29,211.6,False,-14,lapsing,-99.19113,54.198
-MB11549,MB,10197729 Manitoba Inc.,VIC 11549,2026-10-29,216.4,False,-14,lapsing,-99.18988,54.1808
-MB11539,MB,10197729 Manitoba Inc.,VIC 11539,2026-10-29,225.9,False,-14,lapsing,-99.18821,54.21312
-MB11499,MB,10197729 Manitoba Inc.,VIC 11499,2026-10-29,247.3,False,-14,lapsing,-99.21226,54.16988
-1068982,BC,COPPERGOLD EXPLORATION CORP.,MOT 5,2026-10-29,757.4,False,-14,lapsing,-127.12374,56.12488
-1097881,BC,COPPERGOLD EXPLORATION CORP.,MOTPOTHANDLE,2026-10-29,631.7,False,-14,lapsing,-126.98623,56.08946
-1097883,BC,COPPERGOLD EXPLORATION CORP.,POTBELLY,2026-10-29,487.1,False,-14,lapsing,-127.02999,56.11238
-104983,NU,6081 Nunavut Ltd. (100%),,2026-10-29,1126.6,True,-14,lapsing,-95.1408,63.78998
-104986,NU,6081 Nunavut Ltd. (100%),,2026-10-29,957.7,True,-14,lapsing,-95.5627,63.80665
-1097880,BC,COPPERGOLD EXPLORATION CORP.,MOTPOT,2026-10-29,1336.8,False,-14,lapsing,-126.9706,56.0603
-1097882,BC,COPPERGOLD EXPLORATION CORP.,POTOMAC,2026-10-29,1280.6,False,-14,lapsing,-126.99249,56.11655
-517965,BC,COPPERGOLD EXPLORATION CORP.,,2026-10-29,18.1,False,-14,lapsing,-127.13624,56.08529
-1041761,BC,COPPERGOLD EXPLORATION CORP.,MOT 12,2026-10-29,18.1,False,-14,lapsing,-127.08623,56.06863
-1042152,BC,COPPERGOLD EXPLORATION CORP.,MOT 17,2026-10-29,18.1,False,-14,lapsing,-127.07998,56.03946
-1111278,BC,COPPERGOLD EXPLORATION CORP.,,2026-10-29,18.1,False,-14,lapsing,-127.10498,56.06029
-1041900,BC,COPPERGOLD EXPLORATION CORP.,MOT 13,2026-10-29,18.0,False,-14,lapsing,-127.13624,56.08946
-MB11541,MB,10197729 Manitoba Inc.,VIC 11541,2026-10-29,255.9,False,-14,lapsing,-99.26178,54.19854
-1068369,BC,COPPERGOLD EXPLORATION CORP.,MOT 4,2026-10-29,54.2,False,-14,lapsing,-127.12061,56.08738
-1068364,BC,COPPERGOLD EXPLORATION CORP.,MOT 2,2026-10-29,72.2,False,-14,lapsing,-127.15186,56.08738
-1074189,BC,TIDAL GOLD CORP.,COURTE,2026-10-29,77.2,False,-14,lapsing,-132.408,53.3664
-104987,NU,6081 Nunavut Ltd. (100%),,2026-10-29,725.2,True,-14,lapsing,-95.6838,63.70454
-1120258,BC,COPPERGOLD EXPLORATION CORP.,,2026-10-29,432.9,False,-14,lapsing,-126.94561,56.11238
-1068940,BC,COPPERGOLD EXPLORATION CORP.,MOT 4,2026-10-29,1174.0,False,-14,lapsing,-127.05811,56.06446
-104985,NU,6081 Nunavut Ltd. (100%),,2026-10-29,335.6,True,-14,lapsing,-94.98844,63.84828
-104996,NU,6081 Nunavut Ltd. (100%),,2026-10-30,33.7,True,-13,lapsing,-95.45722,63.76078
-104997,NU,6081 Nunavut Ltd. (100%),,2026-10-30,83.9,True,-13,lapsing,-95.41425,63.81914
-1127295,BC,"MOWATT, JASPER",RileyBuffer,2026-10-30,1697.9,False,-13,lapsing,-132.42675,53.36432
-104994,NU,6081 Nunavut Ltd. (100%),,2026-10-30,253.1,True,-13,lapsing,-95.60566,63.69622
-035416M,NL,Mineral Lands Admin,,2026-10-30,24.7,False,-13,lapsing,-55.58821,50.678
-389830,BC,"FALLIS, GLENN",,2026-10-30,28.8,False,-13,lapsing,-121.69553,50.44439
-1094472,BC,TIDAL GOLD CORP.,HOMESTAKE,2026-10-30,77.7,False,-13,lapsing,-131.72668,53.05811
-1072254,BC,TIDAL GOLD CORP.,BELLA,2026-10-30,77.7,False,-13,lapsing,-131.72043,53.07894
-1072255,BC,TIDAL GOLD CORP.,MARINO,2026-10-30,77.7,False,-13,lapsing,-131.67668,53.07895
-104992,NU,6081 Nunavut Ltd. (100%),,2026-10-30,859.8,True,-13,lapsing,-95.8049,63.71288
-104995,NU,6081 Nunavut Ltd. (100%),,2026-10-30,605.6,True,-13,lapsing,-94.94156,63.76913
-1078208,BC,TIDAL GOLD CORP.,BELLA MARINO,2026-10-30,2447.3,False,-13,lapsing,-131.69856,53.07686
-104991,NU,6081 Nunavut Ltd. (100%),,2026-10-30,521.8,True,-13,lapsing,-95.74239,63.73994
-104993,NU,6081 Nunavut Ltd. (100%),,2026-10-30,421.1,True,-13,lapsing,-95.60567,63.74414
-1018442,BC,CASSIAR JADE CONTRACTING INC.,WOLV,2026-10-31,237.9,False,-12,lapsing,-128.60173,58.33934
-YE77628,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 101,2026-10-31,19.7,True,-12,lapsing,-139.30748,63.81161
-YE55692,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 65,2026-10-31,19.7,True,-12,lapsing,-139.30613,63.85591
-1127357,BC,"MITCHELL, RICHARD GEORGE",Law_H15,2026-10-31,209.0,False,-12,lapsing,-120.8825,49.68528
-YE55695,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 68,2026-10-31,19.6,True,-12,lapsing,-139.30388,63.85011
-YE77625,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 98,2026-10-31,19.7,True,-12,lapsing,-139.2869,63.81035
-YE79870,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 37,2026-10-31,19.7,True,-12,lapsing,-139.27591,63.83187
-YE55686,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 59,2026-10-31,19.7,True,-12,lapsing,-139.32916,63.86286
-YE77609,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 82,2026-10-31,19.7,True,-12,lapsing,-139.24525,63.82259
-YE55697,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 70,2026-10-31,19.6,True,-12,lapsing,-139.29595,63.84796
-YE55677,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 50,2026-10-31,19.7,True,-12,lapsing,-139.27638,63.8171
-YE77627,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 100,2026-10-31,19.7,True,-12,lapsing,-139.29456,63.81267
-YE77603,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 76,2026-10-31,19.7,True,-12,lapsing,-139.25004,63.83398
-1127354,BC,"MITCHELL, RICHARD GEORGE",Law_H2,2026-10-31,62.7,False,-12,lapsing,-121.00438,49.69361
-1127338,BC,"SCHNEIDER, RONALD GORDON",RAM ADIT,2026-10-31,21.1,False,-12,lapsing,-120.01058,49.17279
-YE79871,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 38,2026-10-31,19.3,True,-12,lapsing,-139.27061,63.83524
-YE77614,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 87,2026-10-31,19.7,True,-12,lapsing,-139.2534,63.81014
-YE55666,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 39,2026-10-31,19.7,True,-12,lapsing,-139.26345,63.81816
-YE55698,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 71,2026-10-31,18.9,True,-12,lapsing,-139.28311,63.84896
-YE77601,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 74,2026-10-31,19.2,True,-12,lapsing,-139.28065,63.84384
-YE77623,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 96,2026-10-31,19.7,True,-12,lapsing,-139.27924,63.80803
-YE55699,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 72,2026-10-31,19.7,True,-12,lapsing,-139.28838,63.84558
-YE77608,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 81,2026-10-31,19.7,True,-12,lapsing,-139.2376,63.82027
-YE55679,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 52,2026-10-31,19.7,True,-12,lapsing,-139.28404,63.81942
-MC00013892,SK,Doctors Investment Group Ltd.: 100.000%,,2026-10-31,3131.9,False,-12,lapsing,-106.2399,56.598
-MC00013893,SK,Doctors Investment Group Ltd.: 100.000%,,2026-10-31,2782.6,False,-12,lapsing,-106.29306,56.52889
-CBS 8866,SK,GOLDEN BAND RESOURCES INC.: 100.000%,,2026-10-31,394.9,False,-12,lapsing,-104.37537,55.97252
-YE77604,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 77,2026-10-31,12.4,True,-12,lapsing,-139.23907,63.83608
-YE55681,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 54,2026-10-31,19.7,True,-12,lapsing,-139.2917,63.82174
-YE55700,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 73,2026-10-31,11.6,True,-12,lapsing,-139.27711,63.84679
-YE79864,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 31,2026-10-31,19.7,True,-12,lapsing,-139.25292,63.82491
-MC00013891,SK,Doctors Investment Group Ltd.: 100.000%,,2026-10-31,4199.5,False,-12,lapsing,-106.38611,56.52348
-YE77616,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 89,2026-10-31,19.6,True,-12,lapsing,-139.25866,63.80676
-YE77606,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 79,2026-10-31,18.5,True,-12,lapsing,-139.23501,63.82993
-YE79867,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 34,2026-10-31,19.6,True,-12,lapsing,-139.25531,63.83061
-YE77620,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 93,2026-10-31,19.6,True,-12,lapsing,-139.27684,63.80234
-YE55685,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 58,2026-10-31,19.7,True,-12,lapsing,-139.3421,63.8618
-YE77612,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 85,2026-10-31,19.7,True,-12,lapsing,-139.24813,63.81351
-YE55694,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 67,2026-10-31,19.3,True,-12,lapsing,-139.29855,63.85353
-YE55696,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 69,2026-10-31,14.1,True,-12,lapsing,-139.29242,63.85237
-YE77613,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 86,2026-10-31,19.7,True,-12,lapsing,-139.25579,63.81584
-YE55693,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 66,2026-10-31,19.7,True,-12,lapsing,-139.3114,63.85253
-YE55680,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 53,2026-10-31,19.6,True,-12,lapsing,-139.29696,63.81836
-YE77611,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 84,2026-10-31,19.6,True,-12,lapsing,-139.25052,63.81922
-YE55690,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 63,2026-10-31,19.7,True,-12,lapsing,-139.3138,63.85823
-YE77621,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 94,2026-10-31,19.7,True,-12,lapsing,-139.27158,63.80571
-YE55672,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 45,2026-10-31,19.6,True,-12,lapsing,-139.28643,63.82512
-YE55671,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 44,2026-10-31,19.6,True,-12,lapsing,-139.27351,63.82618
-YE77610,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 83,2026-10-31,19.7,True,-12,lapsing,-139.24286,63.8169
-YE55683,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 56,2026-10-31,19.6,True,-12,lapsing,-139.34978,63.86412
-YE77630,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 103,2026-10-31,19.6,True,-12,lapsing,-139.31514,63.81393
-YE55684,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 57,2026-10-31,19.6,True,-12,lapsing,-139.33652,63.86538
-YE77626,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 99,2026-10-31,19.7,True,-12,lapsing,-139.29982,63.80929
-YE79868,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 35,2026-10-31,19.7,True,-12,lapsing,-139.26824,63.82955
-YE55670,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 43,2026-10-31,19.7,True,-12,lapsing,-139.27877,63.8228
-YE77634,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 107,2026-10-31,19.7,True,-12,lapsing,-139.33047,63.81856
-YE77617,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 90,2026-10-31,19.6,True,-12,lapsing,-139.26632,63.80908
-YE79865,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 32,2026-10-31,19.6,True,-12,lapsing,-139.24765,63.82828
-YE77624,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 97,2026-10-31,19.6,True,-12,lapsing,-139.29216,63.80697
-YE55687,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 60,2026-10-31,19.6,True,-12,lapsing,-139.33442,63.85948
-YE77622,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 95,2026-10-31,19.6,True,-12,lapsing,-139.2845,63.80466
-YE77637,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 110,2026-10-31,19.6,True,-12,lapsing,-139.33288,63.82426
-YE55688,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 61,2026-10-31,19.6,True,-12,lapsing,-139.32148,63.86054
-YE55689,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 62,2026-10-31,19.6,True,-12,lapsing,-139.32675,63.85717
-YE77633,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 106,2026-10-31,19.7,True,-12,lapsing,-139.31755,63.81962
-YE79866,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 33,2026-10-31,19.7,True,-12,lapsing,-139.26058,63.82723
-YE77629,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 102,2026-10-31,19.6,True,-12,lapsing,-139.30222,63.81499
-YE55667,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 40,2026-10-31,19.6,True,-12,lapsing,-139.25819,63.82154
-YE77619,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 92,2026-10-31,19.7,True,-12,lapsing,-139.26392,63.80339
-YE77602,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 75,2026-10-31,19.6,True,-12,lapsing,-139.24495,63.83724
-YE55676,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 49,2026-10-31,19.6,True,-12,lapsing,-139.28164,63.81373
-YE77607,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 80,2026-10-31,19.6,True,-12,lapsing,-139.23999,63.82596
-YE55674,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 47,2026-10-31,19.6,True,-12,lapsing,-139.27398,63.8114
-YE79869,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 36,2026-10-31,19.5,True,-12,lapsing,-139.26296,63.83292
-YE55673,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 46,2026-10-31,19.6,True,-12,lapsing,-139.28118,63.82849
-YE77636,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 109,2026-10-31,19.6,True,-12,lapsing,-139.33814,63.82088
-YE55669,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 42,2026-10-31,19.6,True,-12,lapsing,-139.26585,63.82385
-YE77631,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 104,2026-10-31,19.4,True,-12,lapsing,-139.30989,63.8173
-YE77635,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 108,2026-10-31,19.7,True,-12,lapsing,-139.32522,63.82194
-YE55675,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 48,2026-10-31,19.7,True,-12,lapsing,-139.26871,63.81478
-YE77618,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 91,2026-10-31,19.6,True,-12,lapsing,-139.26918,63.80002
-YE55682,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 55,2026-10-31,19.6,True,-12,lapsing,-139.34452,63.86749
-YE55678,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 51,2026-10-31,19.6,True,-12,lapsing,-139.2893,63.81604
-YE77615,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 88,2026-10-31,19.7,True,-12,lapsing,-139.26106,63.81246
-YE55668,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 41,2026-10-31,19.7,True,-12,lapsing,-139.27111,63.82048
-978972,BC,CASSIAR JADE CONTRACTING INC.,,2026-10-31,85.0,False,-12,lapsing,-128.58611,58.33934
-YE77605,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 78,2026-10-31,19.7,True,-12,lapsing,-139.24238,63.83166
-YE77632,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 105,2026-10-31,19.6,True,-12,lapsing,-139.32281,63.81624
-YE55691,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 64,2026-10-31,19.7,True,-12,lapsing,-139.31907,63.85485
-55308,YK,Elsa Reclamation & Development Company Ltd. - 100%,PRINCE ,2026-11-01,17.2,True,-11,lapsing,-135.25648,63.93436
-59439,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 3,2026-11-01,16.4,True,-11,lapsing,-135.32185,63.89686
-YF74746,YK,Kara Lynn Perri - 100%,Spring 1,2026-11-01,14.5,True,-11,lapsing,-139.30964,63.925
-YE79939,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 12,2026-11-01,19.7,True,-11,lapsing,-138.62694,63.81049
-YF04652,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 26,2026-11-01,19.7,True,-11,lapsing,-138.81251,63.86194
-13035,YK,Elsa Reclamation & Development Company Ltd. - 100%,STONE ,2026-11-01,18.9,True,-11,lapsing,-135.23274,63.95904
-YE79946,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 19,2026-11-01,12.9,True,-11,lapsing,-138.66479,63.82068
-61725,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLOT ,2026-11-01,18.0,True,-11,lapsing,-135.33876,63.88204
-59437,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 1,2026-11-01,18.3,True,-11,lapsing,-135.32488,63.89324
-59446,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 10,2026-11-01,19.3,True,-11,lapsing,-135.3188,63.88843
-59451,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 15,2026-11-01,19.3,True,-11,lapsing,-135.33452,63.8775
-59450,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 14,2026-11-01,18.7,True,-11,lapsing,-135.32381,63.88049
-59441,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 5,2026-11-01,14.3,True,-11,lapsing,-135.3193,63.90041
-59444,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 8,2026-11-01,13.9,True,-11,lapsing,-135.30665,63.90394
-YF04647,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 21,2026-11-01,17.4,True,-11,lapsing,-138.82251,63.84888
-38658,YK,Elsa Reclamation & Development Company Ltd. - 100%,NOIDER ,2026-11-01,5.1,True,-11,lapsing,-135.2406,63.93958
-59005,YK,Elsa Reclamation & Development Company Ltd. - 100%,D.C. ,2026-11-01,0.1,True,-11,lapsing,-135.28517,63.94944
-59443,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 7,2026-11-01,0.5,True,-11,lapsing,-135.31385,63.90298
-55270,YK,Elsa Reclamation & Development Company Ltd. - 100%,V.D. ,2026-11-01,2.1,True,-11,lapsing,-135.28778,63.95012
-62248,YK,Elsa Reclamation & Development Company Ltd. - 100%,KARIN ,2026-11-01,8.3,True,-11,lapsing,-135.286,63.94011
-55384,YK,Elsa Reclamation & Development Company Ltd. - 100%,ROAD ,2026-11-01,4.6,True,-11,lapsing,-135.29044,63.94888
-56530,YK,Elsa Reclamation & Development Company Ltd. - 100%,MARIE ELENA ,2026-11-01,10.2,True,-11,lapsing,-135.27573,63.93602
-103501,NU,White Cliff Minerals Limited (100%),,2026-11-01,1373.5,True,-11,lapsing,-117.77912,67.78372
-103504,NU,White Cliff Minerals Limited (100%),,2026-11-01,1378.1,True,-11,lapsing,-117.0525,67.70039
-103505,NU,White Cliff Minerals Limited (100%),,2026-11-01,1235.7,True,-11,lapsing,-116.92749,67.65038
-103497,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.8,True,-11,lapsing,-117.36894,67.7212
-103500,NU,White Cliff Minerals Limited (100%),,2026-11-01,1305.8,True,-11,lapsing,-116.90796,67.69621
-103503,NU,White Cliff Minerals Limited (100%),,2026-11-01,1337.3,True,-11,lapsing,-116.88452,67.6608
-103506,NU,White Cliff Minerals Limited (100%),,2026-11-01,1250.5,True,-11,lapsing,-116.96656,67.65244
-103488,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.0,True,-11,lapsing,-117.50566,67.75245
-103485,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.0,True,-11,lapsing,-117.29471,67.75247
-103490,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-11,lapsing,-117.6463,67.75246
-103492,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.0,True,-11,lapsing,-117.78693,67.75246
-103493,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.0,True,-11,lapsing,-117.85725,67.75246
-103491,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-11,lapsing,-117.71661,67.75244
-103502,NU,White Cliff Minerals Limited (100%),,2026-11-01,1373.9,True,-11,lapsing,-117.63068,67.7837
-103486,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-11,lapsing,-117.36503,67.75247
-YE79943,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 16,2026-11-01,19.7,True,-11,lapsing,-138.64574,63.82044
-YF04644,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 18,2026-11-01,19.6,True,-11,lapsing,-138.84092,63.85292
-103484,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-11,lapsing,-117.2244,67.75244
-103494,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.4,True,-11,lapsing,-117.79083,67.72122
-103498,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.5,True,-11,lapsing,-117.2283,67.72122
-59447,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 11,2026-11-01,19.8,True,-11,lapsing,-135.33008,63.88606
-59445,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 9,2026-11-01,20.1,True,-11,lapsing,-135.32786,63.88966
-103489,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-11,lapsing,-117.57598,67.75247
-59449,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 13,2026-11-01,20.0,True,-11,lapsing,-135.33291,63.8813
-YF74747,YK,Sylvain Montreuil - 100%,Spring 2,2026-11-01,10.2,True,-11,lapsing,-139.29701,63.92399
-59448,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 12,2026-11-01,19.0,True,-11,lapsing,-135.32155,63.8843
-YF04651,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 25,2026-11-01,19.6,True,-11,lapsing,-138.82208,63.85715
-YF04643,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 17,2026-11-01,19.7,True,-11,lapsing,-138.84067,63.8577
-YF04641,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 15,2026-11-01,19.7,True,-11,lapsing,-138.85914,63.86063
-YF04642,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 16,2026-11-01,19.6,True,-11,lapsing,-138.84978,63.86153
-YE79941,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 14,2026-11-01,19.6,True,-11,lapsing,-138.64274,63.81481
-59440,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 4,2026-11-01,19.6,True,-11,lapsing,-135.31344,63.89597
-YF04645,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 19,2026-11-01,19.6,True,-11,lapsing,-138.83138,63.85735
-YE79938,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 11,2026-11-01,19.6,True,-11,lapsing,-138.61904,63.80833
-59442,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 6,2026-11-01,19.5,True,-11,lapsing,-135.31066,63.89987
-YE79947,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 20,2026-11-01,19.6,True,-11,lapsing,-138.66155,63.82476
-YF04653,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 27,2026-11-01,19.7,True,-11,lapsing,-138.82186,63.86125
-YE79944,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 17,2026-11-01,19.6,True,-11,lapsing,-138.65854,63.81912
-YE79942,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 15,2026-11-01,19.6,True,-11,lapsing,-138.65064,63.81696
-YF04649,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 23,2026-11-01,19.6,True,-11,lapsing,-138.82227,63.85352
-YF04648,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 22,2026-11-01,19.6,True,-11,lapsing,-138.81296,63.85344
-YF04650,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 24,2026-11-01,19.6,True,-11,lapsing,-138.81275,63.85758
-YF04646,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 20,2026-11-01,19.7,True,-11,lapsing,-138.81319,63.8492
-YE79945,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 18,2026-11-01,19.6,True,-11,lapsing,-138.65364,63.8226
-YE79940,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 13,2026-11-01,19.6,True,-11,lapsing,-138.63502,63.81252
-103495,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.5,True,-11,lapsing,-117.6502,67.7212
-103496,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.8,True,-11,lapsing,-117.50957,67.72121
-103499,NU,White Cliff Minerals Limited (100%),,2026-11-01,1406.0,True,-11,lapsing,-117.06813,67.72121
-59438,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 2,2026-11-01,19.6,True,-11,lapsing,-135.31626,63.89206
-103487,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-11,lapsing,-117.43535,67.75246
-103515,NU,White Cliff Minerals Limited (100%),,2026-11-02,1382.5,True,-10,lapsing,-117.03688,67.61704
-103520,NU,White Cliff Minerals Limited (100%),,2026-11-02,795.3,True,-10,lapsing,-117.51348,67.7837
-SV14077,MB,CanWhite Sands Corp.,DEN 89,2026-11-02,254.3,False,-10,lapsing,-96.58924,49.28708
-103507,NU,White Cliff Minerals Limited (100%),,2026-11-02,1398.8,True,-10,lapsing,-116.90796,67.5983
-103516,NU,White Cliff Minerals Limited (100%),,2026-11-02,1457.6,True,-10,lapsing,-116.9939,67.58994
-103518,NU,White Cliff Minerals Limited (100%),,2026-11-02,1454.8,True,-10,lapsing,-117.1697,67.64828
-103512,NU,White Cliff Minerals Limited (100%),,2026-11-02,1452.5,True,-10,lapsing,-117.20486,67.67954
-SV14031,MB,CanWhite Sands Corp.,DEN 28,2026-11-02,261.6,False,-10,lapsing,-96.76989,49.3163
-SV14078,MB,CanWhite Sands Corp.,DEN 90,2026-11-02,262.5,False,-10,lapsing,-96.56666,49.30166
-103508,NU,White Cliff Minerals Limited (100%),,2026-11-02,1306.3,True,-10,lapsing,-117.36112,67.70038
-103519,NU,White Cliff Minerals Limited (100%),,2026-11-02,1000.6,True,-10,lapsing,-117.31034,67.67747
-015580M,NL,Maritime Resources Corp.,"Kings Point, Central NL",2026-11-02,99.7,False,-10,lapsing,-56.18476,49.52572
-103510,NU,White Cliff Minerals Limited (100%),,2026-11-02,798.0,True,-10,lapsing,-117.1697,67.70038
-036393M,NL,Maritime Resources Corp.,,2026-11-02,1370.0,False,-10,lapsing,-56.22928,49.55075
-025614M,NL,Champion Iron Mines Limited,"Powderhorn Lake, Central NL",2026-11-02,699.8,False,-10,lapsing,-56.12605,49.13627
-SV14028,MB,CanWhite Sands Corp.,DEN 25,2026-11-02,64.4,False,-10,lapsing,-96.73002,49.30156
-SV14045,MB,CanWhite Sands Corp.,DEN 43,2026-11-02,256.8,False,-10,lapsing,-96.70213,49.34591
-SV14073,MB,CanWhite Sands Corp.,DEN 85,2026-11-02,258.4,False,-10,lapsing,-96.58913,49.27238
-SV14025,MB,CanWhite Sands Corp.,DEN 22,2026-11-02,259.1,False,-10,lapsing,-96.65683,49.30167
-SV14029,MB,CanWhite Sands Corp.,DEN 26,2026-11-02,259.8,False,-10,lapsing,-96.74707,49.30156
-SV14027,MB,CanWhite Sands Corp.,DEN 24,2026-11-02,258.4,False,-10,lapsing,-96.70206,49.30159
-SV14030,MB,CanWhite Sands Corp.,DEN 27,2026-11-02,262.7,False,-10,lapsing,-96.76984,49.30152
-SV14082,MB,CanWhite Sands Corp.,DEN 94,2026-11-02,256.3,False,-10,lapsing,-96.63429,49.31653
-103513,NU,White Cliff Minerals Limited (100%),,2026-11-02,1308.1,True,-10,lapsing,-117.05641,67.65872
-103514,NU,White Cliff Minerals Limited (100%),,2026-11-02,1309.2,True,-10,lapsing,-117.05641,67.63788
-SV14079,MB,CanWhite Sands Corp.,DEN 91,2026-11-02,264.2,False,-10,lapsing,-96.58926,49.3018
-SV14026,MB,CanWhite Sands Corp.,DEN 23,2026-11-02,262.1,False,-10,lapsing,-96.67948,49.30163
-103509,NU,White Cliff Minerals Limited (100%),,2026-11-02,725.7,True,-10,lapsing,-117.25174,67.70037
-103511,NU,White Cliff Minerals Limited (100%),,2026-11-02,1307.0,True,-10,lapsing,-117.05641,67.67955
-MC00014679,SK,Atha Energy Corp.: 100.000%,,2026-11-03,1886.8,False,-9,lapsing,-106.57294,59.15508
-MC00014672,SK,Atha Energy Corp.: 100.000%,,2026-11-03,5314.0,False,-9,lapsing,-106.60156,59.07506
-MC00014677,SK,Atha Energy Corp.: 100.000%,,2026-11-03,5621.9,False,-9,lapsing,-106.24944,59.16418
-1051805,BC,"BINICHAKIS, MITCH LEIGHTON",SUNRISE,2026-11-04,235.0,False,-8,lapsing,-121.63889,52.72286
-SV15188,MB,SHAUN SPELLISCY,CHASE 6,2026-11-05,255.6,False,-7,lapsing,-101.5734,52.02157
-SV15190,MB,SHAUN SPELLISCY,CHASE 8,2026-11-05,254.7,False,-7,lapsing,-101.52563,52.02152
-SV15191,MB,SHAUN SPELLISCY,CHASE 9,2026-11-05,191.8,False,-7,lapsing,-101.52563,52.03799
-SV15184,MB,SHAUN SPELLISCY,CHASE 2,2026-11-05,255.6,False,-7,lapsing,-101.54955,52.00708
-SV15186,MB,SHAUN SPELLISCY,CHASE 4,2026-11-05,255.5,False,-7,lapsing,-101.59728,52.0071
-SV15189,MB,SHAUN SPELLISCY,CHASE 7,2026-11-05,63.9,False,-7,lapsing,-101.54363,52.01616
-SV15193,MB,SHAUN SPELLISCY,CHASE 11,2026-11-05,253.6,False,-7,lapsing,-101.57341,52.03617
-SV15192,MB,SHAUN SPELLISCY,CHASE 10,2026-11-05,253.6,False,-7,lapsing,-101.54951,52.03618
-SV15183,MB,SHAUN SPELLISCY,CHASE 1,2026-11-05,253.9,False,-7,lapsing,-101.52565,52.00708
-SV15195,MB,SHAUN SPELLISCY,CHASE 12,2026-11-05,252.2,False,-7,lapsing,-101.59729,52.0362
-YF79185,YK,Callum Ryan - 100%,Vice 25,2026-11-06,19.6,True,-6,lapsing,-135.81242,63.91116
-YF79034,YK,Callum Ryan - 100%,MBL 34,2026-11-06,19.6,True,-6,lapsing,-135.36294,63.78852
-YF79201,YK,Shawn Ryan - 100%,KYS 1,2026-11-06,19.6,True,-6,lapsing,-135.26616,63.84078
-YF79150,YK,Callum Ryan - 100%,Bert 22,2026-11-06,19.6,True,-6,lapsing,-136.06638,63.89853
-YF79003,YK,Callum Ryan - 100%,MBL 3,2026-11-06,19.6,True,-6,lapsing,-135.36206,63.81696
-YF79275,YK,Shawn Ryan - 100%,KYS 75,2026-11-06,19.6,True,-6,lapsing,-135.17726,63.81108
-YF79259,YK,Shawn Ryan - 100%,KYS 59,2026-11-06,19.6,True,-6,lapsing,-135.11906,63.79156
-YF79001,YK,Callum Ryan - 100%,MBL 1,2026-11-06,19.6,True,-6,lapsing,-135.35277,63.81688
-YF79041,YK,Callum Ryan - 100%,MBL 41,2026-11-06,19.6,True,-6,lapsing,-135.37172,63.80498
-YF79123,YK,Callum Ryan - 100%,Serv 29,2026-11-06,19.6,True,-6,lapsing,-136.26462,63.8669
-YF79105,YK,Callum Ryan - 100%,Serv 11,2026-11-06,19.6,True,-6,lapsing,-136.26432,63.8587
-YF79184,YK,Callum Ryan - 100%,Vice 24,2026-11-06,19.6,True,-6,lapsing,-135.91321,63.91558
-YF79071,YK,Callum Ryan - 100%,MBL 71,2026-11-06,18.5,True,-6,lapsing,-135.40877,63.8092
-YF79024,YK,Callum Ryan - 100%,MBL 24,2026-11-06,18.5,True,-6,lapsing,-135.36231,63.80888
-YF79039,YK,Callum Ryan - 100%,MBL 39,2026-11-06,18.5,True,-6,lapsing,-135.3716,63.80894
-YF79043,YK,Callum Ryan - 100%,MBL 43,2026-11-06,19.6,True,-6,lapsing,-135.37185,63.80088
-YF79052,YK,Callum Ryan - 100%,MBL 52,2026-11-06,19.6,True,-6,lapsing,-135.38163,63.78456
-YF79112,YK,Callum Ryan - 100%,Serv 18,2026-11-06,19.6,True,-6,lapsing,-136.20876,63.86728
-YF92535,YK,Callum Ryan - 100%,Vice 41,2026-11-06,19.6,True,-6,lapsing,-135.818,63.91998
-YF79239,YK,Shawn Ryan - 100%,KYS 39,2026-11-06,19.6,True,-6,lapsing,-135.2201,63.84041
-YF79057,YK,Callum Ryan - 100%,MBL 57,2026-11-06,19.6,True,-6,lapsing,-135.39031,63.8051
-YF79114,YK,Callum Ryan - 100%,Serv 20,2026-11-06,19.7,True,-6,lapsing,-136.21821,63.87131
-YF79191,YK,Callum Ryan - 100%,Vice 31,2026-11-06,17.9,True,-6,lapsing,-135.83948,63.91347
-YE56910,YK,Shawn Ryan - 100%,Shanghai 116,2026-11-06,14.9,True,-6,lapsing,-135.72581,63.92344
-YF79274,YK,Shawn Ryan - 100%,KYS 74,2026-11-06,15.7,True,-6,lapsing,-135.16495,63.81188
-YF79004,YK,Callum Ryan - 100%,MBL 4,2026-11-06,19.4,True,-6,lapsing,-135.36194,63.821
-YF79203,YK,Shawn Ryan - 100%,KYS 3,2026-11-06,18.0,True,-6,lapsing,-135.26076,63.84392
-YF79225,YK,Shawn Ryan - 100%,KYS 25,2026-11-06,18.0,True,-6,lapsing,-135.24593,63.83897
-YF79182,YK,Callum Ryan - 100%,Vice 22,2026-11-06,19.6,True,-6,lapsing,-135.90407,63.9148
-YF79190,YK,Callum Ryan - 100%,Vice 30,2026-11-06,19.6,True,-6,lapsing,-135.83073,63.91272
-YF79075,YK,Callum Ryan - 100%,MBL 75,2026-11-06,19.6,True,-6,lapsing,-135.409,63.80112
-YF79256,YK,Shawn Ryan - 100%,KYS 56,2026-11-06,19.7,True,-6,lapsing,-135.20714,63.8005
-YF79047,YK,Callum Ryan - 100%,MBL 47,2026-11-06,19.6,True,-6,lapsing,-135.3721,63.79268
-YF79243,YK,Shawn Ryan - 100%,KYS 43,2026-11-06,19.7,True,-6,lapsing,-135.24594,63.81862
-YF79019,YK,Callum Ryan - 100%,MBL 19,2026-11-06,19.6,True,-6,lapsing,-135.43642,63.81744
-YF79248,YK,Shawn Ryan - 100%,KYS 48,2026-11-06,19.6,True,-6,lapsing,-135.23675,63.81041
-YF79067,YK,Callum Ryan - 100%,MBL 67,2026-11-06,19.6,True,-6,lapsing,-135.39091,63.78462
-YF79107,YK,Callum Ryan - 100%,Serv 13,2026-11-06,19.6,True,-6,lapsing,-136.27363,63.85864
-YF79115,YK,Callum Ryan - 100%,Serv 21,2026-11-06,19.7,True,-6,lapsing,-136.22738,63.86715
-YF79080,YK,Callum Ryan - 100%,MBL 80,2026-11-06,19.7,True,-6,lapsing,-135.41852,63.79299
-YF79076,YK,Callum Ryan - 100%,MBL 76,2026-11-06,19.6,True,-6,lapsing,-135.41829,63.80118
-YF79048,YK,Callum Ryan - 100%,MBL 48,2026-11-06,19.6,True,-6,lapsing,-135.38138,63.79274
-YF79174,YK,Callum Ryan - 100%,Vice 14,2026-11-06,11.2,True,-6,lapsing,-135.87001,63.9086
-YE56907,YK,Shawn Ryan - 100%,Shanghai 113,2026-11-06,19.7,True,-6,lapsing,-135.71629,63.93392
-YF79200,YK,Callum Ryan - 100%,Vice 40,2026-11-06,19.7,True,-6,lapsing,-135.80885,63.9192
-YF79120,YK,Callum Ryan - 100%,Serv 26,2026-11-06,19.7,True,-6,lapsing,-136.24614,63.87112
-YF79165,YK,Callum Ryan - 100%,Vice 5,2026-11-06,11.4,True,-6,lapsing,-135.83392,63.90552
-YF79181,YK,Callum Ryan - 100%,Vice 21,2026-11-06,11.4,True,-6,lapsing,-135.90548,63.91162
-YF79163,YK,Callum Ryan - 100%,Vice 3,2026-11-06,11.4,True,-6,lapsing,-135.82477,63.90474
-YF79169,YK,Callum Ryan - 100%,Vice 9,2026-11-06,11.4,True,-6,lapsing,-135.85142,63.90702
-YF79177,YK,Callum Ryan - 100%,Vice 17,2026-11-06,10.8,True,-6,lapsing,-135.88768,63.91011
-YF79179,YK,Callum Ryan - 100%,Vice 19,2026-11-06,11.1,True,-6,lapsing,-135.89646,63.91086
-YF79175,YK,Callum Ryan - 100%,Vice 15,2026-11-06,11.1,True,-6,lapsing,-135.87892,63.90937
-YF79091,YK,Callum Ryan - 100%,MBL 91,2026-11-06,19.7,True,-6,lapsing,-135.4277,63.79715
-YF79161,YK,Callum Ryan - 100%,Vice 1,2026-11-06,11.4,True,-6,lapsing,-135.81561,63.90396
-YF79183,YK,Callum Ryan - 100%,Vice 23,2026-11-06,11.4,True,-6,lapsing,-135.91461,63.9124
-YF79087,YK,Callum Ryan - 100%,MBL 87,2026-11-06,19.7,True,-6,lapsing,-135.42747,63.80534
-YF79217,YK,Shawn Ryan - 100%,KYS 17,2026-11-06,19.7,True,-6,lapsing,-135.26436,63.83504
-YF79293,YK,Shawn Ryan - 100%,KYS 93,2026-11-06,6.8,True,-6,lapsing,-135.21479,63.86205
-YF79215,YK,Shawn Ryan - 100%,KYS 15,2026-11-06,9.1,True,-6,lapsing,-135.22716,63.86174
-YF79171,YK,Callum Ryan - 100%,Vice 11,2026-11-06,11.9,True,-6,lapsing,-135.86076,63.90782
-YF79167,YK,Callum Ryan - 100%,Vice 7,2026-11-06,10.4,True,-6,lapsing,-135.84267,63.90627
-YF79062,YK,Callum Ryan - 100%,MBL 62,2026-11-06,19.6,True,-6,lapsing,-135.39984,63.79696
-YF79290,YK,Shawn Ryan - 100%,KYS 90,2026-11-06,19.6,True,-6,lapsing,-135.16905,63.80318
-YF79053,YK,Callum Ryan - 100%,MBL 53,2026-11-06,19.6,True,-6,lapsing,-135.39007,63.81304
-YF79277,YK,Callum Ryan - 100%,KYS 77,2026-11-06,19.6,True,-6,lapsing,-135.13032,63.78504
-YF79042,YK,Callum Ryan - 100%,MBL 42,2026-11-06,19.6,True,-6,lapsing,-135.38102,63.80504
-YF79250,YK,Shawn Ryan - 100%,KYS 50,2026-11-06,19.6,True,-6,lapsing,-135.22934,63.80794
-YF79066,YK,Callum Ryan - 100%,MBL 66,2026-11-06,19.6,True,-6,lapsing,-135.40008,63.78878
-YF79005,YK,Callum Ryan - 100%,MBL 5,2026-11-06,19.6,True,-6,lapsing,-135.37136,63.81702
-YF79242,YK,Shawn Ryan - 100%,KYS 42,2026-11-06,19.6,True,-6,lapsing,-135.25897,63.81784
-YF79237,YK,Shawn Ryan - 100%,KYS 37,2026-11-06,19.7,True,-6,lapsing,-135.22752,63.84288
-YF79060,YK,Callum Ryan - 100%,MBL 60,2026-11-06,19.7,True,-6,lapsing,-135.39972,63.80106
-YF79287,YK,Shawn Ryan - 100%,KYS 87,2026-11-06,19.7,True,-6,lapsing,-135.16727,63.79744
-YF79092,YK,Callum Ryan - 100%,MBL 92,2026-11-06,19.6,True,-6,lapsing,-135.43698,63.79721
-YF79029,YK,Callum Ryan - 100%,MBL 29,2026-11-06,19.6,True,-6,lapsing,-135.3534,63.79666
-YF79132,YK,Callum Ryan - 100%,Bert 4,2026-11-06,19.6,True,-6,lapsing,-136.0572,63.89031
-YF79220,YK,Shawn Ryan - 100%,KYS 20,2026-11-06,19.6,True,-6,lapsing,-135.27739,63.83426
-YF79283,YK,Shawn Ryan - 100%,KYS 83,2026-11-06,19.6,True,-6,lapsing,-135.15249,63.79248
-YF79049,YK,Callum Ryan - 100%,MBL 49,2026-11-06,19.7,True,-6,lapsing,-135.37222,63.78859
-YF79211,YK,Shawn Ryan - 100%,KYS 11,2026-11-06,19.7,True,-6,lapsing,-135.23851,63.85684
-YF79093,YK,Callum Ryan - 100%,MBL 93,2026-11-06,19.7,True,-6,lapsing,-135.42781,63.79305
-YF79202,YK,Shawn Ryan - 100%,KYS 2,2026-11-06,19.7,True,-6,lapsing,-135.25874,63.83831
-YF79197,YK,Callum Ryan - 100%,Vice 37,2026-11-06,19.1,True,-6,lapsing,-135.89328,63.91806
-YF79155,YK,Callum Ryan - 100%,Bert 27,2026-11-06,19.7,True,-6,lapsing,-136.09441,63.89452
-YF79094,YK,Callum Ryan - 100%,MBL 94,2026-11-06,19.7,True,-6,lapsing,-135.4371,63.79311
-YF79235,YK,Shawn Ryan - 100%,KYS 35,2026-11-06,19.7,True,-6,lapsing,-135.23493,63.84536
-YF79289,YK,Shawn Ryan - 100%,KYS 89,2026-11-06,19.7,True,-6,lapsing,-135.17467,63.79992
-YF79135,YK,Callum Ryan - 100%,Bert 7,2026-11-06,19.7,True,-6,lapsing,-136.0759,63.88628
-YF79147,YK,Callum Ryan - 100%,Bert 19,2026-11-06,19.7,True,-6,lapsing,-136.05712,63.8944
-YF79153,YK,Callum Ryan - 100%,Bert 25,2026-11-06,19.7,True,-6,lapsing,-136.08509,63.8945
-YF79073,YK,Callum Ryan - 100%,MBL 73,2026-11-06,19.7,True,-6,lapsing,-135.40888,63.80522
-YF79176,YK,Callum Ryan - 100%,Vice 16,2026-11-06,19.0,True,-6,lapsing,-135.87752,63.91254
-YF79180,YK,Callum Ryan - 100%,Vice 20,2026-11-06,19.1,True,-6,lapsing,-135.89505,63.91404
-YF79262,YK,Shawn Ryan - 100%,KYS 62,2026-11-06,18.0,True,-6,lapsing,-135.12106,63.79716
-YF79173,YK,Callum Ryan - 100%,Vice 13,2026-11-06,19.2,True,-6,lapsing,-135.8686,63.91178
-YF79194,YK,Callum Ryan - 100%,Vice 34,2026-11-06,19.2,True,-6,lapsing,-135.86682,63.91581
-YF79023,YK,Callum Ryan - 100%,MBL 23,2026-11-06,18.5,True,-6,lapsing,-135.35302,63.80882
-YF79292,YK,Shawn Ryan - 100%,KYS 92,2026-11-06,17.1,True,-6,lapsing,-135.17597,63.8055
-YF79072,YK,Callum Ryan - 100%,MBL 72,2026-11-06,18.5,True,-6,lapsing,-135.41806,63.80926
-YE56911,YK,Shawn Ryan - 100%,Shanghai 117,2026-11-06,18.8,True,-6,lapsing,-135.73487,63.92256
-YF79056,YK,Callum Ryan - 100%,MBL 56,2026-11-06,18.5,True,-6,lapsing,-135.39948,63.80914
-YF79178,YK,Callum Ryan - 100%,Vice 18,2026-11-06,18.5,True,-6,lapsing,-135.88628,63.91329
-YF79085,YK,Callum Ryan - 100%,MBL 85,2026-11-06,18.5,True,-6,lapsing,-135.42735,63.80932
-YF79260,YK,Shawn Ryan - 100%,KYS 60,2026-11-06,18.0,True,-6,lapsing,-135.11367,63.79468
-YF79128,YK,Callum Ryan - 100%,Serv 34,2026-11-06,19.7,True,-6,lapsing,-136.28336,63.87
-YF79095,YK,Callum Ryan - 100%,Serv 1,2026-11-06,19.6,True,-6,lapsing,-136.21778,63.85902
-YF79122,YK,Callum Ryan - 100%,Serv 28,2026-11-06,19.7,True,-6,lapsing,-136.25546,63.87106
-YF79074,YK,Callum Ryan - 100%,MBL 74,2026-11-06,19.7,True,-6,lapsing,-135.41818,63.80528
-YF79069,YK,Callum Ryan - 100%,MBL 69,2026-11-06,19.7,True,-6,lapsing,-135.40866,63.81317
-YF79149,YK,Callum Ryan - 100%,Bert 21,2026-11-06,19.7,True,-6,lapsing,-136.06644,63.89444
-YF79288,YK,Shawn Ryan - 100%,KYS 88,2026-11-06,19.7,True,-6,lapsing,-135.16165,63.8007
-YF79228,YK,Shawn Ryan - 100%,KYS 28,2026-11-06,19.7,True,-6,lapsing,-135.25694,63.83258
-YF79266,YK,Shawn Ryan - 100%,KYS 66,2026-11-06,18.0,True,-6,lapsing,-135.13585,63.80212
-YF79276,YK,Shawn Ryan - 100%,KYS 76,2026-11-06,18.0,True,-6,lapsing,-135.17187,63.8142
-YF79086,YK,Callum Ryan - 100%,MBL 86,2026-11-06,18.5,True,-6,lapsing,-135.43664,63.80938
-YF79272,YK,Shawn Ryan - 100%,KYS 72,2026-11-06,18.0,True,-6,lapsing,-135.15803,63.80957
-YF79196,YK,Callum Ryan - 100%,Vice 36,2026-11-06,18.5,True,-6,lapsing,-135.8845,63.91731
-YF79168,YK,Callum Ryan - 100%,Vice 8,2026-11-06,17.9,True,-6,lapsing,-135.84126,63.90945
-YF79264,YK,Shawn Ryan - 100%,KYS 64,2026-11-06,18.0,True,-6,lapsing,-135.12845,63.79964
-YF79050,YK,Callum Ryan - 100%,MBL 50,2026-11-06,19.7,True,-6,lapsing,-135.3815,63.78865
-YF79058,YK,Callum Ryan - 100%,MBL 58,2026-11-06,19.7,True,-6,lapsing,-135.3996,63.80516
-YF79018,YK,Callum Ryan - 100%,MBL 18,2026-11-06,19.7,True,-6,lapsing,-135.42701,63.82148
-YF79144,YK,Callum Ryan - 100%,Bert 16,2026-11-06,19.7,True,-6,lapsing,-136.11311,63.89048
-YF79192,YK,Callum Ryan - 100%,Vice 32,2026-11-06,19.7,True,-6,lapsing,-135.84823,63.91422
-YF79121,YK,Callum Ryan - 100%,Serv 27,2026-11-06,19.6,True,-6,lapsing,-136.25531,63.86696
-YF79020,YK,Callum Ryan - 100%,MBL 20,2026-11-06,19.5,True,-6,lapsing,-135.43631,63.82127
-YF79109,YK,Callum Ryan - 100%,Serv 15,2026-11-06,19.6,True,-6,lapsing,-136.28294,63.85857
-YF79103,YK,Callum Ryan - 100%,Serv 9,2026-11-06,19.6,True,-6,lapsing,-136.25501,63.85876
-YF79240,YK,Shawn Ryan - 100%,KYS 40,2026-11-06,19.6,True,-6,lapsing,-135.22573,63.83714
-YF79081,YK,Callum Ryan - 100%,MBL 81,2026-11-06,19.6,True,-6,lapsing,-135.40936,63.78884
-YF79137,YK,Callum Ryan - 100%,Bert 9,2026-11-06,19.7,True,-6,lapsing,-136.08522,63.8863
-YF79253,YK,Shawn Ryan - 100%,KYS 53,2026-11-06,19.7,True,-6,lapsing,-135.20892,63.80624
-YF79231,YK,Shawn Ryan - 100%,KYS 31,2026-11-06,19.7,True,-6,lapsing,-135.26076,63.82358
-YF79097,YK,Callum Ryan - 100%,Serv 3,2026-11-06,19.7,True,-6,lapsing,-136.22709,63.85896
-YF79222,YK,Shawn Ryan - 100%,KYS 22,2026-11-06,19.7,True,-6,lapsing,-135.283,63.83099
-YF79214,YK,Shawn Ryan - 100%,KYS 14,2026-11-06,19.5,True,-6,lapsing,-135.22547,63.85762
-YF79008,YK,Callum Ryan - 100%,MBL 8,2026-11-06,19.6,True,-6,lapsing,-135.38053,63.82118
-YF79223,YK,Shawn Ryan - 100%,KYS 23,2026-11-06,19.6,True,-6,lapsing,-135.2812,63.82526
-YF79270,YK,Shawn Ryan - 100%,KYS 70,2026-11-06,18.0,True,-6,lapsing,-135.15064,63.80708
-YF79268,YK,Shawn Ryan - 100%,KYS 68,2026-11-06,18.0,True,-6,lapsing,-135.14324,63.80461
-YF79204,YK,Shawn Ryan - 100%,KYS 4,2026-11-06,18.0,True,-6,lapsing,-135.25336,63.84144
-YF79291,YK,Shawn Ryan - 100%,KYS 91,2026-11-06,17.1,True,-6,lapsing,-135.18159,63.80224
-YF79273,YK,Shawn Ryan - 100%,KYS 73,2026-11-06,17.1,True,-6,lapsing,-135.17034,63.80876
-YF79216,YK,Shawn Ryan - 100%,KYS 16,2026-11-06,17.1,True,-6,lapsing,-135.2202,63.86068
-YF79213,YK,Shawn Ryan - 100%,KYS 13,2026-11-06,19.6,True,-6,lapsing,-135.23289,63.8601
-YF79055,YK,Callum Ryan - 100%,MBL 55,2026-11-06,18.5,True,-6,lapsing,-135.39019,63.80908
-YF79035,YK,Callum Ryan - 100%,MBL 35,2026-11-06,19.4,True,-6,lapsing,-135.35378,63.78439
-YF79195,YK,Callum Ryan - 100%,Vice 35,2026-11-06,19.0,True,-6,lapsing,-135.87574,63.91656
-YE56912,YK,Shawn Ryan - 100%,Shanghai 118,2026-11-06,19.7,True,-6,lapsing,-135.74346,63.92112
-YF79064,YK,Callum Ryan - 100%,MBL 64,2026-11-06,19.7,True,-6,lapsing,-135.39996,63.79287
-YF79059,YK,Callum Ryan - 100%,MBL 59,2026-11-06,19.7,True,-6,lapsing,-135.39042,63.801
-YF79088,YK,Callum Ryan - 100%,MBL 88,2026-11-06,19.7,True,-6,lapsing,-135.43676,63.8054
-YF79252,YK,Shawn Ryan - 100%,KYS 52,2026-11-06,19.7,True,-6,lapsing,-135.22194,63.80546
-YF79282,YK,Shawn Ryan - 100%,KYS 82,2026-11-06,19.7,True,-6,lapsing,-135.13947,63.79326
-YF79040,YK,Callum Ryan - 100%,MBL 40,2026-11-06,18.5,True,-6,lapsing,-135.3809,63.809
-YF79044,YK,Callum Ryan - 100%,MBL 44,2026-11-06,19.7,True,-6,lapsing,-135.38114,63.80094
-YF79119,YK,Callum Ryan - 100%,Serv 25,2026-11-06,19.7,True,-6,lapsing,-136.246,63.86702
-YF79068,YK,Callum Ryan - 100%,MBL 68,2026-11-06,19.7,True,-6,lapsing,-135.40019,63.78468
-YF79280,YK,Shawn Ryan - 100%,KYS 80,2026-11-06,19.7,True,-6,lapsing,-135.13208,63.79078
-YF79111,YK,Callum Ryan - 100%,Serv 17,2026-11-06,19.7,True,-6,lapsing,-136.20889,63.87137
-YF79070,YK,Callum Ryan - 100%,MBL 70,2026-11-06,19.7,True,-6,lapsing,-135.41795,63.81323
-YF79078,YK,Callum Ryan - 100%,MBL 78,2026-11-06,19.7,True,-6,lapsing,-135.41841,63.79709
-YF79037,YK,Callum Ryan - 100%,MBL 37,2026-11-06,19.7,True,-6,lapsing,-135.37148,63.81292
-YF79101,YK,Callum Ryan - 100%,Serv 7,2026-11-06,19.6,True,-6,lapsing,-136.2457,63.85884
-YF79096,YK,Callum Ryan - 100%,Serv 2,2026-11-06,19.6,True,-6,lapsing,-136.21792,63.86312
-YF79106,YK,Callum Ryan - 100%,Serv 12,2026-11-06,19.6,True,-6,lapsing,-136.26447,63.8628
-YF79146,YK,Callum Ryan - 100%,Bert 18,2026-11-06,19.6,True,-6,lapsing,-136.04773,63.89847
-YF79139,YK,Callum Ryan - 100%,Bert 11,2026-11-06,19.6,True,-6,lapsing,-136.09454,63.88634
-YF79210,YK,Shawn Ryan - 100%,KYS 10,2026-11-06,19.6,True,-6,lapsing,-135.23654,63.8512
-YF79124,YK,Callum Ryan - 100%,Serv 30,2026-11-06,19.6,True,-6,lapsing,-136.26477,63.87098
-YF79015,YK,Callum Ryan - 100%,MBL 15,2026-11-06,19.6,True,-6,lapsing,-135.41783,63.81732
-YF79255,YK,Shawn Ryan - 100%,KYS 55,2026-11-06,19.6,True,-6,lapsing,-135.20152,63.80377
-YF79134,YK,Callum Ryan - 100%,Bert 6,2026-11-06,19.6,True,-6,lapsing,-136.06652,63.89034
-YF79051,YK,Callum Ryan - 100%,MBL 51,2026-11-06,19.6,True,-6,lapsing,-135.37234,63.7845
-YF79099,YK,Callum Ryan - 100%,Serv 5,2026-11-06,19.6,True,-6,lapsing,-136.23639,63.8589
-YF79159,YK,Callum Ryan - 100%,Bert 31,2026-11-06,19.6,True,-6,lapsing,-136.11305,63.89458
-YF79129,YK,Callum Ryan - 100%,Bert 1,2026-11-06,19.6,True,-6,lapsing,-136.04795,63.88618
-YF79246,YK,Shawn Ryan - 100%,KYS 46,2026-11-06,19.6,True,-6,lapsing,-135.24415,63.81288
-YF79281,YK,Shawn Ryan - 100%,KYS 81,2026-11-06,19.6,True,-6,lapsing,-135.1451,63.79
-YF79141,YK,Callum Ryan - 100%,Bert 13,2026-11-06,19.6,True,-6,lapsing,-136.10386,63.88636
-YF79127,YK,Callum Ryan - 100%,Serv 33,2026-11-06,19.6,True,-6,lapsing,-136.28324,63.86676
-YF79226,YK,Shawn Ryan - 100%,KYS 26,2026-11-06,19.6,True,-6,lapsing,-135.25133,63.83584
-YF79010,YK,Callum Ryan - 100%,MBL 10,2026-11-06,19.6,True,-6,lapsing,-135.38983,63.82124
-YF79026,YK,Callum Ryan - 100%,MBL 26,2026-11-06,19.6,True,-6,lapsing,-135.36244,63.8049
-YF79030,YK,Callum Ryan - 100%,MBL 30,2026-11-06,19.6,True,-6,lapsing,-135.36269,63.79672
-YF79031,YK,Callum Ryan - 100%,MBL 31,2026-11-06,19.6,True,-6,lapsing,-135.35354,63.79186
-YF79054,YK,Callum Ryan - 100%,MBL 54,2026-11-06,19.6,True,-6,lapsing,-135.39936,63.8131
-YF79104,YK,Callum Ryan - 100%,Serv 10,2026-11-06,19.6,True,-6,lapsing,-136.25516,63.86286
-YF79232,YK,Shawn Ryan - 100%,KYS 32,2026-11-06,19.6,True,-6,lapsing,-135.26817,63.82604
-YF79209,YK,Shawn Ryan - 100%,KYS 9,2026-11-06,19.6,True,-6,lapsing,-135.24414,63.85358
-YF79126,YK,Callum Ryan - 100%,Serv 32,2026-11-06,19.6,True,-6,lapsing,-136.2741,63.87154
-YF79090,YK,Callum Ryan - 100%,MBL 90,2026-11-06,19.6,True,-6,lapsing,-135.43687,63.8013
-YF79098,YK,Callum Ryan - 100%,Serv 4,2026-11-06,19.6,True,-6,lapsing,-136.22723,63.86306
-YF79117,YK,Callum Ryan - 100%,Serv 23,2026-11-06,19.6,True,-6,lapsing,-136.23668,63.86708
-YF79230,YK,Shawn Ryan - 100%,KYS 30,2026-11-06,19.6,True,-6,lapsing,-135.26256,63.82931
-YF79286,YK,Shawn Ryan - 100%,KYS 86,2026-11-06,19.6,True,-6,lapsing,-135.15426,63.79822
-YF79022,YK,Callum Ryan - 100%,MBL 22,2026-11-06,19.6,True,-6,lapsing,-135.36219,63.81286
-YF79125,YK,Callum Ryan - 100%,Serv 31,2026-11-06,19.6,True,-6,lapsing,-136.27393,63.86682
-YF79257,YK,Shawn Ryan - 100%,KYS 57,2026-11-06,19.6,True,-6,lapsing,-135.19413,63.80129
-YF79046,YK,Callum Ryan - 100%,MBL 46,2026-11-06,19.6,True,-6,lapsing,-135.38126,63.79684
-YF79218,YK,Shawn Ryan - 100%,KYS 18,2026-11-06,19.7,True,-6,lapsing,-135.27177,63.83752
-YF79199,YK,Callum Ryan - 100%,Vice 39,2026-11-06,19.6,True,-6,lapsing,-135.91144,63.9196
-YF79279,YK,Shawn Ryan - 100%,KYS 79,2026-11-06,19.6,True,-6,lapsing,-135.1377,63.78752
-YF79285,YK,Shawn Ryan - 100%,KYS 85,2026-11-06,19.6,True,-6,lapsing,-135.15988,63.79496
-YF79234,YK,Shawn Ryan - 100%,KYS 34,2026-11-06,19.7,True,-6,lapsing,-135.27379,63.82278
-YF79254,YK,Shawn Ryan - 100%,KYS 54,2026-11-06,19.7,True,-6,lapsing,-135.21454,63.80298
-YF79116,YK,Callum Ryan - 100%,Serv 22,2026-11-06,19.6,True,-6,lapsing,-136.22752,63.87124
-YF79187,YK,Callum Ryan - 100%,Vice 27,2026-11-06,19.6,True,-6,lapsing,-135.82157,63.91194
-YF79158,YK,Callum Ryan - 100%,Bert 30,2026-11-06,19.6,True,-6,lapsing,-136.10367,63.89864
-YF79160,YK,Callum Ryan - 100%,Bert 32,2026-11-06,19.7,True,-6,lapsing,-136.11299,63.89868
-YF79021,YK,Callum Ryan - 100%,MBL 21,2026-11-06,19.6,True,-6,lapsing,-135.3529,63.8128
-YF79089,YK,Callum Ryan - 100%,MBL 89,2026-11-06,19.6,True,-6,lapsing,-135.42758,63.80124
-YF79079,YK,Callum Ryan - 100%,MBL 79,2026-11-06,19.7,True,-6,lapsing,-135.40924,63.79293
-YF79009,YK,Callum Ryan - 100%,MBL 9,2026-11-06,19.7,True,-6,lapsing,-135.38995,63.81714
-YF79130,YK,Callum Ryan - 100%,Bert 2,2026-11-06,19.6,True,-6,lapsing,-136.04787,63.89028
-YF79063,YK,Callum Ryan - 100%,MBL 63,2026-11-06,19.7,True,-6,lapsing,-135.39067,63.79281
-YF79142,YK,Callum Ryan - 100%,Bert 14,2026-11-06,19.7,True,-6,lapsing,-136.10379,63.89046
-YF79002,YK,Callum Ryan - 100%,MBL 2,2026-11-06,19.6,True,-6,lapsing,-135.35264,63.82098
-YF79028,YK,Callum Ryan - 100%,MBL 28,2026-11-06,19.6,True,-6,lapsing,-135.36256,63.80082
-YF79251,YK,Shawn Ryan - 100%,KYS 51,2026-11-06,19.7,True,-6,lapsing,-135.21633,63.80872
-YF79188,YK,Callum Ryan - 100%,Vice 28,2026-11-06,19.6,True,-6,lapsing,-135.81979,63.91596
-YF79162,YK,Callum Ryan - 100%,Vice 2,2026-11-06,19.6,True,-6,lapsing,-135.81421,63.90714
-YF79238,YK,Shawn Ryan - 100%,KYS 38,2026-11-06,19.6,True,-6,lapsing,-135.23313,63.83962
-YF79061,YK,Callum Ryan - 100%,MBL 61,2026-11-06,19.6,True,-6,lapsing,-135.39054,63.7969
-YE56909,YK,Shawn Ryan - 100%,Shanghai 115,2026-11-06,19.7,True,-6,lapsing,-135.72937,63.92678
-101452,NU,Agnico Eagle Mines Limited (100%),GOT 12,2026-11-06,1073.7,True,-6,lapsing,-96.69563,65.51502
-YF79236,YK,Shawn Ryan - 100%,KYS 36,2026-11-06,19.7,True,-6,lapsing,-135.24055,63.8421
-YF79011,YK,Callum Ryan - 100%,MBL 11,2026-11-06,19.7,True,-6,lapsing,-135.39924,63.8172
-YF79233,YK,Shawn Ryan - 100%,KYS 33,2026-11-06,19.6,True,-6,lapsing,-135.26638,63.82031
-YF79247,YK,Shawn Ryan - 100%,KYS 47,2026-11-06,19.6,True,-6,lapsing,-135.23113,63.81368
-YF79038,YK,Callum Ryan - 100%,MBL 38,2026-11-06,19.6,True,-6,lapsing,-135.38077,63.81298
-YF79208,YK,Shawn Ryan - 100%,KYS 8,2026-11-06,19.7,True,-6,lapsing,-135.24234,63.84784
-YF79045,YK,Callum Ryan - 100%,MBL 45,2026-11-06,19.7,True,-6,lapsing,-135.37197,63.79678
-YF79083,YK,Callum Ryan - 100%,MBL 83,2026-11-06,19.7,True,-6,lapsing,-135.42724,63.81329
-YF79033,YK,Callum Ryan - 100%,MBL 33,2026-11-06,19.7,True,-6,lapsing,-135.35364,63.7889
-YF79227,YK,Shawn Ryan - 100%,KYS 27,2026-11-06,19.7,True,-6,lapsing,-135.24954,63.8301
-YF79207,YK,Shawn Ryan - 100%,KYS 7,2026-11-06,19.7,True,-6,lapsing,-135.24976,63.85031
-YF79284,YK,Shawn Ryan - 100%,KYS 84,2026-11-06,19.7,True,-6,lapsing,-135.14686,63.79574
-YF79278,YK,Callum Ryan - 100%,KYS 78,2026-11-06,19.6,True,-6,lapsing,-135.12469,63.7883
-YF79136,YK,Callum Ryan - 100%,Bert 8,2026-11-06,19.6,True,-6,lapsing,-136.07583,63.89037
-YF79082,YK,Callum Ryan - 100%,MBL 82,2026-11-06,19.7,True,-6,lapsing,-135.40948,63.78474
-YF79241,YK,Shawn Ryan - 100%,KYS 41,2026-11-06,19.7,True,-6,lapsing,-135.25336,63.8211
-YF79133,YK,Callum Ryan - 100%,Bert 5,2026-11-06,19.7,True,-6,lapsing,-136.06658,63.88624
-YF79007,YK,Callum Ryan - 100%,MBL 7,2026-11-06,19.7,True,-6,lapsing,-135.38065,63.81708
-YF79193,YK,Callum Ryan - 100%,Vice 33,2026-11-06,20.5,True,-6,lapsing,-135.85758,63.91502
-YF79016,YK,Callum Ryan - 100%,MBL 16,2026-11-06,19.7,True,-6,lapsing,-135.41771,63.82142
-YF79145,YK,Callum Ryan - 100%,Bert 17,2026-11-06,19.7,True,-6,lapsing,-136.0478,63.89438
-YF79245,YK,Shawn Ryan - 100%,KYS 45,2026-11-06,19.6,True,-6,lapsing,-135.23854,63.81615
-YF79265,YK,Shawn Ryan - 100%,KYS 65,2026-11-06,19.7,True,-6,lapsing,-135.14124,63.799
-YF79205,YK,Shawn Ryan - 100%,KYS 5,2026-11-06,19.7,True,-6,lapsing,-135.25538,63.84704
-YF79170,YK,Callum Ryan - 100%,Vice 10,2026-11-06,19.7,True,-6,lapsing,-135.85001,63.9102
-YF79172,YK,Callum Ryan - 100%,Vice 12,2026-11-06,20.5,True,-6,lapsing,-135.85936,63.911
-YF79012,YK,Callum Ryan - 100%,MBL 12,2026-11-06,19.7,True,-6,lapsing,-135.39912,63.8213
-YF79267,YK,Shawn Ryan - 100%,KYS 67,2026-11-06,19.6,True,-6,lapsing,-135.14863,63.80148
-YF79244,YK,Shawn Ryan - 100%,KYS 44,2026-11-06,19.7,True,-6,lapsing,-135.25156,63.81536
-YF79032,YK,Callum Ryan - 100%,MBL 32,2026-11-06,19.6,True,-6,lapsing,-135.36281,63.79262
-YF79206,YK,Shawn Ryan - 100%,KYS 6,2026-11-06,19.6,True,-6,lapsing,-135.24796,63.84458
-YF79224,YK,Shawn Ryan - 100%,KYS 24,2026-11-06,19.6,True,-6,lapsing,-135.28862,63.82772
-YF79249,YK,Shawn Ryan - 100%,KYS 49,2026-11-06,19.6,True,-6,lapsing,-135.22373,63.8112
-YF79263,YK,Shawn Ryan - 100%,KYS 63,2026-11-06,19.6,True,-6,lapsing,-135.13384,63.79652
-YF79269,YK,Shawn Ryan - 100%,KYS 69,2026-11-06,19.6,True,-6,lapsing,-135.15603,63.80396
-YF79014,YK,Callum Ryan - 100%,MBL 14,2026-11-06,19.7,True,-6,lapsing,-135.40842,63.82136
-YF79258,YK,Shawn Ryan - 100%,KYS 58,2026-11-06,19.7,True,-6,lapsing,-135.19974,63.79803
-YF79025,YK,Callum Ryan - 100%,MBL 25,2026-11-06,19.7,True,-6,lapsing,-135.35314,63.80484
-YF79110,YK,Callum Ryan - 100%,Serv 16,2026-11-06,19.7,True,-6,lapsing,-136.28309,63.86266
-YF79186,YK,Callum Ryan - 100%,Vice 26,2026-11-06,19.7,True,-6,lapsing,-135.81063,63.91518
-YF79219,YK,Shawn Ryan - 100%,KYS 19,2026-11-06,19.7,True,-6,lapsing,-135.26997,63.83178
-YF79164,YK,Callum Ryan - 100%,Vice 4,2026-11-06,19.6,True,-6,lapsing,-135.82336,63.90792
-YF79108,YK,Callum Ryan - 100%,Serv 14,2026-11-06,19.6,True,-6,lapsing,-136.27378,63.86274
-YF79065,YK,Callum Ryan - 100%,MBL 65,2026-11-06,19.6,True,-6,lapsing,-135.39079,63.78872
-YF79221,YK,Shawn Ryan - 100%,KYS 21,2026-11-06,19.7,True,-6,lapsing,-135.27559,63.82852
-YF79131,YK,Callum Ryan - 100%,Bert 3,2026-11-06,19.7,True,-6,lapsing,-136.05726,63.88622
-YF79166,YK,Callum Ryan - 100%,Vice 6,2026-11-06,19.6,True,-6,lapsing,-135.83251,63.9087
-YF79148,YK,Callum Ryan - 100%,Bert 20,2026-11-06,19.6,True,-6,lapsing,-136.05706,63.8985
-YF79156,YK,Callum Ryan - 100%,Bert 28,2026-11-06,19.6,True,-6,lapsing,-136.09434,63.89862
-YF79102,YK,Callum Ryan - 100%,Serv 8,2026-11-06,19.6,True,-6,lapsing,-136.24585,63.86292
-YF79229,YK,Shawn Ryan - 100%,KYS 29,2026-11-06,19.6,True,-6,lapsing,-135.25515,63.82684
-YF79027,YK,Callum Ryan - 100%,MBL 27,2026-11-06,19.6,True,-6,lapsing,-135.35327,63.80074
-YF79017,YK,Callum Ryan - 100%,MBL 17,2026-11-06,19.6,True,-6,lapsing,-135.42712,63.81738
-YF79143,YK,Callum Ryan - 100%,Bert 15,2026-11-06,19.6,True,-6,lapsing,-136.11317,63.88638
-YF79113,YK,Callum Ryan - 100%,Serv 19,2026-11-06,19.6,True,-6,lapsing,-136.21807,63.86722
-YF79138,YK,Callum Ryan - 100%,Bert 10,2026-11-06,19.6,True,-6,lapsing,-136.08515,63.8904
-YF79006,YK,Callum Ryan - 100%,MBL 6,2026-11-06,19.6,True,-6,lapsing,-135.37123,63.82112
-YF79077,YK,Callum Ryan - 100%,MBL 77,2026-11-06,19.6,True,-6,lapsing,-135.40912,63.79702
-YF79154,YK,Callum Ryan - 100%,Bert 26,2026-11-06,19.6,True,-6,lapsing,-136.08502,63.89859
-YE56908,YK,Shawn Ryan - 100%,Shanghai 114,2026-11-06,19.6,True,-6,lapsing,-135.72478,63.9322
-YF79036,YK,Callum Ryan - 100%,MBL 36,2026-11-06,19.7,True,-6,lapsing,-135.36306,63.78443
-YF79212,YK,Shawn Ryan - 100%,KYS 12,2026-11-06,19.6,True,-6,lapsing,-135.2311,63.85436
-YF79013,YK,Callum Ryan - 100%,MBL 13,2026-11-06,19.6,True,-6,lapsing,-135.40854,63.81726
-YF79084,YK,Callum Ryan - 100%,MBL 84,2026-11-06,19.6,True,-6,lapsing,-135.43653,63.81335
-YF79157,YK,Callum Ryan - 100%,Bert 29,2026-11-06,19.6,True,-6,lapsing,-136.10373,63.89456
-YF79152,YK,Callum Ryan - 100%,Bert 24,2026-11-06,19.6,True,-6,lapsing,-136.0757,63.89856
-YF79189,YK,Callum Ryan - 100%,Vice 29,2026-11-06,19.6,True,-6,lapsing,-135.82894,63.91674
-YF79198,YK,Callum Ryan - 100%,Vice 38,2026-11-06,19.6,True,-6,lapsing,-135.9023,63.91882
-YF79140,YK,Callum Ryan - 100%,Bert 12,2026-11-06,19.6,True,-6,lapsing,-136.09447,63.89042
-YF79271,YK,Shawn Ryan - 100%,KYS 71,2026-11-06,19.6,True,-6,lapsing,-135.16342,63.80644
-YF79261,YK,Shawn Ryan - 100%,KYS 61,2026-11-06,19.6,True,-6,lapsing,-135.12646,63.79404
-YF79100,YK,Callum Ryan - 100%,Serv 6,2026-11-06,19.6,True,-6,lapsing,-136.23654,63.863
-YF79151,YK,Callum Ryan - 100%,Bert 23,2026-11-06,19.7,True,-6,lapsing,-136.07576,63.89446
-YF79118,YK,Callum Ryan - 100%,Serv 24,2026-11-06,19.6,True,-6,lapsing,-136.23683,63.87118
-80228,YK,Elsa Reclamation & Development Company Ltd. - 100%,VENUS FRACTION 2,2026-11-07,9.7,True,-5,lapsing,-135.17617,63.95073
-80227,YK,Elsa Reclamation & Development Company Ltd. - 100%,VENUS FRACTION 1,2026-11-07,7.7,True,-5,lapsing,-135.18026,63.94728
-1121174,BC,ZIMTU CAPITAL CORP,Eagle 2.0,2026-11-08,1709.2,False,-4,lapsing,-131.88,58.11648
-MC00016085,SK,EAGLE PLAINS RESOURCES LTD.: 100.000%,,2026-11-08,483.0,False,-4,lapsing,-107.95086,57.50684
-1121173,BC,ZIMTU CAPITAL CORP,Eagle 1.0,2026-11-08,1708.9,False,-4,lapsing,-131.92688,58.12689
-1121175,BC,ZIMTU CAPITAL CORP,Eagle 3.0,2026-11-08,1709.2,False,-4,lapsing,-131.83312,58.11856
-55271,YK,Elsa Reclamation & Development Company Ltd. - 100%,ROSEMARY ,2026-11-09,18.2,True,-3,lapsing,-135.2596,63.89766
-102695,NU,Forum Energy Metals Corp. (100%),FORUMA,2026-11-09,1470.4,True,-3,lapsing,-98.34414,64.29414
-102704,NU,Forum Energy Metals Corp. (100%),FORUMJ,2026-11-09,1553.3,True,-3,lapsing,-98.0277,64.2629
-YD35343,YK,Senoa Gold Corp - 100%,OB 43,2026-11-10,19.7,True,-2,lapsing,-131.85808,64.28098
-1127589,BC,"WRIGHT, MATT",A1 Sauce,2026-11-10,38.4,False,-2,lapsing,-132.59549,53.56013
-YD35372,YK,Senoa Gold Corp - 100%,OB 72,2026-11-10,19.4,True,-2,lapsing,-131.83075,64.28977
-372719,BC,"JENSEN, IAN FLEMING",,2026-11-10,32.0,False,-2,lapsing,-121.3624,52.94359
-YD35346,YK,Senoa Gold Corp - 100%,OB 46,2026-11-10,19.6,True,-2,lapsing,-131.84957,64.28937
-YD35344,YK,Senoa Gold Corp - 100%,OB 44,2026-11-10,19.7,True,-2,lapsing,-131.8491,64.28528
-YD35347,YK,Senoa Gold Corp - 100%,OB 47,2026-11-10,19.6,True,-2,lapsing,-131.85902,64.28916
-YD35322,YK,Senoa Gold Corp - 100%,OB 22,2026-11-10,19.7,True,-2,lapsing,-131.86846,64.28896
-YD35371,YK,Senoa Gold Corp - 100%,OB 71,2026-11-10,19.7,True,-2,lapsing,-131.83966,64.28548
-YD35369,YK,Senoa Gold Corp - 100%,OB 69,2026-11-10,19.6,True,-2,lapsing,-131.8392,64.28139
-YD35318,YK,Senoa Gold Corp - 100%,OB 18,2026-11-10,19.6,True,-2,lapsing,-131.86752,64.28079
-YD35349,YK,Senoa Gold Corp - 100%,OB 49,2026-11-10,19.6,True,-2,lapsing,-131.85948,64.29325
-YD35375,YK,Senoa Gold Corp - 100%,OB 75,2026-11-10,19.6,True,-2,lapsing,-131.84059,64.29366
-YD35342,YK,Senoa Gold Corp - 100%,OB 42,2026-11-10,19.6,True,-2,lapsing,-131.84864,64.28118
-YD35324,YK,Senoa Gold Corp - 100%,OB 24,2026-11-10,19.6,True,-2,lapsing,-131.86893,64.29306
-YD35345,YK,Senoa Gold Corp - 100%,OB 45,2026-11-10,19.7,True,-2,lapsing,-131.85855,64.28508
-YD35368,YK,Senoa Gold Corp - 100%,OB 68,2026-11-10,19.6,True,-2,lapsing,-131.82976,64.2816
-YD35320,YK,Senoa Gold Corp - 100%,OB 20,2026-11-10,19.7,True,-2,lapsing,-131.86799,64.28488
-YD35370,YK,Senoa Gold Corp - 100%,OB 70,2026-11-10,19.4,True,-2,lapsing,-131.83015,64.28504
-YD35373,YK,Senoa Gold Corp - 100%,OB 73,2026-11-10,19.6,True,-2,lapsing,-131.84013,64.28958
-YD35374,YK,Senoa Gold Corp - 100%,OB 74,2026-11-10,17.5,True,-2,lapsing,-131.83145,64.29317
-YD35348,YK,Senoa Gold Corp - 100%,OB 48,2026-11-10,19.6,True,-2,lapsing,-131.85004,64.29346
-MC00019333,SK,Sabrina Little: 100.000%,,2026-11-11,508.6,False,-1,lapsing,-102.63034,54.3328
-MC00019329,SK,Sabrina Little: 100.000%,,2026-11-11,1513.2,False,-1,lapsing,-102.62402,54.26738
-MC00019326,SK,Sabrina Little: 100.000%,,2026-11-11,1483.1,False,-1,lapsing,-102.67416,54.34373
-MC00019330,SK,GEM OIL INC.: 100.000%,,2026-11-11,141.8,False,-1,lapsing,-102.09858,54.68792
-MC00019332,SK,Sabrina Little: 100.000%,,2026-11-11,663.3,False,-1,lapsing,-102.6959,54.3019
-MC00019338,SK,Sabrina Little: 100.000%,,2026-11-11,2030.7,False,-1,lapsing,-102.60536,54.31643
-MC00019336,SK,Sabrina Little: 100.000%,,2026-11-11,1905.5,False,-1,lapsing,-102.65534,54.3073
-MC00019327,SK,Sabrina Little: 100.000%,,2026-11-11,1621.8,False,-1,lapsing,-102.67416,54.38006
-MC00019328,SK,Sabrina Little: 100.000%,,2026-11-11,1659.1,False,-1,lapsing,-102.643,54.18732
-MC00019337,SK,Sabrina Little: 100.000%,,2026-11-11,1786.7,False,-1,lapsing,-102.57728,54.21821
-MC00019335,SK,GEM OIL INC.: 100.000%,,2026-11-11,175.7,False,-1,lapsing,-102.85217,54.26368
-S-111739,SK,GOLDEN BAND RESOURCES INC.: 100.000%,,2026-11-12,657.9,False,0,expiring,-104.24228,56.00732
-1051135,BC,"DIELEMAN, MARTIN JAMES",COTTONWOOD BRIDGE,2026-11-12,19.4,False,0,expiring,-122.36706,53.0937
-104999,NU,6081 Nunavut Ltd. (100%),,2026-11-12,202.0,True,0,expiring,-94.92985,63.7858
-1107119,BC,"WRIGHT, MATT",SAL Mountain,2026-11-12,42.4,False,0,expiring,-117.31358,49.03118
-1117322,BC,"FUNK, KELLY BRENT",,2026-11-12,21.1,False,0,expiring,-125.2733,49.30189
-1095586,BC,1163915 B.C. LTD.,ELIXIR,2026-11-12,226.8,False,0,expiring,-119.37931,50.34156
-104998,NU,6081 Nunavut Ltd. (100%),,2026-11-12,471.0,True,0,expiring,-95.00016,63.76911
-S-111738,SK,GOLDEN BAND RESOURCES INC.: 100.000%,,2026-11-12,1198.1,False,0,expiring,-104.31022,56.00802
-1037597,BC,"WRIGHT, MATT",SAL,2026-11-13,21.2,False,1,expiring,-117.31671,49.03535
-1140930,BC,"SUMER, SUMEET SINGH",Statlu Ganite,2026-11-13,84.3,False,1,expiring,-121.97003,49.28318
-525190,BC,"LUS, ROBERT",LORRAINE 2,2026-11-13,21.2,False,1,expiring,-117.31046,49.03535
-YF81535,YK,Hardy Hibbing - 100%,BETTER 1,2026-11-14,19.7,True,2,expiring,-131.21388,60.1796
-1117400,BC,"SINCLAIR, COLIN FRASER",Quarry,2026-11-14,21.1,False,2,expiring,-115.12289,49.28539
-1117321,BC,"FUNK, KELLY BRENT",,2026-11-14,21.1,False,2,expiring,-125.27955,49.30189
-YF81536,YK,Hardy Hibbing - 100%,BETTER 2,2026-11-14,19.7,True,2,expiring,-131.21028,60.18329
-1044750,BC,"RUBEN, ABRAHAM",ESOKTAK,2026-11-14,63.2,False,2,expiring,-121.6169,49.28526
-YF81540,YK,Hardy Hibbing - 100%,BETTER 6,2026-11-14,19.7,True,2,expiring,-131.22508,60.18689
-YF81539,YK,Hardy Hibbing - 100%,BETTER 5,2026-11-14,19.8,True,2,expiring,-131.22868,60.18319
-YF81538,YK,Hardy Hibbing - 100%,BETTER 4,2026-11-14,19.8,True,2,expiring,-131.21768,60.18509
-1014516,BC,"RIEHL, RONALD EDWARD",WILD CREEK,2026-11-14,20.9,False,2,expiring,-115.5229,49.74374
-1046544,BC,"RUBEN, ABRAHAM",,2026-11-14,21.1,False,2,expiring,-121.6169,49.3061
-M11672,NT,508053 N.W.T. Ltd. (100%),BHE 06,2026-11-14,991.0,True,2,expiring,-113.83657,62.4857
-YF81537,YK,Hardy Hibbing - 100%,BETTER 3,2026-11-14,19.7,True,2,expiring,-131.22128,60.18139
-1048918,BC,"RUBEN, ABRAHAM",,2026-11-14,189.6,False,2,expiring,-121.62002,49.29776
-105000,NU,6081 Nunavut Ltd. (100%),,2026-11-14,605.7,True,2,expiring,-94.88297,63.77332
-1040351,BC,"RUBEN, ABRAHAM",KAGUNA,2026-11-14,84.2,False,2,expiring,-121.62627,49.31026
-1068213,BC,"FALLIS, GLENN",PINE CREEK,2026-11-15,81.9,False,3,expiring,-133.45804,59.61638
-397855,BC,"JENKINS, CHRISTOPHER JOHN",BRR 3,2026-11-15,25.0,False,3,expiring,-115.33749,49.71241
-399017,BC,"JENKINS, CHRISTOPHER JOHN",BRR 6,2026-11-15,25.0,False,3,expiring,-115.32218,49.71085
-1054364,BC,"FALLIS, GLENN",REBA,2026-11-15,32.8,False,3,expiring,-133.46742,59.62263
-1093798,BC,"BILLINGSLEY, RICHARD JOHN",GEM 4,2026-11-15,41.8,False,3,expiring,-121.73253,49.69776
-1113407,BC,"BLANEY, DARREN RAY",Southern Light,2026-11-15,38.5,False,3,expiring,-122.98274,53.48952
-1072959,BC,"BARRY, ANTHONY JOSEPH",,2026-11-15,39.0,False,3,expiring,-121.13262,52.93537
-1072961,BC,"BARRY, ANTHONY JOSEPH",,2026-11-15,39.0,False,3,expiring,-121.11387,52.93954
-1108032,BC,"BOWCOTT, DENNIS FREDRICK",Summit South,2026-11-15,38.7,False,3,expiring,-121.46076,53.1958
-928501,BC,SPARKLING MINDS RESOURCES LTD,SHADOW,2026-11-15,58.4,False,3,expiring,-121.94673,52.97911
-1113423,BC,"BLANEY, DARREN RAY",Sunset Nickel,2026-11-15,57.6,False,3,expiring,-123.06713,53.56244
-1092655,BC,"BILLINGSLEY, RICHARD JOHN",NEW GEM 4,2026-11-15,1440.6,False,3,expiring,-121.74816,49.73526
-1072957,BC,"BARRY, ANTHONY JOSEPH",,2026-11-15,97.4,False,3,expiring,-121.14825,52.94371
-521499,BC,"SEMENOFF, JACK GEORGE",,2026-11-15,84.7,False,3,expiring,-118.55739,49.06031
-1113417,BC,"BLANEY, DARREN RAY",Link 2,2026-11-15,134.5,False,3,expiring,-123.01712,53.54368
-1113426,BC,"BLANEY, DARREN RAY",Black Nickel,2026-11-15,690.9,False,3,expiring,-123.07963,53.59577
-1084802,BC,"BILLINGSLEY, RICHARD JOHN",GEM 2,2026-11-15,710.1,False,3,expiring,-121.72316,49.72276
-1113434,BC,"BLANEY, DARREN RAY",North Nickel,2026-11-15,767.1,False,3,expiring,-123.09838,53.62494
-56644,NS,,,2026-11-15,178.7,False,3,expiring,-61.67968,45.3698
-1072931,BC,"BARRY, ANTHONY JOSEPH",CARIBOO RIVER 2,2026-11-15,19.5,False,3,expiring,-121.167,52.94788
-1105018,BC,"BLANEY, DARREN RAY",NORTHERN GOLD,2026-11-15,38.4,False,3,expiring,-123.00775,53.53952
-397854,BC,"JENKINS, CHRISTOPHER JOHN",BRR 2,2026-11-15,25.0,False,3,expiring,-115.32782,49.71348
-397853,BC,"JENKINS, CHRISTOPHER JOHN",BRR 1,2026-11-15,25.0,False,3,expiring,-115.33185,49.70982
-397856,BC,"JENKINS, CHRISTOPHER JOHN",BRR 4,2026-11-15,25.0,False,3,expiring,-115.33351,49.7161
-399016,BC,"JENKINS, CHRISTOPHER JOHN",BRR 5,2026-11-15,25.0,False,3,expiring,-115.32619,49.7072
-1096598,BC,"FALLIS, GLENN",BIRCHE,2026-11-15,16.4,False,3,expiring,-133.47367,59.62263
-56646,NS,,,2026-11-15,16.4,False,3,expiring,-64.10676,44.95314
-56643,NS,,,2026-11-15,50.1,False,3,expiring,-64.91406,44.3073
-1113438,BC,"BLANEY, DARREN RAY",Love It,2026-11-15,38.4,False,3,expiring,-122.99837,53.52493
-56642,NS,,,2026-11-15,16.2,False,3,expiring,-63.2474,45.63369
-1113431,BC,"BLANEY, DARREN RAY",7777777,2026-11-15,38.5,False,3,expiring,-123.00462,53.5166
-1113412,BC,"BLANEY, DARREN RAY",Golden Girl,2026-11-15,38.5,False,3,expiring,-122.99837,53.5166
-56645,NS,,,2026-11-15,67.4,False,3,expiring,-65.92187,44.02258
-1092650,BC,"BILLINGSLEY, RICHARD JOHN",NEW GEM 5,2026-11-15,1023.9,False,3,expiring,-121.69972,49.70401
-512295,BC,"BOWCOTT, DENNIS FREDRICK",,2026-11-15,213.0,False,3,expiring,-121.45451,53.20829
-1113432,BC,"BLANEY, DARREN RAY",999,2026-11-15,230.4,False,3,expiring,-123.07338,53.57494
-1072930,BC,"BARRY, ANTHONY JOSEPH",CARIBOO RIVER 1,2026-11-15,19.5,False,3,expiring,-121.167,52.93954
-1096293,BC,"FALLIS, GLENN",PINE REACH,2026-11-15,16.4,False,3,expiring,-133.46117,59.62263
-1091554,BC,"LUCE, VERN DEAN",NING,2026-11-15,19.4,False,3,expiring,-121.79829,53.06453
-1072373,BC,"BILLINGSLEY, RICHARD JOHN",GEM 1,2026-11-15,20.9,False,3,expiring,-121.72941,49.71443
-1072955,BC,"BARRY, ANTHONY JOSEPH",,2026-11-15,19.5,False,3,expiring,-121.1795,52.94371
-380806,BC,"BOWCOTT, DENNIS FREDRICK",RUBY MINE,2026-11-15,50.0,False,3,expiring,-121.45357,53.20028
-1099321,BC,"BAUER, BRUNO",MADMAX,2026-11-15,42.8,False,3,expiring,-123.8732,48.52063
-1061983,BC,"BLANEY, DARREN RAY",CRIMSON COBALT,2026-11-15,230.8,False,3,expiring,-122.98899,53.50202
-1113419,BC,"BLANEY, DARREN RAY",Link 3,2026-11-15,76.8,False,3,expiring,-123.04837,53.55202
-1061984,BC,"BLANEY, DARREN RAY",COBALT ROCKER,2026-11-15,76.9,False,3,expiring,-122.98899,53.51035
-1072932,BC,"BARRY, ANTHONY JOSEPH",CARIBOO RIVER 3,2026-11-15,77.9,False,3,expiring,-121.15762,52.95412
-1113414,BC,"BLANEY, DARREN RAY",Nickel Nines,2026-11-15,153.8,False,3,expiring,-123.014,53.53327
-1114107,BC,TRAILBREAKER RESOURCES LTD.,McMurdo,2026-11-15,1747.9,False,3,expiring,-117.11671,51.02912
-1071336,BC,"BLANEY, DARREN RAY",TRUMP,2026-11-15,191.8,False,3,expiring,-123.0765,53.61869
-1072960,BC,"BARRY, ANTHONY JOSEPH",Cariboo East,2026-11-15,214.3,False,3,expiring,-121.12168,52.94579
-1109058,BC,SPARKLING MINDS RESOURCES LTD,Sparkling 6,2026-11-15,370.0,False,3,expiring,-121.88579,52.96245
-1071983,BC,GOLCAP RESOURCES CORP.,SGBG TIP,2026-11-15,335.0,False,3,expiring,-120.8325,49.6082
-1072954,BC,"BARRY, ANTHONY JOSEPH",Cariboo West,2026-11-15,116.9,False,3,expiring,-121.167,52.94371
-1052263,BC,"FULLER, MARSHALL KENNETH LYLE",ELDORADO,2026-11-15,84.0,False,3,expiring,-120.98562,49.44569
-1113409,BC,"BLANEY, DARREN RAY",Royal Rush,2026-11-15,76.9,False,3,expiring,-122.98899,53.49368
-1061995,BC,"BLANEY, DARREN RAY",NICKEL 2,2026-11-15,76.9,False,3,expiring,-123.00775,53.52702
-1113421,BC,"BLANEY, DARREN RAY",East Nickel Star,2026-11-15,134.4,False,3,expiring,-123.06088,53.57077
-024327M,NL,MLK Gold Ltd.,"Caledonia Brook, Central NL",2026-11-16,75.2,False,4,expiring,-56.01987,48.78458
-1121865,BC,"HARRIS, KELLY",UPPER SOMBRIO,2026-11-16,64.2,False,4,expiring,-124.25266,48.5248
-024324M,NL,MLK Gold Ltd.,"Caledonia Brook, Central NL",2026-11-16,1252.6,False,4,expiring,-55.94789,48.80866
-024305M,NL,Golden Promise Mines Inc.,"Exploits River, Central NL",2026-11-16,2155.0,False,4,expiring,-56.3873,48.79396
-024311M,NL,Golden Promise Mines Inc.,"Noel Pauls Brook, Central NL",2026-11-16,400.9,False,4,expiring,-56.29875,48.79783
-1127698,BC,EAGLE PLAINS RESOURCES LTD.,ARROYO W,2026-11-17,274.6,False,5,expiring,-121.50763,52.64577
-100966,NU,Tundra Copper Corp. (100%),TKS 23,2026-11-17,538.3,True,5,expiring,-115.72039,67.62955
-100968,NU,Tundra Copper Corp. (100%),TKE 11,2026-11-17,392.9,True,5,expiring,-115.3649,67.62957
-1098290,BC,ROCKBRIDGE RESOURCES INC.,BURNBT,2026-11-17,187.1,False,5,expiring,-126.61733,54.67073
-100901,NU,Tundra Copper Corp. (100%),TKE 23,2026-11-17,247.4,True,5,expiring,-115.19692,67.62956
-100994,NU,Tundra Copper Corp. (100%),TKE 28,2026-11-17,681.8,True,5,expiring,-115.07974,67.70249
-100965,NU,Tundra Copper Corp. (100%),TKS 22,2026-11-17,683.8,True,5,expiring,-115.77899,67.62746
-100964,NU,Tundra Copper Corp. (100%),TKS 21,2026-11-17,698.6,True,5,expiring,-115.83758,67.62748
-101192,NU,Tundra Copper Corp. (100%),TKS 25,2026-11-17,320.1,True,5,expiring,-115.59929,67.63164
-100967,NU,Tundra Copper Corp. (100%),TKS 24,2026-11-17,523.9,True,5,expiring,-115.66179,67.62956
-101171,NU,Tundra Copper Corp. (100%),TKS 9,2026-11-17,876.3,True,5,expiring,-116.14228,67.53998
-100985,NU,Tundra Copper Corp. (100%),TKS 20,2026-11-17,873.2,True,5,expiring,-115.89618,67.62748
-YF47271,YK,536005 Yukon Inc. - 100%,CARTER 21,2026-11-17,19.7,True,5,expiring,-134.2362,60.63366
-100993,NU,Tundra Copper Corp. (100%),TKE 26,2026-11-17,494.1,True,5,expiring,-115.14223,67.65874
-101076,NU,Tundra Copper Corp. (100%),TKS 18,2026-11-17,262.6,True,5,expiring,-115.98212,67.5587
-100989,NU,Tundra Copper Corp. (100%),TKE 4,2026-11-17,291.4,True,5,expiring,-115.47037,67.62745
-1079637,BC,POLARIS MATERIALS CORPORATION,PORT MCNEILL ROCK 2,2026-11-17,205.3,False,5,expiring,-127.11543,50.55815
-101703,NU,North Arrow Minerals Inc. (100%),HB 20,2026-11-17,1291.1,True,5,expiring,-82.24935,67.42342
-101168,NU,Tundra Copper Corp. (100%),TKW 28,2026-11-17,1279.0,True,5,expiring,-116.30636,67.66287
-101330,NU,Tundra Copper Corp. (100%),TKW 11,2026-11-17,1276.6,True,5,expiring,-116.54076,67.70869
-100991,NU,Tundra Copper Corp. (100%),TKE 8,2026-11-17,349.2,True,5,expiring,-115.4235,67.62748
-100970,NU,Tundra Copper Corp. (100%),TKE 19,2026-11-17,392.9,True,5,expiring,-115.2477,67.62747
-101077,NU,Tundra Copper Corp. (100%),TKE 15,2026-11-17,349.2,True,5,expiring,-115.3063,67.62955
-101554,NU,North Arrow Minerals Inc. (100%),HB 8,2026-11-17,1291.4,True,5,expiring,-82.42904,67.42343
-YF47274,YK,536005 Yukon Inc. - 100%,CARTER 24,2026-11-17,19.7,True,5,expiring,-134.22774,60.62962
-101333,NU,Tundra Copper Corp. (100%),TKS 26,2026-11-17,189.1,True,5,expiring,-115.5446,67.62956
-1116828,BC,ROCKBRIDGE RESOURCES INC.,,2026-11-17,1217.0,False,5,expiring,-126.69233,54.63531
-1133079,BC,ROCKBRIDGE RESOURCES INC.,Burn2b,2026-11-17,505.0,False,5,expiring,-126.67984,54.67281
-100839,NU,Tundra Copper Corp. (100%),TKS 12,2026-11-17,1281.2,True,5,expiring,-116.07197,67.61704
-101622,NU,North Arrow Minerals Inc. (100%),HB 19,2026-11-17,1291.0,True,5,expiring,-82.31185,67.42343
-YF47251,YK,536005 Yukon Inc. - 100%,CARTER 1,2026-11-17,19.7,True,5,expiring,-134.31965,60.63305
-YF47269,YK,536005 Yukon Inc. - 100%,CARTER 19,2026-11-17,19.7,True,5,expiring,-134.24455,60.6336
-SV14262,MB,Grid Metals Corp.,FALCONWEST057,2026-11-17,262.4,False,5,expiring,-95.71408,49.55252
-SV14258,MB,Grid Metals Corp.,FALCONWEST053,2026-11-17,262.2,False,5,expiring,-95.66859,49.55248
-MC00002082,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,31.3,False,5,expiring,-102.03535,58.91556
-101191,NU,Tundra Copper Corp. (100%),TKW 34,2026-11-17,1563.9,True,5,expiring,-116.18527,67.75039
-1117468,BC,"SHEARER, JOHAN THOM",Brucite 2,2026-11-17,20.6,False,5,expiring,-124.86707,50.31858
-100878,NU,Tundra Copper Corp. (100%),TKS 2,2026-11-17,1543.2,True,5,expiring,-116.24776,67.62121
-SV14268,MB,Grid Metals Corp.,FALCONWEST063,2026-11-17,267.3,False,5,expiring,-95.77681,49.52276
-1133080,BC,ROCKBRIDGE RESOURCES INC.,Burn1a,2026-11-17,804.7,False,5,expiring,-126.67983,54.65614
-YF47252,YK,536005 Yukon Inc. - 100%,CARTER 2,2026-11-17,19.7,True,5,expiring,-134.31952,60.62894
-100900,NU,Tundra Copper Corp. (100%),TKS 11,2026-11-17,1560.6,True,5,expiring,-116.07587,67.56915
-101386,NU,Tundra Copper Corp. (100%),TKE 21,2026-11-17,1552.9,True,5,expiring,-115.18521,67.69415
-101384,NU,Tundra Copper Corp. (100%),TKW 22,2026-11-17,1549.5,True,5,expiring,-116.36497,67.7504
-100979,NU,Tundra Copper Corp. (100%),TNK 11,2026-11-17,1566.9,True,5,expiring,-115.95088,67.70456
-101326,NU,Tundra Copper Corp. (100%),TKN 38,2026-11-17,1477.2,True,5,expiring,-115.53679,67.73374
-YF47259,YK,536005 Yukon Inc. - 100%,CARTER 9,2026-11-17,19.7,True,5,expiring,-134.28627,60.6333
-YF47256,YK,536005 Yukon Inc. - 100%,CARTER 6,2026-11-17,19.7,True,5,expiring,-134.30282,60.62906
-YF47265,YK,536005 Yukon Inc. - 100%,CARTER 15,2026-11-17,19.7,True,5,expiring,-134.26123,60.63348
-SV14269,MB,Grid Metals Corp.,FALCONWEST064,2026-11-17,262.0,False,5,expiring,-95.79965,49.52274
-101169,NU,Tundra Copper Corp. (100%),TKW 31,2026-11-17,1566.8,True,5,expiring,-116.24777,67.70454
-101391,NU,Tundra Copper Corp. (100%),TKN 3,2026-11-17,1566.9,True,5,expiring,-116.06807,67.70663
-SV14261,MB,Grid Metals Corp.,FALCONWEST056,2026-11-17,258.6,False,5,expiring,-95.71413,49.5376
-SV14267,MB,Grid Metals Corp.,FALCONWEST062,2026-11-17,258.7,False,5,expiring,-95.75411,49.52283
-SV14255,MB,Grid Metals Corp.,FALCONWEST050,2026-11-17,258.9,False,5,expiring,-95.89021,49.50773
-SV14251,MB,Grid Metals Corp.,FALCONWEST046,2026-11-17,255.5,False,5,expiring,-95.89581,49.53747
-SV14264,MB,Grid Metals Corp.,FALCONWEST059,2026-11-17,255.9,False,5,expiring,-95.73676,49.53766
-YF47254,YK,536005 Yukon Inc. - 100%,CARTER 4,2026-11-17,19.8,True,5,expiring,-134.31117,60.62901
-YF47270,YK,536005 Yukon Inc. - 100%,CARTER 20,2026-11-17,19.8,True,5,expiring,-134.24442,60.6295
-YF47266,YK,536005 Yukon Inc. - 100%,CARTER 16,2026-11-17,19.7,True,5,expiring,-134.26111,60.62938
-MC00002080,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,46.4,False,5,expiring,-102.02496,58.9338
-MC00002077,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,61.4,False,5,expiring,-102.02154,58.93018
-MC00002078,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,61.9,False,5,expiring,-102.03535,58.91917
-SV14259,MB,Grid Metals Corp.,FALCONWEST054,2026-11-17,259.4,False,5,expiring,-95.6914,49.55254
-101079,NU,Tundra Copper Corp. (100%),TKN 6,2026-11-17,1419.1,True,5,expiring,-116.00948,67.74413
-100899,NU,Tundra Copper Corp. (100%),TKS 13,2026-11-17,1578.2,True,5,expiring,-116.07587,67.52746
-100988,NU,Tundra Copper Corp. (100%),TKE 3,2026-11-17,1570.0,True,5,expiring,-115.4821,67.65455
-101390,NU,Tundra Copper Corp. (100%),TKE 10,2026-11-17,1570.0,True,5,expiring,-115.3649,67.65666
-101229,NU,Tundra Copper Corp. (100%),TKW 40,2026-11-17,1569.7,True,5,expiring,-116.13057,67.66082
-101194,NU,Tundra Copper Corp. (100%),TKW 4,2026-11-17,1569.6,True,5,expiring,-116.66185,67.66288
-100832,NU,Tundra Copper Corp. (100%),TKW 23,2026-11-17,1567.0,True,5,expiring,-116.36497,67.70665
-101327,NU,Tundra Copper Corp. (100%),TKN 39,2026-11-17,1567.1,True,5,expiring,-115.53679,67.70244
-101193,NU,Tundra Copper Corp. (100%),TKE 17,2026-11-17,1408.0,True,5,expiring,-115.2438,67.69414
-100892,NU,Tundra Copper Corp. (100%),TKN 30,2026-11-17,1564.4,True,5,expiring,-115.65399,67.74832
-101240,NU,Tundra Copper Corp. (100%),TKE 6,2026-11-17,1567.0,True,5,expiring,-115.4196,67.7004
-101241,NU,Tundra Copper Corp. (100%),TKE 7,2026-11-17,1410.1,True,5,expiring,-115.4235,67.6525
-100903,NU,Tundra Copper Corp. (100%),TKW 14,2026-11-17,1564.0,True,5,expiring,-116.48216,67.75037
-100961,NU,Tundra Copper Corp. (100%),TKN 22,2026-11-17,1563.9,True,5,expiring,-115.77118,67.74622
-100974,NU,Tundra Copper Corp. (100%),TKN 2,2026-11-17,1563.9,True,5,expiring,-116.06808,67.75246
-101195,NU,Tundra Copper Corp. (100%),TKW 6,2026-11-17,1563.9,True,5,expiring,-116.59936,67.75247
-100890,NU,Tundra Copper Corp. (100%),TKN 28,2026-11-17,1511.7,True,5,expiring,-115.71649,67.65873
-100838,NU,Tundra Copper Corp. (100%),TKS 1,2026-11-17,1412.1,True,5,expiring,-116.30636,67.6212
-YF47273,YK,536005 Yukon Inc. - 100%,CARTER 23,2026-11-17,19.7,True,5,expiring,-134.22785,60.63371
-YF47268,YK,536005 Yukon Inc. - 100%,CARTER 18,2026-11-17,19.7,True,5,expiring,-134.25277,60.62944
-YF47263,YK,536005 Yukon Inc. - 100%,CARTER 13,2026-11-17,19.7,True,5,expiring,-134.26958,60.63342
-MC00004998,SK,Appia Rare Earths & Uranium Corp.: 100.000%,,2026-11-17,2317.5,False,5,expiring,-103.66173,57.79261
-MC00004999,SK,Appia Rare Earths & Uranium Corp.: 100.000%,,2026-11-17,1802.2,False,5,expiring,-103.73179,57.74711
-MC00019343,SK,Sienna Resources Inc.: 100.000%,,2026-11-17,4736.0,False,5,expiring,-106.9824,57.54316
-YF47262,YK,536005 Yukon Inc. - 100%,CARTER 12,2026-11-17,19.7,True,5,expiring,-134.2778,60.62926
-100909,NU,Tundra Copper Corp. (100%),TKW 17,2026-11-17,1460.3,True,5,expiring,-115.82979,67.78164
-100975,NU,Tundra Copper Corp. (100%),TKN 5,2026-11-17,1459.8,True,5,expiring,-116.00558,67.79413
-101236,NU,Tundra Copper Corp. (100%),TKE 14,2026-11-17,1453.5,True,5,expiring,-115.3063,67.64622
-101170,NU,Tundra Copper Corp. (100%),TKN 34,2026-11-17,1491.9,True,5,expiring,-115.59149,67.75873
-100973,NU,Tundra Copper Corp. (100%),TKW 8,2026-11-17,1482.3,True,5,expiring,-116.59935,67.66497
-100908,NU,Tundra Copper Corp. (100%),TKW 39,2026-11-17,1479.8,True,5,expiring,-116.12862,67.70456
-100889,NU,Tundra Copper Corp. (100%),TKN 27,2026-11-17,1465.6,True,5,expiring,-115.71649,67.6983
-100885,NU,Tundra Copper Corp. (100%),TKW 26,2026-11-17,1535.0,True,5,expiring,-116.30247,67.75662
-100960,NU,Tundra Copper Corp. (100%),TKN 20,2026-11-17,1511.7,True,5,expiring,-115.83368,67.66914
-100984,NU,Tundra Copper Corp. (100%),TKS 14,2026-11-17,1572.2,True,5,expiring,-116.01337,67.61287
-101239,NU,Tundra Copper Corp. (100%),TNK 13,2026-11-17,1561.5,True,5,expiring,-115.88839,67.79416
-101385,NU,Tundra Copper Corp. (100%),TKN 25,2026-11-17,1561.4,True,5,expiring,-115.70868,67.79206
-100886,NU,Tundra Copper Corp. (100%),TKW 27,2026-11-17,1392.8,True,5,expiring,-116.30637,67.70662
-100976,NU,Tundra Copper Corp. (100%),TKN 7,2026-11-17,1392.4,True,5,expiring,-116.00947,67.70454
-100879,NU,Tundra Copper Corp. (100%),TKW 18,2026-11-17,1419.2,True,5,expiring,-116.42357,67.74624
-100896,NU,Tundra Copper Corp. (100%),TKN 36,2026-11-17,1526.5,True,5,expiring,-115.59929,67.65873
-1117461,BC,"KITTELSON, JON ANDREW",,2026-11-17,21.1,False,5,expiring,-120.59185,49.15195
-1063239,BC,ROCKBRIDGE RESOURCES INC.,DEL SANTO#1,2026-11-17,37.4,False,5,expiring,-126.67359,54.6624
-100972,NU,Tundra Copper Corp. (100%),TKW 3,2026-11-17,1436.0,True,5,expiring,-116.66186,67.70664
-101235,NU,Tundra Copper Corp. (100%),TKE 13,2026-11-17,1436.6,True,5,expiring,-115.3024,67.70038
-101332,NU,Tundra Copper Corp. (100%),TKW 15,2026-11-17,1465.3,True,5,expiring,-116.48216,67.70662
-101325,NU,Tundra Copper Corp. (100%),TKN 35,2026-11-17,1465.5,True,5,expiring,-115.59539,67.71082
-100986,NU,Tundra Copper Corp. (100%),TKE 1,2026-11-17,1506.5,True,5,expiring,-115.47429,67.75457
-100893,NU,Tundra Copper Corp. (100%),TKN 31,2026-11-17,1509.0,True,5,expiring,-115.65399,67.71082
-100837,NU,Tundra Copper Corp. (100%),TNK 16,2026-11-17,1511.5,True,5,expiring,-115.89618,67.65248
-101338,NU,Tundra Copper Corp. (100%),TKE 25,2026-11-17,1465.9,True,5,expiring,-115.12661,67.68583
-100836,NU,Tundra Copper Corp. (100%),TNK 12,2026-11-17,1467.8,True,5,expiring,-115.95478,67.64832
-101232,NU,Tundra Copper Corp. (100%),TKN 24,2026-11-17,1467.8,True,5,expiring,-115.77508,67.66913
-100992,NU,Tundra Copper Corp. (100%),TKE 24,2026-11-17,1535.5,True,5,expiring,-115.12271,67.74
-101075,NU,Tundra Copper Corp. (100%),TKW 16,2026-11-17,1540.4,True,5,expiring,-116.48216,67.66288
-100977,NU,Tundra Copper Corp. (100%),TKN 8,2026-11-17,1540.4,True,5,expiring,-116.01338,67.65455
-100969,NU,Tundra Copper Corp. (100%),TKE 16,2026-11-17,1491.9,True,5,expiring,-115.2399,67.73789
-100904,NU,Tundra Copper Corp. (100%),TKW 35,2026-11-17,1494.1,True,5,expiring,-116.18527,67.71497
-100959,NU,Tundra Copper Corp. (100%),TKN 19,2026-11-17,1494.5,True,5,expiring,-115.83368,67.70456
-101331,NU,Tundra Copper Corp. (100%),TKW 12,2026-11-17,1497.0,True,5,expiring,-116.54466,67.65247
-101231,NU,Tundra Copper Corp. (100%),TKN 21,2026-11-17,1503.5,True,5,expiring,-115.77119,67.78372
-100834,NU,Tundra Copper Corp. (100%),TKN 40,2026-11-17,1395.7,True,5,expiring,-115.54069,67.65662
-100963,NU,Tundra Copper Corp. (100%),TKS 16,2026-11-17,1402.6,True,5,expiring,-116.01727,67.52537
-100833,NU,Tundra Copper Corp. (100%),TKN 26,2026-11-17,1404.9,True,5,expiring,-115.71259,67.74415
-1133086,BC,ROCKBRIDGE RESOURCES INC.,DS2A1,2026-11-17,598.4,False,5,expiring,-126.5892,54.67489
-1116827,BC,ROCKBRIDGE RESOURCES INC.,BWE,2026-11-17,112.2,False,5,expiring,-126.59857,54.67281
-1133084,BC,ROCKBRIDGE RESOURCES INC.,DS1a,2026-11-17,748.5,False,5,expiring,-126.61733,54.66031
-1116826,BC,ROCKBRIDGE RESOURCES INC.,BWW,2026-11-17,112.2,False,5,expiring,-126.63608,54.66864
-033581M,NL,Latitude Uranium Inc.,,2026-11-17,1823.0,False,5,expiring,-62.25005,55.81272
-YF47255,YK,536005 Yukon Inc. - 100%,CARTER 5,2026-11-17,19.7,True,5,expiring,-134.30296,60.63317
-YF47264,YK,536005 Yukon Inc. - 100%,CARTER 14,2026-11-17,19.7,True,5,expiring,-134.26945,60.62932
-YF47253,YK,536005 Yukon Inc. - 100%,CARTER 3,2026-11-17,19.7,True,5,expiring,-134.3113,60.63311
-YF47260,YK,536005 Yukon Inc. - 100%,CARTER 10,2026-11-17,19.7,True,5,expiring,-134.28614,60.62919
-YF47261,YK,536005 Yukon Inc. - 100%,CARTER 11,2026-11-17,19.7,True,5,expiring,-134.27792,60.63336
-YF47272,YK,536005 Yukon Inc. - 100%,CARTER 22,2026-11-17,19.7,True,5,expiring,-134.23608,60.62956
-033582M,NL,Latitude Uranium Inc.,,2026-11-17,1055.8,False,5,expiring,-62.3069,55.75623
-YF47267,YK,536005 Yukon Inc. - 100%,CARTER 17,2026-11-17,19.7,True,5,expiring,-134.25289,60.63354
-YF47258,YK,536005 Yukon Inc. - 100%,CARTER 8,2026-11-17,19.7,True,5,expiring,-134.29449,60.62913
-100907,NU,Tundra Copper Corp. (100%),TKW 38,2026-11-17,1390.1,True,5,expiring,-116.12668,67.75249
-100898,NU,Tundra Copper Corp. (100%),TKS 10,2026-11-17,307.0,True,5,expiring,-116.11493,67.51706
-101389,NU,Tundra Copper Corp. (100%),TKE 9,2026-11-17,1320.5,True,5,expiring,-115.361,67.7004
-101189,NU,Tundra Copper Corp. (100%),TKE 22,2026-11-17,1351.9,True,5,expiring,-115.1852,67.6629
-101080,NU,Tundra Copper Corp. (100%),TNK 9,2026-11-17,1387.8,True,5,expiring,-115.94698,67.79206
-101233,NU,Tundra Copper Corp. (100%),TKS 19,2026-11-17,979.1,True,5,expiring,-115.97039,67.5233
-100881,NU,Tundra Copper Corp. (100%),TKW 20,2026-11-17,1307.9,True,5,expiring,-116.42356,67.66496
-100905,NU,Tundra Copper Corp. (100%),TKW 36,2026-11-17,1366.2,True,5,expiring,-116.18917,67.66081
-100982,NU,Tundra Copper Corp. (100%),TKS 5,2026-11-17,1368.7,True,5,expiring,-116.18917,67.62121
-101081,NU,Tundra Copper Corp. (100%),TKE 27,2026-11-17,1419.6,True,5,expiring,-115.0602,67.75039
-100978,NU,Tundra Copper Corp. (100%),TNK 10,2026-11-17,1419.4,True,5,expiring,-115.95088,67.74622
-101230,NU,Tundra Copper Corp. (100%),TKN 18,2026-11-17,1419.3,True,5,expiring,-115.82978,67.75872
-100983,NU,Tundra Copper Corp. (100%),TKS 7,2026-11-17,1441.6,True,5,expiring,-116.13057,67.61706
-100883,NU,Tundra Copper Corp. (100%),TKW 24,2026-11-17,1438.9,True,5,expiring,-116.36496,67.66289
-101334,NU,Tundra Copper Corp. (100%),TKE 18,2026-11-17,1438.9,True,5,expiring,-115.2477,67.6483
-101078,NU,Tundra Copper Corp. (100%),TKN 4,2026-11-17,1438.9,True,5,expiring,-116.07197,67.65247
-100888,NU,Tundra Copper Corp. (100%),TKW 32,2026-11-17,1438.8,True,5,expiring,-116.24777,67.6608
-101337,NU,Tundra Copper Corp. (100%),TKS 17,2026-11-17,931.8,True,5,expiring,-115.95478,67.6233
-100906,NU,Tundra Copper Corp. (100%),TKW 37,2026-11-17,1358.5,True,5,expiring,-116.12277,67.80666
-100987,NU,Tundra Copper Corp. (100%),TKE 2,2026-11-17,1407.4,True,5,expiring,-115.47819,67.70246
-101196,NU,Tundra Copper Corp. (100%),TKW 7,2026-11-17,1436.0,True,5,expiring,-116.59935,67.70872
-101074,NU,Tundra Copper Corp. (100%),TKE 20,2026-11-17,1434.1,True,5,expiring,-115.1813,67.73583
-101237,NU,Tundra Copper Corp. (100%),TKW 2,2026-11-17,1433.8,True,5,expiring,-116.65796,67.75664
-100887,NU,Tundra Copper Corp. (100%),TKW 30,2026-11-17,1433.5,True,5,expiring,-116.24387,67.75662
-101188,NU,Tundra Copper Corp. (100%),TKS 8,2026-11-17,1429.2,True,5,expiring,-116.13447,67.56706
-100981,NU,Tundra Copper Corp. (100%),TNK 15,2026-11-17,1392.9,True,5,expiring,-115.89228,67.70666
-100880,NU,Tundra Copper Corp. (100%),TKW 19,2026-11-17,1392.9,True,5,expiring,-116.42356,67.70456
-101863,NU,North Arrow Minerals Inc. (100%),HB 39,2026-11-17,1161.6,True,5,expiring,-81.92901,67.68385
-101234,NU,Tundra Copper Corp. (100%),TKE 12,2026-11-17,1130.3,True,5,expiring,-115.3024,67.73583
-101704,NU,North Arrow Minerals Inc. (100%),HB 9,2026-11-17,1129.8,True,5,expiring,-82.37044,67.42344
-101387,NU,Tundra Copper Corp. (100%),TKW 10,2026-11-17,1390.1,True,5,expiring,-116.54076,67.75244
-100980,NU,Tundra Copper Corp. (100%),TNK 14,2026-11-17,1390.2,True,5,expiring,-115.88838,67.75665
-100835,NU,Tundra Copper Corp. (100%),TKS 6,2026-11-17,1312.5,True,5,expiring,-116.19307,67.57746
-100962,NU,Tundra Copper Corp. (100%),TKN 23,2026-11-17,1320.2,True,5,expiring,-115.77509,67.69621
-101228,NU,Tundra Copper Corp. (100%),TKS 15,2026-11-17,1327.3,True,5,expiring,-116.01728,67.56496
-100990,NU,Tundra Copper Corp. (100%),TKE 5,2026-11-17,1361.5,True,5,expiring,-115.42351,67.74417
-YF47257,YK,536005 Yukon Inc. - 100%,CARTER 7,2026-11-17,19.7,True,5,expiring,-134.29461,60.63324
-MC00004997,SK,Appia Rare Earths & Uranium Corp.: 100.000%,,2026-11-17,1561.9,False,5,expiring,-103.57968,57.84708
-MC00002081,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,142.4,False,5,expiring,-102.03192,58.92288
-100894,NU,Tundra Copper Corp. (100%),TKN 32,2026-11-17,1308.3,True,5,expiring,-115.65789,67.66081
-101197,NU,Tundra Copper Corp. (100%),TKN 1,2026-11-17,1373.3,True,5,expiring,-116.06808,67.78582
-1098240,BC,"MACNEIL, KENNETH DANIEL",,2026-11-18,1053.9,False,6,expiring,-120.50747,49.26861
-1058232,BC,SCOTTIE RESOURCES CORP.,COMET,2026-11-18,18.0,False,6,expiring,-129.77385,56.13104
-M12254,NT,North by Northwest Lithium Inc. (100%),RON 5,2026-11-18,394.4,True,6,expiring,-112.28216,62.16263
-M12255,NT,North by Northwest Lithium Inc. (100%),RON 6,2026-11-18,268.6,True,6,expiring,-112.30093,62.21616
-1117474,BC,"GARSIDE, PATRICK T",Full House,2026-11-18,20.4,False,6,expiring,-121.89196,50.96864
-1117475,BC,"WOLFF, RIORDAN",Frost1,2026-11-18,19.1,False,6,expiring,-122.36085,53.78537
-105013,NU,6081 Nunavut Ltd. (100%),,2026-11-18,738.6,True,6,expiring,-95.42988,63.83164
-M12250,NT,North by Northwest Lithium Inc. (100%),RON 1,2026-11-18,1122.9,True,6,expiring,-112.23863,62.22084
-M12256,NT,North by Northwest Lithium Inc. (100%),RON 7,2026-11-18,102.2,True,6,expiring,-112.29975,62.15381
-13542,YK,Elsa Reclamation & Development Company Ltd. - 100%,OUTCAST FRACTIO ,2026-11-18,3.4,True,6,expiring,-135.24092,63.93362
-M12251,NT,North by Northwest Lithium Inc. (100%),RON 2,2026-11-18,995.4,True,6,expiring,-112.29186,62.18892
-105012,NU,6081 Nunavut Ltd. (100%),,2026-11-18,1175.7,True,6,expiring,-95.34784,63.82332
-1117472,BC,"BA, HONG",The Rose,2026-11-18,20.1,False,6,expiring,-127.7985,51.53108
-105011,NU,6081 Nunavut Ltd. (100%),,2026-11-18,1414.4,True,6,expiring,-94.98844,63.75039
-105010,NU,6081 Nunavut Ltd. (100%),,2026-11-18,942.0,True,6,expiring,-94.82047,63.77745
-105021,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1585.5,True,7,expiring,-95.52364,63.71704
-105020,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1652.3,True,7,expiring,-95.42988,63.71288
-105027,NU,6081 Nunavut Ltd. (100%),,2026-11-19,84.2,True,7,expiring,-94.95719,63.74412
-1117483,BC,"SWITZER, ROURY",Weasel Creek,2026-11-19,62.9,False,7,expiring,-121.00125,49.53736
-105026,NU,6081 Nunavut Ltd. (100%),,2026-11-19,84.2,True,7,expiring,-95.0197,63.73578
-105022,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1689.5,True,7,expiring,-95.66426,63.65247
-105016,NU,6081 Nunavut Ltd. (100%),,2026-11-19,469.9,True,7,expiring,-95.03532,63.8483
-105024,NU,6081 Nunavut Ltd. (100%),,2026-11-19,286.8,True,7,expiring,-95.59199,63.68788
-1042933,BC,"DUCKWORTH, STEVEN JAMES",GOLDEN,2026-11-19,21.0,False,7,expiring,-117.40424,49.45201
-MB15091,MB,Eden Gold Corporation,EGC-6,2026-11-19,244.8,False,7,expiring,-99.2552,56.64412
-105017,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1525.2,True,7,expiring,-95.00016,63.88163
-105023,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1045.6,True,7,expiring,-95.41034,63.69828
-105015,NU,6081 Nunavut Ltd. (100%),,2026-11-19,944.8,True,7,expiring,-95.10173,63.73371
-105025,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1077.1,True,7,expiring,-95.60566,63.76082
-105019,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1012.6,True,7,expiring,-95.66426,63.6858
-MC00017509,SK,Fulcrum Metals (Canada) Ltd.: 100.000%,,2026-11-19,531.1,False,7,expiring,-104.90426,59.6606
-105014,NU,6081 Nunavut Ltd. (100%),,2026-11-19,252.6,True,7,expiring,-94.88297,63.75665
-MC00017508,SK,Fulcrum Metals (Canada) Ltd.: 100.000%,,2026-11-19,473.5,False,7,expiring,-104.89708,59.67514
-105018,NU,6081 Nunavut Ltd. (100%),,2026-11-19,335.4,True,7,expiring,-94.94938,63.8483
+1078208,BC,TIDAL GOLD CORP.,BELLA MARINO,2026-10-30,2447.3,False,-14,lapsing,-131.69856,53.07686
+104997,NU,6081 Nunavut Ltd. (100%),,2026-10-30,83.9,True,-14,lapsing,-95.41425,63.81914
+104994,NU,6081 Nunavut Ltd. (100%),,2026-10-30,253.1,True,-14,lapsing,-95.60566,63.69622
+104991,NU,6081 Nunavut Ltd. (100%),,2026-10-30,521.8,True,-14,lapsing,-95.74239,63.73994
+104993,NU,6081 Nunavut Ltd. (100%),,2026-10-30,421.1,True,-14,lapsing,-95.60567,63.74414
+1072254,BC,TIDAL GOLD CORP.,BELLA,2026-10-30,77.7,False,-14,lapsing,-131.72043,53.07894
+1072255,BC,TIDAL GOLD CORP.,MARINO,2026-10-30,77.7,False,-14,lapsing,-131.67668,53.07895
+1094472,BC,TIDAL GOLD CORP.,HOMESTAKE,2026-10-30,77.7,False,-14,lapsing,-131.72668,53.05811
+389830,BC,"FALLIS, GLENN",,2026-10-30,28.8,False,-14,lapsing,-121.69553,50.44439
+035416M,NL,Mineral Lands Admin,,2026-10-30,24.7,False,-14,lapsing,-55.58821,50.678
+104992,NU,6081 Nunavut Ltd. (100%),,2026-10-30,859.8,True,-14,lapsing,-95.8049,63.71288
+1127295,BC,"MOWATT, JASPER",RileyBuffer,2026-10-30,1697.9,False,-14,lapsing,-132.42675,53.36432
+104996,NU,6081 Nunavut Ltd. (100%),,2026-10-30,33.7,True,-14,lapsing,-95.45722,63.76078
+104995,NU,6081 Nunavut Ltd. (100%),,2026-10-30,605.6,True,-14,lapsing,-94.94156,63.76913
+CBS 8866,SK,GOLDEN BAND RESOURCES INC.: 100.000%,,2026-10-31,394.9,False,-13,lapsing,-104.37537,55.97252
+978972,BC,CASSIAR JADE CONTRACTING INC.,,2026-10-31,85.0,False,-13,lapsing,-128.58611,58.33934
+MC00013892,SK,Doctors Investment Group Ltd.: 100.000%,,2026-10-31,3131.9,False,-13,lapsing,-106.2399,56.598
+YE55700,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 73,2026-10-31,11.6,True,-13,lapsing,-139.27711,63.84679
+YE77604,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 77,2026-10-31,12.4,True,-13,lapsing,-139.23907,63.83608
+YE55671,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 44,2026-10-31,19.6,True,-13,lapsing,-139.27351,63.82618
+YE55672,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 45,2026-10-31,19.6,True,-13,lapsing,-139.28643,63.82512
+YE55698,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 71,2026-10-31,18.9,True,-13,lapsing,-139.28311,63.84896
+YE55694,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 67,2026-10-31,19.3,True,-13,lapsing,-139.29855,63.85353
+YE79871,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 38,2026-10-31,19.3,True,-13,lapsing,-139.27061,63.83524
+YE55678,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 51,2026-10-31,19.6,True,-13,lapsing,-139.2893,63.81604
+YE77606,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 79,2026-10-31,18.5,True,-13,lapsing,-139.23501,63.82993
+YE77631,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 104,2026-10-31,19.4,True,-13,lapsing,-139.30989,63.8173
+YE79867,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 34,2026-10-31,19.6,True,-13,lapsing,-139.25531,63.83061
+YE55682,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 55,2026-10-31,19.6,True,-13,lapsing,-139.34452,63.86749
+1127354,BC,"MITCHELL, RICHARD GEORGE",Law_H2,2026-10-31,62.7,False,-13,lapsing,-121.00438,49.69361
+MC00013893,SK,Doctors Investment Group Ltd.: 100.000%,,2026-10-31,2782.6,False,-13,lapsing,-106.29306,56.52889
+1127338,BC,"SCHNEIDER, RONALD GORDON",RAM ADIT,2026-10-31,21.1,False,-13,lapsing,-120.01058,49.17279
+YE79869,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 36,2026-10-31,19.5,True,-13,lapsing,-139.26296,63.83292
+YE77605,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 78,2026-10-31,19.7,True,-13,lapsing,-139.24238,63.83166
+YE79866,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 33,2026-10-31,19.7,True,-13,lapsing,-139.26058,63.82723
+YE55677,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 50,2026-10-31,19.7,True,-13,lapsing,-139.27638,63.8171
+YE77615,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 88,2026-10-31,19.7,True,-13,lapsing,-139.26106,63.81246
+YE55689,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 62,2026-10-31,19.6,True,-13,lapsing,-139.32675,63.85717
+YE77611,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 84,2026-10-31,19.6,True,-13,lapsing,-139.25052,63.81922
+YE55688,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 61,2026-10-31,19.6,True,-13,lapsing,-139.32148,63.86054
+YE77630,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 103,2026-10-31,19.6,True,-13,lapsing,-139.31514,63.81393
+YE55669,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 42,2026-10-31,19.6,True,-13,lapsing,-139.26585,63.82385
+YE77607,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 80,2026-10-31,19.6,True,-13,lapsing,-139.23999,63.82596
+YE55673,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 46,2026-10-31,19.6,True,-13,lapsing,-139.28118,63.82849
+YE77608,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 81,2026-10-31,19.7,True,-13,lapsing,-139.2376,63.82027
+YE77603,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 76,2026-10-31,19.7,True,-13,lapsing,-139.25004,63.83398
+YE55667,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 40,2026-10-31,19.6,True,-13,lapsing,-139.25819,63.82154
+YE55676,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 49,2026-10-31,19.6,True,-13,lapsing,-139.28164,63.81373
+YE55699,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 72,2026-10-31,19.7,True,-13,lapsing,-139.28838,63.84558
+YE77633,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 106,2026-10-31,19.7,True,-13,lapsing,-139.31755,63.81962
+YE77616,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 89,2026-10-31,19.6,True,-13,lapsing,-139.25866,63.80676
+YE77624,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 97,2026-10-31,19.6,True,-13,lapsing,-139.29216,63.80697
+YE55687,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 60,2026-10-31,19.6,True,-13,lapsing,-139.33442,63.85948
+YE55684,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 57,2026-10-31,19.6,True,-13,lapsing,-139.33652,63.86538
+YE77618,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 91,2026-10-31,19.6,True,-13,lapsing,-139.26918,63.80002
+YE55674,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 47,2026-10-31,19.6,True,-13,lapsing,-139.27398,63.8114
+YE77620,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 93,2026-10-31,19.6,True,-13,lapsing,-139.27684,63.80234
+YE77617,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 90,2026-10-31,19.6,True,-13,lapsing,-139.26632,63.80908
+YE79865,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 32,2026-10-31,19.6,True,-13,lapsing,-139.24765,63.82828
+YE77636,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 109,2026-10-31,19.6,True,-13,lapsing,-139.33814,63.82088
+YE77637,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 110,2026-10-31,19.6,True,-13,lapsing,-139.33288,63.82426
+YE77601,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 74,2026-10-31,19.2,True,-13,lapsing,-139.28065,63.84384
+YE55696,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 69,2026-10-31,14.1,True,-13,lapsing,-139.29242,63.85237
+MC00013891,SK,Doctors Investment Group Ltd.: 100.000%,,2026-10-31,4199.5,False,-13,lapsing,-106.38611,56.52348
+YE77622,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 95,2026-10-31,19.6,True,-13,lapsing,-139.2845,63.80466
+YE77602,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 75,2026-10-31,19.6,True,-13,lapsing,-139.24495,63.83724
+YE55683,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 56,2026-10-31,19.6,True,-13,lapsing,-139.34978,63.86412
+YE77628,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 101,2026-10-31,19.7,True,-13,lapsing,-139.30748,63.81161
+YE55697,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 70,2026-10-31,19.6,True,-13,lapsing,-139.29595,63.84796
+YE79864,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 31,2026-10-31,19.7,True,-13,lapsing,-139.25292,63.82491
+YE77627,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 100,2026-10-31,19.7,True,-13,lapsing,-139.29456,63.81267
+YE77635,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 108,2026-10-31,19.7,True,-13,lapsing,-139.32522,63.82194
+YE77634,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 107,2026-10-31,19.7,True,-13,lapsing,-139.33047,63.81856
+YE79870,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 37,2026-10-31,19.7,True,-13,lapsing,-139.27591,63.83187
+YE77621,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 94,2026-10-31,19.7,True,-13,lapsing,-139.27158,63.80571
+YE55686,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 59,2026-10-31,19.7,True,-13,lapsing,-139.32916,63.86286
+YE55679,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 52,2026-10-31,19.7,True,-13,lapsing,-139.28404,63.81942
+YE79868,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 35,2026-10-31,19.7,True,-13,lapsing,-139.26824,63.82955
+YE55681,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 54,2026-10-31,19.7,True,-13,lapsing,-139.2917,63.82174
+YE77623,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 96,2026-10-31,19.7,True,-13,lapsing,-139.27924,63.80803
+1127357,BC,"MITCHELL, RICHARD GEORGE",Law_H15,2026-10-31,209.0,False,-13,lapsing,-120.8825,49.68528
+YE77626,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 99,2026-10-31,19.7,True,-13,lapsing,-139.29982,63.80929
+YE77613,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 86,2026-10-31,19.7,True,-13,lapsing,-139.25579,63.81584
+YE55675,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 48,2026-10-31,19.7,True,-13,lapsing,-139.26871,63.81478
+1018442,BC,CASSIAR JADE CONTRACTING INC.,WOLV,2026-10-31,237.9,False,-13,lapsing,-128.60173,58.33934
+YE55693,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 66,2026-10-31,19.7,True,-13,lapsing,-139.3114,63.85253
+YE55666,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 39,2026-10-31,19.7,True,-13,lapsing,-139.26345,63.81816
+YE77614,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 87,2026-10-31,19.7,True,-13,lapsing,-139.2534,63.81014
+YE55685,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 58,2026-10-31,19.7,True,-13,lapsing,-139.3421,63.8618
+YE55670,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 43,2026-10-31,19.7,True,-13,lapsing,-139.27877,63.8228
+YE55692,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 65,2026-10-31,19.7,True,-13,lapsing,-139.30613,63.85591
+YE55690,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 63,2026-10-31,19.7,True,-13,lapsing,-139.3138,63.85823
+YE55668,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 41,2026-10-31,19.7,True,-13,lapsing,-139.27111,63.82048
+YE77612,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 85,2026-10-31,19.7,True,-13,lapsing,-139.24813,63.81351
+YE77619,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 92,2026-10-31,19.7,True,-13,lapsing,-139.26392,63.80339
+YE77609,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 82,2026-10-31,19.7,True,-13,lapsing,-139.24525,63.82259
+YE77610,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 83,2026-10-31,19.7,True,-13,lapsing,-139.24286,63.8169
+YE55691,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 64,2026-10-31,19.7,True,-13,lapsing,-139.31907,63.85485
+YE77625,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 98,2026-10-31,19.7,True,-13,lapsing,-139.2869,63.81035
+YE55695,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 68,2026-10-31,19.6,True,-13,lapsing,-139.30388,63.85011
+YE77629,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 102,2026-10-31,19.6,True,-13,lapsing,-139.30222,63.81499
+YE55680,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 53,2026-10-31,19.6,True,-13,lapsing,-139.29696,63.81836
+YE77632,YK,RST Klondike Discoveries Ltd. - 100%,OPHIR 105,2026-10-31,19.6,True,-13,lapsing,-139.32281,63.81624
+59449,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 13,2026-11-01,20.0,True,-12,lapsing,-135.33291,63.8813
+YF04646,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 20,2026-11-01,19.7,True,-12,lapsing,-138.81319,63.8492
+YF04651,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 25,2026-11-01,19.6,True,-12,lapsing,-138.82208,63.85715
+YF04648,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 22,2026-11-01,19.6,True,-12,lapsing,-138.81296,63.85344
+YE79938,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 11,2026-11-01,19.6,True,-12,lapsing,-138.61904,63.80833
+59448,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 12,2026-11-01,19.0,True,-12,lapsing,-135.32155,63.8843
+59446,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 10,2026-11-01,19.3,True,-12,lapsing,-135.3188,63.88843
+55308,YK,Elsa Reclamation & Development Company Ltd. - 100%,PRINCE ,2026-11-01,17.2,True,-12,lapsing,-135.25648,63.93436
+59439,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 3,2026-11-01,16.4,True,-12,lapsing,-135.32185,63.89686
+56530,YK,Elsa Reclamation & Development Company Ltd. - 100%,MARIE ELENA ,2026-11-01,10.2,True,-12,lapsing,-135.27573,63.93602
+59441,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 5,2026-11-01,14.3,True,-12,lapsing,-135.3193,63.90041
+YF74746,YK,Kara Lynn Perri - 100%,Spring 1,2026-11-01,14.5,True,-12,lapsing,-139.30964,63.925
+38658,YK,Elsa Reclamation & Development Company Ltd. - 100%,NOIDER ,2026-11-01,5.1,True,-12,lapsing,-135.2406,63.93958
+62248,YK,Elsa Reclamation & Development Company Ltd. - 100%,KARIN ,2026-11-01,8.3,True,-12,lapsing,-135.286,63.94011
+103501,NU,White Cliff Minerals Limited (100%),,2026-11-01,1373.5,True,-12,lapsing,-117.77912,67.78372
+103504,NU,White Cliff Minerals Limited (100%),,2026-11-01,1378.1,True,-12,lapsing,-117.0525,67.70039
+103502,NU,White Cliff Minerals Limited (100%),,2026-11-01,1373.9,True,-12,lapsing,-117.63068,67.7837
+59005,YK,Elsa Reclamation & Development Company Ltd. - 100%,D.C. ,2026-11-01,0.1,True,-12,lapsing,-135.28517,63.94944
+103499,NU,White Cliff Minerals Limited (100%),,2026-11-01,1406.0,True,-12,lapsing,-117.06813,67.72121
+59443,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 7,2026-11-01,0.5,True,-12,lapsing,-135.31385,63.90298
+YF74747,YK,Sylvain Montreuil - 100%,Spring 2,2026-11-01,10.2,True,-12,lapsing,-139.29701,63.92399
+55270,YK,Elsa Reclamation & Development Company Ltd. - 100%,V.D. ,2026-11-01,2.1,True,-12,lapsing,-135.28778,63.95012
+55384,YK,Elsa Reclamation & Development Company Ltd. - 100%,ROAD ,2026-11-01,4.6,True,-12,lapsing,-135.29044,63.94888
+59447,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 11,2026-11-01,19.8,True,-12,lapsing,-135.33008,63.88606
+YF04645,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 19,2026-11-01,19.6,True,-12,lapsing,-138.83138,63.85735
+YF04652,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 26,2026-11-01,19.7,True,-12,lapsing,-138.81251,63.86194
+YF04644,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 18,2026-11-01,19.6,True,-12,lapsing,-138.84092,63.85292
+YF04650,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 24,2026-11-01,19.6,True,-12,lapsing,-138.81275,63.85758
+YF04653,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 27,2026-11-01,19.7,True,-12,lapsing,-138.82186,63.86125
+103495,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.5,True,-12,lapsing,-117.6502,67.7212
+103498,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.5,True,-12,lapsing,-117.2283,67.72122
+103494,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.4,True,-12,lapsing,-117.79083,67.72122
+103497,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.8,True,-12,lapsing,-117.36894,67.7212
+103487,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-12,lapsing,-117.43535,67.75246
+103489,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-12,lapsing,-117.57598,67.75247
+103484,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-12,lapsing,-117.2244,67.75244
+103490,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-12,lapsing,-117.6463,67.75246
+103486,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-12,lapsing,-117.36503,67.75247
+103491,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.1,True,-12,lapsing,-117.71661,67.75244
+103492,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.0,True,-12,lapsing,-117.78693,67.75246
+103485,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.0,True,-12,lapsing,-117.29471,67.75247
+103500,NU,White Cliff Minerals Limited (100%),,2026-11-01,1305.8,True,-12,lapsing,-116.90796,67.69621
+103496,NU,White Cliff Minerals Limited (100%),,2026-11-01,1304.8,True,-12,lapsing,-117.50957,67.72121
+59438,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 2,2026-11-01,19.6,True,-12,lapsing,-135.31626,63.89206
+YE79943,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 16,2026-11-01,19.7,True,-12,lapsing,-138.64574,63.82044
+103493,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.0,True,-12,lapsing,-117.85725,67.75246
+YF04643,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 17,2026-11-01,19.7,True,-12,lapsing,-138.84067,63.8577
+YE79939,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 12,2026-11-01,19.7,True,-12,lapsing,-138.62694,63.81049
+103506,NU,White Cliff Minerals Limited (100%),,2026-11-01,1250.5,True,-12,lapsing,-116.96656,67.65244
+103505,NU,White Cliff Minerals Limited (100%),,2026-11-01,1235.7,True,-12,lapsing,-116.92749,67.65038
+YE79945,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 18,2026-11-01,19.6,True,-12,lapsing,-138.65364,63.8226
+103488,NU,White Cliff Minerals Limited (100%),,2026-11-01,1303.0,True,-12,lapsing,-117.50566,67.75245
+YE79942,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 15,2026-11-01,19.6,True,-12,lapsing,-138.65064,63.81696
+YF04649,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 23,2026-11-01,19.6,True,-12,lapsing,-138.82227,63.85352
+YF04641,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 15,2026-11-01,19.7,True,-12,lapsing,-138.85914,63.86063
+YE79947,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 20,2026-11-01,19.6,True,-12,lapsing,-138.66155,63.82476
+YE79941,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 14,2026-11-01,19.6,True,-12,lapsing,-138.64274,63.81481
+YF04647,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 21,2026-11-01,17.4,True,-12,lapsing,-138.82251,63.84888
+59451,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 15,2026-11-01,19.3,True,-12,lapsing,-135.33452,63.8775
+59445,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 9,2026-11-01,20.1,True,-12,lapsing,-135.32786,63.88966
+59450,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 14,2026-11-01,18.7,True,-12,lapsing,-135.32381,63.88049
+61725,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLOT ,2026-11-01,18.0,True,-12,lapsing,-135.33876,63.88204
+59437,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 1,2026-11-01,18.3,True,-12,lapsing,-135.32488,63.89324
+YE79946,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 19,2026-11-01,12.9,True,-12,lapsing,-138.66479,63.82068
+59444,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 8,2026-11-01,13.9,True,-12,lapsing,-135.30665,63.90394
+13035,YK,Elsa Reclamation & Development Company Ltd. - 100%,STONE ,2026-11-01,18.9,True,-12,lapsing,-135.23274,63.95904
+YE79940,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 13,2026-11-01,19.6,True,-12,lapsing,-138.63502,63.81252
+103503,NU,White Cliff Minerals Limited (100%),,2026-11-01,1337.3,True,-12,lapsing,-116.88452,67.6608
+YF04642,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",DIS 16,2026-11-01,19.6,True,-12,lapsing,-138.84978,63.86153
+59440,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 4,2026-11-01,19.6,True,-12,lapsing,-135.31344,63.89597
+YE79944,YK,"RST Klondike Discoveries Ltd. - 50%, EKlondike Holdings Ltd - 25%, SKlondike Holdings Ltd - 25%",Paris 17,2026-11-01,19.6,True,-12,lapsing,-138.65854,63.81912
+59442,YK,Elsa Reclamation & Development Company Ltd. - 100%,FALLS 6,2026-11-01,19.5,True,-12,lapsing,-135.31066,63.89987
+SV14028,MB,CanWhite Sands Corp.,DEN 25,2026-11-02,64.4,False,-11,lapsing,-96.73002,49.30156
+103516,NU,White Cliff Minerals Limited (100%),,2026-11-02,1457.6,True,-11,lapsing,-116.9939,67.58994
+103518,NU,White Cliff Minerals Limited (100%),,2026-11-02,1454.8,True,-11,lapsing,-117.1697,67.64828
+SV14077,MB,CanWhite Sands Corp.,DEN 89,2026-11-02,254.3,False,-11,lapsing,-96.58924,49.28708
+103512,NU,White Cliff Minerals Limited (100%),,2026-11-02,1452.5,True,-11,lapsing,-117.20486,67.67954
+SV14079,MB,CanWhite Sands Corp.,DEN 91,2026-11-02,264.2,False,-11,lapsing,-96.58926,49.3018
+SV14078,MB,CanWhite Sands Corp.,DEN 90,2026-11-02,262.5,False,-11,lapsing,-96.56666,49.30166
+SV14026,MB,CanWhite Sands Corp.,DEN 23,2026-11-02,262.1,False,-11,lapsing,-96.67948,49.30163
+015580M,NL,Maritime Resources Corp.,"Kings Point, Central NL",2026-11-02,99.7,False,-11,lapsing,-56.18476,49.52572
+SV14031,MB,CanWhite Sands Corp.,DEN 28,2026-11-02,261.6,False,-11,lapsing,-96.76989,49.3163
+SV14030,MB,CanWhite Sands Corp.,DEN 27,2026-11-02,262.7,False,-11,lapsing,-96.76984,49.30152
+SV14025,MB,CanWhite Sands Corp.,DEN 22,2026-11-02,259.1,False,-11,lapsing,-96.65683,49.30167
+SV14029,MB,CanWhite Sands Corp.,DEN 26,2026-11-02,259.8,False,-11,lapsing,-96.74707,49.30156
+SV14027,MB,CanWhite Sands Corp.,DEN 24,2026-11-02,258.4,False,-11,lapsing,-96.70206,49.30159
+SV14073,MB,CanWhite Sands Corp.,DEN 85,2026-11-02,258.4,False,-11,lapsing,-96.58913,49.27238
+SV14045,MB,CanWhite Sands Corp.,DEN 43,2026-11-02,256.8,False,-11,lapsing,-96.70213,49.34591
+SV14082,MB,CanWhite Sands Corp.,DEN 94,2026-11-02,256.3,False,-11,lapsing,-96.63429,49.31653
+036393M,NL,Maritime Resources Corp.,,2026-11-02,1370.0,False,-11,lapsing,-56.22928,49.55075
+103507,NU,White Cliff Minerals Limited (100%),,2026-11-02,1398.8,True,-11,lapsing,-116.90796,67.5983
+103515,NU,White Cliff Minerals Limited (100%),,2026-11-02,1382.5,True,-11,lapsing,-117.03688,67.61704
+103513,NU,White Cliff Minerals Limited (100%),,2026-11-02,1308.1,True,-11,lapsing,-117.05641,67.65872
+103520,NU,White Cliff Minerals Limited (100%),,2026-11-02,795.3,True,-11,lapsing,-117.51348,67.7837
+103509,NU,White Cliff Minerals Limited (100%),,2026-11-02,725.7,True,-11,lapsing,-117.25174,67.70037
+103519,NU,White Cliff Minerals Limited (100%),,2026-11-02,1000.6,True,-11,lapsing,-117.31034,67.67747
+103510,NU,White Cliff Minerals Limited (100%),,2026-11-02,798.0,True,-11,lapsing,-117.1697,67.70038
+025614M,NL,Champion Iron Mines Limited,"Powderhorn Lake, Central NL",2026-11-02,699.8,False,-11,lapsing,-56.12605,49.13627
+103508,NU,White Cliff Minerals Limited (100%),,2026-11-02,1306.3,True,-11,lapsing,-117.36112,67.70038
+103514,NU,White Cliff Minerals Limited (100%),,2026-11-02,1309.2,True,-11,lapsing,-117.05641,67.63788
+103511,NU,White Cliff Minerals Limited (100%),,2026-11-02,1307.0,True,-11,lapsing,-117.05641,67.67955
+MC00014679,SK,Atha Energy Corp.: 100.000%,,2026-11-03,1886.8,False,-10,lapsing,-106.57294,59.15508
+MC00014677,SK,Atha Energy Corp.: 100.000%,,2026-11-03,5621.9,False,-10,lapsing,-106.24944,59.16418
+MC00014672,SK,Atha Energy Corp.: 100.000%,,2026-11-03,5314.0,False,-10,lapsing,-106.60156,59.07506
+1051805,BC,"BINICHAKIS, MITCH LEIGHTON",SUNRISE,2026-11-04,235.0,False,-9,lapsing,-121.63889,52.72286
+SV15190,MB,SHAUN SPELLISCY,CHASE 8,2026-11-05,254.7,False,-8,lapsing,-101.52563,52.02152
+SV15183,MB,SHAUN SPELLISCY,CHASE 1,2026-11-05,253.9,False,-8,lapsing,-101.52565,52.00708
+SV15186,MB,SHAUN SPELLISCY,CHASE 4,2026-11-05,255.5,False,-8,lapsing,-101.59728,52.0071
+SV15189,MB,SHAUN SPELLISCY,CHASE 7,2026-11-05,63.9,False,-8,lapsing,-101.54363,52.01616
+SV15192,MB,SHAUN SPELLISCY,CHASE 10,2026-11-05,253.6,False,-8,lapsing,-101.54951,52.03618
+SV15193,MB,SHAUN SPELLISCY,CHASE 11,2026-11-05,253.6,False,-8,lapsing,-101.57341,52.03617
+SV15184,MB,SHAUN SPELLISCY,CHASE 2,2026-11-05,255.6,False,-8,lapsing,-101.54955,52.00708
+SV15188,MB,SHAUN SPELLISCY,CHASE 6,2026-11-05,255.6,False,-8,lapsing,-101.5734,52.02157
+SV15195,MB,SHAUN SPELLISCY,CHASE 12,2026-11-05,252.2,False,-8,lapsing,-101.59729,52.0362
+SV15191,MB,SHAUN SPELLISCY,CHASE 9,2026-11-05,191.8,False,-8,lapsing,-101.52563,52.03799
+YF79006,YK,Callum Ryan - 100%,MBL 6,2026-11-06,19.6,True,-7,lapsing,-135.37123,63.82112
+YF79150,YK,Callum Ryan - 100%,Bert 22,2026-11-06,19.6,True,-7,lapsing,-136.06638,63.89853
+YF79240,YK,Shawn Ryan - 100%,KYS 40,2026-11-06,19.6,True,-7,lapsing,-135.22573,63.83714
+YF79041,YK,Callum Ryan - 100%,MBL 41,2026-11-06,19.6,True,-7,lapsing,-135.37172,63.80498
+YF79230,YK,Shawn Ryan - 100%,KYS 30,2026-11-06,19.6,True,-7,lapsing,-135.26256,63.82931
+YF79008,YK,Callum Ryan - 100%,MBL 8,2026-11-06,19.6,True,-7,lapsing,-135.38053,63.82118
+YF79166,YK,Callum Ryan - 100%,Vice 6,2026-11-06,19.6,True,-7,lapsing,-135.83251,63.9087
+YF79103,YK,Callum Ryan - 100%,Serv 9,2026-11-06,19.6,True,-7,lapsing,-136.25501,63.85876
+YF79206,YK,Shawn Ryan - 100%,KYS 6,2026-11-06,19.6,True,-7,lapsing,-135.24796,63.84458
+YF79263,YK,Shawn Ryan - 100%,KYS 63,2026-11-06,19.6,True,-7,lapsing,-135.13384,63.79652
+YF79176,YK,Callum Ryan - 100%,Vice 16,2026-11-06,19.0,True,-7,lapsing,-135.87752,63.91254
+YF79019,YK,Callum Ryan - 100%,MBL 19,2026-11-06,19.6,True,-7,lapsing,-135.43642,63.81744
+YF79232,YK,Shawn Ryan - 100%,KYS 32,2026-11-06,19.6,True,-7,lapsing,-135.26817,63.82604
+YF79261,YK,Shawn Ryan - 100%,KYS 61,2026-11-06,19.6,True,-7,lapsing,-135.12646,63.79404
+YF79092,YK,Callum Ryan - 100%,MBL 92,2026-11-06,19.6,True,-7,lapsing,-135.43698,63.79721
+YF79223,YK,Shawn Ryan - 100%,KYS 23,2026-11-06,19.6,True,-7,lapsing,-135.2812,63.82526
+YF79013,YK,Callum Ryan - 100%,MBL 13,2026-11-06,19.6,True,-7,lapsing,-135.40854,63.81726
+YF79054,YK,Callum Ryan - 100%,MBL 54,2026-11-06,19.6,True,-7,lapsing,-135.39936,63.8131
+YF79233,YK,Shawn Ryan - 100%,KYS 33,2026-11-06,19.6,True,-7,lapsing,-135.26638,63.82031
+YF79044,YK,Callum Ryan - 100%,MBL 44,2026-11-06,19.7,True,-7,lapsing,-135.38114,63.80094
+YF79015,YK,Callum Ryan - 100%,MBL 15,2026-11-06,19.6,True,-7,lapsing,-135.41783,63.81732
+YF79278,YK,Callum Ryan - 100%,KYS 78,2026-11-06,19.6,True,-7,lapsing,-135.12469,63.7883
+YF79132,YK,Callum Ryan - 100%,Bert 4,2026-11-06,19.6,True,-7,lapsing,-136.0572,63.89031
+YF79154,YK,Callum Ryan - 100%,Bert 26,2026-11-06,19.6,True,-7,lapsing,-136.08502,63.89859
+YF79253,YK,Shawn Ryan - 100%,KYS 53,2026-11-06,19.7,True,-7,lapsing,-135.20892,63.80624
+YF79153,YK,Callum Ryan - 100%,Bert 25,2026-11-06,19.7,True,-7,lapsing,-136.08509,63.8945
+YF79251,YK,Shawn Ryan - 100%,KYS 51,2026-11-06,19.7,True,-7,lapsing,-135.21633,63.80872
+YF79147,YK,Callum Ryan - 100%,Bert 19,2026-11-06,19.7,True,-7,lapsing,-136.05712,63.8944
+YF79058,YK,Callum Ryan - 100%,MBL 58,2026-11-06,19.7,True,-7,lapsing,-135.3996,63.80516
+YF79034,YK,Callum Ryan - 100%,MBL 34,2026-11-06,19.6,True,-7,lapsing,-135.36294,63.78852
+YF79070,YK,Callum Ryan - 100%,MBL 70,2026-11-06,19.7,True,-7,lapsing,-135.41795,63.81323
+YF79211,YK,Shawn Ryan - 100%,KYS 11,2026-11-06,19.7,True,-7,lapsing,-135.23851,63.85684
+YF79218,YK,Shawn Ryan - 100%,KYS 18,2026-11-06,19.7,True,-7,lapsing,-135.27177,63.83752
+YF79121,YK,Callum Ryan - 100%,Serv 27,2026-11-06,19.6,True,-7,lapsing,-136.25531,63.86696
+YF79123,YK,Callum Ryan - 100%,Serv 29,2026-11-06,19.6,True,-7,lapsing,-136.26462,63.8669
+YF79005,YK,Callum Ryan - 100%,MBL 5,2026-11-06,19.6,True,-7,lapsing,-135.37136,63.81702
+YF79046,YK,Callum Ryan - 100%,MBL 46,2026-11-06,19.6,True,-7,lapsing,-135.38126,63.79684
+YF79127,YK,Callum Ryan - 100%,Serv 33,2026-11-06,19.6,True,-7,lapsing,-136.28324,63.86676
+YF79187,YK,Callum Ryan - 100%,Vice 27,2026-11-06,19.6,True,-7,lapsing,-135.82157,63.91194
+YF79259,YK,Shawn Ryan - 100%,KYS 59,2026-11-06,19.6,True,-7,lapsing,-135.11906,63.79156
+YF79022,YK,Callum Ryan - 100%,MBL 22,2026-11-06,19.6,True,-7,lapsing,-135.36219,63.81286
+YF79139,YK,Callum Ryan - 100%,Bert 11,2026-11-06,19.6,True,-7,lapsing,-136.09454,63.88634
+YF79158,YK,Callum Ryan - 100%,Bert 30,2026-11-06,19.6,True,-7,lapsing,-136.10367,63.89864
+YF79090,YK,Callum Ryan - 100%,MBL 90,2026-11-06,19.6,True,-7,lapsing,-135.43687,63.8013
+YF79101,YK,Callum Ryan - 100%,Serv 7,2026-11-06,19.6,True,-7,lapsing,-136.2457,63.85884
+YF79096,YK,Callum Ryan - 100%,Serv 2,2026-11-06,19.6,True,-7,lapsing,-136.21792,63.86312
+YF79199,YK,Callum Ryan - 100%,Vice 39,2026-11-06,19.6,True,-7,lapsing,-135.91144,63.9196
+YF79105,YK,Callum Ryan - 100%,Serv 11,2026-11-06,19.6,True,-7,lapsing,-136.26432,63.8587
+YF79275,YK,Shawn Ryan - 100%,KYS 75,2026-11-06,19.6,True,-7,lapsing,-135.17726,63.81108
+YF79254,YK,Shawn Ryan - 100%,KYS 54,2026-11-06,19.7,True,-7,lapsing,-135.21454,63.80298
+YF79122,YK,Callum Ryan - 100%,Serv 28,2026-11-06,19.7,True,-7,lapsing,-136.25546,63.87106
+YF79284,YK,Shawn Ryan - 100%,KYS 84,2026-11-06,19.7,True,-7,lapsing,-135.14686,63.79574
+YF79079,YK,Callum Ryan - 100%,MBL 79,2026-11-06,19.7,True,-7,lapsing,-135.40924,63.79293
+YF79009,YK,Callum Ryan - 100%,MBL 9,2026-11-06,19.7,True,-7,lapsing,-135.38995,63.81714
+YF79228,YK,Shawn Ryan - 100%,KYS 28,2026-11-06,19.7,True,-7,lapsing,-135.25694,63.83258
+YF79227,YK,Shawn Ryan - 100%,KYS 27,2026-11-06,19.7,True,-7,lapsing,-135.24954,63.8301
+YF79074,YK,Callum Ryan - 100%,MBL 74,2026-11-06,19.7,True,-7,lapsing,-135.41818,63.80528
+YF79152,YK,Callum Ryan - 100%,Bert 24,2026-11-06,19.6,True,-7,lapsing,-136.0757,63.89856
+YF79184,YK,Callum Ryan - 100%,Vice 24,2026-11-06,19.6,True,-7,lapsing,-135.91321,63.91558
+YF79095,YK,Callum Ryan - 100%,Serv 1,2026-11-06,19.6,True,-7,lapsing,-136.21778,63.85902
+YF79249,YK,Shawn Ryan - 100%,KYS 49,2026-11-06,19.6,True,-7,lapsing,-135.22373,63.8112
+YF79156,YK,Callum Ryan - 100%,Bert 28,2026-11-06,19.6,True,-7,lapsing,-136.09434,63.89862
+YF79102,YK,Callum Ryan - 100%,Serv 8,2026-11-06,19.6,True,-7,lapsing,-136.24585,63.86292
+YF79076,YK,Callum Ryan - 100%,MBL 76,2026-11-06,19.6,True,-7,lapsing,-135.41829,63.80118
+YF79143,YK,Callum Ryan - 100%,Bert 15,2026-11-06,19.6,True,-7,lapsing,-136.11317,63.88638
+YF79017,YK,Callum Ryan - 100%,MBL 17,2026-11-06,19.6,True,-7,lapsing,-135.42712,63.81738
+YF79271,YK,Shawn Ryan - 100%,KYS 71,2026-11-06,19.6,True,-7,lapsing,-135.16342,63.80644
+YF79134,YK,Callum Ryan - 100%,Bert 6,2026-11-06,19.6,True,-7,lapsing,-136.06652,63.89034
+YE56908,YK,Shawn Ryan - 100%,Shanghai 114,2026-11-06,19.6,True,-7,lapsing,-135.72478,63.9322
+YF79245,YK,Shawn Ryan - 100%,KYS 45,2026-11-06,19.6,True,-7,lapsing,-135.23854,63.81615
+YF79148,YK,Callum Ryan - 100%,Bert 20,2026-11-06,19.6,True,-7,lapsing,-136.05706,63.8985
+YF79055,YK,Callum Ryan - 100%,MBL 55,2026-11-06,18.5,True,-7,lapsing,-135.39019,63.80908
+YF79024,YK,Callum Ryan - 100%,MBL 24,2026-11-06,18.5,True,-7,lapsing,-135.36231,63.80888
+YF79072,YK,Callum Ryan - 100%,MBL 72,2026-11-06,18.5,True,-7,lapsing,-135.41806,63.80926
+YF79040,YK,Callum Ryan - 100%,MBL 40,2026-11-06,18.5,True,-7,lapsing,-135.3809,63.809
+YF79056,YK,Callum Ryan - 100%,MBL 56,2026-11-06,18.5,True,-7,lapsing,-135.39948,63.80914
+YF79020,YK,Callum Ryan - 100%,MBL 20,2026-11-06,19.5,True,-7,lapsing,-135.43631,63.82127
+YF79269,YK,Shawn Ryan - 100%,KYS 69,2026-11-06,19.6,True,-7,lapsing,-135.15603,63.80396
+YF79065,YK,Callum Ryan - 100%,MBL 65,2026-11-06,19.6,True,-7,lapsing,-135.39079,63.78872
+YF79108,YK,Callum Ryan - 100%,Serv 14,2026-11-06,19.6,True,-7,lapsing,-136.27378,63.86274
+YF79239,YK,Shawn Ryan - 100%,KYS 39,2026-11-06,19.6,True,-7,lapsing,-135.2201,63.84041
+YF79131,YK,Callum Ryan - 100%,Bert 3,2026-11-06,19.7,True,-7,lapsing,-136.05726,63.88622
+YF79234,YK,Shawn Ryan - 100%,KYS 34,2026-11-06,19.7,True,-7,lapsing,-135.27379,63.82278
+YF79110,YK,Callum Ryan - 100%,Serv 16,2026-11-06,19.7,True,-7,lapsing,-136.28309,63.86266
+YF79244,YK,Shawn Ryan - 100%,KYS 44,2026-11-06,19.7,True,-7,lapsing,-135.25156,63.81536
+YF79214,YK,Shawn Ryan - 100%,KYS 14,2026-11-06,19.5,True,-7,lapsing,-135.22547,63.85762
+YF79209,YK,Shawn Ryan - 100%,KYS 9,2026-11-06,19.6,True,-7,lapsing,-135.24414,63.85358
+YF79089,YK,Callum Ryan - 100%,MBL 89,2026-11-06,19.6,True,-7,lapsing,-135.42758,63.80124
+YF79212,YK,Shawn Ryan - 100%,KYS 12,2026-11-06,19.6,True,-7,lapsing,-135.2311,63.85436
+YF79267,YK,Shawn Ryan - 100%,KYS 67,2026-11-06,19.6,True,-7,lapsing,-135.14863,63.80148
+YF79100,YK,Callum Ryan - 100%,Serv 6,2026-11-06,19.6,True,-7,lapsing,-136.23654,63.863
+YF79130,YK,Callum Ryan - 100%,Bert 2,2026-11-06,19.6,True,-7,lapsing,-136.04787,63.89028
+YF79077,YK,Callum Ryan - 100%,MBL 77,2026-11-06,19.6,True,-7,lapsing,-135.40912,63.79702
+YF79025,YK,Callum Ryan - 100%,MBL 25,2026-11-06,19.7,True,-7,lapsing,-135.35314,63.80484
+YF79221,YK,Shawn Ryan - 100%,KYS 21,2026-11-06,19.7,True,-7,lapsing,-135.27559,63.82852
+YF79241,YK,Shawn Ryan - 100%,KYS 41,2026-11-06,19.7,True,-7,lapsing,-135.25336,63.8211
+YF79051,YK,Callum Ryan - 100%,MBL 51,2026-11-06,19.6,True,-7,lapsing,-135.37234,63.7845
+YF79084,YK,Callum Ryan - 100%,MBL 84,2026-11-06,19.6,True,-7,lapsing,-135.43653,63.81335
+YF79062,YK,Callum Ryan - 100%,MBL 62,2026-11-06,19.6,True,-7,lapsing,-135.39984,63.79696
+YF79141,YK,Callum Ryan - 100%,Bert 13,2026-11-06,19.6,True,-7,lapsing,-136.10386,63.88636
+YF79201,YK,Shawn Ryan - 100%,KYS 1,2026-11-06,19.6,True,-7,lapsing,-135.26616,63.84078
+YF79129,YK,Callum Ryan - 100%,Bert 1,2026-11-06,19.6,True,-7,lapsing,-136.04795,63.88618
+YF79118,YK,Callum Ryan - 100%,Serv 24,2026-11-06,19.6,True,-7,lapsing,-136.23683,63.87118
+YF79001,YK,Callum Ryan - 100%,MBL 1,2026-11-06,19.6,True,-7,lapsing,-135.35277,63.81688
+YF79116,YK,Callum Ryan - 100%,Serv 22,2026-11-06,19.6,True,-7,lapsing,-136.22752,63.87124
+YF79063,YK,Callum Ryan - 100%,MBL 63,2026-11-06,19.7,True,-7,lapsing,-135.39067,63.79281
+YF79028,YK,Callum Ryan - 100%,MBL 28,2026-11-06,19.6,True,-7,lapsing,-135.36256,63.80082
+YF79167,YK,Callum Ryan - 100%,Vice 7,2026-11-06,10.4,True,-7,lapsing,-135.84267,63.90627
+YF79177,YK,Callum Ryan - 100%,Vice 17,2026-11-06,10.8,True,-7,lapsing,-135.88768,63.91011
+YF79213,YK,Shawn Ryan - 100%,KYS 13,2026-11-06,19.6,True,-7,lapsing,-135.23289,63.8601
+YF79217,YK,Shawn Ryan - 100%,KYS 17,2026-11-06,19.7,True,-7,lapsing,-135.26436,63.83504
+YF79188,YK,Callum Ryan - 100%,Vice 28,2026-11-06,19.6,True,-7,lapsing,-135.81979,63.91596
+YF79109,YK,Callum Ryan - 100%,Serv 15,2026-11-06,19.6,True,-7,lapsing,-136.28294,63.85857
+YF79126,YK,Callum Ryan - 100%,Serv 32,2026-11-06,19.6,True,-7,lapsing,-136.2741,63.87154
+YF79173,YK,Callum Ryan - 100%,Vice 13,2026-11-06,19.2,True,-7,lapsing,-135.8686,63.91178
+YF79189,YK,Callum Ryan - 100%,Vice 29,2026-11-06,19.6,True,-7,lapsing,-135.82894,63.91674
+YF79124,YK,Callum Ryan - 100%,Serv 30,2026-11-06,19.6,True,-7,lapsing,-136.26477,63.87098
+YF79157,YK,Callum Ryan - 100%,Bert 29,2026-11-06,19.6,True,-7,lapsing,-136.10373,63.89456
+YF79190,YK,Callum Ryan - 100%,Vice 30,2026-11-06,19.6,True,-7,lapsing,-135.83073,63.91272
+YF79136,YK,Callum Ryan - 100%,Bert 8,2026-11-06,19.6,True,-7,lapsing,-136.07583,63.89037
+YF79075,YK,Callum Ryan - 100%,MBL 75,2026-11-06,19.6,True,-7,lapsing,-135.409,63.80112
+YF79195,YK,Callum Ryan - 100%,Vice 35,2026-11-06,19.0,True,-7,lapsing,-135.87574,63.91656
+YF79197,YK,Callum Ryan - 100%,Vice 37,2026-11-06,19.1,True,-7,lapsing,-135.89328,63.91806
+YF79180,YK,Callum Ryan - 100%,Vice 20,2026-11-06,19.1,True,-7,lapsing,-135.89505,63.91404
+YF79220,YK,Shawn Ryan - 100%,KYS 20,2026-11-06,19.6,True,-7,lapsing,-135.27739,63.83426
+YF79194,YK,Callum Ryan - 100%,Vice 34,2026-11-06,19.2,True,-7,lapsing,-135.86682,63.91581
+YF79035,YK,Callum Ryan - 100%,MBL 35,2026-11-06,19.4,True,-7,lapsing,-135.35378,63.78439
+YF79004,YK,Callum Ryan - 100%,MBL 4,2026-11-06,19.4,True,-7,lapsing,-135.36194,63.821
+YF79172,YK,Callum Ryan - 100%,Vice 12,2026-11-06,20.5,True,-7,lapsing,-135.85936,63.911
+YF79193,YK,Callum Ryan - 100%,Vice 33,2026-11-06,20.5,True,-7,lapsing,-135.85758,63.91502
+YF79081,YK,Callum Ryan - 100%,MBL 81,2026-11-06,19.6,True,-7,lapsing,-135.40936,63.78884
+YF79048,YK,Callum Ryan - 100%,MBL 48,2026-11-06,19.6,True,-7,lapsing,-135.38138,63.79274
+YF79002,YK,Callum Ryan - 100%,MBL 2,2026-11-06,19.6,True,-7,lapsing,-135.35264,63.82098
+YF79285,YK,Shawn Ryan - 100%,KYS 85,2026-11-06,19.6,True,-7,lapsing,-135.15988,63.79496
+YF79288,YK,Shawn Ryan - 100%,KYS 88,2026-11-06,19.7,True,-7,lapsing,-135.16165,63.8007
+YF79114,YK,Callum Ryan - 100%,Serv 20,2026-11-06,19.7,True,-7,lapsing,-136.21821,63.87131
+YF79235,YK,Shawn Ryan - 100%,KYS 35,2026-11-06,19.7,True,-7,lapsing,-135.23493,63.84536
+YF79256,YK,Shawn Ryan - 100%,KYS 56,2026-11-06,19.7,True,-7,lapsing,-135.20714,63.8005
+YF79151,YK,Callum Ryan - 100%,Bert 23,2026-11-06,19.7,True,-7,lapsing,-136.07576,63.89446
+YF79222,YK,Shawn Ryan - 100%,KYS 22,2026-11-06,19.7,True,-7,lapsing,-135.283,63.83099
+YF79106,YK,Callum Ryan - 100%,Serv 12,2026-11-06,19.6,True,-7,lapsing,-136.26447,63.8628
+YF79098,YK,Callum Ryan - 100%,Serv 4,2026-11-06,19.6,True,-7,lapsing,-136.22723,63.86306
+YF79010,YK,Callum Ryan - 100%,MBL 10,2026-11-06,19.6,True,-7,lapsing,-135.38983,63.82124
+YF79155,YK,Callum Ryan - 100%,Bert 27,2026-11-06,19.7,True,-7,lapsing,-136.09441,63.89452
+YF79242,YK,Shawn Ryan - 100%,KYS 42,2026-11-06,19.6,True,-7,lapsing,-135.25897,63.81784
+YF79047,YK,Callum Ryan - 100%,MBL 47,2026-11-06,19.6,True,-7,lapsing,-135.3721,63.79268
+YF79277,YK,Callum Ryan - 100%,KYS 77,2026-11-06,19.6,True,-7,lapsing,-135.13032,63.78504
+YF79164,YK,Callum Ryan - 100%,Vice 4,2026-11-06,19.6,True,-7,lapsing,-135.82336,63.90792
+YF79031,YK,Callum Ryan - 100%,MBL 31,2026-11-06,19.6,True,-7,lapsing,-135.35354,63.79186
+YF79198,YK,Callum Ryan - 100%,Vice 38,2026-11-06,19.6,True,-7,lapsing,-135.9023,63.91882
+YF79043,YK,Callum Ryan - 100%,MBL 43,2026-11-06,19.6,True,-7,lapsing,-135.37185,63.80088
+YF79185,YK,Callum Ryan - 100%,Vice 25,2026-11-06,19.6,True,-7,lapsing,-135.81242,63.91116
+YF79237,YK,Shawn Ryan - 100%,KYS 37,2026-11-06,19.7,True,-7,lapsing,-135.22752,63.84288
+YF79014,YK,Callum Ryan - 100%,MBL 14,2026-11-06,19.7,True,-7,lapsing,-135.40842,63.82136
+YF79207,YK,Shawn Ryan - 100%,KYS 7,2026-11-06,19.7,True,-7,lapsing,-135.24976,63.85031
+YF79088,YK,Callum Ryan - 100%,MBL 88,2026-11-06,19.7,True,-7,lapsing,-135.43676,63.8054
+YF79045,YK,Callum Ryan - 100%,MBL 45,2026-11-06,19.7,True,-7,lapsing,-135.37197,63.79678
+YF79059,YK,Callum Ryan - 100%,MBL 59,2026-11-06,19.7,True,-7,lapsing,-135.39042,63.801
+YF79119,YK,Callum Ryan - 100%,Serv 25,2026-11-06,19.7,True,-7,lapsing,-136.246,63.86702
+YF79064,YK,Callum Ryan - 100%,MBL 64,2026-11-06,19.7,True,-7,lapsing,-135.39996,63.79287
+YE56912,YK,Shawn Ryan - 100%,Shanghai 118,2026-11-06,19.7,True,-7,lapsing,-135.74346,63.92112
+YF79243,YK,Shawn Ryan - 100%,KYS 43,2026-11-06,19.7,True,-7,lapsing,-135.24594,63.81862
+YF79128,YK,Callum Ryan - 100%,Serv 34,2026-11-06,19.7,True,-7,lapsing,-136.28336,63.87
+YF79137,YK,Callum Ryan - 100%,Bert 9,2026-11-06,19.7,True,-7,lapsing,-136.08522,63.8863
+YF79120,YK,Callum Ryan - 100%,Serv 26,2026-11-06,19.7,True,-7,lapsing,-136.24614,63.87112
+YF79160,YK,Callum Ryan - 100%,Bert 32,2026-11-06,19.7,True,-7,lapsing,-136.11299,63.89868
+YF79133,YK,Callum Ryan - 100%,Bert 5,2026-11-06,19.7,True,-7,lapsing,-136.06658,63.88624
+YF79080,YK,Callum Ryan - 100%,MBL 80,2026-11-06,19.7,True,-7,lapsing,-135.41852,63.79299
+YE56907,YK,Shawn Ryan - 100%,Shanghai 113,2026-11-06,19.7,True,-7,lapsing,-135.71629,63.93392
+YF79135,YK,Callum Ryan - 100%,Bert 7,2026-11-06,19.7,True,-7,lapsing,-136.0759,63.88628
+YF79149,YK,Callum Ryan - 100%,Bert 21,2026-11-06,19.7,True,-7,lapsing,-136.06644,63.89444
+YF79115,YK,Callum Ryan - 100%,Serv 21,2026-11-06,19.7,True,-7,lapsing,-136.22738,63.86715
+YF79061,YK,Callum Ryan - 100%,MBL 61,2026-11-06,19.6,True,-7,lapsing,-135.39054,63.7969
+YF79082,YK,Callum Ryan - 100%,MBL 82,2026-11-06,19.7,True,-7,lapsing,-135.40948,63.78474
+YF79087,YK,Callum Ryan - 100%,MBL 87,2026-11-06,19.7,True,-7,lapsing,-135.42747,63.80534
+YF79038,YK,Callum Ryan - 100%,MBL 38,2026-11-06,19.6,True,-7,lapsing,-135.38077,63.81298
+YF79138,YK,Callum Ryan - 100%,Bert 10,2026-11-06,19.6,True,-7,lapsing,-136.08515,63.8904
+YF79282,YK,Shawn Ryan - 100%,KYS 82,2026-11-06,19.7,True,-7,lapsing,-135.13947,63.79326
+YF79049,YK,Callum Ryan - 100%,MBL 49,2026-11-06,19.7,True,-7,lapsing,-135.37222,63.78859
+YF79252,YK,Shawn Ryan - 100%,KYS 52,2026-11-06,19.7,True,-7,lapsing,-135.22194,63.80546
+YF79037,YK,Callum Ryan - 100%,MBL 37,2026-11-06,19.7,True,-7,lapsing,-135.37148,63.81292
+YF79060,YK,Callum Ryan - 100%,MBL 60,2026-11-06,19.7,True,-7,lapsing,-135.39972,63.80106
+YF79071,YK,Callum Ryan - 100%,MBL 71,2026-11-06,18.5,True,-7,lapsing,-135.40877,63.8092
+YF79086,YK,Callum Ryan - 100%,MBL 86,2026-11-06,18.5,True,-7,lapsing,-135.43664,63.80938
+YF79023,YK,Callum Ryan - 100%,MBL 23,2026-11-06,18.5,True,-7,lapsing,-135.35302,63.80882
+YF79085,YK,Callum Ryan - 100%,MBL 85,2026-11-06,18.5,True,-7,lapsing,-135.42735,63.80932
+YE56910,YK,Shawn Ryan - 100%,Shanghai 116,2026-11-06,14.9,True,-7,lapsing,-135.72581,63.92344
+YF79265,YK,Shawn Ryan - 100%,KYS 65,2026-11-06,19.7,True,-7,lapsing,-135.14124,63.799
+YF79205,YK,Shawn Ryan - 100%,KYS 5,2026-11-06,19.7,True,-7,lapsing,-135.25538,63.84704
+YF79068,YK,Callum Ryan - 100%,MBL 68,2026-11-06,19.7,True,-7,lapsing,-135.40019,63.78468
+YF79171,YK,Callum Ryan - 100%,Vice 11,2026-11-06,11.9,True,-7,lapsing,-135.86076,63.90782
+YF79219,YK,Shawn Ryan - 100%,KYS 19,2026-11-06,19.7,True,-7,lapsing,-135.26997,63.83178
+YF79083,YK,Callum Ryan - 100%,MBL 83,2026-11-06,19.7,True,-7,lapsing,-135.42724,63.81329
+YF79073,YK,Callum Ryan - 100%,MBL 73,2026-11-06,19.7,True,-7,lapsing,-135.40888,63.80522
+YE56909,YK,Shawn Ryan - 100%,Shanghai 115,2026-11-06,19.7,True,-7,lapsing,-135.72937,63.92678
+YF79224,YK,Shawn Ryan - 100%,KYS 24,2026-11-06,19.6,True,-7,lapsing,-135.28862,63.82772
+YF79003,YK,Callum Ryan - 100%,MBL 3,2026-11-06,19.6,True,-7,lapsing,-135.36206,63.81696
+101452,NU,Agnico Eagle Mines Limited (100%),GOT 12,2026-11-06,1073.7,True,-7,lapsing,-96.69563,65.51502
+YF79161,YK,Callum Ryan - 100%,Vice 1,2026-11-06,11.4,True,-7,lapsing,-135.81561,63.90396
+YF79169,YK,Callum Ryan - 100%,Vice 9,2026-11-06,11.4,True,-7,lapsing,-135.85142,63.90702
+YF79012,YK,Callum Ryan - 100%,MBL 12,2026-11-06,19.7,True,-7,lapsing,-135.39912,63.8213
+YF79293,YK,Shawn Ryan - 100%,KYS 93,2026-11-06,6.8,True,-7,lapsing,-135.21479,63.86205
+YF79215,YK,Shawn Ryan - 100%,KYS 15,2026-11-06,9.1,True,-7,lapsing,-135.22716,63.86174
+YF79274,YK,Shawn Ryan - 100%,KYS 74,2026-11-06,15.7,True,-7,lapsing,-135.16495,63.81188
+YF79216,YK,Shawn Ryan - 100%,KYS 16,2026-11-06,17.1,True,-7,lapsing,-135.2202,63.86068
+YF79273,YK,Shawn Ryan - 100%,KYS 73,2026-11-06,17.1,True,-7,lapsing,-135.17034,63.80876
+YF79291,YK,Shawn Ryan - 100%,KYS 91,2026-11-06,17.1,True,-7,lapsing,-135.18159,63.80224
+YF79292,YK,Shawn Ryan - 100%,KYS 92,2026-11-06,17.1,True,-7,lapsing,-135.17597,63.8055
+YF79168,YK,Callum Ryan - 100%,Vice 8,2026-11-06,17.9,True,-7,lapsing,-135.84126,63.90945
+YF79179,YK,Callum Ryan - 100%,Vice 19,2026-11-06,11.1,True,-7,lapsing,-135.89646,63.91086
+YF79111,YK,Callum Ryan - 100%,Serv 17,2026-11-06,19.7,True,-7,lapsing,-136.20889,63.87137
+YF79033,YK,Callum Ryan - 100%,MBL 33,2026-11-06,19.7,True,-7,lapsing,-135.35364,63.7889
+YF79231,YK,Shawn Ryan - 100%,KYS 31,2026-11-06,19.7,True,-7,lapsing,-135.26076,63.82358
+YF79186,YK,Callum Ryan - 100%,Vice 26,2026-11-06,19.7,True,-7,lapsing,-135.81063,63.91518
+YF79097,YK,Callum Ryan - 100%,Serv 3,2026-11-06,19.7,True,-7,lapsing,-136.22709,63.85896
+YF79266,YK,Shawn Ryan - 100%,KYS 66,2026-11-06,18.0,True,-7,lapsing,-135.13585,63.80212
+YF79264,YK,Shawn Ryan - 100%,KYS 64,2026-11-06,18.0,True,-7,lapsing,-135.12845,63.79964
+YF79016,YK,Callum Ryan - 100%,MBL 16,2026-11-06,19.7,True,-7,lapsing,-135.41771,63.82142
+YF79036,YK,Callum Ryan - 100%,MBL 36,2026-11-06,19.7,True,-7,lapsing,-135.36306,63.78443
+YF79175,YK,Callum Ryan - 100%,Vice 15,2026-11-06,11.1,True,-7,lapsing,-135.87892,63.90937
+YF79174,YK,Callum Ryan - 100%,Vice 14,2026-11-06,11.2,True,-7,lapsing,-135.87001,63.9086
+YF79165,YK,Callum Ryan - 100%,Vice 5,2026-11-06,11.4,True,-7,lapsing,-135.83392,63.90552
+YF79181,YK,Callum Ryan - 100%,Vice 21,2026-11-06,11.4,True,-7,lapsing,-135.90548,63.91162
+YF79183,YK,Callum Ryan - 100%,Vice 23,2026-11-06,11.4,True,-7,lapsing,-135.91461,63.9124
+YF79163,YK,Callum Ryan - 100%,Vice 3,2026-11-06,11.4,True,-7,lapsing,-135.82477,63.90474
+YF79287,YK,Shawn Ryan - 100%,KYS 87,2026-11-06,19.7,True,-7,lapsing,-135.16727,63.79744
+YF79007,YK,Callum Ryan - 100%,MBL 7,2026-11-06,19.7,True,-7,lapsing,-135.38065,63.81708
+YF79208,YK,Shawn Ryan - 100%,KYS 8,2026-11-06,19.7,True,-7,lapsing,-135.24234,63.84784
+YF79057,YK,Callum Ryan - 100%,MBL 57,2026-11-06,19.6,True,-7,lapsing,-135.39031,63.8051
+YF79159,YK,Callum Ryan - 100%,Bert 31,2026-11-06,19.6,True,-7,lapsing,-136.11305,63.89458
+YF79030,YK,Callum Ryan - 100%,MBL 30,2026-11-06,19.6,True,-7,lapsing,-135.36269,63.79672
+YF79052,YK,Callum Ryan - 100%,MBL 52,2026-11-06,19.6,True,-7,lapsing,-135.38163,63.78456
+YF79255,YK,Shawn Ryan - 100%,KYS 55,2026-11-06,19.6,True,-7,lapsing,-135.20152,63.80377
+YF79145,YK,Callum Ryan - 100%,Bert 17,2026-11-06,19.7,True,-7,lapsing,-136.0478,63.89438
+YF79011,YK,Callum Ryan - 100%,MBL 11,2026-11-06,19.7,True,-7,lapsing,-135.39924,63.8172
+YF79236,YK,Shawn Ryan - 100%,KYS 36,2026-11-06,19.7,True,-7,lapsing,-135.24055,63.8421
+YF79170,YK,Callum Ryan - 100%,Vice 10,2026-11-06,19.7,True,-7,lapsing,-135.85001,63.9102
+YF79250,YK,Shawn Ryan - 100%,KYS 50,2026-11-06,19.6,True,-7,lapsing,-135.22934,63.80794
+YF79144,YK,Callum Ryan - 100%,Bert 16,2026-11-06,19.7,True,-7,lapsing,-136.11311,63.89048
+YF79192,YK,Callum Ryan - 100%,Vice 32,2026-11-06,19.7,True,-7,lapsing,-135.84823,63.91422
+YF79286,YK,Shawn Ryan - 100%,KYS 86,2026-11-06,19.6,True,-7,lapsing,-135.15426,63.79822
+YF79026,YK,Callum Ryan - 100%,MBL 26,2026-11-06,19.6,True,-7,lapsing,-135.36244,63.8049
+YF79246,YK,Shawn Ryan - 100%,KYS 46,2026-11-06,19.6,True,-7,lapsing,-135.24415,63.81288
+YF79281,YK,Shawn Ryan - 100%,KYS 81,2026-11-06,19.6,True,-7,lapsing,-135.1451,63.79
+YF79104,YK,Callum Ryan - 100%,Serv 10,2026-11-06,19.6,True,-7,lapsing,-136.25516,63.86286
+YF79091,YK,Callum Ryan - 100%,MBL 91,2026-11-06,19.7,True,-7,lapsing,-135.4277,63.79715
+YF92535,YK,Callum Ryan - 100%,Vice 41,2026-11-06,19.6,True,-7,lapsing,-135.818,63.91998
+YF79289,YK,Shawn Ryan - 100%,KYS 89,2026-11-06,19.7,True,-7,lapsing,-135.17467,63.79992
+YF79182,YK,Callum Ryan - 100%,Vice 22,2026-11-06,19.6,True,-7,lapsing,-135.90407,63.9148
+YF79248,YK,Shawn Ryan - 100%,KYS 48,2026-11-06,19.6,True,-7,lapsing,-135.23675,63.81041
+YF79067,YK,Callum Ryan - 100%,MBL 67,2026-11-06,19.6,True,-7,lapsing,-135.39091,63.78462
+YF79032,YK,Callum Ryan - 100%,MBL 32,2026-11-06,19.6,True,-7,lapsing,-135.36281,63.79262
+YF79107,YK,Callum Ryan - 100%,Serv 13,2026-11-06,19.6,True,-7,lapsing,-136.27363,63.85864
+YF79196,YK,Callum Ryan - 100%,Vice 36,2026-11-06,18.5,True,-7,lapsing,-135.8845,63.91731
+YF79021,YK,Callum Ryan - 100%,MBL 21,2026-11-06,19.6,True,-7,lapsing,-135.3529,63.8128
+YF79229,YK,Shawn Ryan - 100%,KYS 29,2026-11-06,19.6,True,-7,lapsing,-135.25515,63.82684
+YF79029,YK,Callum Ryan - 100%,MBL 29,2026-11-06,19.6,True,-7,lapsing,-135.3534,63.79666
+YF79226,YK,Shawn Ryan - 100%,KYS 26,2026-11-06,19.6,True,-7,lapsing,-135.25133,63.83584
+YF79283,YK,Shawn Ryan - 100%,KYS 83,2026-11-06,19.6,True,-7,lapsing,-135.15249,63.79248
+YF79162,YK,Callum Ryan - 100%,Vice 2,2026-11-06,19.6,True,-7,lapsing,-135.81421,63.90714
+YF79053,YK,Callum Ryan - 100%,MBL 53,2026-11-06,19.6,True,-7,lapsing,-135.39007,63.81304
+YF79290,YK,Shawn Ryan - 100%,KYS 90,2026-11-06,19.6,True,-7,lapsing,-135.16905,63.80318
+YF79099,YK,Callum Ryan - 100%,Serv 5,2026-11-06,19.6,True,-7,lapsing,-136.23639,63.8589
+YF79042,YK,Callum Ryan - 100%,MBL 42,2026-11-06,19.6,True,-7,lapsing,-135.38102,63.80504
+YF79260,YK,Shawn Ryan - 100%,KYS 60,2026-11-06,18.0,True,-7,lapsing,-135.11367,63.79468
+YF79066,YK,Callum Ryan - 100%,MBL 66,2026-11-06,19.6,True,-7,lapsing,-135.40008,63.78878
+YF79178,YK,Callum Ryan - 100%,Vice 18,2026-11-06,18.5,True,-7,lapsing,-135.88628,63.91329
+YE56911,YK,Shawn Ryan - 100%,Shanghai 117,2026-11-06,18.8,True,-7,lapsing,-135.73487,63.92256
+YF79191,YK,Callum Ryan - 100%,Vice 31,2026-11-06,17.9,True,-7,lapsing,-135.83948,63.91347
+YF79270,YK,Shawn Ryan - 100%,KYS 70,2026-11-06,18.0,True,-7,lapsing,-135.15064,63.80708
+YF79268,YK,Shawn Ryan - 100%,KYS 68,2026-11-06,18.0,True,-7,lapsing,-135.14324,63.80461
+YF79203,YK,Shawn Ryan - 100%,KYS 3,2026-11-06,18.0,True,-7,lapsing,-135.26076,63.84392
+YF79262,YK,Shawn Ryan - 100%,KYS 62,2026-11-06,18.0,True,-7,lapsing,-135.12106,63.79716
+YF79204,YK,Shawn Ryan - 100%,KYS 4,2026-11-06,18.0,True,-7,lapsing,-135.25336,63.84144
+YF79039,YK,Callum Ryan - 100%,MBL 39,2026-11-06,18.5,True,-7,lapsing,-135.3716,63.80894
+YF79276,YK,Shawn Ryan - 100%,KYS 76,2026-11-06,18.0,True,-7,lapsing,-135.17187,63.8142
+YF79272,YK,Shawn Ryan - 100%,KYS 72,2026-11-06,18.0,True,-7,lapsing,-135.15803,63.80957
+YF79225,YK,Shawn Ryan - 100%,KYS 25,2026-11-06,18.0,True,-7,lapsing,-135.24593,63.83897
+YF79078,YK,Callum Ryan - 100%,MBL 78,2026-11-06,19.7,True,-7,lapsing,-135.41841,63.79709
+YF79050,YK,Callum Ryan - 100%,MBL 50,2026-11-06,19.7,True,-7,lapsing,-135.3815,63.78865
+YF79280,YK,Shawn Ryan - 100%,KYS 80,2026-11-06,19.7,True,-7,lapsing,-135.13208,63.79078
+YF79094,YK,Callum Ryan - 100%,MBL 94,2026-11-06,19.7,True,-7,lapsing,-135.4371,63.79311
+YF79202,YK,Shawn Ryan - 100%,KYS 2,2026-11-06,19.7,True,-7,lapsing,-135.25874,63.83831
+YF79027,YK,Callum Ryan - 100%,MBL 27,2026-11-06,19.6,True,-7,lapsing,-135.35327,63.80074
+YF79279,YK,Shawn Ryan - 100%,KYS 79,2026-11-06,19.6,True,-7,lapsing,-135.1377,63.78752
+YF79112,YK,Callum Ryan - 100%,Serv 18,2026-11-06,19.6,True,-7,lapsing,-136.20876,63.86728
+YF79117,YK,Callum Ryan - 100%,Serv 23,2026-11-06,19.6,True,-7,lapsing,-136.23668,63.86708
+YF79140,YK,Callum Ryan - 100%,Bert 12,2026-11-06,19.6,True,-7,lapsing,-136.09447,63.89042
+YF79210,YK,Shawn Ryan - 100%,KYS 10,2026-11-06,19.6,True,-7,lapsing,-135.23654,63.8512
+YF79238,YK,Shawn Ryan - 100%,KYS 38,2026-11-06,19.6,True,-7,lapsing,-135.23313,63.83962
+YF79146,YK,Callum Ryan - 100%,Bert 18,2026-11-06,19.6,True,-7,lapsing,-136.04773,63.89847
+YF79142,YK,Callum Ryan - 100%,Bert 14,2026-11-06,19.7,True,-7,lapsing,-136.10379,63.89046
+YF79125,YK,Callum Ryan - 100%,Serv 31,2026-11-06,19.6,True,-7,lapsing,-136.27393,63.86682
+YF79257,YK,Shawn Ryan - 100%,KYS 57,2026-11-06,19.6,True,-7,lapsing,-135.19413,63.80129
+YF79247,YK,Shawn Ryan - 100%,KYS 47,2026-11-06,19.6,True,-7,lapsing,-135.23113,63.81368
+YF79113,YK,Callum Ryan - 100%,Serv 19,2026-11-06,19.6,True,-7,lapsing,-136.21807,63.86722
+YF79018,YK,Callum Ryan - 100%,MBL 18,2026-11-06,19.7,True,-7,lapsing,-135.42701,63.82148
+YF79200,YK,Callum Ryan - 100%,Vice 40,2026-11-06,19.7,True,-7,lapsing,-135.80885,63.9192
+YF79069,YK,Callum Ryan - 100%,MBL 69,2026-11-06,19.7,True,-7,lapsing,-135.40866,63.81317
+YF79258,YK,Shawn Ryan - 100%,KYS 58,2026-11-06,19.7,True,-7,lapsing,-135.19974,63.79803
+YF79093,YK,Callum Ryan - 100%,MBL 93,2026-11-06,19.7,True,-7,lapsing,-135.42781,63.79305
+80227,YK,Elsa Reclamation & Development Company Ltd. - 100%,VENUS FRACTION 1,2026-11-07,7.7,True,-6,lapsing,-135.18026,63.94728
+80228,YK,Elsa Reclamation & Development Company Ltd. - 100%,VENUS FRACTION 2,2026-11-07,9.7,True,-6,lapsing,-135.17617,63.95073
+1121175,BC,ZIMTU CAPITAL CORP,Eagle 3.0,2026-11-08,1709.2,False,-5,lapsing,-131.83312,58.11856
+MC00016085,SK,EAGLE PLAINS RESOURCES LTD.: 100.000%,,2026-11-08,483.0,False,-5,lapsing,-107.95086,57.50684
+1121174,BC,ZIMTU CAPITAL CORP,Eagle 2.0,2026-11-08,1709.2,False,-5,lapsing,-131.88,58.11648
+1121173,BC,ZIMTU CAPITAL CORP,Eagle 1.0,2026-11-08,1708.9,False,-5,lapsing,-131.92688,58.12689
+102695,NU,Forum Energy Metals Corp. (100%),FORUMA,2026-11-09,1470.4,True,-4,lapsing,-98.34414,64.29414
+55271,YK,Elsa Reclamation & Development Company Ltd. - 100%,ROSEMARY ,2026-11-09,18.2,True,-4,lapsing,-135.2596,63.89766
+102704,NU,Forum Energy Metals Corp. (100%),FORUMJ,2026-11-09,1553.3,True,-4,lapsing,-98.0277,64.2629
+1127589,BC,"WRIGHT, MATT",A1 Sauce,2026-11-10,38.4,False,-3,lapsing,-132.59549,53.56013
+YD35368,YK,Senoa Gold Corp - 100%,OB 68,2026-11-10,19.6,True,-3,lapsing,-131.82976,64.2816
+YD35347,YK,Senoa Gold Corp - 100%,OB 47,2026-11-10,19.6,True,-3,lapsing,-131.85902,64.28916
+YD35346,YK,Senoa Gold Corp - 100%,OB 46,2026-11-10,19.6,True,-3,lapsing,-131.84957,64.28937
+YD35372,YK,Senoa Gold Corp - 100%,OB 72,2026-11-10,19.4,True,-3,lapsing,-131.83075,64.28977
+YD35324,YK,Senoa Gold Corp - 100%,OB 24,2026-11-10,19.6,True,-3,lapsing,-131.86893,64.29306
+YD35322,YK,Senoa Gold Corp - 100%,OB 22,2026-11-10,19.7,True,-3,lapsing,-131.86846,64.28896
+YD35370,YK,Senoa Gold Corp - 100%,OB 70,2026-11-10,19.4,True,-3,lapsing,-131.83015,64.28504
+YD35343,YK,Senoa Gold Corp - 100%,OB 43,2026-11-10,19.7,True,-3,lapsing,-131.85808,64.28098
+YD35342,YK,Senoa Gold Corp - 100%,OB 42,2026-11-10,19.6,True,-3,lapsing,-131.84864,64.28118
+YD35348,YK,Senoa Gold Corp - 100%,OB 48,2026-11-10,19.6,True,-3,lapsing,-131.85004,64.29346
+YD35369,YK,Senoa Gold Corp - 100%,OB 69,2026-11-10,19.6,True,-3,lapsing,-131.8392,64.28139
+YD35374,YK,Senoa Gold Corp - 100%,OB 74,2026-11-10,17.5,True,-3,lapsing,-131.83145,64.29317
+YD35371,YK,Senoa Gold Corp - 100%,OB 71,2026-11-10,19.7,True,-3,lapsing,-131.83966,64.28548
+YD35373,YK,Senoa Gold Corp - 100%,OB 73,2026-11-10,19.6,True,-3,lapsing,-131.84013,64.28958
+372719,BC,"JENSEN, IAN FLEMING",,2026-11-10,32.0,False,-3,lapsing,-121.3624,52.94359
+YD35344,YK,Senoa Gold Corp - 100%,OB 44,2026-11-10,19.7,True,-3,lapsing,-131.8491,64.28528
+YD35349,YK,Senoa Gold Corp - 100%,OB 49,2026-11-10,19.6,True,-3,lapsing,-131.85948,64.29325
+YD35318,YK,Senoa Gold Corp - 100%,OB 18,2026-11-10,19.6,True,-3,lapsing,-131.86752,64.28079
+YD35320,YK,Senoa Gold Corp - 100%,OB 20,2026-11-10,19.7,True,-3,lapsing,-131.86799,64.28488
+YD35345,YK,Senoa Gold Corp - 100%,OB 45,2026-11-10,19.7,True,-3,lapsing,-131.85855,64.28508
+YD35375,YK,Senoa Gold Corp - 100%,OB 75,2026-11-10,19.6,True,-3,lapsing,-131.84059,64.29366
+S-111738,SK,GOLDEN BAND RESOURCES INC.: 100.000%,,2026-11-12,1198.1,False,-1,lapsing,-104.31022,56.00802
+S-111739,SK,GOLDEN BAND RESOURCES INC.: 100.000%,,2026-11-12,657.9,False,-1,lapsing,-104.24228,56.00732
+1107119,BC,"WRIGHT, MATT",SAL Mountain,2026-11-12,42.4,False,-1,lapsing,-117.31358,49.03118
+1117322,BC,"FUNK, KELLY BRENT",,2026-11-12,21.1,False,-1,lapsing,-125.2733,49.30189
+1095586,BC,1163915 B.C. LTD.,ELIXIR,2026-11-12,226.8,False,-1,lapsing,-119.37931,50.34156
+104998,NU,6081 Nunavut Ltd. (100%),,2026-11-12,471.0,True,-1,lapsing,-95.00016,63.76911
+104999,NU,6081 Nunavut Ltd. (100%),,2026-11-12,202.0,True,-1,lapsing,-94.92985,63.7858
+525190,BC,"LUS, ROBERT",LORRAINE 2,2026-11-13,21.2,False,0,expiring,-117.31046,49.03535
+1140930,BC,"SUMER, SUMEET SINGH",Statlu Ganite,2026-11-13,84.3,False,0,expiring,-121.97003,49.28318
+1037597,BC,"WRIGHT, MATT",SAL,2026-11-13,21.2,False,0,expiring,-117.31671,49.03535
+YF81540,YK,Hardy Hibbing - 100%,BETTER 6,2026-11-14,19.7,True,1,expiring,-131.22508,60.18689
+YF81535,YK,Hardy Hibbing - 100%,BETTER 1,2026-11-14,19.7,True,1,expiring,-131.21388,60.1796
+1117400,BC,"SINCLAIR, COLIN FRASER",Quarry,2026-11-14,21.1,False,1,expiring,-115.12289,49.28539
+YF81537,YK,Hardy Hibbing - 100%,BETTER 3,2026-11-14,19.7,True,1,expiring,-131.22128,60.18139
+1117321,BC,"FUNK, KELLY BRENT",,2026-11-14,21.1,False,1,expiring,-125.27955,49.30189
+1014516,BC,"RIEHL, RONALD EDWARD",WILD CREEK,2026-11-14,20.9,False,1,expiring,-115.5229,49.74374
+1046544,BC,"RUBEN, ABRAHAM",,2026-11-14,21.1,False,1,expiring,-121.6169,49.3061
+105000,NU,6081 Nunavut Ltd. (100%),,2026-11-14,605.7,True,1,expiring,-94.88297,63.77332
+1048918,BC,"RUBEN, ABRAHAM",,2026-11-14,189.6,False,1,expiring,-121.62002,49.29776
+1040351,BC,"RUBEN, ABRAHAM",KAGUNA,2026-11-14,84.2,False,1,expiring,-121.62627,49.31026
+YF81538,YK,Hardy Hibbing - 100%,BETTER 4,2026-11-14,19.8,True,1,expiring,-131.21768,60.18509
+YF81539,YK,Hardy Hibbing - 100%,BETTER 5,2026-11-14,19.8,True,1,expiring,-131.22868,60.18319
+M11672,NT,508053 N.W.T. Ltd. (100%),BHE 06,2026-11-14,991.0,True,1,expiring,-113.83657,62.4857
+1044750,BC,"RUBEN, ABRAHAM",ESOKTAK,2026-11-14,63.2,False,1,expiring,-121.6169,49.28526
+YF81536,YK,Hardy Hibbing - 100%,BETTER 2,2026-11-14,19.7,True,1,expiring,-131.21028,60.18329
+56644,NS,,,2026-11-15,178.7,False,2,expiring,-61.67968,45.3698
+56645,NS,,,2026-11-15,67.4,False,2,expiring,-65.92187,44.02258
+1072932,BC,"BARRY, ANTHONY JOSEPH",CARIBOO RIVER 3,2026-11-15,77.9,False,2,expiring,-121.15762,52.95412
+1068213,BC,"FALLIS, GLENN",PINE CREEK,2026-11-15,81.9,False,2,expiring,-133.45804,59.61638
+1113438,BC,"BLANEY, DARREN RAY",Love It,2026-11-15,38.4,False,2,expiring,-122.99837,53.52493
+1072957,BC,"BARRY, ANTHONY JOSEPH",,2026-11-15,97.4,False,2,expiring,-121.14825,52.94371
+56646,NS,,,2026-11-15,16.4,False,2,expiring,-64.10676,44.95314
+1113434,BC,"BLANEY, DARREN RAY",North Nickel,2026-11-15,767.1,False,2,expiring,-123.09838,53.62494
+1114107,BC,TRAILBREAKER RESOURCES LTD.,McMurdo,2026-11-15,1747.9,False,2,expiring,-117.11671,51.02912
+1092650,BC,"BILLINGSLEY, RICHARD JOHN",NEW GEM 5,2026-11-15,1023.9,False,2,expiring,-121.69972,49.70401
+1072960,BC,"BARRY, ANTHONY JOSEPH",Cariboo East,2026-11-15,214.3,False,2,expiring,-121.12168,52.94579
+1091554,BC,"LUCE, VERN DEAN",NING,2026-11-15,19.4,False,2,expiring,-121.79829,53.06453
+1072930,BC,"BARRY, ANTHONY JOSEPH",CARIBOO RIVER 1,2026-11-15,19.5,False,2,expiring,-121.167,52.93954
+1072955,BC,"BARRY, ANTHONY JOSEPH",,2026-11-15,19.5,False,2,expiring,-121.1795,52.94371
+1072959,BC,"BARRY, ANTHONY JOSEPH",,2026-11-15,39.0,False,2,expiring,-121.13262,52.93537
+1113431,BC,"BLANEY, DARREN RAY",7777777,2026-11-15,38.5,False,2,expiring,-123.00462,53.5166
+1113407,BC,"BLANEY, DARREN RAY",Southern Light,2026-11-15,38.5,False,2,expiring,-122.98274,53.48952
+1072931,BC,"BARRY, ANTHONY JOSEPH",CARIBOO RIVER 2,2026-11-15,19.5,False,2,expiring,-121.167,52.94788
+1072961,BC,"BARRY, ANTHONY JOSEPH",,2026-11-15,39.0,False,2,expiring,-121.11387,52.93954
+1093798,BC,"BILLINGSLEY, RICHARD JOHN",GEM 4,2026-11-15,41.8,False,2,expiring,-121.73253,49.69776
+1113423,BC,"BLANEY, DARREN RAY",Sunset Nickel,2026-11-15,57.6,False,2,expiring,-123.06713,53.56244
+1113419,BC,"BLANEY, DARREN RAY",Link 3,2026-11-15,76.8,False,2,expiring,-123.04837,53.55202
+1061995,BC,"BLANEY, DARREN RAY",NICKEL 2,2026-11-15,76.9,False,2,expiring,-123.00775,53.52702
+1061984,BC,"BLANEY, DARREN RAY",COBALT ROCKER,2026-11-15,76.9,False,2,expiring,-122.98899,53.51035
+1096598,BC,"FALLIS, GLENN",BIRCHE,2026-11-15,16.4,False,2,expiring,-133.47367,59.62263
+1113412,BC,"BLANEY, DARREN RAY",Golden Girl,2026-11-15,38.5,False,2,expiring,-122.99837,53.5166
+1113409,BC,"BLANEY, DARREN RAY",Royal Rush,2026-11-15,76.9,False,2,expiring,-122.98899,53.49368
+56643,NS,,,2026-11-15,50.1,False,2,expiring,-64.91406,44.3073
+1113421,BC,"BLANEY, DARREN RAY",East Nickel Star,2026-11-15,134.4,False,2,expiring,-123.06088,53.57077
+1072954,BC,"BARRY, ANTHONY JOSEPH",Cariboo West,2026-11-15,116.9,False,2,expiring,-121.167,52.94371
+1113417,BC,"BLANEY, DARREN RAY",Link 2,2026-11-15,134.5,False,2,expiring,-123.01712,53.54368
+1113414,BC,"BLANEY, DARREN RAY",Nickel Nines,2026-11-15,153.8,False,2,expiring,-123.014,53.53327
+1113426,BC,"BLANEY, DARREN RAY",Black Nickel,2026-11-15,690.9,False,2,expiring,-123.07963,53.59577
+1084802,BC,"BILLINGSLEY, RICHARD JOHN",GEM 2,2026-11-15,710.1,False,2,expiring,-121.72316,49.72276
+1092655,BC,"BILLINGSLEY, RICHARD JOHN",NEW GEM 4,2026-11-15,1440.6,False,2,expiring,-121.74816,49.73526
+56642,NS,,,2026-11-15,16.2,False,2,expiring,-63.2474,45.63369
+399016,BC,"JENKINS, CHRISTOPHER JOHN",BRR 5,2026-11-15,25.0,False,2,expiring,-115.32619,49.7072
+399017,BC,"JENKINS, CHRISTOPHER JOHN",BRR 6,2026-11-15,25.0,False,2,expiring,-115.32218,49.71085
+1105018,BC,"BLANEY, DARREN RAY",NORTHERN GOLD,2026-11-15,38.4,False,2,expiring,-123.00775,53.53952
+1054364,BC,"FALLIS, GLENN",REBA,2026-11-15,32.8,False,2,expiring,-133.46742,59.62263
+1096293,BC,"FALLIS, GLENN",PINE REACH,2026-11-15,16.4,False,2,expiring,-133.46117,59.62263
+397854,BC,"JENKINS, CHRISTOPHER JOHN",BRR 2,2026-11-15,25.0,False,2,expiring,-115.32782,49.71348
+1113432,BC,"BLANEY, DARREN RAY",999,2026-11-15,230.4,False,2,expiring,-123.07338,53.57494
+1071983,BC,GOLCAP RESOURCES CORP.,SGBG TIP,2026-11-15,335.0,False,2,expiring,-120.8325,49.6082
+1061983,BC,"BLANEY, DARREN RAY",CRIMSON COBALT,2026-11-15,230.8,False,2,expiring,-122.98899,53.50202
+397855,BC,"JENKINS, CHRISTOPHER JOHN",BRR 3,2026-11-15,25.0,False,2,expiring,-115.33749,49.71241
+397856,BC,"JENKINS, CHRISTOPHER JOHN",BRR 4,2026-11-15,25.0,False,2,expiring,-115.33351,49.7161
+397853,BC,"JENKINS, CHRISTOPHER JOHN",BRR 1,2026-11-15,25.0,False,2,expiring,-115.33185,49.70982
+1071336,BC,"BLANEY, DARREN RAY",TRUMP,2026-11-15,191.8,False,2,expiring,-123.0765,53.61869
+1072373,BC,"BILLINGSLEY, RICHARD JOHN",GEM 1,2026-11-15,20.9,False,2,expiring,-121.72941,49.71443
+1121865,BC,"HARRIS, KELLY",UPPER SOMBRIO,2026-11-16,64.2,False,3,expiring,-124.25266,48.5248
+024327M,NL,MLK Gold Ltd.,"Caledonia Brook, Central NL",2026-11-16,75.2,False,3,expiring,-56.01987,48.78458
+024324M,NL,MLK Gold Ltd.,"Caledonia Brook, Central NL",2026-11-16,1252.6,False,3,expiring,-55.94789,48.80866
+024311M,NL,Golden Promise Mines Inc.,"Noel Pauls Brook, Central NL",2026-11-16,400.9,False,3,expiring,-56.29875,48.79783
+024305M,NL,Golden Promise Mines Inc.,"Exploits River, Central NL",2026-11-16,2155.0,False,3,expiring,-56.3873,48.79396
+1079637,BC,POLARIS MATERIALS CORPORATION,PORT MCNEILL ROCK 2,2026-11-17,205.3,False,4,expiring,-127.11543,50.55815
+1127698,BC,EAGLE PLAINS RESOURCES LTD.,ARROYO W,2026-11-17,274.6,False,4,expiring,-121.50763,52.64577
+1133079,BC,ROCKBRIDGE RESOURCES INC.,Burn2b,2026-11-17,505.0,False,4,expiring,-126.67984,54.67281
+101192,NU,Tundra Copper Corp. (100%),TKS 25,2026-11-17,320.1,True,4,expiring,-115.59929,67.63164
+101704,NU,North Arrow Minerals Inc. (100%),HB 9,2026-11-17,1129.8,True,4,expiring,-82.37044,67.42344
+101234,NU,Tundra Copper Corp. (100%),TKE 12,2026-11-17,1130.3,True,4,expiring,-115.3024,67.73583
+101863,NU,North Arrow Minerals Inc. (100%),HB 39,2026-11-17,1161.6,True,4,expiring,-81.92901,67.68385
+100883,NU,Tundra Copper Corp. (100%),TKW 24,2026-11-17,1438.9,True,4,expiring,-116.36496,67.66289
+100991,NU,Tundra Copper Corp. (100%),TKE 8,2026-11-17,349.2,True,4,expiring,-115.4235,67.62748
+100983,NU,Tundra Copper Corp. (100%),TKS 7,2026-11-17,1441.6,True,4,expiring,-116.13057,67.61706
+100966,NU,Tundra Copper Corp. (100%),TKS 23,2026-11-17,538.3,True,4,expiring,-115.72039,67.62955
+101077,NU,Tundra Copper Corp. (100%),TKE 15,2026-11-17,349.2,True,4,expiring,-115.3063,67.62955
+100968,NU,Tundra Copper Corp. (100%),TKE 11,2026-11-17,392.9,True,4,expiring,-115.3649,67.62957
+100970,NU,Tundra Copper Corp. (100%),TKE 19,2026-11-17,392.9,True,4,expiring,-115.2477,67.62747
+100993,NU,Tundra Copper Corp. (100%),TKE 26,2026-11-17,494.1,True,4,expiring,-115.14223,67.65874
+100967,NU,Tundra Copper Corp. (100%),TKS 24,2026-11-17,523.9,True,4,expiring,-115.66179,67.62956
+101703,NU,North Arrow Minerals Inc. (100%),HB 20,2026-11-17,1291.1,True,4,expiring,-82.24935,67.42342
+100898,NU,Tundra Copper Corp. (100%),TKS 10,2026-11-17,307.0,True,4,expiring,-116.11493,67.51706
+100989,NU,Tundra Copper Corp. (100%),TKE 4,2026-11-17,291.4,True,4,expiring,-115.47037,67.62745
+101076,NU,Tundra Copper Corp. (100%),TKS 18,2026-11-17,262.6,True,4,expiring,-115.98212,67.5587
+100901,NU,Tundra Copper Corp. (100%),TKE 23,2026-11-17,247.4,True,4,expiring,-115.19692,67.62956
+033581M,NL,Latitude Uranium Inc.,,2026-11-17,1823.0,False,4,expiring,-62.25005,55.81272
+1117461,BC,"KITTELSON, JON ANDREW",,2026-11-17,21.1,False,4,expiring,-120.59185,49.15195
+101330,NU,Tundra Copper Corp. (100%),TKW 11,2026-11-17,1276.6,True,4,expiring,-116.54076,67.70869
+YF47271,YK,536005 Yukon Inc. - 100%,CARTER 21,2026-11-17,19.7,True,4,expiring,-134.2362,60.63366
+101168,NU,Tundra Copper Corp. (100%),TKW 28,2026-11-17,1279.0,True,4,expiring,-116.30636,67.66287
+100839,NU,Tundra Copper Corp. (100%),TKS 12,2026-11-17,1281.2,True,4,expiring,-116.07197,67.61704
+101622,NU,North Arrow Minerals Inc. (100%),HB 19,2026-11-17,1291.0,True,4,expiring,-82.31185,67.42343
+YF47253,YK,536005 Yukon Inc. - 100%,CARTER 3,2026-11-17,19.7,True,4,expiring,-134.3113,60.63311
+101554,NU,North Arrow Minerals Inc. (100%),HB 8,2026-11-17,1291.4,True,4,expiring,-82.42904,67.42343
+100994,NU,Tundra Copper Corp. (100%),TKE 28,2026-11-17,681.8,True,4,expiring,-115.07974,67.70249
+YF47273,YK,536005 Yukon Inc. - 100%,CARTER 23,2026-11-17,19.7,True,4,expiring,-134.22785,60.63371
+1063239,BC,ROCKBRIDGE RESOURCES INC.,DEL SANTO#1,2026-11-17,37.4,False,4,expiring,-126.67359,54.6624
+YF47262,YK,536005 Yukon Inc. - 100%,CARTER 12,2026-11-17,19.7,True,4,expiring,-134.2778,60.62926
+100965,NU,Tundra Copper Corp. (100%),TKS 22,2026-11-17,683.8,True,4,expiring,-115.77899,67.62746
+100964,NU,Tundra Copper Corp. (100%),TKS 21,2026-11-17,698.6,True,4,expiring,-115.83758,67.62748
+100985,NU,Tundra Copper Corp. (100%),TKS 20,2026-11-17,873.2,True,4,expiring,-115.89618,67.62748
+101171,NU,Tundra Copper Corp. (100%),TKS 9,2026-11-17,876.3,True,4,expiring,-116.14228,67.53998
+101337,NU,Tundra Copper Corp. (100%),TKS 17,2026-11-17,931.8,True,4,expiring,-115.95478,67.6233
+101233,NU,Tundra Copper Corp. (100%),TKS 19,2026-11-17,979.1,True,4,expiring,-115.97039,67.5233
+100976,NU,Tundra Copper Corp. (100%),TKN 7,2026-11-17,1392.4,True,4,expiring,-116.00947,67.70454
+101080,NU,Tundra Copper Corp. (100%),TNK 9,2026-11-17,1387.8,True,4,expiring,-115.94698,67.79206
+100907,NU,Tundra Copper Corp. (100%),TKW 38,2026-11-17,1390.1,True,4,expiring,-116.12668,67.75249
+101387,NU,Tundra Copper Corp. (100%),TKW 10,2026-11-17,1390.1,True,4,expiring,-116.54076,67.75244
+100886,NU,Tundra Copper Corp. (100%),TKW 27,2026-11-17,1392.8,True,4,expiring,-116.30637,67.70662
+100980,NU,Tundra Copper Corp. (100%),TNK 14,2026-11-17,1390.2,True,4,expiring,-115.88838,67.75665
+100834,NU,Tundra Copper Corp. (100%),TKN 40,2026-11-17,1395.7,True,4,expiring,-115.54069,67.65662
+033582M,NL,Latitude Uranium Inc.,,2026-11-17,1055.8,False,4,expiring,-62.3069,55.75623
+YF47255,YK,536005 Yukon Inc. - 100%,CARTER 5,2026-11-17,19.7,True,4,expiring,-134.30296,60.63317
+YF47258,YK,536005 Yukon Inc. - 100%,CARTER 8,2026-11-17,19.7,True,4,expiring,-134.29449,60.62913
+100963,NU,Tundra Copper Corp. (100%),TKS 16,2026-11-17,1402.6,True,4,expiring,-116.01727,67.52537
+MC00004997,SK,Appia Rare Earths & Uranium Corp.: 100.000%,,2026-11-17,1561.9,False,4,expiring,-103.57968,57.84708
+MC00004999,SK,Appia Rare Earths & Uranium Corp.: 100.000%,,2026-11-17,1802.2,False,4,expiring,-103.73179,57.74711
+MC00004998,SK,Appia Rare Earths & Uranium Corp.: 100.000%,,2026-11-17,2317.5,False,4,expiring,-103.66173,57.79261
+MC00019343,SK,Sienna Resources Inc.: 100.000%,,2026-11-17,4736.0,False,4,expiring,-106.9824,57.54316
+101197,NU,Tundra Copper Corp. (100%),TKN 1,2026-11-17,1373.3,True,4,expiring,-116.06808,67.78582
+YF47268,YK,536005 Yukon Inc. - 100%,CARTER 18,2026-11-17,19.7,True,4,expiring,-134.25277,60.62944
+YF47261,YK,536005 Yukon Inc. - 100%,CARTER 11,2026-11-17,19.7,True,4,expiring,-134.27792,60.63336
+YF47260,YK,536005 Yukon Inc. - 100%,CARTER 10,2026-11-17,19.7,True,4,expiring,-134.28614,60.62919
+YF47264,YK,536005 Yukon Inc. - 100%,CARTER 14,2026-11-17,19.7,True,4,expiring,-134.26945,60.62932
+YF47263,YK,536005 Yukon Inc. - 100%,CARTER 13,2026-11-17,19.7,True,4,expiring,-134.26958,60.63342
+YF47256,YK,536005 Yukon Inc. - 100%,CARTER 6,2026-11-17,19.7,True,4,expiring,-134.30282,60.62906
+YF47257,YK,536005 Yukon Inc. - 100%,CARTER 7,2026-11-17,19.7,True,4,expiring,-134.29461,60.63324
+YF47274,YK,536005 Yukon Inc. - 100%,CARTER 24,2026-11-17,19.7,True,4,expiring,-134.22774,60.62962
+1116826,BC,ROCKBRIDGE RESOURCES INC.,BWW,2026-11-17,112.2,False,4,expiring,-126.63608,54.66864
+100962,NU,Tundra Copper Corp. (100%),TKN 23,2026-11-17,1320.2,True,4,expiring,-115.77509,67.69621
+101389,NU,Tundra Copper Corp. (100%),TKE 9,2026-11-17,1320.5,True,4,expiring,-115.361,67.7004
+101228,NU,Tundra Copper Corp. (100%),TKS 15,2026-11-17,1327.3,True,4,expiring,-116.01728,67.56496
+YF47267,YK,536005 Yukon Inc. - 100%,CARTER 17,2026-11-17,19.7,True,4,expiring,-134.25289,60.63354
+SV14269,MB,Grid Metals Corp.,FALCONWEST064,2026-11-17,262.0,False,4,expiring,-95.79965,49.52274
+YF47269,YK,536005 Yukon Inc. - 100%,CARTER 19,2026-11-17,19.7,True,4,expiring,-134.24455,60.6336
+1117468,BC,"SHEARER, JOHAN THOM",Brucite 2,2026-11-17,20.6,False,4,expiring,-124.86707,50.31858
+SV14268,MB,Grid Metals Corp.,FALCONWEST063,2026-11-17,267.3,False,4,expiring,-95.77681,49.52276
+SV14262,MB,Grid Metals Corp.,FALCONWEST057,2026-11-17,262.4,False,4,expiring,-95.71408,49.55252
+MC00002082,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,31.3,False,4,expiring,-102.03535,58.91556
+SV14258,MB,Grid Metals Corp.,FALCONWEST053,2026-11-17,262.2,False,4,expiring,-95.66859,49.55248
+YF47265,YK,536005 Yukon Inc. - 100%,CARTER 15,2026-11-17,19.7,True,4,expiring,-134.26123,60.63348
+YF47266,YK,536005 Yukon Inc. - 100%,CARTER 16,2026-11-17,19.7,True,4,expiring,-134.26111,60.62938
+100981,NU,Tundra Copper Corp. (100%),TNK 15,2026-11-17,1392.9,True,4,expiring,-115.89228,67.70666
+100880,NU,Tundra Copper Corp. (100%),TKW 19,2026-11-17,1392.9,True,4,expiring,-116.42356,67.70456
+100894,NU,Tundra Copper Corp. (100%),TKN 32,2026-11-17,1308.3,True,4,expiring,-115.65789,67.66081
+100835,NU,Tundra Copper Corp. (100%),TKS 6,2026-11-17,1312.5,True,4,expiring,-116.19307,67.57746
+MC00002078,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,61.9,False,4,expiring,-102.03535,58.91917
+MC00002081,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,142.4,False,4,expiring,-102.03192,58.92288
+YF47252,YK,536005 Yukon Inc. - 100%,CARTER 2,2026-11-17,19.7,True,4,expiring,-134.31952,60.62894
+YF47254,YK,536005 Yukon Inc. - 100%,CARTER 4,2026-11-17,19.8,True,4,expiring,-134.31117,60.62901
+YF47272,YK,536005 Yukon Inc. - 100%,CARTER 22,2026-11-17,19.7,True,4,expiring,-134.23608,60.62956
+100881,NU,Tundra Copper Corp. (100%),TKW 20,2026-11-17,1307.9,True,4,expiring,-116.42356,67.66496
+SV14251,MB,Grid Metals Corp.,FALCONWEST046,2026-11-17,255.5,False,4,expiring,-95.89581,49.53747
+SV14264,MB,Grid Metals Corp.,FALCONWEST059,2026-11-17,255.9,False,4,expiring,-95.73676,49.53766
+SV14261,MB,Grid Metals Corp.,FALCONWEST056,2026-11-17,258.6,False,4,expiring,-95.71413,49.5376
+SV14267,MB,Grid Metals Corp.,FALCONWEST062,2026-11-17,258.7,False,4,expiring,-95.75411,49.52283
+101079,NU,Tundra Copper Corp. (100%),TKN 6,2026-11-17,1419.1,True,4,expiring,-116.00948,67.74413
+100833,NU,Tundra Copper Corp. (100%),TKN 26,2026-11-17,1404.9,True,4,expiring,-115.71259,67.74415
+SV14259,MB,Grid Metals Corp.,FALCONWEST054,2026-11-17,259.4,False,4,expiring,-95.6914,49.55254
+SV14255,MB,Grid Metals Corp.,FALCONWEST050,2026-11-17,258.9,False,4,expiring,-95.89021,49.50773
+100990,NU,Tundra Copper Corp. (100%),TKE 5,2026-11-17,1361.5,True,4,expiring,-115.42351,67.74417
+100905,NU,Tundra Copper Corp. (100%),TKW 36,2026-11-17,1366.2,True,4,expiring,-116.18917,67.66081
+101169,NU,Tundra Copper Corp. (100%),TKW 31,2026-11-17,1566.8,True,4,expiring,-116.24777,67.70454
+1116827,BC,ROCKBRIDGE RESOURCES INC.,BWE,2026-11-17,112.2,False,4,expiring,-126.59857,54.67281
+100838,NU,Tundra Copper Corp. (100%),TKS 1,2026-11-17,1412.1,True,4,expiring,-116.30636,67.6212
+101241,NU,Tundra Copper Corp. (100%),TKE 7,2026-11-17,1410.1,True,4,expiring,-115.4235,67.6525
+MC00002077,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,61.4,False,4,expiring,-102.02154,58.93018
+MC00002080,SK,ValOre Metals Corp.: 100.000%,,2026-11-17,46.4,False,4,expiring,-102.02496,58.9338
+101230,NU,Tundra Copper Corp. (100%),TKN 18,2026-11-17,1419.3,True,4,expiring,-115.82978,67.75872
+100879,NU,Tundra Copper Corp. (100%),TKW 18,2026-11-17,1419.2,True,4,expiring,-116.42357,67.74624
+100892,NU,Tundra Copper Corp. (100%),TKN 30,2026-11-17,1564.4,True,4,expiring,-115.65399,67.74832
+101237,NU,Tundra Copper Corp. (100%),TKW 2,2026-11-17,1433.8,True,4,expiring,-116.65796,67.75664
+100887,NU,Tundra Copper Corp. (100%),TKW 30,2026-11-17,1433.5,True,4,expiring,-116.24387,67.75662
+101188,NU,Tundra Copper Corp. (100%),TKS 8,2026-11-17,1429.2,True,4,expiring,-116.13447,67.56706
+101081,NU,Tundra Copper Corp. (100%),TKE 27,2026-11-17,1419.6,True,4,expiring,-115.0602,67.75039
+100978,NU,Tundra Copper Corp. (100%),TNK 10,2026-11-17,1419.4,True,4,expiring,-115.95088,67.74622
+101189,NU,Tundra Copper Corp. (100%),TKE 22,2026-11-17,1351.9,True,4,expiring,-115.1852,67.6629
+100906,NU,Tundra Copper Corp. (100%),TKW 37,2026-11-17,1358.5,True,4,expiring,-116.12277,67.80666
+100885,NU,Tundra Copper Corp. (100%),TKW 26,2026-11-17,1535.0,True,4,expiring,-116.30247,67.75662
+100899,NU,Tundra Copper Corp. (100%),TKS 13,2026-11-17,1578.2,True,4,expiring,-116.07587,67.52746
+100984,NU,Tundra Copper Corp. (100%),TKS 14,2026-11-17,1572.2,True,4,expiring,-116.01337,67.61287
+100988,NU,Tundra Copper Corp. (100%),TKE 3,2026-11-17,1570.0,True,4,expiring,-115.4821,67.65455
+101390,NU,Tundra Copper Corp. (100%),TKE 10,2026-11-17,1570.0,True,4,expiring,-115.3649,67.65666
+101229,NU,Tundra Copper Corp. (100%),TKW 40,2026-11-17,1569.7,True,4,expiring,-116.13057,67.66082
+101194,NU,Tundra Copper Corp. (100%),TKW 4,2026-11-17,1569.6,True,4,expiring,-116.66185,67.66288
+101327,NU,Tundra Copper Corp. (100%),TKN 39,2026-11-17,1567.1,True,4,expiring,-115.53679,67.70244
+100832,NU,Tundra Copper Corp. (100%),TKW 23,2026-11-17,1567.0,True,4,expiring,-116.36497,67.70665
+101240,NU,Tundra Copper Corp. (100%),TKE 6,2026-11-17,1567.0,True,4,expiring,-115.4196,67.7004
+YF47259,YK,536005 Yukon Inc. - 100%,CARTER 9,2026-11-17,19.7,True,4,expiring,-134.28627,60.6333
+YF47270,YK,536005 Yukon Inc. - 100%,CARTER 20,2026-11-17,19.8,True,4,expiring,-134.24442,60.6295
+YF47251,YK,536005 Yukon Inc. - 100%,CARTER 1,2026-11-17,19.7,True,4,expiring,-134.31965,60.63305
+100982,NU,Tundra Copper Corp. (100%),TKS 5,2026-11-17,1368.7,True,4,expiring,-116.18917,67.62121
+1133086,BC,ROCKBRIDGE RESOURCES INC.,DS2A1,2026-11-17,598.4,False,4,expiring,-126.5892,54.67489
+100972,NU,Tundra Copper Corp. (100%),TKW 3,2026-11-17,1436.0,True,4,expiring,-116.66186,67.70664
+101235,NU,Tundra Copper Corp. (100%),TKE 13,2026-11-17,1436.6,True,4,expiring,-115.3024,67.70038
+100888,NU,Tundra Copper Corp. (100%),TKW 32,2026-11-17,1438.8,True,4,expiring,-116.24777,67.6608
+101333,NU,Tundra Copper Corp. (100%),TKS 26,2026-11-17,189.1,True,4,expiring,-115.5446,67.62956
+100986,NU,Tundra Copper Corp. (100%),TKE 1,2026-11-17,1506.5,True,4,expiring,-115.47429,67.75457
+100893,NU,Tundra Copper Corp. (100%),TKN 31,2026-11-17,1509.0,True,4,expiring,-115.65399,67.71082
+100837,NU,Tundra Copper Corp. (100%),TNK 16,2026-11-17,1511.5,True,4,expiring,-115.89618,67.65248
+100960,NU,Tundra Copper Corp. (100%),TKN 20,2026-11-17,1511.7,True,4,expiring,-115.83368,67.66914
+100890,NU,Tundra Copper Corp. (100%),TKN 28,2026-11-17,1511.7,True,4,expiring,-115.71649,67.65873
+100896,NU,Tundra Copper Corp. (100%),TKN 36,2026-11-17,1526.5,True,4,expiring,-115.59929,67.65873
+101078,NU,Tundra Copper Corp. (100%),TKN 4,2026-11-17,1438.9,True,4,expiring,-116.07197,67.65247
+101334,NU,Tundra Copper Corp. (100%),TKE 18,2026-11-17,1438.9,True,4,expiring,-115.2477,67.6483
+100977,NU,Tundra Copper Corp. (100%),TKN 8,2026-11-17,1540.4,True,4,expiring,-116.01338,67.65455
+100992,NU,Tundra Copper Corp. (100%),TKE 24,2026-11-17,1535.5,True,4,expiring,-115.12271,67.74
+100987,NU,Tundra Copper Corp. (100%),TKE 2,2026-11-17,1407.4,True,4,expiring,-115.47819,67.70246
+101193,NU,Tundra Copper Corp. (100%),TKE 17,2026-11-17,1408.0,True,4,expiring,-115.2438,67.69414
+100878,NU,Tundra Copper Corp. (100%),TKS 2,2026-11-17,1543.2,True,4,expiring,-116.24776,67.62121
+101384,NU,Tundra Copper Corp. (100%),TKW 22,2026-11-17,1549.5,True,4,expiring,-116.36497,67.7504
+101386,NU,Tundra Copper Corp. (100%),TKE 21,2026-11-17,1552.9,True,4,expiring,-115.18521,67.69415
+100900,NU,Tundra Copper Corp. (100%),TKS 11,2026-11-17,1560.6,True,4,expiring,-116.07587,67.56915
+101385,NU,Tundra Copper Corp. (100%),TKN 25,2026-11-17,1561.4,True,4,expiring,-115.70868,67.79206
+101239,NU,Tundra Copper Corp. (100%),TNK 13,2026-11-17,1561.5,True,4,expiring,-115.88839,67.79416
+100961,NU,Tundra Copper Corp. (100%),TKN 22,2026-11-17,1563.9,True,4,expiring,-115.77118,67.74622
+101195,NU,Tundra Copper Corp. (100%),TKW 6,2026-11-17,1563.9,True,4,expiring,-116.59936,67.75247
+100974,NU,Tundra Copper Corp. (100%),TKN 2,2026-11-17,1563.9,True,4,expiring,-116.06808,67.75246
+101191,NU,Tundra Copper Corp. (100%),TKW 34,2026-11-17,1563.9,True,4,expiring,-116.18527,67.75039
+100903,NU,Tundra Copper Corp. (100%),TKW 14,2026-11-17,1564.0,True,4,expiring,-116.48216,67.75037
+101326,NU,Tundra Copper Corp. (100%),TKN 38,2026-11-17,1477.2,True,4,expiring,-115.53679,67.73374
+101391,NU,Tundra Copper Corp. (100%),TKN 3,2026-11-17,1566.9,True,4,expiring,-116.06807,67.70663
+100979,NU,Tundra Copper Corp. (100%),TNK 11,2026-11-17,1566.9,True,4,expiring,-115.95088,67.70456
+101170,NU,Tundra Copper Corp. (100%),TKN 34,2026-11-17,1491.9,True,4,expiring,-115.59149,67.75873
+100969,NU,Tundra Copper Corp. (100%),TKE 16,2026-11-17,1491.9,True,4,expiring,-115.2399,67.73789
+100904,NU,Tundra Copper Corp. (100%),TKW 35,2026-11-17,1494.1,True,4,expiring,-116.18527,67.71497
+100959,NU,Tundra Copper Corp. (100%),TKN 19,2026-11-17,1494.5,True,4,expiring,-115.83368,67.70456
+101331,NU,Tundra Copper Corp. (100%),TKW 12,2026-11-17,1497.0,True,4,expiring,-116.54466,67.65247
+101231,NU,Tundra Copper Corp. (100%),TKN 21,2026-11-17,1503.5,True,4,expiring,-115.77119,67.78372
+101338,NU,Tundra Copper Corp. (100%),TKE 25,2026-11-17,1465.9,True,4,expiring,-115.12661,67.68583
+101232,NU,Tundra Copper Corp. (100%),TKN 24,2026-11-17,1467.8,True,4,expiring,-115.77508,67.66913
+100836,NU,Tundra Copper Corp. (100%),TNK 12,2026-11-17,1467.8,True,4,expiring,-115.95478,67.64832
+1098290,BC,ROCKBRIDGE RESOURCES INC.,BURNBT,2026-11-17,187.1,False,4,expiring,-126.61733,54.67073
+100908,NU,Tundra Copper Corp. (100%),TKW 39,2026-11-17,1479.8,True,4,expiring,-116.12862,67.70456
+100973,NU,Tundra Copper Corp. (100%),TKW 8,2026-11-17,1482.3,True,4,expiring,-116.59935,67.66497
+1133084,BC,ROCKBRIDGE RESOURCES INC.,DS1a,2026-11-17,748.5,False,4,expiring,-126.61733,54.66031
+1133080,BC,ROCKBRIDGE RESOURCES INC.,Burn1a,2026-11-17,804.7,False,4,expiring,-126.67983,54.65614
+1116828,BC,ROCKBRIDGE RESOURCES INC.,,2026-11-17,1217.0,False,4,expiring,-126.69233,54.63531
+101075,NU,Tundra Copper Corp. (100%),TKW 16,2026-11-17,1540.4,True,4,expiring,-116.48216,67.66288
+101236,NU,Tundra Copper Corp. (100%),TKE 14,2026-11-17,1453.5,True,4,expiring,-115.3063,67.64622
+100975,NU,Tundra Copper Corp. (100%),TKN 5,2026-11-17,1459.8,True,4,expiring,-116.00558,67.79413
+100909,NU,Tundra Copper Corp. (100%),TKW 17,2026-11-17,1460.3,True,4,expiring,-115.82979,67.78164
+101332,NU,Tundra Copper Corp. (100%),TKW 15,2026-11-17,1465.3,True,4,expiring,-116.48216,67.70662
+101325,NU,Tundra Copper Corp. (100%),TKN 35,2026-11-17,1465.5,True,4,expiring,-115.59539,67.71082
+100889,NU,Tundra Copper Corp. (100%),TKN 27,2026-11-17,1465.6,True,4,expiring,-115.71649,67.6983
+101196,NU,Tundra Copper Corp. (100%),TKW 7,2026-11-17,1436.0,True,4,expiring,-116.59935,67.70872
+101074,NU,Tundra Copper Corp. (100%),TKE 20,2026-11-17,1434.1,True,4,expiring,-115.1813,67.73583
+105011,NU,6081 Nunavut Ltd. (100%),,2026-11-18,1414.4,True,5,expiring,-94.98844,63.75039
+1117474,BC,"GARSIDE, PATRICK T",Full House,2026-11-18,20.4,False,5,expiring,-121.89196,50.96864
+1058232,BC,SCOTTIE RESOURCES CORP.,COMET,2026-11-18,18.0,False,5,expiring,-129.77385,56.13104
+105010,NU,6081 Nunavut Ltd. (100%),,2026-11-18,942.0,True,5,expiring,-94.82047,63.77745
+105013,NU,6081 Nunavut Ltd. (100%),,2026-11-18,738.6,True,5,expiring,-95.42988,63.83164
+13542,YK,Elsa Reclamation & Development Company Ltd. - 100%,OUTCAST FRACTIO ,2026-11-18,3.4,True,5,expiring,-135.24092,63.93362
+105012,NU,6081 Nunavut Ltd. (100%),,2026-11-18,1175.7,True,5,expiring,-95.34784,63.82332
+1117475,BC,"WOLFF, RIORDAN",Frost1,2026-11-18,19.1,False,5,expiring,-122.36085,53.78537
+1117472,BC,"BA, HONG",The Rose,2026-11-18,20.1,False,5,expiring,-127.7985,51.53108
+M12256,NT,North by Northwest Lithium Inc. (100%),RON 7,2026-11-18,102.2,True,5,expiring,-112.29975,62.15381
+M12251,NT,North by Northwest Lithium Inc. (100%),RON 2,2026-11-18,995.4,True,5,expiring,-112.29186,62.18892
+M12250,NT,North by Northwest Lithium Inc. (100%),RON 1,2026-11-18,1122.9,True,5,expiring,-112.23863,62.22084
+M12255,NT,North by Northwest Lithium Inc. (100%),RON 6,2026-11-18,268.6,True,5,expiring,-112.30093,62.21616
+M12254,NT,North by Northwest Lithium Inc. (100%),RON 5,2026-11-18,394.4,True,5,expiring,-112.28216,62.16263
+1098240,BC,"MACNEIL, KENNETH DANIEL",,2026-11-18,1053.9,False,5,expiring,-120.50747,49.26861
+105026,NU,6081 Nunavut Ltd. (100%),,2026-11-19,84.2,True,6,expiring,-95.0197,63.73578
+105027,NU,6081 Nunavut Ltd. (100%),,2026-11-19,84.2,True,6,expiring,-94.95719,63.74412
+105024,NU,6081 Nunavut Ltd. (100%),,2026-11-19,286.8,True,6,expiring,-95.59199,63.68788
+105014,NU,6081 Nunavut Ltd. (100%),,2026-11-19,252.6,True,6,expiring,-94.88297,63.75665
+105022,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1689.5,True,6,expiring,-95.66426,63.65247
+105020,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1652.3,True,6,expiring,-95.42988,63.71288
+105021,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1585.5,True,6,expiring,-95.52364,63.71704
+105017,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1525.2,True,6,expiring,-95.00016,63.88163
+MC00017508,SK,Fulcrum Metals (Canada) Ltd.: 100.000%,,2026-11-19,473.5,False,6,expiring,-104.89708,59.67514
+MC00017509,SK,Fulcrum Metals (Canada) Ltd.: 100.000%,,2026-11-19,531.1,False,6,expiring,-104.90426,59.6606
+MB15091,MB,Eden Gold Corporation,EGC-6,2026-11-19,244.8,False,6,expiring,-99.2552,56.64412
+105018,NU,6081 Nunavut Ltd. (100%),,2026-11-19,335.4,True,6,expiring,-94.94938,63.8483
+105016,NU,6081 Nunavut Ltd. (100%),,2026-11-19,469.9,True,6,expiring,-95.03532,63.8483
+105019,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1012.6,True,6,expiring,-95.66426,63.6858
+105025,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1077.1,True,6,expiring,-95.60566,63.76082
+105023,NU,6081 Nunavut Ltd. (100%),,2026-11-19,1045.6,True,6,expiring,-95.41034,63.69828
+105015,NU,6081 Nunavut Ltd. (100%),,2026-11-19,944.8,True,6,expiring,-95.10173,63.73371
+1042933,BC,"DUCKWORTH, STEVEN JAMES",GOLDEN,2026-11-19,21.0,False,6,expiring,-117.40424,49.45201
+1117483,BC,"SWITZER, ROURY",Weasel Creek,2026-11-19,62.9,False,6,expiring,-121.00125,49.53736
+105029,NU,1501253 B.C. Ltd. (100%),A3,2026-11-20,1452.7,True,7,expiring,-117.39237,67.66911
+105034,NU,1501253 B.C. Ltd. (100%),C1A,2026-11-20,1459.3,True,7,expiring,-117.03296,67.5608
+56648,NS,,,2026-11-20,16.2,False,7,expiring,-64.0026,45.4566
+56659,NS,,,2026-11-20,16.5,False,7,expiring,-63.3151,44.87674
+105028,NU,1501253 B.C. Ltd. (100%),A2,2026-11-20,1425.5,True,7,expiring,-117.48612,67.6858
+105033,NU,1501253 B.C. Ltd. (100%),A7,2026-11-20,1456.6,True,7,expiring,-117.21266,67.59828
+105031,NU,1501253 B.C. Ltd. (100%),A5,2026-11-20,1455.9,True,7,expiring,-117.24782,67.6358
+105030,NU,1501253 B.C. Ltd. (100%),A4,2026-11-20,1452.7,True,7,expiring,-117.32986,67.65244
+1055922,BC,"NICHOLSON, GEORGE EARLE",AT 5,2026-11-20,684.1,False,7,expiring,-124.67968,51.50195
+105040,NU,6081 Nunavut Ltd. (100%),,2026-11-20,134.7,True,7,expiring,-94.81656,63.7629
+1055631,BC,"NICHOLSON, GEORGE EARLE",AT 2,2026-11-20,724.2,False,7,expiring,-124.71093,51.50611
+1056240,BC,"NICHOLSON, GEORGE EARLE",AT 7,2026-11-20,805.1,False,7,expiring,-124.7203,51.48528
+1056238,BC,"NICHOLSON, GEORGE EARLE",AT 6,2026-11-20,1227.4,False,7,expiring,-124.65467,51.49778
+56650,NS,,,2026-11-20,635.0,False,7,expiring,-61.82552,45.27258
+56656,NS,,,2026-11-20,542.1,False,7,expiring,-63.80599,44.93056
+56655,NS,,,2026-11-20,376.7,False,7,expiring,-63.76562,45.04688
+56658,NS,,,2026-11-20,1031.7,False,7,expiring,-62.4974,45.06424
+MB2822,MB,OZIAS THERIAULT,MEAGAN 1,2026-11-20,32.3,False,7,expiring,-95.51983,50.55766
+56652,NS,,,2026-11-20,1049.7,False,7,expiring,-63.60938,45.00869
+MC00017512,SK,7153945 CANADA INC.: 100.000%,,2026-11-20,1166.6,False,7,expiring,-106.66148,59.39125
+MC00017511,SK,7153945 CANADA INC.: 100.000%,,2026-11-20,1646.8,False,7,expiring,-106.23741,59.56387
+022654M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,1292.2,False,7,expiring,-62.06094,56.37498
+022656M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2392.5,False,7,expiring,-61.97595,56.37446
+022655M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2392.6,False,7,expiring,-62.02862,56.37241
+022657M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2392.8,False,7,expiring,-61.95596,56.36514
+022658M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2393.0,False,7,expiring,-61.96085,56.33415
+022651M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2393.1,False,7,expiring,-62.20006,56.3038
+022653M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2393.2,False,7,expiring,-62.08669,56.31387
+022649M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2393.4,False,7,expiring,-62.29713,56.2975
+022652M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2393.6,False,7,expiring,-62.06679,56.30105
+022650M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2393.7,False,7,expiring,-62.28098,56.2974
+022648M,NL,Vale Newfoundland & Labrador Limited,Reid Brook,2026-11-20,2393.8,False,7,expiring,-62.31329,56.2976
+YF29019,YK,Metallic Minerals Corp. - 100%,Moria 19,2026-11-20,11.6,True,7,expiring,-135.26972,64.48539
+YE79833,YK,Erini Petroutsas - 100%,EL ,2026-11-20,15.3,True,7,expiring,-139.37712,64.03622
+YF29018,YK,Metallic Minerals Corp. - 100%,Moria 18,2026-11-20,17.2,True,7,expiring,-135.27598,64.48822
+YF29021,YK,Metallic Minerals Corp. - 100%,Gondor 1,2026-11-20,17.5,True,7,expiring,-135.21628,64.49392
+YF29023,YK,Metallic Minerals Corp. - 100%,Gondor 3,2026-11-20,17.6,True,7,expiring,-135.22373,64.49136
+56647,NS,,,2026-11-20,65.2,False,7,expiring,-61.54687,45.25868
+56657,NS,,,2026-11-20,114.0,False,7,expiring,-62.4401,45.24828
+56651,NS,,,2026-11-20,262.2,False,7,expiring,-61.85938,45.07119
+56654,NS,,,2026-11-20,360.4,False,7,expiring,-63.82032,45.04688
+56653,NS,,,2026-11-20,360.4,False,7,expiring,-63.85156,45.05382
+105039,NU,6081 Nunavut Ltd. (100%),,2026-11-20,100.7,True,7,expiring,-95.59395,63.83164
+105035,NU,1501253 B.C. Ltd. (100%),C1B,2026-11-20,277.4,True,7,expiring,-116.97826,67.53994
+1117178,BC,"DOYLE, LOUIS ERIC",TDL1,2026-11-20,547.8,False,7,expiring,-121.01697,52.76246
+YF29034,YK,Metallic Minerals Corp. - 100%,Gondor 14,2026-11-20,19.6,True,7,expiring,-135.25018,64.49253
+YF29077,YK,Metallic Minerals Corp. - 100%,Moria 8,2026-11-20,19.6,True,7,expiring,-135.27594,64.46894
+YF29013,YK,Metallic Minerals Corp. - 100%,Moria 13,2026-11-20,19.6,True,7,expiring,-135.27112,64.48172
+YF29029,YK,Metallic Minerals Corp. - 100%,Gondor 9,2026-11-20,19.6,True,7,expiring,-135.27103,64.49065
+YF29009,YK,Metallic Minerals Corp. - 100%,Moria 9,2026-11-20,19.6,True,7,expiring,-135.288,64.48551
+YF29010,YK,Metallic Minerals Corp. - 100%,Moria 10,2026-11-20,19.6,True,7,expiring,-135.2924,64.4819
+YF29032,YK,Metallic Minerals Corp. - 100%,Gondor 12,2026-11-20,19.6,True,7,expiring,-135.25765,64.48998
+YF29020,YK,Metallic Minerals Corp. - 100%,Moria 20,2026-11-20,19.4,True,7,expiring,-135.25846,64.48328
+YF29017,YK,Metallic Minerals Corp. - 100%,Moria 17,2026-11-20,19.6,True,7,expiring,-135.28357,64.48915
+YF29011,YK,Metallic Minerals Corp. - 100%,Moria 11,2026-11-20,19.6,True,7,expiring,-135.27956,64.48362
+YF29036,YK,Metallic Minerals Corp. - 100%,Gondor 16,2026-11-20,19.6,True,7,expiring,-135.23525,64.49762
+YF29035,YK,Metallic Minerals Corp. - 100%,Gondor 15,2026-11-20,19.6,True,7,expiring,-135.24272,64.49507
+YF29026,YK,Metallic Minerals Corp. - 100%,Gondor 6,2026-11-20,19.6,True,7,expiring,-135.2368,64.49186
+YF29084,YK,Metallic Minerals Corp. - 100%,Nazgul 14,2026-11-20,19.6,True,7,expiring,-135.21103,64.49076
+YF29015,YK,Metallic Minerals Corp. - 100%,Moria 15,2026-11-20,19.6,True,7,expiring,-135.26268,64.47982
+YF29031,YK,Metallic Minerals Corp. - 100%,Gondor 11,2026-11-20,19.6,True,7,expiring,-135.26356,64.49319
+YF29086,YK,Metallic Minerals Corp. - 100%,Nazgul 16,2026-11-20,19.7,True,7,expiring,-135.21846,64.4882
+YF29079,YK,Metallic Minerals Corp. - 100%,Nazgul 9,2026-11-20,19.7,True,7,expiring,-135.19021,64.49268
+YF29074,YK,Metallic Minerals Corp. - 100%,Moria 5,2026-11-20,19.7,True,7,expiring,-135.27996,64.47447
+YF29083,YK,Metallic Minerals Corp. - 100%,Nazgul 13,2026-11-20,19.7,True,7,expiring,-135.20506,64.48756
+YF29014,YK,Metallic Minerals Corp. - 100%,Moria 14,2026-11-20,19.7,True,7,expiring,-135.27554,64.4781
+YF29082,YK,Metallic Minerals Corp. - 100%,Nazgul 12,2026-11-20,19.7,True,7,expiring,-135.2036,64.49332
+YF29081,YK,Metallic Minerals Corp. - 100%,Nazgul 11,2026-11-20,19.7,True,7,expiring,-135.19764,64.49013
+YF29080,YK,Metallic Minerals Corp. - 100%,Nazgul 10,2026-11-20,19.7,True,7,expiring,-135.19618,64.49588
+YF29085,YK,Metallic Minerals Corp. - 100%,Nazgul 15,2026-11-20,19.7,True,7,expiring,-135.21249,64.485
+YF29027,YK,Metallic Minerals Corp. - 100%,Gondor 7,2026-11-20,19.7,True,7,expiring,-135.24427,64.48932
+YF29030,YK,Metallic Minerals Corp. - 100%,Gondor 10,2026-11-20,19.7,True,7,expiring,-135.26511,64.48744
+YF29076,YK,Metallic Minerals Corp. - 100%,Moria 7,2026-11-20,19.7,True,7,expiring,-135.27152,64.47256
+YF29016,YK,Metallic Minerals Corp. - 100%,Moria 16,2026-11-20,19.7,True,7,expiring,-135.26711,64.47619
+YF29025,YK,Metallic Minerals Corp. - 100%,Gondor 5,2026-11-20,19.6,True,7,expiring,-135.23118,64.48882
+YF29028,YK,Metallic Minerals Corp. - 100%,Gondor 8,2026-11-20,19.6,True,7,expiring,-135.25173,64.48677
+YF29024,YK,Metallic Minerals Corp. - 100%,Gondor 4,2026-11-20,19.6,True,7,expiring,-135.22934,64.4944
+YF29033,YK,Metallic Minerals Corp. - 100%,Gondor 13,2026-11-20,19.7,True,7,expiring,-135.2561,64.49574
+YF29072,YK,Metallic Minerals Corp. - 100%,Moria 3,2026-11-20,19.7,True,7,expiring,-135.28839,64.47636
+YF29073,YK,Metallic Minerals Corp. - 100%,Moria 4,2026-11-20,19.7,True,7,expiring,-135.2928,64.47274
+YF29022,YK,Metallic Minerals Corp. - 100%,Gondor 2,2026-11-20,19.7,True,7,expiring,-135.22187,64.49695
+YF29075,YK,Metallic Minerals Corp. - 100%,Moria 6,2026-11-20,19.7,True,7,expiring,-135.28437,64.47083
+1118403,BC,"DOYLE, LOUIS ERIC",CL4,2026-11-20,19.6,False,7,expiring,-121.01697,52.79371
+1098279,BC,"WHYTOCK, ANDREW DALGARNO",ANTLER CREEK,2026-11-20,19.4,False,7,expiring,-121.41701,53.05204
+YF29012,YK,Metallic Minerals Corp. - 100%,Moria 12,2026-11-20,19.7,True,7,expiring,-135.28397,64.48
+1118409,BC,"DOYLE, LOUIS ERIC",CL7,2026-11-20,19.6,False,7,expiring,-121.01072,52.77287
+1118405,BC,"DOYLE, LOUIS ERIC",CL5,2026-11-20,19.6,False,7,expiring,-121.01697,52.78954
+1027942,BC,"LEAVER, RICHARD BOYD",SUMMER SUN,2026-11-20,20.9,False,7,expiring,-120.15435,49.72696
+1117477,BC,"SCOTT, STEVEN JEFFREY",,2026-11-20,20.8,False,7,expiring,-115.52291,49.8979
+1118407,BC,"DOYLE, LOUIS ERIC",CL6,2026-11-20,39.1,False,7,expiring,-121.02009,52.77287
+1118410,BC,"DOYLE, LOUIS ERIC",CL8,2026-11-20,39.1,False,7,expiring,-121.00447,52.77496
+YF29070,YK,Metallic Minerals Corp. - 100%,Moria 1,2026-11-20,19.7,True,7,expiring,-135.29682,64.47826
+YF29071,YK,Metallic Minerals Corp. - 100%,Moria 2,2026-11-20,19.7,True,7,expiring,-135.30124,64.47464
+1120489,BC,"SHEARER, JOHAN THOM",Snapper 2,2026-11-20,103.5,False,7,expiring,-121.0279,50.15821
+1118412,BC,"DOYLE, LOUIS ERIC",CL9,2026-11-20,58.7,False,7,expiring,-120.99822,52.77704
+105037,NU,1501253 B.C. Ltd. (100%),N1,2026-11-20,351.7,True,7,expiring,-115.21253,67.4483
+105036,NU,1501253 B.C. Ltd. (100%),G3_I,2026-11-20,397.0,True,7,expiring,-115.89616,67.34622
+105032,NU,1501253 B.C. Ltd. (100%),A6,2026-11-20,509.4,True,7,expiring,-117.19313,67.6191
+1118401,BC,"DOYLE, LOUIS ERIC",CL3,2026-11-20,312.9,False,7,expiring,-121.03572,52.78329
+1122801,BC,"DOYLE, LOUIS ERIC",3L5,2026-11-20,391.2,False,7,expiring,-120.91696,52.77079
+1122689,BC,"DOYLE, LOUIS ERIC",3L3,2026-11-20,391.2,False,7,expiring,-120.97946,52.77079
+1122804,BC,"DOYLE, LOUIS ERIC",3L6,2026-11-20,391.2,False,7,expiring,-120.8857,52.77079
+1122799,BC,"DOYLE, LOUIS ERIC",3L4,2026-11-20,391.2,False,7,expiring,-120.94821,52.77079
+105038,NU,6081 Nunavut Ltd. (100%),,2026-11-20,16.9,True,7,expiring,-95.76974,63.71494
+1122472,BC,"DOYLE, LOUIS ERIC",3L1,2026-11-20,1702.5,False,7,expiring,-120.96383,52.74996

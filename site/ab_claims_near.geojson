@@ -646,7 +646,6 @@
 { "type": "Feature", "properties": { "claim": "9424060137", "cname": "", "owner": "PRISM DIVERSIFIED LTD.", "expiry": "", "staked": "2024-06-10" }, "geometry": { "type": "Point", "coordinates": [ -118.65233, 56.81728 ] } },
 { "type": "Feature", "properties": { "claim": "9424060138", "cname": "", "owner": "PRISM DIVERSIFIED LTD.", "expiry": "", "staked": "2024-06-10" }, "geometry": { "type": "Point", "coordinates": [ -118.54578, 56.76274 ] } },
 { "type": "Feature", "properties": { "claim": "9424060139", "cname": "", "owner": "PRISM DIVERSIFIED LTD.", "expiry": "", "staked": "2024-06-10" }, "geometry": { "type": "Point", "coordinates": [ -118.59905, 56.81548 ] } },
-{ "type": "Feature", "properties": { "claim": "9324090125", "cname": "", "owner": "2639074 ALBERTA LTD.", "expiry": "", "staked": "2024-09-25" }, "geometry": { "type": "Point", "coordinates": [ -110.04811, 58.6058 ] } },
 { "type": "Feature", "properties": { "claim": "9409090471", "cname": "", "owner": "ROCKPOINT GAS STORAGE CANADA LTD.", "expiry": "", "staked": "2009-09-23" }, "geometry": { "type": "Point", "coordinates": [ -112.05391, 53.54883 ] } },
 { "type": "Feature", "properties": { "claim": "9410030823", "cname": "", "owner": "WARWICK GAS STORAGE LTD.", "expiry": "", "staked": "2010-03-17" }, "geometry": { "type": "Point", "coordinates": [ -112.10304, 53.57793 ] } },
 { "type": "Feature", "properties": { "claim": "9723010200", "cname": "", "owner": "IPC CANADA LTD.", "expiry": "", "staked": "2023-01-04" }, "geometry": { "type": "Point", "coordinates": [ -112.65803, 55.61727 ] } },
