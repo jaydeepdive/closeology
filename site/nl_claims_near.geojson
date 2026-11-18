@@ -1982,7 +1982,6 @@
 { "type": "Feature", "properties": { "claim": "038006M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "2029-07-18", "staked": "2024-06-18" }, "geometry": { "type": "Point", "coordinates": [ -65.98074, 54.4503 ] } },
 { "type": "Feature", "properties": { "claim": "038008M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "2029-07-18", "staked": "2024-06-18" }, "geometry": { "type": "Point", "coordinates": [ -65.98219, 54.47021 ] } },
 { "type": "Feature", "properties": { "claim": "038009M", "cname": null, "owner": "Penny Boulos", "expiry": "2029-07-18", "staked": "2024-06-18" }, "geometry": { "type": "Point", "coordinates": [ -55.76869, 48.61807 ] } },
-{ "type": "Feature", "properties": { "claim": "038012M", "cname": null, "owner": "Kirby House", "expiry": "2029-07-18", "staked": "2024-06-18" }, "geometry": { "type": "Point", "coordinates": [ -58.26925, 49.04722 ] } },
 { "type": "Feature", "properties": { "claim": "038013M", "cname": null, "owner": "Quest Inc.", "expiry": "2029-07-18", "staked": "2024-06-18" }, "geometry": { "type": "Point", "coordinates": [ -54.66067, 49.53867 ] } },
 { "type": "Feature", "properties": { "claim": "038015M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "2029-07-18", "staked": "2024-06-18" }, "geometry": { "type": "Point", "coordinates": [ -65.99597, 54.44759 ] } },
 { "type": "Feature", "properties": { "claim": "038017M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "2029-07-18", "staked": "2024-06-18" }, "geometry": { "type": "Point", "coordinates": [ -57.52246, 48.29723 ] } },
@@ -4693,6 +4692,8 @@
 { "type": "Feature", "properties": { "claim": "041527M", "cname": null, "owner": "Jonathan Moulton", "expiry": "", "staked": "2026-11-11" }, "geometry": { "type": "Point", "coordinates": [ -55.90576, 49.33451 ] } },
 { "type": "Feature", "properties": { "claim": "041528M", "cname": null, "owner": "Nehemiah Pinsent Jr", "expiry": "", "staked": "2026-11-15" }, "geometry": { "type": "Point", "coordinates": [ -56.14373, 49.10489 ] } },
 { "type": "Feature", "properties": { "claim": "041529M", "cname": null, "owner": "Nehemiah Pinsent Jr", "expiry": "", "staked": "2026-11-15" }, "geometry": { "type": "Point", "coordinates": [ -56.38088, 49.03894 ] } },
-{ "type": "Feature", "properties": { "claim": "041531M", "cname": null, "owner": "Stephen Sheppard", "expiry": "2031-03-17", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -53.15258, 47.33581 ] } }
+{ "type": "Feature", "properties": { "claim": "041531M", "cname": null, "owner": "Stephen Sheppard", "expiry": "2031-03-17", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -53.15258, 47.33581 ] } },
+{ "type": "Feature", "properties": { "claim": "041532M", "cname": null, "owner": "Critical Minerals NL Corp.", "expiry": "", "staked": "2026-11-17" }, "geometry": { "type": "Point", "coordinates": [ -65.62133, 53.28413 ] } },
+{ "type": "Feature", "properties": { "claim": "039460M", "cname": null, "owner": "Marilyn Quinlan", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -55.79566, 48.62495 ] } }
 ]
 }
