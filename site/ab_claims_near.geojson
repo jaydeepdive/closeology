@@ -1043,6 +1043,8 @@
 { "type": "Feature", "properties": { "claim": "260205101", "cname": "", "owner": "THIBAULT, PIERRE", "expiry": "", "staked": "2026-10-31" }, "geometry": { "type": "Point", "coordinates": [ -112.24814, 52.38314 ] } },
 { "type": "Feature", "properties": { "claim": "9326110129", "cname": "", "owner": "GRQ PROSPECTS INC.", "expiry": "", "staked": "2026-11-16" }, "geometry": { "type": "Point", "coordinates": [ -111.85043, 59.9702 ] } },
 { "type": "Feature", "properties": { "claim": "9326110130", "cname": "", "owner": "HAIMILA, RAYMOND ARTHUR", "expiry": "", "staked": "2026-11-17" }, "geometry": { "type": "Point", "coordinates": [ -113.55778, 55.24273 ] } },
-{ "type": "Feature", "properties": { "claim": "9326110131", "cname": "", "owner": "FAGE, ADAM", "expiry": "", "staked": "2026-11-17" }, "geometry": { "type": "Point", "coordinates": [ -116.74264, 52.84149 ] } }
+{ "type": "Feature", "properties": { "claim": "9326110131", "cname": "", "owner": "FAGE, ADAM", "expiry": "", "staked": "2026-11-17" }, "geometry": { "type": "Point", "coordinates": [ -116.74264, 52.84149 ] } },
+{ "type": "Feature", "properties": { "claim": "260210101", "cname": "", "owner": "DETTA, DARYL THOMAS", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -113.65179, 53.42862 ] } },
+{ "type": "Feature", "properties": { "claim": "260210102", "cname": "", "owner": "DETTA, DARYL THOMAS", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -113.84178, 53.35934 ] } }
 ]
 }

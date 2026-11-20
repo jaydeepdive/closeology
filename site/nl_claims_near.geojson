@@ -3221,7 +3221,7 @@
 { "type": "Feature", "properties": { "claim": "040033M", "cname": null, "owner": "Carey Galeschuk", "expiry": "2031-01-15", "staked": "2025-12-16" }, "geometry": { "type": "Point", "coordinates": [ -62.05534, 55.28547 ] } },
 { "type": "Feature", "properties": { "claim": "040034M", "cname": null, "owner": "Joyce Direct Iron Inc.", "expiry": "2031-06-14", "staked": "2025-12-16" }, "geometry": { "type": "Point", "coordinates": [ -67.31357, 54.95414 ] } },
 { "type": "Feature", "properties": { "claim": "040035M", "cname": null, "owner": "Canterra Minerals Corporation", "expiry": "2031-01-15", "staked": "2025-12-16" }, "geometry": { "type": "Point", "coordinates": [ -56.94557, 48.7617 ] } },
-{ "type": "Feature", "properties": { "claim": "040036M", "cname": null, "owner": "Warwick Gold Limited", "expiry": "2031-01-15", "staked": "2025-12-16" }, "geometry": { "type": "Point", "coordinates": [ -55.97735, 48.86724 ] } },
+{ "type": "Feature", "properties": { "claim": "040036M", "cname": null, "owner": "Manewagi Technologies Inc.", "expiry": "2031-01-15", "staked": "2025-12-16" }, "geometry": { "type": "Point", "coordinates": [ -55.97735, 48.86724 ] } },
 { "type": "Feature", "properties": { "claim": "040038M", "cname": null, "owner": "Golden Promise Mines Inc.", "expiry": "2031-01-17", "staked": "2025-12-18" }, "geometry": { "type": "Point", "coordinates": [ -56.29553, 48.78431 ] } },
 { "type": "Feature", "properties": { "claim": "040039M", "cname": null, "owner": "Golden Promise Mines Inc.", "expiry": "2031-01-17", "staked": "2025-12-18" }, "geometry": { "type": "Point", "coordinates": [ -56.4758, 48.79419 ] } },
 { "type": "Feature", "properties": { "claim": "040040M", "cname": null, "owner": "Stanley H.B. Squires", "expiry": "2031-01-17", "staked": "2025-12-18" }, "geometry": { "type": "Point", "coordinates": [ -56.44189, 48.78289 ] } },
@@ -4613,7 +4613,7 @@
 { "type": "Feature", "properties": { "claim": "041449M", "cname": null, "owner": "Lloyd Pike", "expiry": "", "staked": "2026-10-19" }, "geometry": { "type": "Point", "coordinates": [ -54.3474, 48.22732 ] } },
 { "type": "Feature", "properties": { "claim": "041450M", "cname": null, "owner": "Lloyd Pike", "expiry": "", "staked": "2026-10-19" }, "geometry": { "type": "Point", "coordinates": [ -54.36084, 48.22763 ] } },
 { "type": "Feature", "properties": { "claim": "041451M", "cname": null, "owner": "Canterra Minerals Corporation", "expiry": "2029-08-15", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.56708, 48.86663 ] } },
-{ "type": "Feature", "properties": { "claim": "041452M", "cname": null, "owner": "Warwick Gold Limited", "expiry": "2031-11-18", "staked": "2026-10-19" }, "geometry": { "type": "Point", "coordinates": [ -56.06276, 48.85686 ] } },
+{ "type": "Feature", "properties": { "claim": "041452M", "cname": null, "owner": "Manewagi Technologies Inc.", "expiry": "2031-11-18", "staked": "2026-10-19" }, "geometry": { "type": "Point", "coordinates": [ -56.06276, 48.85686 ] } },
 { "type": "Feature", "properties": { "claim": "041453M", "cname": null, "owner": "David Hicks", "expiry": "", "staked": "2026-10-19" }, "geometry": { "type": "Point", "coordinates": [ -56.14505, 48.82827 ] } },
 { "type": "Feature", "properties": { "claim": "041454M", "cname": null, "owner": "Derrick Fancey", "expiry": "", "staked": "2026-10-20" }, "geometry": { "type": "Point", "coordinates": [ -54.5161, 49.45911 ] } },
 { "type": "Feature", "properties": { "claim": "041455M", "cname": null, "owner": "FPX Nickel Corp", "expiry": "", "staked": "2026-10-20" }, "geometry": { "type": "Point", "coordinates": [ -56.54669, 49.61087 ] } },
@@ -4669,7 +4669,6 @@
 { "type": "Feature", "properties": { "claim": "041504M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -59.3786, 52.55738 ] } },
 { "type": "Feature", "properties": { "claim": "041505M", "cname": null, "owner": "Stephen Sheppard", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -53.1091, 47.36571 ] } },
 { "type": "Feature", "properties": { "claim": "041506M", "cname": null, "owner": "17907621 Canada Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -57.09304, 49.40263 ] } },
-{ "type": "Feature", "properties": { "claim": "041507M", "cname": null, "owner": "Jeffery Brushett", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -57.70101, 48.28954 ] } },
 { "type": "Feature", "properties": { "claim": "041508M", "cname": null, "owner": "Paradigm Minerals Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -58.67818, 48.69328 ] } },
 { "type": "Feature", "properties": { "claim": "041509M", "cname": null, "owner": "Stephen Stockley Agriculture and Fabrication Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -53.35291, 48.5915 ] } },
 { "type": "Feature", "properties": { "claim": "041510M", "cname": null, "owner": "Benton Resources Inc.", "expiry": "", "staked": "2026-11-03" }, "geometry": { "type": "Point", "coordinates": [ -56.87445, 48.63572 ] } },
@@ -4696,6 +4695,8 @@
 { "type": "Feature", "properties": { "claim": "041532M", "cname": null, "owner": "Critical Minerals NL Corp.", "expiry": "", "staked": "2026-11-17" }, "geometry": { "type": "Point", "coordinates": [ -65.62133, 53.28413 ] } },
 { "type": "Feature", "properties": { "claim": "039460M", "cname": null, "owner": "Marilyn Quinlan", "expiry": "2030-08-07", "staked": "2025-07-08" }, "geometry": { "type": "Point", "coordinates": [ -55.79566, 48.62495 ] } },
 { "type": "Feature", "properties": { "claim": "041533M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -54.75156, 49.66641 ] } },
-{ "type": "Feature", "properties": { "claim": "041534M", "cname": null, "owner": "Canstar Resources Inc.", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -55.92488, 49.40447 ] } }
+{ "type": "Feature", "properties": { "claim": "041534M", "cname": null, "owner": "Canstar Resources Inc.", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -55.92488, 49.40447 ] } },
+{ "type": "Feature", "properties": { "claim": "032865M", "cname": null, "owner": "Edwin Northcott", "expiry": "2026-06-23", "staked": "2021-05-24" }, "geometry": { "type": "Point", "coordinates": [ -57.70101, 48.28954 ] } },
+{ "type": "Feature", "properties": { "claim": "041535M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-20" }, "geometry": { "type": "Point", "coordinates": [ -54.67439, 49.395 ] } }
 ]
 }
