@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Closeology Claims API</title>
+<meta name="description" content="Free, public API for every active mineral claim in Canada: details, locations and map overlays.">
+<style>
+:root{--bg:#fbfaf8;--fg:#1d1d1f;--mut:#5f6368;--line:#e6e2dc;--card:#fff;--code:#f4f1ec;--acc:#b8360a;--ok:#2e7d32;--warn:#b26a00}
+@media (prefers-color-scheme:dark){:root{--bg:#141414;--fg:#ececec;--mut:#a3a3a3;--line:#2c2c2c;--card:#1c1c1c;--code:#232323;--acc:#ff7a45;--ok:#66bb6a;--warn:#ffb74d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:920px;margin:0 auto;padding:40px 20px 80px}
+h1{font-size:2rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.3rem;margin:48px 0 10px;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:1.02rem;margin:26px 0 6px}
+p,li{color:var(--fg)} .mut{color:var(--mut)}
+a{color:var(--acc)}
+code{font:13.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);padding:1px 5px;border-radius:4px}
+pre{position:relative;background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow:auto;margin:10px 0}
+pre code{background:none;padding:0;white-space:pre}
+.copy{position:absolute;top:8px;right:8px;font:12px system-ui;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:3px 9px;cursor:pointer}
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 6px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-width:150px}
+.stat b{display:block;font-size:1.45rem;line-height:1.2} .stat span{color:var(--mut);font-size:.88rem}
+table{border-collapse:collapse;width:100%;font-size:.92rem;margin:10px 0}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em}
+.tw{overflow-x:auto}
+.cov{font-variant-numeric:tabular-nums}
+.full{color:var(--ok)} .part{color:var(--warn)} .none{color:var(--mut)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.tabs button{font:14px system-ui;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:5px 13px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.panel{display:none}.panel.on{display:block}
+.note{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:8px;padding:10px 14px;margin:14px 0}
+</style>
+</head>
+<body>
+<main>
+<h1>Closeology Claims API</h1>
+<p class="mut">Every active mineral claim in Canada, its details, its location, and a map overlay you can drop onto any map. Free, public, rebuilt daily from each province's and territory's official registry.</p>
+
+<div class="stats">
+  <div class="stat"><b id="s-claims">—</b><span>active claims</span></div>
+  <div class="stat"><b id="s-jur">—</b><span>jurisdictions</span></div>
+  <div class="stat"><b id="s-date">—</b><span>last rebuilt</span></div>
+</div>
+<p class="mut">No key, no sign-up. Every endpoint sends <code>Access-Control-Allow-Origin: *</code>, so you can call it straight from a browser on any domain, or from a server.</p>
+
+<h2 id="overlay">Overlay the claims on your map</h2>
+<p>Add <code>closeology-claims.js</code> and make one call with the map library you already use. Clicking a claim opens its details.</p>
+<div class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-t="ml">MapLibre</button>
+  <button role="tab" aria-selected="false" data-t="lf">Leaflet</button>
+  <button role="tab" aria-selected="false" data-t="ol">OpenLayers</button>
+  <button role="tab" aria-selected="false" data-t="gm">Google Maps</button>
+</div>
+<div class="panel on" id="p-ml">
+<pre><code>&lt;link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"&gt;
+&lt;script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"&gt;&lt;/script&gt;
+&lt;script src="https://jaydeepdive.github.io/closeology/api/closeology-claims.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  const map = new maplibregl.Map({ container: "map", style: YOUR_STYLE, center: [-81.33, 48.47], zoom: 10 });
+  map.on("load", () =&gt; CloseologyClaims.addToMapLibre(map, { maplibregl, pmtiles }));
+&lt;/script&gt;</code></pre>
+<p class="mut">Uses the vector tiles, the fastest option, and smooth at any zoom. Pass <code>beforeId</code> to slot the claims under your labels. <a href="examples/maplibre.html">Live example</a></p>
+</div>
+<div class="panel" id="p-lf">
+<pre><code>&lt;script src="https://jaydeepdive.github.io/closeology/api/closeology-claims.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const map = L.map("map", { preferCanvas: true }).setView([48.47, -81.33], 10);
+  // ...your basemap...
+  CloseologyClaims.addToLeaflet(map, L);
+&lt;/script&gt;</code></pre>
+<p class="mut">Loads claims for the area in view as you pan; coverage dots below zoom 9. <a href="examples/leaflet.html">Live example</a></p>
+</div>
+<div class="panel" id="p-ol">
+<pre><code>&lt;script src="https://jaydeepdive.github.io/closeology/api/closeology-claims.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const overlay = CloseologyClaims.addToOpenLayers(map, ol);   // map = your ol.Map
+  // overlay.claims is the layer; overlay.popupHTML(feature) gives the details HTML
+&lt;/script&gt;</code></pre>
+<p class="mut"><a href="examples/openlayers.html">Live example</a> (includes click popups).</p>
+</div>
+<div class="panel" id="p-gm">
+<pre><code>&lt;script src="https://jaydeepdive.github.io/closeology/api/closeology-claims.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  // inside your Google Maps init, once `map` exists:
+  CloseologyClaims.addToGoogleMaps(map);
+&lt;/script&gt;</code></pre>
+<p class="mut">Draws through <code>google.maps.Data</code>. <a href="examples/google-maps.html">Live example</a> (open it with <code>?key=YOUR_GOOGLE_MAPS_KEY</code>).</p>
+</div>
+<p>Each call returns a handle with a <code>remove()</code> method. Not using one of these libraries? Use the raw formats below; they're standard.</p>
+
+<h2 id="lookup">Look up a claim</h2>
+<pre><code>const claim = await CloseologyClaims.getClaim("YT", "YC88074");
+// { id, jurisdiction, holder, name, issued, expiry, area_ha, lon, lat, bbox, tile, record_url }
+// null if it isn't an active claim today</code></pre>
+<p>Without the helper: claims are split into small files per jurisdiction. Fetch <code>api/v1/claim/{jurisdiction}/{shard}.json</code>, where <code>shard = fnv1a32(id) % lookup_shards</code> (32-bit FNV-1a over the UTF-8 bytes of the claim number; <code>lookup_shards</code> is in <code>jurisdictions.json</code>). The file is an object keyed by claim number.</p>
+
+<h3>Claims in an area</h3>
+<pre><code>const fc = await CloseologyClaims.getClaimsInBBox([-81.6, 48.3, -81.0, 48.7]);   // [west, south, east, north]
+// GeoJSON FeatureCollection, polygons with the fields below</code></pre>
+
+<h2 id="bulk">Bulk download</h2>
+<p>One gzipped CSV per jurisdiction, with every active claim, all fields, its centre point and bounding box. Ideal for loading into a database or search index.</p>
+<div class="tw"><table id="bulk-table"><thead><tr><th>Jurisdiction</th><th>Claims</th><th>File</th></tr></thead><tbody></tbody></table></div>
+<p class="mut">Columns: <code>id, jurisdiction, holder, name, issued, expiry, area_ha, lon, lat, min_lon, min_lat, max_lon, max_lat, tile, record_url</code></p>
+
+<h2 id="fields">Fields</h2>
+<div class="tw"><table id="field-table"><thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead><tbody></tbody></table></div>
+
+<h3>What each jurisdiction publishes</h3>
+<p>We pass through what each registry makes public. Some publish less than others; blank fields mean the source doesn't release them, not that the claim lacks them.</p>
+<div class="tw"><table id="cov-table"><thead><tr><th>Jurisdiction</th><th>Claims</th><th>Holder</th><th>Name</th><th>Issued</th><th>Expiry</th><th>Date type</th><th>Source</th></tr></thead><tbody></tbody></table></div>
+<div class="note" id="cov-notes"></div>
+
+<h2 id="formats">Raw formats &amp; endpoints</h2>
+<p>Base URL: <code>https://jaydeepdive.github.io/closeology/</code></p>
+<div class="tw"><table>
+<thead><tr><th>Endpoint</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><code>api/v1/index.json</code></td><td>Manifest: endpoints, field schema, counts, build date.</td></tr>
+<tr><td><code>api/v1/jurisdictions.json</code></td><td>Per jurisdiction: claim count, bounding box, source registry, field coverage, lookup shard count, official-record URL template.</td></tr>
+<tr><td><code>api/v1/claims.pmtiles</code></td><td>Vector tiles (<a href="https://docs.protomaps.com/pmtiles/">PMTiles</a> v3, Mapbox Vector Tile format). Layer <code>claims</code>: every claim polygon, zooms 9–11 (overzoom beyond). Layer <code>coverage</code>: one point per ~5 km cell with staked ground, zooms 0–8, property <code>n</code> = claims in the cell. Works with MapLibre, OpenLayers (ol-pmtiles), Leaflet (protomaps-leaflet), deck.gl, and QGIS / GDAL.</td></tr>
+<tr><td><code>api/v1/claims.style.json</code></td><td>Ready-made MapLibre source + layer definitions for the vector tiles.</td></tr>
+<tr><td><code>claimtiles/index.json</code><br><code>claimtiles/{ix}_{iy}.geojson</code></td><td>GeoJSON tiles on a 0.5° grid: <code>ix = floor(lon / 0.5)</code>, <code>iy = floor(lat / 0.5)</code>. Full-precision polygons (~1 m). Only keys in <code>index.json</code> exist. A claim crossing a tile edge appears in each tile it touches. Short property keys: <code>c</code> id, <code>j</code> jurisdiction, <code>o</code> holder, <code>n</code> name, <code>i</code> issued, <code>e</code> expiry, <code>a</code> area_ha.</td></tr>
+<tr><td><code>api/v1/claim/{jur}/{shard}.json</code></td><td>Single-claim lookup (see above).</td></tr>
+<tr><td><code>api/v1/claims/{jur}.csv.gz</code></td><td>Bulk CSV per jurisdiction.</td></tr>
+<tr><td><code>claim_coverage.geojson</code></td><td>The coverage points as plain GeoJSON.</td></tr>
+</tbody></table></div>
+<p class="mut">Jurisdiction codes: AB BC MB NB NL NS NT NU ON QC SK YT (lower-case in URLs). Coordinates are WGS84 longitude/latitude. Dates are <code>YYYY-MM-DD</code>.</p>
+
+<h2 id="terms">Updates, stability &amp; attribution</h2>
+<p><b>Updates.</b> Rebuilt once a day from each jurisdiction's public registry. A claim that lapses disappears from the next build. Check <code>generated</code> in <code>index.json</code> for the build date.</p>
+<p><b>Stability.</b> Everything under <code>/api/v1/</code> plus the <code>claimtiles</code> keys above is a stable contract. New fields may be added; existing ones won't be renamed or change meaning without a new version (<code>/api/v2/</code>).</p>
+<p><b>Attribution.</b> Please credit "Claims: Canadian mineral tenure registries via Closeology". The underlying records belong to each province and territory; see <code>jurisdictions.json</code> for each source.</p>
+<div class="note"><b>Verify before you stake or transact.</b> This is a convenience copy of public registry data and can lag the registry by up to a day. Always confirm a claim's status in the official registry.</div>
+</main>
+
+<script>
+document.querySelectorAll("pre").forEach(pre => {
+  const b = document.createElement("button"); b.className = "copy"; b.textContent = "Copy";
+  b.onclick = () => navigator.clipboard.writeText(pre.innerText.replace(/^Copy\n?/, "")).then(() => { b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1400); });
+  pre.appendChild(b);
+});
+document.querySelectorAll(".tabs button").forEach(btn => btn.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b === btn));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "p-" + btn.dataset.t));
+});
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pct = v => { const n = Math.round(v * 100); const cls = n >= 95 ? "full" : n > 0 ? "part" : "none"; return `<span class="cov ${cls}">${n ? n + "%" : "—"}</span>`; };
+Promise.all([fetch("v1/index.json").then(r => r.json()), fetch("v1/jurisdictions.json").then(r => r.json())]).then(([idx, J]) => {
+  document.getElementById("s-claims").textContent = idx.claims.toLocaleString();
+  document.getElementById("s-jur").textContent = J.jurisdictions.length;
+  document.getElementById("s-date").textContent = idx.generated;
+  document.querySelector("#field-table tbody").innerHTML = idx.fields.map(f =>
+    `<tr><td><code>${esc(f.name)}</code></td><td>${esc(f.type)}</td><td>${esc(f.description)}</td></tr>`).join("");
+  const kind = { anniversary: "Anniversary", good_to: "Good-to", term_end: "Term end" };
+  document.querySelector("#cov-table tbody").innerHTML = J.jurisdictions.map(j =>
+    `<tr><td>${esc(j.name)} <span class="mut">${j.code}</span></td><td class="cov">${j.claims.toLocaleString()}</td>` +
+    `<td>${pct(j.field_coverage.holder)}</td><td>${pct(j.field_coverage.name)}</td><td>${pct(j.field_coverage.issued)}</td>` +
+    `<td>${pct(j.field_coverage.expiry)}</td><td>${kind[j.expiry_kind] || ""}</td>` +
+    `<td><a href="${esc(j.source_url)}">${esc(j.source)}</a></td></tr>`).join("");
+  document.querySelector("#bulk-table tbody").innerHTML = J.jurisdictions.map(j =>
+    `<tr><td>${esc(j.name)}</td><td class="cov">${j.claims.toLocaleString()}</td><td><a href="${esc(j.bulk_csv)}">${j.code.toLowerCase()}.csv.gz</a></td></tr>`).join("");
+  const notes = J.jurisdictions.filter(j => j.note).map(j => `<b>${esc(j.name)}:</b> ${esc(j.note)}`);
+  const cn = document.getElementById("cov-notes");
+  if (notes.length) cn.innerHTML = notes.join("<br>"); else cn.remove();
+}).catch(() => { document.getElementById("s-claims").textContent = "unavailable"; });
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claims overlay — Leaflet</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../closeology-claims.js"></script>
+<style>html,body,#map{margin:0;height:100%}#tag{position:absolute;top:10px;left:54px;z-index:1000;background:#fff;padding:6px 10px;border-radius:6px;font:13px system-ui;box-shadow:0 1px 4px rgba(0,0,0,.25)}</style>
+</head>
+<body>
+<div id="tag">Closeology claims · Leaflet + GeoJSON tiles · claims draw from zoom 9</div>
+<div id="map"></div>
+<script>
+  const api = new URLSearchParams(location.search).get("api");
+  if (api) CloseologyClaims.setBase(api);
+
+  const map = L.map("map", { preferCanvas: true }).setView([48.47, -81.33], 10);   // Timmins, Ontario
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              { maxZoom: 19, attribution: "© OpenStreetMap contributors" }).addTo(map);
+
+  // One call: loads the claims in view as you pan/zoom (coverage dots when zoomed out).
+  window.claimsOverlay = CloseologyClaims.addToLeaflet(map, L);
+  window.map = map;
+</script>
+</body>
+</html>

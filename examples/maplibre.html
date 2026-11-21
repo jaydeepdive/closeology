@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claims overlay — MapLibre</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js"></script>
+<script src="../closeology-claims.js"></script>
+<style>html,body,#map{margin:0;height:100%}#tag{position:absolute;top:10px;left:10px;z-index:2;background:#fff;padding:6px 10px;border-radius:6px;font:13px system-ui;box-shadow:0 1px 4px rgba(0,0,0,.25)}</style>
+</head>
+<body>
+<div id="tag">Closeology claims · MapLibre + vector tiles · click a claim</div>
+<div id="map"></div>
+<script>
+  // Optional: ?api=https://other-host/ to point at a mirror. Defaults to the live API.
+  const api = new URLSearchParams(location.search).get("api");
+  if (api) CloseologyClaims.setBase(api);
+
+  const map = new maplibregl.Map({
+    container: "map",
+    center: [-81.33, 48.47], zoom: 10,           // Timmins, Ontario
+    style: {                                      // any basemap works; OSM raster for the demo
+      version: 8,
+      sources: { osm: { type: "raster", tileSize: 256, attribution: "© OpenStreetMap contributors",
+                        tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"] } },
+      layers: [{ id: "osm", type: "raster", source: "osm" }]
+    }
+  });
+  map.addControl(new maplibregl.NavigationControl());
+  map.on("load", () => {
+    // One call: adds the PMTiles source + coverage/fill/outline layers + click popups.
+    CloseologyClaims.addToMapLibre(map, { maplibregl, pmtiles }).then(h => { window.claimsOverlay = h; });
+  });
+  window.map = map;
+</script>
+</body>
+</html>

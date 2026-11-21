@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claims overlay — Google Maps</title>
+<script src="../closeology-claims.js"></script>
+<style>
+  html,body,#map{margin:0;height:100%}
+  #tag{position:absolute;top:10px;left:10px;z-index:2;background:#fff;padding:6px 10px;border-radius:6px;font:13px system-ui;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  #nokey{max-width:560px;margin:60px auto;font:15px/1.55 system-ui;padding:0 16px}
+  code{background:#f2f2f2;padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+  // Google Maps needs YOUR Maps JavaScript API key: open this page with ?key=YOUR_KEY
+  const qs = new URLSearchParams(location.search);
+  const key = qs.get("key");
+  if (qs.get("api")) CloseologyClaims.setBase(qs.get("api"));
+
+  if (!key) {
+    document.body.innerHTML = `<div id="nokey"><h2>Google Maps example</h2>
+      <p>Google Maps requires your own Maps JavaScript API key. Add it to this page's URL:</p>
+      <p><code>google-maps.html?key=YOUR_KEY</code></p>
+      <p>The overlay itself is one line once the map exists:</p>
+      <p><code>CloseologyClaims.addToGoogleMaps(map)</code></p></div>`;
+  } else {
+    window.initMap = function () {
+      const map = new google.maps.Map(document.getElementById("map"),
+        { center: { lat: 48.47, lng: -81.33 }, zoom: 10, mapTypeId: "terrain" });   // Timmins, Ontario
+      // One call: loads the claims in view on every pan/zoom (coverage dots when zoomed out).
+      window.claimsOverlay = CloseologyClaims.addToGoogleMaps(map);
+      window.map = map;
+    };
+    const s = document.createElement("script");
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(key) + "&callback=initMap";
+    s.async = true;
+    document.head.appendChild(s);
+    const tag = document.createElement("div");
+    tag.id = "tag"; tag.textContent = "Closeology claims · Google Maps + GeoJSON tiles · claims draw from zoom 9";
+    document.body.appendChild(tag);
+  }
+</script>
+</body>
+</html>
