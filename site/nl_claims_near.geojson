@@ -4697,6 +4697,9 @@
 { "type": "Feature", "properties": { "claim": "041533M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -54.75156, 49.66641 ] } },
 { "type": "Feature", "properties": { "claim": "041534M", "cname": null, "owner": "Canstar Resources Inc.", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -55.92488, 49.40447 ] } },
 { "type": "Feature", "properties": { "claim": "032865M", "cname": null, "owner": "Edwin Northcott", "expiry": "2026-06-23", "staked": "2021-05-24" }, "geometry": { "type": "Point", "coordinates": [ -57.70101, 48.28954 ] } },
-{ "type": "Feature", "properties": { "claim": "041535M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-20" }, "geometry": { "type": "Point", "coordinates": [ -54.67439, 49.395 ] } }
+{ "type": "Feature", "properties": { "claim": "041535M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-20" }, "geometry": { "type": "Point", "coordinates": [ -54.67439, 49.395 ] } },
+{ "type": "Feature", "properties": { "claim": "041536M", "cname": null, "owner": "Jason Jacque", "expiry": "", "staked": "2026-11-20" }, "geometry": { "type": "Point", "coordinates": [ -60.13077, 54.94983 ] } },
+{ "type": "Feature", "properties": { "claim": "041537M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.03005, 47.12844 ] } },
+{ "type": "Feature", "properties": { "claim": "041538M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-21" }, "geometry": { "type": "Point", "coordinates": [ -55.5461, 49.97594 ] } }
 ]
 }
