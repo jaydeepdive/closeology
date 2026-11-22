@@ -4700,6 +4700,7 @@
 { "type": "Feature", "properties": { "claim": "041535M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-20" }, "geometry": { "type": "Point", "coordinates": [ -54.67439, 49.395 ] } },
 { "type": "Feature", "properties": { "claim": "041536M", "cname": null, "owner": "Jason Jacque", "expiry": "", "staked": "2026-11-20" }, "geometry": { "type": "Point", "coordinates": [ -60.13077, 54.94983 ] } },
 { "type": "Feature", "properties": { "claim": "041537M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -54.03005, 47.12844 ] } },
-{ "type": "Feature", "properties": { "claim": "041538M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-21" }, "geometry": { "type": "Point", "coordinates": [ -55.5461, 49.97594 ] } }
+{ "type": "Feature", "properties": { "claim": "041538M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-21" }, "geometry": { "type": "Point", "coordinates": [ -55.5461, 49.97594 ] } },
+{ "type": "Feature", "properties": { "claim": "041539M", "cname": null, "owner": "Jeffery Brushett", "expiry": "", "staked": "2026-11-22" }, "geometry": { "type": "Point", "coordinates": [ -54.03837, 47.92292 ] } }
 ]
 }
