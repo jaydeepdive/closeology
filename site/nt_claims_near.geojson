@@ -416,7 +416,6 @@
 { "type": "Feature", "properties": { "claim": "K08175", "cname": "VOV 5", "owner": "Vanadium North Resources Inc. (100%)", "expiry": "2026-09-25", "staked": "2018-09-25" }, "geometry": { "type": "Point", "coordinates": [ -128.36927, 62.0789 ] } },
 { "type": "Feature", "properties": { "claim": "M10644", "cname": "GLT 16", "owner": "Golden Pursuit Resources Ltd. (100%)", "expiry": "2032-01-17", "staked": "2022-01-17" }, "geometry": { "type": "Point", "coordinates": [ -113.2452, 62.94749 ] } },
 { "type": "Feature", "properties": { "claim": "M10645", "cname": "GLT 17", "owner": "Golden Pursuit Resources Ltd. (100%)", "expiry": "2032-01-17", "staked": "2022-01-17" }, "geometry": { "type": "Point", "coordinates": [ -113.26585, 62.95155 ] } },
-{ "type": "Feature", "properties": { "claim": "M11328", "cname": "MYLONINA", "owner": "Martin Tobias Kruger (100%)", "expiry": "2032-02-17", "staked": "2022-02-17" }, "geometry": { "type": "Point", "coordinates": [ -113.34218, 62.55814 ] } },
 { "type": "Feature", "properties": { "claim": "M10643", "cname": "GLT 15", "owner": "Golden Pursuit Resources Ltd. (100%)", "expiry": "2032-01-17", "staked": "2022-01-17" }, "geometry": { "type": "Point", "coordinates": [ -113.25642, 62.93336 ] } },
 { "type": "Feature", "properties": { "claim": "M10646", "cname": "GLT 18", "owner": "Golden Pursuit Resources Ltd. (100%)", "expiry": "2032-01-17", "staked": "2022-01-17" }, "geometry": { "type": "Point", "coordinates": [ -113.2687, 62.94514 ] } },
 { "type": "Feature", "properties": { "claim": "M10649", "cname": "PP96", "owner": "Pine Point Mining Limited (100%)", "expiry": "2032-03-25", "staked": "2022-03-25" }, "geometry": { "type": "Point", "coordinates": [ -114.65922, 60.87699 ] } },
@@ -1103,6 +1102,7 @@
 { "type": "Feature", "properties": { "claim": "M10199", "cname": "TXR71", "owner": "Gold Terra Resource Corp. (100%)", "expiry": "2027-07-07", "staked": "2017-07-07" }, "geometry": { "type": "Point", "coordinates": [ -114.25164, 62.5258 ] } },
 { "type": "Feature", "properties": { "claim": "M10474", "cname": "TXR124", "owner": "Gold Terra Resource Corp. (100%)", "expiry": "2028-03-07", "staked": "2018-03-07" }, "geometry": { "type": "Point", "coordinates": [ -114.17998, 62.53838 ] } },
 { "type": "Feature", "properties": { "claim": "M10098", "cname": "TXR 50", "owner": "Gold Terra Resource Corp. (100%)", "expiry": "2027-01-20", "staked": "2017-01-20" }, "geometry": { "type": "Point", "coordinates": [ -114.1645, 62.51833 ] } },
-{ "type": "Feature", "properties": { "claim": "M10093", "cname": "TXR 47", "owner": "Gold Terra Resource Corp. (100%)", "expiry": "2027-01-20", "staked": "2017-01-20" }, "geometry": { "type": "Point", "coordinates": [ -114.17091, 62.49124 ] } }
+{ "type": "Feature", "properties": { "claim": "M10093", "cname": "TXR 47", "owner": "Gold Terra Resource Corp. (100%)", "expiry": "2027-01-20", "staked": "2017-01-20" }, "geometry": { "type": "Point", "coordinates": [ -114.17091, 62.49124 ] } },
+{ "type": "Feature", "properties": { "claim": "M11328", "cname": "MYLONINA", "owner": "Martin Tobias Kruger (100%)", "expiry": "2032-02-17", "staked": "2022-02-17" }, "geometry": { "type": "Point", "coordinates": [ -113.34231, 62.55631 ] } }
 ]
 }
