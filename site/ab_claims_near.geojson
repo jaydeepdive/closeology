@@ -120,7 +120,7 @@
 { "type": "Feature", "properties": { "claim": "9415040282", "cname": "", "owner": "PAT DWYER CONST. INC.", "expiry": "", "staked": "2015-04-28" }, "geometry": { "type": "Point", "coordinates": [ -114.47767, 49.81632 ] } },
 { "type": "Feature", "properties": { "claim": "9412070625", "cname": "", "owner": "HEIDELBERG MATERIALS CANADA LIMITED", "expiry": "", "staked": "2012-07-29" }, "geometry": { "type": "Point", "coordinates": [ -113.81889, 53.68341 ] } },
 { "type": "Feature", "properties": { "claim": "9412070625", "cname": "", "owner": "HEIDELBERG MATERIALS CANADA LIMITED", "expiry": "", "staked": "2012-07-29" }, "geometry": { "type": "Point", "coordinates": [ -113.79964, 53.67952 ] } },
-{ "type": "Feature", "properties": { "claim": "9415060183", "cname": "", "owner": "DARREN TAYLOR HARVESTING INC.", "expiry": "", "staked": "2015-06-01" }, "geometry": { "type": "Point", "coordinates": [ -114.10842, 49.57135 ] } },
+{ "type": "Feature", "properties": { "claim": "9415060183", "cname": "", "owner": "2284807 ALBERTA LTD.", "expiry": "", "staked": "2015-06-01" }, "geometry": { "type": "Point", "coordinates": [ -114.10842, 49.57135 ] } },
 { "type": "Feature", "properties": { "claim": "3713060308", "cname": "", "owner": "SHELL CANADA LIMITED", "expiry": "", "staked": "2013-06-26" }, "geometry": { "type": "Point", "coordinates": [ -113.11801, 53.78151 ] } },
 { "type": "Feature", "properties": { "claim": "3713060309", "cname": "", "owner": "SHELL CANADA LIMITED", "expiry": "", "staked": "2013-06-26" }, "geometry": { "type": "Point", "coordinates": [ -113.08714, 53.79621 ] } },
 { "type": "Feature", "properties": { "claim": "9415080373", "cname": "", "owner": "GRAYMONT WESTERN CANADA INC.", "expiry": "", "staked": "2015-08-18" }, "geometry": { "type": "Point", "coordinates": [ -115.56059, 52.21166 ] } },
@@ -1045,8 +1045,8 @@
 { "type": "Feature", "properties": { "claim": "260205101", "cname": "", "owner": "THIBAULT, PIERRE", "expiry": "", "staked": "2026-10-31" }, "geometry": { "type": "Point", "coordinates": [ -112.24814, 52.38314 ] } },
 { "type": "Feature", "properties": { "claim": "260204401", "cname": "", "owner": "R360 ENVIRONMENTAL SOLUTIONS CANADA INC.", "expiry": "", "staked": "2026-10-29" }, "geometry": { "type": "Point", "coordinates": [ -110.61162, 53.84968 ] } },
 { "type": "Feature", "properties": { "claim": "260204701", "cname": "", "owner": "R360 ENVIRONMENTAL SOLUTIONS CANADA INC.", "expiry": "", "staked": "2026-10-29" }, "geometry": { "type": "Point", "coordinates": [ -110.6363, 53.86791 ] } },
-{ "type": "Feature", "properties": { "claim": "260210102", "cname": "", "owner": "DETTA, DARYL THOMAS", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -113.84178, 53.35934 ] } },
 { "type": "Feature", "properties": { "claim": "9426110133", "cname": "", "owner": "THIBAULT, PIERRE", "expiry": "", "staked": "2026-11-24" }, "geometry": { "type": "Point", "coordinates": [ -112.45022, 52.71054 ] } },
-{ "type": "Feature", "properties": { "claim": "260210101", "cname": "", "owner": "DETTA, DARYL THOMAS", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -113.65182, 53.42997 ] } }
+{ "type": "Feature", "properties": { "claim": "260210101", "cname": "", "owner": "DETTA, DARYL THOMAS", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -113.65182, 53.42997 ] } },
+{ "type": "Feature", "properties": { "claim": "260210102", "cname": "", "owner": "DETTA, DARYL THOMAS", "expiry": "", "staked": "2026-11-19" }, "geometry": { "type": "Point", "coordinates": [ -113.8175, 53.3611 ] } }
 ]
 }

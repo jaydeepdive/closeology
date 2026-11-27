@@ -4691,6 +4691,10 @@
 { "type": "Feature", "properties": { "claim": "041545M", "cname": null, "owner": "Alex Bailey", "expiry": "", "staked": "2026-11-25" }, "geometry": { "type": "Point", "coordinates": [ -55.14991, 49.3024 ] } },
 { "type": "Feature", "properties": { "claim": "041546M", "cname": null, "owner": "Alex Bailey", "expiry": "", "staked": "2026-11-25" }, "geometry": { "type": "Point", "coordinates": [ -55.15938, 49.32503 ] } },
 { "type": "Feature", "properties": { "claim": "039520M", "cname": null, "owner": "Natalie Hicks", "expiry": "2030-08-21", "staked": "2025-07-22" }, "geometry": { "type": "Point", "coordinates": [ -55.49945, 49.45589 ] } },
-{ "type": "Feature", "properties": { "claim": "041548M", "cname": null, "owner": "FPX Nickel Corp", "expiry": "2029-02-17", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.64871, 49.37736 ] } }
+{ "type": "Feature", "properties": { "claim": "041548M", "cname": null, "owner": "FPX Nickel Corp", "expiry": "2029-02-17", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -56.64871, 49.37736 ] } },
+{ "type": "Feature", "properties": { "claim": "041549M", "cname": null, "owner": "Steve Masson", "expiry": "", "staked": "2026-11-26" }, "geometry": { "type": "Point", "coordinates": [ -54.32254, 49.21196 ] } },
+{ "type": "Feature", "properties": { "claim": "041550M", "cname": null, "owner": null, "expiry": "", "staked": "" }, "geometry": { "type": "Point", "coordinates": [ -53.25921, 48.77107 ] } },
+{ "type": "Feature", "properties": { "claim": "041551M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-27" }, "geometry": { "type": "Point", "coordinates": [ -55.36575, 49.11899 ] } },
+{ "type": "Feature", "properties": { "claim": "041552M", "cname": null, "owner": "Darren Eddison", "expiry": "", "staked": "2026-11-27" }, "geometry": { "type": "Point", "coordinates": [ -55.12519, 48.77347 ] } }
 ]
 }
